@@ -1,0 +1,101 @@
+{
+ "cwe": "78",
+ "scenario_ko": "운용자 콘솔·정비 명령에서 받은 장비 이름·로그 묶음 이름·기록 번호를 넣어 진단·보관·내려받기 스크립트를 실행한다(예시는 무해한 echo로 대신한다). 공격자는 값에 ';', '&', '$( )' 같은 셸 문법을 넣어 다른 명령을 함께 실행시킨다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n/* 운용자 콘솔에서 받은 장비 이름으로 진단 스크립트를 실행(여기서는 echo로 대신) */\nstatic int run_diag(const char *device)\n{\n    char cmd[128];\n    snprintf(cmd, sizeof cmd, \"echo diag start %s\", device);  /* 입력을 셸 명령에 이어 붙임 */\n    fflush(stdout);\n    return system(cmd);                                        /* /bin/sh -c 로 해석됨 */\n}\n\nint main(void)\n{\n    const char *requests[] = {\"sensor01\", \"sensor01; echo INJECTED-RAN\"};  /* ';' 뒤도 실행 */\n    for (size_t i = 0; i < sizeof requests / sizeof requests[0]; ++i) {\n        if (run_diag(requests[i]) != 0) {\n            puts(\"diag failed\");\n        }\n    }\n    return 0;\n}\n",
+    "explain_ko": "입력을 이어 붙인 문자열을 system()에 넘기면 /bin/sh가 해석하므로 ';' 뒤의 명령까지 실행된다. 실행 계정 권한이 그대로 공격자 명령에 넘어간다."
+   },
+   "good": {
+    "code": "#include <ctype.h>\n#include <stdio.h>\n#include <string.h>\n#include <sys/wait.h>\n#include <unistd.h>\n\n/* 장비 이름은 영문 소문자·숫자 1~16자만 허용 */\nstatic int valid_device(const char *s)\n{\n    size_t n = strlen(s);\n    if (n == 0 || n > 16) return 0;\n    for (size_t i = 0; i < n; ++i) {\n        if (!islower((unsigned char)s[i]) && !isdigit((unsigned char)s[i])) return 0;\n    }\n    return 1;\n}\n\nstatic void run_diag(const char *device)\n{\n    if (!valid_device(device)) { puts(\"rejected: invalid device name\"); return; }\n    fflush(stdout);\n    pid_t pid = fork();\n    if (pid == 0) {\n        /* 셸 없이 고정 경로 프로그램에 인자 배열로 넘긴다 */\n        char *const argv[] = {\"echo\", \"diag\", \"start\", (char *)device, NULL};\n        char *const envp[] = {\"PATH=/usr/bin:/bin\", NULL};\n        execve(\"/bin/echo\", argv, envp);\n        _exit(127);\n    }\n    if (pid > 0) { waitpid(pid, NULL, 0); }\n}\n\nint main(void)\n{\n    const char *requests[] = {\"sensor01\", \"sensor01; echo INJECTED-RAN\"};\n    for (size_t i = 0; i < sizeof requests / sizeof requests[0]; ++i) {\n        run_diag(requests[i]);\n    }\n    return 0;\n}\n",
+    "explain_ko": "장비 이름을 허용목록(소문자·숫자 1~16자)으로 검증하고, 셸 없이 execve()로 고정 경로 프로그램에 인자 배열과 최소 환경 변수(PATH)만 넘긴다(I-04)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?m)^INJECTED-RAN",
+    "expect_good": "rejected: invalid device name",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-78 Demonstrative Example 2(system()에 입력을 이어 붙임) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-4 '운영체제 명령어 삽입'(인쇄 15쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <cstdlib>\n#include <string>\n#include <vector>\n\n// 정비 명령: 지정한 로그 묶음 이름으로 압축 보관 스크립트를 실행(여기서는 echo로 대신)\nbool archiveLogs(const std::string &bundle) {\n    const std::string cmd = \"echo archiving \" + bundle + \".tar\";   // 입력이 셸 문법으로 해석됨\n    std::fflush(stdout);\n    return std::system(cmd.c_str()) == 0;\n}\n\nint main() {\n    // 두 번째 요청: $( ) 명령 치환이 실행된다\n    const std::vector<std::string> requests = {\"flight-0412\", \"x$(echo INJECTED-RAN >&2)\"};\n    for (const auto &r : requests) {\n        if (!archiveLogs(r)) {\n            std::puts(\"archive failed\");\n        }\n    }\n}\n",
+    "explain_ko": "std::system()에 넘긴 문자열 안의 $( )가 셸의 명령 치환으로 실행된다. 값 앞뒤에 문자를 붙여도 셸 문법을 막지 못한다."
+   },
+   "good": {
+    "code": "#include <spawn.h>\n#include <sys/wait.h>\n#include <cstdio>\n#include <regex>\n#include <string>\n#include <vector>\n\nvoid archiveLogs(const std::string &bundle) {\n    static const std::regex allowed(\"[a-z]+-[0-9]{4}\");          // 허용 형식만 통과\n    if (!std::regex_match(bundle, allowed)) {\n        std::puts(\"rejected: invalid bundle name\");\n        return;\n    }\n    std::string file = bundle + \".tar\";\n    std::vector<char *> argv = {const_cast<char *>(\"echo\"), const_cast<char *>(\"archiving\"),\n                                file.data(), nullptr};\n    char *envp[] = {nullptr};\n    std::fflush(stdout);\n    pid_t pid{};\n    // 셸을 거치지 않고 고정 경로 프로그램을 인자 배열로 실행\n    if (posix_spawn(&pid, \"/bin/echo\", nullptr, nullptr, argv.data(), envp) == 0) {\n        waitpid(pid, nullptr, 0);\n    }\n}\n\nint main() {\n    const std::vector<std::string> requests = {\"flight-0412\", \"x$(echo INJECTED-RAN >&2)\"};\n    for (const auto &r : requests) {\n        archiveLogs(r);\n    }\n}\n",
+    "explain_ko": "묶음 이름을 정해진 형식(정규식)으로만 받고, posix_spawn()으로 셸을 거치지 않고 고정 경로 프로그램에 인자 배열을 넘긴다(I-04)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?m)^INJECTED-RAN",
+    "expect_good": "rejected: invalid bundle name",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-78 Demonstrative Example 1(입력을 셸 명령에 이어 붙임) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.IOException;\nimport java.util.List;\n\npublic class Example {\n    static final boolean WINDOWS = System.getProperty(\"os.name\").startsWith(\"Windows\");\n\n    // 운용자가 고른 센서 이름으로 보정 스크립트를 셸에서 실행(여기서는 echo로 대신)\n    static void calibrate(String sensor) throws IOException, InterruptedException {\n        String line = \"echo calibrate \" + sensor;                 // 입력을 명령 문자열에 이어 붙임\n        List<String> cmd = WINDOWS ? List.of(\"cmd.exe\", \"/c\", line) : List.of(\"/bin/sh\", \"-c\", line);\n        new ProcessBuilder(cmd).inheritIO().start().waitFor();\n    }\n\n    public static void main(String[] args) throws Exception {\n        calibrate(\"imu-a\");\n        calibrate(\"imu-a & echo INJECTED-RAN\");   // '&' 뒤 명령도 실행된다\n    }\n}\n",
+    "explain_ko": "cmd.exe /c 또는 /bin/sh -c에 이어 붙인 문자열 하나를 넘기므로 '&' 뒤의 명령이 따로 실행된다. ProcessBuilder를 써도 셸에 문자열을 넘기면 소용없다."
+   },
+   "good": {
+    "code": "import java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Map;\n\npublic class Example {\n    static final boolean WINDOWS = System.getProperty(\"os.name\").startsWith(\"Windows\");\n\n    // 입력은 허용된 센서를 고르는 키로만 쓰고, 실행 인자는 코드에 고정한다\n    static final Map<String, List<String>> CALIBRATION = Map.of(\n            \"imu-a\", List.of(\"calibrate\", \"imu-a\"),\n            \"gps-1\", List.of(\"calibrate\", \"gps-1\"));\n\n    static void calibrate(String sensor) throws IOException, InterruptedException {\n        List<String> fixedArgs = CALIBRATION.get(sensor);\n        if (fixedArgs == null) {\n            System.out.println(\"rejected: unknown sensor\");\n            return;\n        }\n        List<String> cmd = new ArrayList<>(WINDOWS ? List.of(\"cmd.exe\", \"/c\", \"echo\") : List.of(\"/bin/echo\"));\n        cmd.addAll(fixedArgs);                     // 명령과 인자를 목록으로 분리\n        new ProcessBuilder(cmd).inheritIO().start().waitFor();\n    }\n\n    public static void main(String[] args) throws Exception {\n        calibrate(\"imu-a\");\n        calibrate(\"imu-a & echo INJECTED-RAN\");\n    }\n}\n",
+    "explain_ko": "입력은 허용된 센서를 고르는 키로만 쓰고, 실행할 명령과 인자는 코드에 고정한 목록에서 가져와 ProcessBuilder에 목록으로 넘긴다(I-04). 예시는 echo가 Windows 셸 내장 명령이라 cmd.exe를 쓰지만, 외부 값은 명령줄에 들어가지 않는다. cmd.exe는 넘겨받은 인자를 다시 해석하므로, 외부 값을 넘겨야 한다면 셸이 아닌 고정 경로 실행 파일에 목록으로 넘긴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?m)^INJECTED-RAN",
+    "expect_good": "rejected: unknown sensor"
+   },
+   "refs": [
+    "MITRE CWE-78 Demonstrative Example 6(Runtime.exec로 cmd.exe에 입력을 이어 붙임) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-4 '운영체제 명령어 삽입'(인쇄 18쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Diagnostics;\n\n// 운용자 콘솔: 입력한 비행 기록 번호로 내려받기 스크립트를 실행(여기서는 echo로 대신)\nstatic void FetchFlightLog(string logId)\n{\n    var psi = OperatingSystem.IsWindows()\n        ? new ProcessStartInfo(\"cmd.exe\", \"/c echo fetching log \" + logId)         // 입력을 셸 명령에 이어 붙임\n        : new ProcessStartInfo(\"/bin/sh\", new[] { \"-c\", \"echo fetching log \" + logId });\n    using var p = Process.Start(psi);\n    p?.WaitForExit();\n}\n\nFetchFlightLog(\"FL-0412\");\nFetchFlightLog(\"FL-0412 & echo INJECTED-RAN\");   // '&' 뒤 명령도 실행된다\n",
+    "explain_ko": "ProcessStartInfo에 \"/c echo ... \" + 입력을 한 문자열로 넘겨 cmd.exe가 해석하므로 '&' 뒤 명령이 실행된다."
+   },
+   "good": {
+    "code": "using System.Diagnostics;\nusing System.Text.RegularExpressions;\n\nstatic void FetchFlightLog(string logId)\n{\n    // 기록 번호는 정해진 형식만 허용한다(\\A·\\z: 끝의 줄바꿈도 허용하지 않음)\n    if (!Regex.IsMatch(logId, @\"\\AFL-[0-9]{4}\\z\", RegexOptions.None, TimeSpan.FromSeconds(1)))\n    {\n        Console.WriteLine(\"rejected: invalid log id\");\n        return;\n    }\n    // 명령과 인자를 목록으로 분리해 전달. cmd.exe는 인자를 다시 해석하므로 여기서 막는 것은 위의 형식 검사다\n    // (실제 과제에서는 셸이 아닌 고정 경로 실행 파일에 ArgumentList로 넘긴다)\n    var psi = OperatingSystem.IsWindows() ? new ProcessStartInfo(\"cmd.exe\") : new ProcessStartInfo(\"/bin/echo\");\n    if (OperatingSystem.IsWindows())\n    {\n        psi.ArgumentList.Add(\"/c\");\n        psi.ArgumentList.Add(\"echo\");\n    }\n    psi.ArgumentList.Add(\"fetching\");\n    psi.ArgumentList.Add(\"log\");\n    psi.ArgumentList.Add(logId);\n    using var p = Process.Start(psi);\n    p?.WaitForExit();\n}\n\nFetchFlightLog(\"FL-0412\");\nFetchFlightLog(\"FL-0412 & echo INJECTED-RAN\");\n",
+    "explain_ko": "기록 번호를 정해진 형식(정규식 \\AFL-[0-9]{4}\\z, 시간 제한 지정)으로 검증한 뒤 ArgumentList로 명령과 인자를 나눠 넘긴다(I-04). Windows cmd.exe는 인자를 다시 해석하므로 ArgumentList만으로는 메타문자를 막지 못한다. 이 예시에서 막는 것은 허용 형식 검사이고, 실제 과제에서는 셸이 아닌 고정 경로 실행 파일에 ArgumentList로 넘긴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?m)^INJECTED-RAN",
+    "expect_good": "rejected: invalid log id"
+   },
+   "refs": [
+    "MITRE CWE-78 Demonstrative Example 1(입력을 셸 명령에 이어 붙임) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import os\nimport subprocess\n\n\n# 정비 명령으로 받은 비행 기록 묶음 이름으로 그 묶음의 파일 목록을 보인다\ndef list_bundle(bundle):\n    command = \"ls logs/\" + bundle                    # 받은 이름이 셸 명령 줄의 일부가 된다\n    subprocess.run(command, shell=True, check=False)\n\n\nos.makedirs(\"logs/flt-0412\", exist_ok=True)\nopen(\"logs/flt-0412/imu.bin\", \"wb\").close()\nlist_bundle(\"flt-0412\")\nlist_bundle(\"flt-0412; echo INJECTED-RAN\")          # ';' 뒤 명령이 함께 실행된다\n",
+    "explain_ko": "받은 묶음 이름을 명령 문자열에 이어 붙이고 shell=True로 실행한다. 셸이 ';'·'&&'·'$( )'를 해석하므로 'flt-0412; echo INJECTED-RAN'을 받으면 뒤의 명령도 실행된다. Bandit은 이 호출을 B602(shell=True인 subprocess 호출, 심각도 높음)로 보고한다."
+   },
+   "good": {
+    "code": "import os\nimport re\nimport subprocess\n\nBUNDLE_NAME = re.compile(r\"[A-Za-z0-9_-]{1,32}\")\n\n\ndef list_bundle(bundle):\n    if not BUNDLE_NAME.fullmatch(bundle):            # 허용목록으로 이름을 먼저 제한\n        print(\"rejected bundle name\")\n        return\n    # 셸을 거치지 않고 인자 목록으로 실행: 이름은 ls의 인자 하나로만 전달된다\n    subprocess.run([\"ls\", \"--\", os.path.join(\"logs\", bundle)], check=False)\n\n\nos.makedirs(\"logs/flt-0412\", exist_ok=True)\nopen(\"logs/flt-0412/imu.bin\", \"wb\").close()\nlist_bundle(\"flt-0412\")\nlist_bundle(\"flt-0412; echo INJECTED-RAN\")\n",
+    "explain_ko": "이름을 허용목록 정규식으로 제한하고, 셸 없이 인자 목록으로 실행한다(I-04, LPY-05). 인자 목록으로 넘긴 값은 셸이 해석하지 않으므로 ';'가 들어와도 파일 이름 한 개로만 쓰인다. 좋은 예에도 Bandit은 B404(subprocess 가져오기)·B603(셸 없는 subprocess 호출)·B607(부분 경로 실행 파일)을 낮음으로 보고한다. 이 셋은 '인자 출처와 실행 파일 경로를 확인하라'는 표시이므로 검토해 사유를 남기고 닫는다. 실행 파일은 운용 환경에서 절대 경로로 고정하는 것이 좋다."
+   },
+   "check": {
+    "tool": "bandit",
+    "expect": "B602",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-78 Demonstrative Example 1(사용자 이름을 셸 명령에 이어 붙여 디렉터리 목록을 봄) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 입력데이터 검증 및 표현 1-5 '운영체제 명령어 삽입'(인쇄 29쪽) 참고"
+   ]
+  }
+ }
+}

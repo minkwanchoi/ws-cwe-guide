@@ -1,0 +1,23 @@
+# 폐쇄망판 설정 — 인터넷 없이 파일로 열거나(index.html 더블클릭) 내부 웹서버에 올려 보는 사이트.
+# 만드는 법: python scripts/build.py --offline && mkdocs build --strict -f mkdocs.offline.yml
+#           python scripts/package_offline.py   (site-offline/ → dist/ 의 zip·SHA-256 해시)
+# 온라인판(mkdocs.yml)을 이어받고 다음만 바꾼다.
+INHERIT: mkdocs.yml
+
+site_dir: site-offline
+site_url: ""                # 파일로 열 때 절대 주소를 만들지 않는다
+use_directory_urls: false   # 페이지를 폴더가 아니라 .html 파일로(파일 시스템에서 링크가 열린다)
+repo_url: null              # 머리글 저장소 정보 상자가 api.github.com을 호출하지 않게 끈다
+repo_name: null
+
+plugins:                    # 목록은 이어받지 않고 통째로 다시 적는다
+  - search:
+      separator: '[\s\-·,:!=\[\]()"/]+'
+  - privacy:                # 글꼴 등 외부 자원을 사이트 안에 넣는다
+      cache_dir: .cache/privacy
+  - offline                 # 파일로 열어도 검색이 동작하게 한다(검색 색인을 스크립트로 내장)
+
+extra:
+  version: null             # 판 선택 메뉴(mike)는 서버의 versions.json이 필요하므로 끈다
+  polyfills:                # 파일로 열 때 검색용 셰임. offline 플러그인이 판 번호 없는 unpkg 주소에서 받지 않게 저장소에 반입한 판을 쓴다
+    - assets/vendor/iframe-worker-1.0.4-shim.js   # npm iframe-worker 1.0.4, SHA-256 e8e412db…9609(scripts/asset_hashes.json)

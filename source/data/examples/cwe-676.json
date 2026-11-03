@@ -1,0 +1,46 @@
+{
+ "cwe": "676",
+ "scenario_ko": "운용자 콘솔의 장비 제어 명령을 감사 로그 한 줄로 만들거나(C), 정비 단말 명령 'GAIN <값>'의 값 글자를 수신기 이득으로 바꾼다(C++). 쓰는 함수가 대상 크기나 변환 오류를 알 수 없는 '위험한 함수'인지가 문제다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define LOG_LINE 32\n\n/* 운용자 콘솔의 장비 제어 명령을 감사 로그 한 줄로 만든다 */\nstatic void audit_line(char *out, const char *operator_id, const char *command)\n{\n    strcpy(out, \"OP=\");           /* 대상 크기를 모르는 함수: 길이 검사를 호출자에게 떠넘긴다 */\n    strcat(out, operator_id);\n    strcat(out, \" CMD=\");\n    strcat(out, command);\n}\n\nint main(void)\n{\n    char line[LOG_LINE];\n    audit_line(line, \"OPR-KIM-0417\", \"HOLD HEATER 3\");\n    puts(line);\n    return 0;\n}\n",
+    "explain_ko": "strcpy·strcat은 대상 버퍼 크기를 받지 않아 모든 길이 검사를 호출자에게 떠넘긴다. 운용자 ID와 명령이 조금만 길어도(이 예에서 종단 문자 포함 34바이트) 32바이트 버퍼를 넘어 스택을 덮어쓴다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n\n#define LOG_LINE 64   /* 운용자 ID·명령의 최대 길이(ICD)에 맞춰 잡는다 */\n\n/* 운용자 콘솔의 장비 제어 명령을 감사 로그 한 줄로 만든다. 성공 0, 잘림 1, 실패 -1(out은 빈 문자열) */\nstatic int audit_line(char *out, size_t out_size, const char *operator_id, const char *command)\n{\n    /* 대상 크기를 인자로 받는 함수를 쓰고 반환값으로 잘림을 확인한다 */\n    int n = snprintf(out, out_size, \"OP=%s CMD=%s\", operator_id, command);\n    if (n < 0) {\n        out[0] = '\\0';      /* 실패하면 버퍼 내용이 보장되지 않는다 */\n        return -1;\n    }\n    return (size_t)n >= out_size ? 1 : 0;\n}\n\nint main(void)\n{\n    char line[LOG_LINE];\n    int rc = audit_line(line, sizeof line, \"OPR-KIM-0417\", \"HOLD HEATER 3\");\n    if (rc < 0) {\n        puts(\"audit line failed: operator notified\");\n    } else if (rc > 0) {\n        /* 잘림은 기록 쪽에서 처리한다: 표시를 남기고 알리되 명령 처리는 막지 않는다 */\n        line[LOG_LINE - 2] = '~';\n        puts(\"audit line truncated: operator notified\");\n    }\n    puts(line);\n    return 0;\n}\n",
+    "explain_ko": "대상 크기를 인자로 받는 snprintf를 쓰고 반환값으로 잘림을 확인한다. 버퍼 크기는 운용자 ID·명령의 최대 길이(ICD)에 맞춰 잡고, 사업 차원에서 금지 함수 목록과 대체 API를 정해 빌드에서 막는다(I-02·LC-04). 잘리면 잘림 표시를 남기고 운용자에게 알린다. 감사 기록 실패가 운용 통제 명령 자체를 막지 않도록 처리 방침은 설계 단계의 오류 처리·안전 상태 설계에서 정한다."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "clang-analyzer-security\\.insecureAPI\\.strcpy"
+   },
+   "refs": [
+    "MITRE CWE-676 Demonstrative Example 1(크기 확인 없이 strcpy로 지역 버퍼에 복사) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) API 오용 7-2 '위험하다고 알려진 함수 사용'(인쇄 196쪽) 참고 — 이 항목의 표 1 대응 CWE는 CWE-242이고, 참고문헌에 CWE-676이 함께 실려 있다"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <cstdlib>\n#include <string>\n\n// 정비 단말 명령 \"GAIN <값>\"의 값 부분으로 수신기 이득을 설정한다\nclass ReceiverConfig {\npublic:\n    void set_gain_from_text(const std::string &arg) {\n        gain_db_ = std::atoi(arg.c_str());   // 숫자가 아니거나 범위를 넘어도 오류를 알리지 않는다\n    }\n    int gain_db() const { return gain_db_; }\n\nprivate:\n    int gain_db_ = 20;\n};\n\nint main() {\n    ReceiverConfig rx;\n    rx.set_gain_from_text(\"2O\");             // 숫자 0 대신 영문자 O를 입력한 실수\n    std::printf(\"gain set to %d dB\\n\", rx.gain_db());\n    return 0;\n}\n",
+    "explain_ko": "std::atoi는 숫자가 아닌 글자나 범위 초과를 오류로 알리지 않는다. '2O'(숫자 0 대신 영문자 O)를 2로 바꿔 이득이 20 dB가 아니라 2 dB로 조용히 설정된다."
+   },
+   "good": {
+    "code": "#include <charconv>\n#include <cstdio>\n#include <string>\n#include <system_error>\n\n// 정비 단말 명령 \"GAIN <값>\"의 값 부분으로 수신기 이득을 설정한다\nclass ReceiverConfig {\npublic:\n    bool set_gain_from_text(const std::string &arg) {\n        int value = 0;\n        const char *end = arg.data() + arg.size();\n        auto [ptr, ec] = std::from_chars(arg.data(), end, value);\n        if (ec != std::errc{} || ptr != end || value < 0 || value > 60) {\n            return false;                    // 변환 오류·남는 글자·범위 밖이면 거부\n        }\n        gain_db_ = value;\n        return true;\n    }\n    int gain_db() const { return gain_db_; }\n\nprivate:\n    int gain_db_ = 20;\n};\n\nint main() {\n    ReceiverConfig rx;\n    if (!rx.set_gain_from_text(\"2O\")) {      // 숫자 0 대신 영문자 O를 입력한 실수\n        std::puts(\"rejected: GAIN value is not a number in 0..60\");\n    }\n    std::printf(\"gain set to %d dB\\n\", rx.gain_db());\n    return 0;\n}\n",
+    "explain_ko": "std::from_chars로 변환 오류와 남는 글자를 확인하고 허용 범위(0~60)를 검사해, 어긋나면 기존 설정을 유지하고 명령을 거부한다."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "cert-err34-c|bugprone-unchecked-string-to-number-conversion"
+   },
+   "refs": [
+    "MITRE CWE-676 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ },
+ "not_applicable": {
+  "Java": "MITRE는 CWE-676의 적용 언어를 C·C++로 두며, 대상은 strcpy처럼 C 라이브러리의 위험한 함수다. Java의 위험한 API(신뢰할 수 없는 데이터의 역직렬화, 폐기 예정 API 등)는 CWE-502·CWE-477 같은 해당 약점의 해설·지침을 따르고, JNI로 부르는 네이티브 코드에는 C 예시를 적용한다(LJ-08).",
+  "C#": "MITRE는 CWE-676의 적용 언어를 C·C++로 둔다. C#의 위험한 API(BinaryFormatter, 보안 용도의 System.Random 등)는 CWE-502·CWE-338 같은 해당 약점의 해설·지침을 따르고, unsafe·P/Invoke 경계의 네이티브 함수 사용에는 C 예시를 적용한다(LCS-02).",
+  "Python": "MITRE는 CWE-676의 적용 언어를 C·C++로 두며, 대상은 strcpy처럼 C 라이브러리의 위험한 함수다. Python의 위험한 함수(eval·exec·pickle.loads·안전하지 않은 Loader의 yaml.load 등)는 CWE-95·CWE-502 같은 해당 약점의 해설·지침을 따르고, ctypes·C 확장 모듈로 부르는 C 함수에는 C 예시를 적용한다."
+ }
+}

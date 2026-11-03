@@ -1,0 +1,1247 @@
+{
+ "checked_at": "2026-10-15",
+ "notes": {
+  "PSOS": "공개 근거 제한: pSOS(pSOS+, pNA+)는 공식 기술 문서·보안 공지·CVE가 공개 웹에서 확인되지 않았다(Wind River 문서는 로그인 또는 비공개, 수명주기 페이지 404, HPCwire 원 사이트 403이라 원 발행처 페이지의 웹 아카이브 보관본으로 확인). PSOS-01/03/04/05의 근거는 pSOS 고유 근거가 아니라 OSAL 설계 패턴·일반 C 규칙이며, PSOS-02/06/07/08의 근거도 pSOS 고유 근거가 아니라 다른 프로젝트의 일반 원칙 자료다(2026. 11. 2. 보강), PSOS-09는 SEC 10-K(Tier 1, 제품 목록 변화)와 HPCwire(Tier 3, 단계적 폐기 방침)로 확인했고, 벤더 지원 종료 공지는 공개 자료에 없다(2026. 10. 28. 재조사).",
+  "VXW": "VXW-02(VxWorks 653)와 VXW-07의 근거는 VxWorks 고유 근거가 아니라 다른 프로젝트의 일반 원칙 자료다(2026. 11. 2. 보강). VxWorks 653 공개 원문은 찾지 못했다."
+ },
+ "projects": {
+  "WIN": [
+   {
+    "name": "Microsoft Learn (Win32·MSVC 공식 문서)",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/",
+    "ref": "2026-10-15 조회",
+    "why": "Windows 지휘통제·정비용 PC 소프트웨어의 DLL 검색 순서, 서비스 계정, 컴파일러 보안 옵션을 정의하는 1차 벤더 문서다."
+   },
+   {
+    "name": "QGroundControl",
+    "url": "https://github.com/mavlink/qgroundcontrol",
+    "ref": "v5.1.5",
+    "why": "무인기 지상통제 소프트웨어로 Windows(MSVC) 빌드를 공식 제공하며 cmake/modules/Hardening.cmake에 MSVC 보안 링크 옵션을 적용해 지휘통제 PC 소프트웨어와 성격이 가깝다."
+   }
+  ],
+  "LNX": [
+   {
+    "name": "Yocto Project poky",
+    "url": "https://github.com/yoctoproject/poky",
+    "ref": "yocto-5.0.4",
+    "why": "임베디드 Linux SBC 이미지를 빌드하는 참조 배포판으로 security_flags.inc, create-spdx, cve-check 등 하드닝·SBOM·CVE 추적 설정이 모두 공개돼 있다. SBC 행은 같은 프로젝트의 문서를 5.2.4 판으로 고정했다. 문서 근거와 저장소 근거의 고정 판이 달라 두 판을 함께 쓴다."
+   },
+   {
+    "name": "QGroundControl",
+    "url": "https://github.com/mavlink/qgroundcontrol",
+    "ref": "v5.1.5",
+    "why": "무인기 지상국 소프트웨어로 Linux 빌드에 ASan/UBSan 옵션을 CMake로 제공한다."
+   },
+   {
+    "name": "Linux kernel (Kconfig)",
+    "url": "https://github.com/torvalds/linux",
+    "ref": "v6.6",
+    "why": "임베디드 Linux 커널 하드닝 설정(STRICT_DEVMEM)의 정의 원문이다."
+   }
+  ],
+  "VXW": [
+   {
+    "name": "NASA OSAL (cFS)",
+    "url": "https://github.com/nasa/osal",
+    "ref": "v7.0.1",
+    "why": "우주 비행 소프트웨어 프레임워크로 VxWorks 커널(src/os/vxworks)과 RTP(src/os/vxworks-rtp) 구현을 함께 공개한다."
+   },
+   {
+    "name": "Wind River VxWorks 보안 공지·CVE",
+    "url": "https://www.windriver.com/security/announcements/tcp-ip-network-stack-ipnet-urgent11",
+    "ref": "2026-10-15 조회",
+    "why": "VxWorks 6.x/7 IPnet(Urgent/11), WDB, 하드코드된 계정 등 지침이 막으려는 결함이 실제 CVE로 공개된 사례다."
+   },
+   {
+    "name": "a653rs-linux",
+    "url": "https://github.com/DLR-FT/a653rs-linux",
+    "ref": "0.2.0",
+    "why": "DLR-FT가 공개한 ARINC 653 하이퍼바이저로 파티션 시간 구성과 샘플링 채널 구성을 보여 준다. VxWorks 653 자료는 아니다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "타깃 코드 실행률 측정의 메모리 제약을 문서로 밝힌다. VxWorks 자료는 아니다."
+   },
+   {
+    "name": "Rapita Systems",
+    "url": "https://www.rapitasystems.com/",
+    "ref": "조회일 2026-11-02",
+    "why": "임베디드 코드 실행률 도구 벤더로 계측 오버헤드 측정 사례를 공개한다."
+   }
+  ],
+  "PSOS": [
+   {
+    "name": "NASA OSAL (cFS)",
+    "url": "https://github.com/nasa/osal",
+    "ref": "v7.0.1",
+    "why": "RTOS를 얇은 추상화 계층 뒤로 격리하는 공개 사례다(pSOS 포트는 없으며 설계 패턴 근거로만 인용)."
+   },
+   {
+    "name": "FreeRTOS-Kernel MISRA.md / SEI CERT C",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+    "ref": "V11.1.0",
+    "why": "pSOS 자체의 공개 기술 문서가 없어 서비스콜 반환값·포인터 무효화 같은 일반 C 규칙의 공개 근거만 보조로 쓴다."
+   },
+   {
+    "name": "CISA ICSA-19-211-01",
+    "url": "https://github.com/cisagov/CSAF",
+    "ref": "커밋 3c2594d",
+    "why": "제어 장치의 네트워크 노출을 줄이는 공식 권고다. pSOS 자료는 아니다."
+   },
+   {
+    "name": "cppcheck",
+    "url": "https://github.com/cppcheck-opensource/cppcheck",
+    "ref": "2.22.0",
+    "why": "임베디드 비표준 문법을 다루는 정적 분석 도구 문서다. pSOS 자료는 아니다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "실제 보드 회귀 자동화 사례다. pSOS 자료는 아니다."
+   },
+   {
+    "name": "Yocto Project",
+    "url": "https://docs.yoctoproject.org/",
+    "ref": "5.0.4",
+    "why": "빌드 소스 보존 수단을 문서화한다. pSOS 자료는 아니다."
+   },
+   {
+    "name": "Packer",
+    "url": "https://developer.hashicorp.com/packer",
+    "ref": "조회일 2026-11-02",
+    "why": "VM 이미지 체크섬 생성 수단을 문서화한다."
+   }
+  ],
+  "FRT": [
+   {
+    "name": "FreeRTOS-Kernel",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+    "ref": "V11.1.0",
+    "why": "MCU용 소형 커널로 지침의 MPU 포트, heap_x, 스택 오버플로 검출, FromISR API가 모두 소스에 정의돼 있다(FreeRTOS 202406-LTS 포함 버전)."
+   },
+   {
+    "name": "FreeRTOS-Plus-TCP",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP",
+    "ref": "V4.4.1",
+    "why": "FRT-06이 다루는 TCP/IP 스택이며 ISN 난수 함수와 ping 응답 설정이 소스에 정의돼 있다."
+   },
+   {
+    "name": "FreeRTOS-LTS",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-LTS",
+    "ref": "202604.01-LTS",
+    "why": "LTS 라이브러리 구성과 지원 기간을 공개한다."
+   }
+  ],
+  "BM": [
+   {
+    "name": "arduino/ArduinoCore-avr",
+    "url": "https://github.com/arduino/ArduinoCore-avr",
+    "ref": "1.8.6",
+    "why": "OS 없이 ISR과 메인 루프만으로 동작하는 8비트 MCU 펌웨어 코어로 ISR 공유 변수와 인터럽트 임계구역 처리가 공개돼 있다. MCU 행은 같은 코어를 1.8.7(avr-libc 사용자 매뉴얼)로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다."
+   },
+   {
+    "name": "avr-libc 사용자 매뉴얼",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/",
+    "ref": "2026-10-15 조회",
+    "why": "베어메탈 AVR의 volatile, util/atomic.h, 힙·스택 충돌 및 미사용 인터럽트 벡터 동작을 설명하는 공식 문서다."
+   },
+   {
+    "name": "ARM-software/CMSIS_5",
+    "url": "https://github.com/ARM-software/CMSIS_5",
+    "ref": "5.9.0",
+    "why": "Cortex-M 베어메탈의 스타트업 코드, 기본 핸들러, 링커 스크립트(스택·힙 점검) 참조 구현이다."
+   },
+   {
+    "name": "STMicroelectronics/stm32f4xx_hal_driver",
+    "url": "https://github.com/STMicroelectronics/stm32f4xx_hal_driver",
+    "ref": "v1.8.3",
+    "why": "MCU 벤더 HAL로 플래시 읽기보호(RDP) 레벨 설정을 정의한다."
+   },
+   {
+    "name": "mcu-tools/mcuboot",
+    "url": "https://github.com/mcu-tools/mcuboot",
+    "ref": "v2.1.0",
+    "why": "MCU 부트로더로 보안 카운터 기반 롤백 방지 인터페이스를 정의한다."
+   },
+   {
+    "name": "FreeRTOS-Kernel",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+    "ref": "V11.1.0",
+    "why": "스택 페인팅과 여유 계산 구현을 공개한다."
+   },
+   {
+    "name": "GCC 매뉴얼",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/",
+    "ref": "14.2.0",
+    "why": "정적 스택 사용량 출력 옵션의 공식 문서다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "스택 침범·워치독 시험과 모듈 형상 고정 사례를 공개한다."
+   },
+   {
+    "name": "PX4-Autopilot",
+    "url": "https://github.com/PX4/PX4-Autopilot",
+    "ref": "v1.17.0",
+    "why": "고장 주입 기능을 문서화한다."
+   }
+  ]
+ },
+ "evidence": {
+  "WIN-01": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 UAC 문서는 관리자 계정도 기본적으로 표준 사용자 보안 컨텍스트에서 자원에 접근하고 앱을 실행한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+    "locator": "How User Account Control works 본문",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 서비스 사용자 계정 문서는 서비스가 사용자 계정 대신 LocalService, NetworkService, LocalSystem 특수 계정 중 하나를 지정할 수 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+    "locator": "Service User Accounts 본문",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-02": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 AutoRun 문서는 NoDriveAutoRun과 NoDriveTypeAutoRun 레지스트리 값으로 AutoRun을 지속적으로 비활성화할 수 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/shell/autoplay-reg",
+    "locator": "Using the Registry to Disable AutoRun",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 장치 설치 그룹 정책 문서는 승인 목록에 있는 장치만 설치하도록 허용하는 시나리오를 제공한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/client-management/manage-device-installation-with-group-policy",
+    "locator": "문서 도입부 시나리오 목록",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-03": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 DLL 보안 문서는 DLL 선로딩 공격을 막으려면 LoadLibrary, LoadLibraryEx, CreateProcess, ShellExecute에 가능한 한 전체 경로를 지정하라고 권고한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-security",
+    "locator": "Dynamic-Link Library Security, 지침 첫 항목",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 DLL 보안 문서는 LoadLibraryEx에 LOAD_LIBRARY_SEARCH 플래그를 쓰거나 SetDefaultDllDirectories로 프로세스의 DLL 검색 순서를 정하라고 권고한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-security",
+    "locator": "Dynamic-Link Library Security, 지침 둘째 항목",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-04": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 /guard 문서는 /guard:cf가 기본값에서 꺼져 있어 명시적으로 켜야 한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/reference/guard-enable-control-flow-guard",
+    "locator": "/guard (Enable Control Flow Guard) Remarks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl v5.1.5의 Hardening.cmake는 MSVC 빌드에서 /guard:cf, /DYNAMICBASE, /HIGHENTROPYVA, /NXCOMPAT를 링크 옵션 점검 후 비디버그 구성에 적용한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/cmake/modules/Hardening.cmake",
+    "locator": "cmake/modules/Hardening.cmake qgc_apply_global_hardening() if(MSVC) 분기",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-05": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 파일 이름 문서는 CON, PRN, AUX, NUL 등 예약 장치명을 파일 이름으로 쓰지 말고 확장자가 붙은 형태도 피하라고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file",
+    "locator": "Naming Files, Paths, and Namespaces, 예약 이름 항목",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 GetFinalPathNameByHandle 문서는 dwFlags의 기본값이 정규화된 드라이브 이름을 반환하는 FILE_NAME_NORMALIZED라고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew",
+    "locator": "GetFinalPathNameByHandleW, dwFlags 표",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-06": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 CryptProtectData 문서는 일반적으로 암호화한 사용자와 같은 로그온 자격 증명을 가진 사용자만 복호화할 수 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+    "locator": "CryptProtectData 함수 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-07": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 GFlags·PageHeap 문서는 전체 페이지 힙 검증이 할당 끝에 접근 불가 페이지를 두어 할당 범위를 넘는 접근 시 프로그램을 즉시 멈추게 하되 널리 쓰면 메모리 부족을 일으킬 수 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags-and-pageheap",
+    "locator": "GFlags and PageHeap 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 Application Verifier 문서는 AppVerifier가 비관리 코드의 미묘한 프로그래밍 오류, 보안 문제, 제한된 사용자 계정 권한 문제를 찾는 데 도움이 된다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/application-verifier",
+    "locator": "Application Verifier - Overview 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-08": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 icacls 문서는 icacls가 지정한 파일의 DACL을 표시하거나 수정한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls",
+    "locator": "icacls 문서 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 Sysinternals AccessChk 문서는 특정 사용자나 그룹이 파일, 디렉터리, 레지스트리 키, 전역 개체, 서비스에 갖는 접근 권한을 확인하는 도구라고 소개한다.",
+    "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk",
+    "locator": "AccessChk Introduction",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WIN-09": [
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 수명주기 문서는 Windows 10이 2025. 10. 14.에 지원 종료되며 기존 LTSC 릴리스는 각자의 수명주기에 따라 그 이후에도 업데이트를 받는다고 밝힌다.",
+    "url": "https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro",
+    "locator": "Windows 10 Home and Pro 수명주기 Important 박스(조회일 2026-10-15)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-01": [
+   {
+    "project": "Yocto Project poky",
+    "claim": "poky 배포 설정 poky.conf는 create-spdx 클래스를 전역으로 상속해 이미지의 SPDX SBOM을 생성한다.",
+    "url": "https://raw.githubusercontent.com/yoctoproject/poky/yocto-5.0.4/meta-poky/conf/distro/poky.conf",
+    "locator": "meta-poky/conf/distro/poky.conf 59행 부근",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project poky",
+    "claim": "Yocto 참조 매뉴얼은 create-spdx 클래스가 이미지와 SDK 내용을 바탕으로 SPDX SBOM 문서를 자동 생성한다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/ref-manual/classes.html",
+    "locator": "ref-manual/classes 5.26 create-spdx",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-02": [
+   {
+    "project": "systemd",
+    "claim": "systemd.exec 매뉴얼에 따르면 NoNewPrivileges=를 참으로 두면 서비스 프로세스와 그 자식은 execve()로 권한을 더 얻을 수 없다. 기본값은 거짓이고, 일부 다른 설정을 쓰면 이 값은 무시된다.",
+    "url": "https://www.freedesktop.org/software/systemd/man/254/systemd.exec.html",
+    "locator": "systemd.exec(5) NoNewPrivileges= (systemd 254)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "systemd",
+    "claim": "systemd.exec 매뉴얼은 ProtectSystem=strict가 /dev, /proc, /sys를 제외한 전체 파일시스템 계층을 읽기 전용으로 마운트한다고 설명한다.",
+    "url": "https://www.freedesktop.org/software/systemd/man/254/systemd.exec.html",
+    "locator": "systemd.exec(5) ProtectSystem= (systemd 254)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-03": [
+   {
+    "project": "U-Boot",
+    "claim": "U-Boot 검증 부팅 문서는 U-Boot를 읽기 전용 메모리에서 읽고, 서명된 커널을 적재한 뒤, 커널의 dm-verity 드라이버로 서명된 루트 파일시스템을 마운트하는 구성을 예로 들 수 있다고 설명한다.",
+    "url": "https://docs.u-boot.org/en/v2024.04/usage/fit/verified-boot.html",
+    "locator": "U-Boot Verified Boot 도입부 (v2024.04 문서)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project poky",
+    "claim": "Yocto 참조 매뉴얼은 debug-tweaks 이미지 기능이 root 로그인과 비밀번호 없는 로그인을 허용하는 개발용 이미지를 만든다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/ref-manual/features.html",
+    "locator": "ref-manual/features IMAGE_FEATURES debug-tweaks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-04": [
+   {
+    "project": "Yocto Project poky",
+    "claim": "poky의 security_flags.inc는 -fstack-protector-strong, -Wl,-z,relro,-z,now, -D_FORTIFY_SOURCE=2, -Wformat-security 계열 옵션을 기본값으로 정의하고 _FORTIFY_SOURCE는 -O1 이상을 요구해 -O0 빌드에서는 끈다.",
+    "url": "https://raw.githubusercontent.com/yoctoproject/poky/yocto-5.0.4/meta/conf/distro/include/security_flags.inc",
+    "locator": "meta/conf/distro/include/security_flags.inc 11~31행",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project poky",
+    "claim": "poky의 security_flags.inc 머리 주석이 밝히는 목표는 레시피별 예외 오버라이드를 점차 없애는 것이다. 현재는 일부 레시피가 이 보안 플래그를 쓰지 못해 예외가 남아 있다.",
+    "url": "https://raw.githubusercontent.com/yoctoproject/poky/yocto-5.0.4/meta/conf/distro/include/security_flags.inc",
+    "locator": "security_flags.inc 1~4행 주석, 40행 pn-glibc 오버라이드",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-05": [
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT ENV33-C는 system()을 execve()로 바꾸는 준수 예시에서 exec 계열 함수가 전체 셸 해석기를 쓰지 않아 명령 주입에 취약하지 않다고 설명한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/environment-env/env33-c",
+    "locator": "ENV33-C 준수 코드 예시 설명",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   },
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT FIO21-C는 mktemp()의 이름 확인과 파일 열기 사이 경쟁조건을 mkstemp(3)가 피한다고 인용한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio21-c",
+    "locator": "FIO21-C 본문(mktemp 설명 인용)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   },
+   {
+    "project": "Linux man-pages",
+    "claim": "mkstemp(3) 문서는 mkstemp가 open(2)의 O_EXCL로 파일을 만들고 플래그 인자가 없으며, mkostemp의 추가 플래그는 O_APPEND·O_CLOEXEC·O_SYNC라고 설명한다.",
+    "url": "https://man7.org/linux/man-pages/man3/mkstemp.3.html",
+    "locator": "mkstemp(3), DESCRIPTION",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "LNX-06": [
+   {
+    "project": "Linux man-pages",
+    "claim": "getrandom(2) 매뉴얼은 getrandom()이 기본적으로 /dev/urandom과 같은 urandom 원천에서 엔트로피를 가져온다고 설명한다.",
+    "url": "https://man7.org/linux/man-pages/man2/getrandom.2.html",
+    "locator": "getrandom(2) DESCRIPTION",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT MSC30-C는 일부 구현의 rand()가 비교적 짧은 주기를 가지며 생성된 숫자가 예측 가능할 수 있다고 설명한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/miscellaneous-msc/msc30-c",
+    "locator": "MSC30-C 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   }
+  ],
+  "LNX-07": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl v5.1.5의 Sanitizers.cmake는 QGC_ENABLE_ASAN, QGC_ENABLE_UBSAN 옵션으로 AddressSanitizer와 UndefinedBehaviorSanitizer 빌드를 켜고 ASan과 TSan은 함께 쓸 수 없다고 안내한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/cmake/modules/Sanitizers.cmake",
+    "locator": "cmake/modules/Sanitizers.cmake 머리 주석 8~22행",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC",
+    "claim": "GCC 매뉴얼은 자원이 제한된 임베디드 같은 freestanding 환경의 타깃에서 계측된 애플리케이션을 실행하고 호스트에서 분석하는 프로파일링·시험 코드 실행률(coverage) 측정 절차를 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Freestanding-Environments.html",
+    "locator": "GCC 13.2 매뉴얼 10.6 Profiling and Test Coverage in Freestanding Environments",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Valgrind",
+    "claim": "Valgrind 지원 플랫폼 문서는 ARM/Linux를 ARMv7부터, ARM64/Linux를 ARMv8에서 지원한다고 적어 쓸 수 있는 타깃 구조가 제한됨을 보여 준다.",
+    "url": "https://valgrind.org/info/platforms.html",
+    "locator": "Supported Platforms",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인. 메모리 부담은 이 문서로 확인하지 못했다",
+    "autolink": false
+   }
+  ],
+  "LNX-08": [
+   {
+    "project": "Linux kernel (Kconfig)",
+    "claim": "Linux v6.6의 STRICT_DEVMEM 설명은 이 옵션이 꺼져 있으면 사용자 공간(root)이 커널 메모리를 포함한 모든 메모리에 접근할 수 있다고 하며 기본값 y는 PPC, X86, ARM64에 한정된다.",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.6/lib/Kconfig.debug",
+    "locator": "lib/Kconfig.debug config STRICT_DEVMEM",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "LNX-09": [
+   {
+    "project": "Yocto Project poky",
+    "claim": "Yocto 개발 매뉴얼은 cve-check가 컴파일되는 소프트웨어 구성요소마다 CVE를 매핑해 Patched, Unpatched, Ignored 상태를 담은 보고서를 만든다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/dev-manual/vulnerabilities.html",
+    "locator": "dev-manual/vulnerabilities 36.2 Vulnerability check at build time",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project poky",
+    "claim": "Yocto 개발 매뉴얼은 create-spdx 클래스로 SBOM을 만든다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/dev-manual/sbom.html",
+    "locator": "개발 매뉴얼 SBOM 절",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project poky",
+    "claim": "Yocto 릴리스 프로세스 문서는 일반 안정 릴리스를 7개월 지원하고 일부 LTS 릴리스는 더 긴 기간 지원한다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/ref-manual/release-process.html",
+    "locator": "ref-manual/release-process 3.4 Long Term Support Releases",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "autolink": false
+   }
+  ],
+  "VXW-01": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL v7.0.1은 VxWorks 커널용 구현(src/os/vxworks)과 별도로 RTP용 구현(src/os/vxworks-rtp)을 두고 파일·파일시스템 구현을 RTP 전용으로 분리한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/os/vxworks-rtp/CMakeLists.txt",
+    "locator": "src/os/vxworks-rtp/CMakeLists.txt",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-03": [
+   {
+    "project": "Wind River VxWorks CVE",
+    "claim": "CVE-2010-2965는 VxWorks 6.x·5.x 이하의 WDB 타깃 에이전트 디버그 서비스가 UDP 포트 17185 요청으로 원격 공격자의 임의 메모리 읽기·쓰기와 함수 호출을 허용한다고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2010-2965",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Wind River VxWorks CVE",
+    "claim": "CVE-2010-2966은 VxWorks 6.x와 5.x의 INCLUDE_SECURITY 기능이 LOGIN_USER_NAME과 LOGIN_USER_PASSWORD로 하드코드된 자격증명을 만들어 telnet, rlogin, FTP 접근을 쉽게 한다고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2010-2966",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-04": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL v7.0.1의 VxWorks 태스크 구현은 태스크 생성 요청의 stack_size를 받아 taskInit()으로 스택을 직접 구성한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/os/vxworks/src/os-impl-tasks.c",
+    "locator": "src/os/vxworks/src/os-impl-tasks.c OS_TaskCreate_Impl 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-05": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL v7.0.1의 VxWorks 뮤텍스 구현은 semMInitialize()에 SEM_Q_PRIORITY | SEM_INVERSION_SAFE 옵션을 지정한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/os/vxworks/src/os-impl-mutex.c",
+    "locator": "src/os/vxworks/src/os-impl-mutex.c OS_MutSemCreate_Impl",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL 소개 문서는 대부분의 API가 ISR에서 호출되면 안 되며 ISR에서 이진 세마포어를 give하는 것 같은 소수의 예외가 있다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/docs/src/osal_frontpage.dox",
+    "locator": "docs/src/osal_frontpage.dox osalIntro",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-06": [
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT MEM01-C는 해제 직후 포인터를 NULL이나 다른 유효 객체로 바꾸면 댕글링 포인터로 인한 이중 해제와 해제 메모리 접근을 막을 수 있다고 설명한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem01-c",
+    "locator": "MEM01-C 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "VxWorks 고유 근거가 아닌 일반 C 규칙이다. | 2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   },
+   {
+    "project": "Wind River VxWorks CVE",
+    "claim": "CVE-2020-35198은 VxWorks 7 메모리 할당기가 calloc()에서 블록 크기를 계산할 때 정수 오버플로가 생겨 요청보다 작은 메모리가 할당된다고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2020-35198",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-08": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL v7.0.1의 VxWorks 힙 정보 구현은 memPartInfoGet()으로 시스템 파티션의 여유 바이트, 여유 블록 수, 가장 큰 여유 블록을 조회한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/os/vxworks/src/os-impl-heap.c",
+    "locator": "src/os/vxworks/src/os-impl-heap.c OS_HeapGetInfo_Impl",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "VXW-09": [
+   {
+    "project": "Wind River VxWorks 보안 공지",
+    "claim": "Wind River의 IPnet(Urgent/11) 공지는 영향받는 버전으로 VxWorks 7(SR540, SR610)과 6.5~6.9를 나열하고 최신 VxWorks 7(SR620)은 영향받지 않는다고 밝힌다.",
+    "url": "https://www.windriver.com/security/announcements/tcp-ip-network-stack-ipnet-urgent11",
+    "locator": "Wind River TCP/IP Network Stack (IPnet, Urgent/11) 공지, CVEs/IMPACTED PRODUCTS",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "Wind River VxWorks CVE",
+    "claim": "CVE-2019-12256은 VxWorks 6.9와 vx7의 IPv4 구성요소에서 IP 옵션 파싱 중 스택 오버플로가 발생하는 IPNET 취약점이라고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2019-12256",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "PSOS-01": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL 소개 문서는 필요한 OS 추상화 계층 구현이 있으면 같은 임베디드 소프트웨어가 우주선 컴퓨터에서 데스크톱 PC까지 여러 플랫폼에서 컴파일·실행되도록 하는 것이 목표라고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/docs/src/osal_frontpage.dox",
+    "locator": "docs/src/osal_frontpage.dox osalIntro",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "OSAL에 pSOS 포트는 없으며 래퍼 계층 설계 패턴의 근거로만 인용한다."
+   }
+  ],
+  "PSOS-03": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel의 MISRA.md는 MISRA C:2012 Dir 4.7 절에서 함수가 반환한 오류 정보의 검사를 다룬다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/MISRA.md",
+    "locator": "MISRA.md Dir 4.7 절",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "pSOS 고유 근거가 아닌 MISRA 규칙 인용이다."
+   }
+  ],
+  "PSOS-04": [
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT MEM01-C는 해제 직후 포인터를 NULL이나 다른 유효 객체로 바꾸면 댕글링 포인터로 인한 이중 해제와 해제 메모리 접근을 막을 수 있다고 설명한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem01-c",
+    "locator": "MEM01-C 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "pSOS 고유 근거가 아닌 일반 C 규칙이다. | 2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   }
+  ],
+  "PSOS-05": [
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL 소개 문서는 대부분의 API가 ISR에서 호출되면 안 되며 ISR에서 이진 세마포어를 give하는 것 같은 소수의 예외가 있다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/docs/src/osal_frontpage.dox",
+    "locator": "docs/src/osal_frontpage.dox osalIntro",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "OSAL 규칙이며 pSOS 서비스콜 허용 목록은 아니다."
+   }
+  ],
+  "PSOS-09": [
+   {
+    "project": "Wind River 연례 보고서(SEC 10-K, 2002. 4. 30. 제출)",
+    "claim": "Wind River의 2002. 4. 30. 제출 10-K(회계연도 2002. 1. 31. 종료)는 임베디드 운영체제 목록에 pSOSystem 제품군을 적었다.",
+    "url": "https://www.sec.gov/Archives/edgar/data/833829/000091205702017396/a2075843z10-k.htm",
+    "locator": "Form 10-K Part I, Item 1. Business(제품 소개)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": "지원 종료 공지가 아니라 제품 목록 변화만 확인한다. SEC가 자동 접속을 HTTP 403으로 막아 내장 브라우저로 원문을 열어 확인(2026. 10. 28.)"
+   },
+   {
+    "project": "Wind River 연례 보고서(SEC 10-K, 2003. 4. 30. 제출)",
+    "claim": "Wind River의 2003. 4. 30. 제출 10-K(회계연도 2003. 1. 31. 종료)는 임베디드 운영체제로 VxWorks를 적고, 본문에 pSOS 언급이 없다.",
+    "url": "https://www.sec.gov/Archives/edgar/data/833829/000120677403000379/d12494.htm",
+    "locator": "Form 10-K Part I, Item 1. Business(제품 소개), 본문 전체 'pSOS' 0건",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": "지원 종료 공지가 아니라 제품 목록 변화만 확인한다. SEC가 자동 접속을 HTTP 403으로 막아 내장 브라우저로 원문을 열어 확인(2026. 10. 28.)"
+   },
+   {
+    "project": "HPCwire 2000. 3. 10.",
+    "claim": "HPCwire는 2000년 봄 Embedded Systems Conference에서 ISI의 pSOS가 앞으로 몇 년에 걸쳐 단계적으로 폐기된다는 방침이 발표되었다고 전했다.",
+    "url": "https://web.archive.org/web/20260104122344id_/https://www.hpcwire.com/2000/03/10/wind-river-drops-isis-psos-operating-system/",
+    "locator": "HPCwire 'Wind River Drops ISI's pSOS Operating System'(원 발행처 페이지의 웹 아카이브 보관본, 2026. 1. 4.)",
+    "tier": 3,
+    "verdict": "VERIFIED",
+    "note": "업계 보도. 원 사이트는 자동 접속을 403으로 막아 원 발행처 페이지의 웹 아카이브 보관본으로 확인(2026. 10. 28.). 이전 근거(위키백과, Tier 4)는 이 레코드로 대체"
+   }
+  ],
+  "FRT-01": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel task.h는 xTaskCreateRestricted()가 MPU 구현을 포함한 시스템에서만 쓰여야 하며 함수 인자가 태스크의 메모리 영역과 접근 권한을 정의한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/task.h",
+    "locator": "include/task.h xTaskCreateRestricted 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS CVE",
+    "claim": "CVE-2021-43997은 FreeRTOS 10.2.0~10.4.5가 비커널 코드의 xPortRaisePrivilege 호출을 막지 못해 MPU 포트에서 권한 상승이 가능했고 V10.5.0과 V10.4.3-LTS Patch 3에서 고쳐졌다고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2021-43997",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel task.h는 xTaskCreateRestrictedStatic()이 configSUPPORT_STATIC_ALLOCATION이 1일 때 쓸 수 있고 동적 메모리 할당 없이 메모리 보호 태스크를 만든다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/task.h",
+    "locator": "include/task.h xTaskCreateRestrictedStatic 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "FRT-02": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel task.h는 xTaskCreateStatic()으로 만들면 응용이 메모리를 제공하므로 동적 메모리 할당 없이 태스크를 만들 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/task.h",
+    "locator": "include/task.h xTaskCreateStatic 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel heap_3.c는 컴파일러의 malloc()과 free() 구현에 의존하며 pvPortMalloc()이 malloc() 호출을 vTaskSuspendAll()과 xTaskResumeAll()로 감싼다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/portable/MemMang/heap_3.c",
+    "locator": "portable/MemMang/heap_3.c pvPortMalloc",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-03": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel stack_macros.h는 configCHECK_FOR_STACK_OVERFLOW가 1보다 크면 스택 끝 몇 바이트도 검사하지만 이 두 번째 검사가 넘친 스택을 항상 인식함을 보장하지는 않는다고 주석한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/stack_macros.h",
+    "locator": "include/stack_macros.h 머리 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel FreeRTOS.h는 configUSE_MALLOC_FAILED_HOOK의 기본값을 0으로 정의한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/FreeRTOS.h",
+    "locator": "include/FreeRTOS.h 86~87행",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-04": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel의 Cortex-M4F 포트(port.c)는 ISR 안전 API를 configMAX_SYSCALL_INTERRUPT_PRIORITY 이하 우선순위로 배정된 인터럽트에서만 호출해야 하며 위반 시 assert가 실패한다고 주석한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/portable/GCC/ARM_CM4F/port.c",
+    "locator": "portable/GCC/ARM_CM4F/port.c vPortValidateInterruptPriority 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-05": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel semphr.h는 xSemaphoreCreateMutex() 뮤텍스가 우선순위 상속을 쓰고 ISR 안에서는 쓸 수 없다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/semphr.h",
+    "locator": "include/semphr.h xSemaphoreCreateMutex 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel semphr.h는 이진 세마포어가 우선순위 상속 메커니즘을 쓰지 않으므로 상속이 필요하면 xSemaphoreCreateMutex()를 보라고 안내한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/semphr.h",
+    "locator": "include/semphr.h xSemaphoreCreateBinary 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-06": [
+   {
+    "project": "FreeRTOS-Plus-TCP",
+    "claim": "FreeRTOS-Plus-TCP V4.4.1의 FreeRTOS_IP.h는 ulApplicationGetNextSequenceNumber()가 RFC에 따른 무작위 TCP 초기 순서번호를 생성하며 응용 개발자가 제공해야 한다고 주석한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Plus-TCP/V4.4.1/source/include/FreeRTOS_IP.h",
+    "locator": "source/include/FreeRTOS_IP.h ulApplicationGetNextSequenceNumber 선언 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Plus-TCP",
+    "claim": "FreeRTOS-Plus-TCP V4.4.1의 FreeRTOSIPConfigDefaults.h는 ipconfigREPLY_TO_INCOMING_PINGS의 기본값을 ipconfigENABLE로 정의한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Plus-TCP/V4.4.1/source/include/FreeRTOSIPConfigDefaults.h",
+    "locator": "source/include/FreeRTOSIPConfigDefaults.h 3073~3074행",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS CVE",
+    "claim": "CVE-2018-16601은 FreeRTOS V10.0.1 이하의 FreeRTOS+TCP에서 조작된 IP 헤더가 prvProcessIPPacket의 전체 메모리 복사를 일으켜 서비스 거부와 원격 코드 실행으로 이어질 수 있다고 기술한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2018-16601",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-07": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel task.h는 uxTaskGetStackHighWaterMark()가 태스크 시작 이후의 최소 여유 스택 공간을 워드 단위로 반환하며 값이 작을수록 오버플로에 가까웠다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/task.h",
+    "locator": "include/task.h uxTaskGetStackHighWaterMark 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel heap_4.c는 xPortGetMinimumEverFreeHeapSize()가 xMinimumEverFreeBytesRemaining 값을 반환하도록 구현한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/portable/MemMang/heap_4.c",
+    "locator": "portable/MemMang/heap_4.c xPortGetMinimumEverFreeHeapSize",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "FRT-08": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel의 Cortex-M4 MPU 포트(port.c)는 MPU를 켜기 전에 메모리 관리 폴트 예외를 활성화한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/portable/GCC/ARM_CM4_MPU/port.c",
+    "locator": "portable/GCC/ARM_CM4_MPU/port.c vPortSetupMPU 부근",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "MemManage 폴트 활성화 코드의 근거일 뿐 비특권 태스크의 접근 위반 시험 수행 자체의 근거는 아니다."
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel의 mpu_wrappers_v2.c는 MPU_vTaskGetInfoImpl에서 호출 태스크가 pxTaskStatus 버퍼에 쓸 권한이 있는지 xPortIsAuthorizedToAccessBuffer()로 확인한 뒤에만 vTaskGetInfo()를 호출한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/portable/Common/mpu_wrappers_v2.c",
+    "locator": "portable/Common/mpu_wrappers_v2.c MPU_vTaskGetInfoImpl",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "한 래퍼(MPU_vTaskGetInfoImpl)의 사례이며 모든 시스템 호출 경로의 포인터 검증을 보증하지 않는다."
+   }
+  ],
+  "FRT-09": [
+   {
+    "project": "FreeRTOS-LTS",
+    "claim": "FreeRTOS-LTS 202604.01 README는 LTS 라이브러리가 FreeRTOS 커널 등에 대한 보안 업데이트와 중요 버그 수정을 두 해 동안 제공하고 연장 유지보수 계획(EMP)으로 추가 10년까지 제공하며 커널 11.3.0과 FreeRTOS-Plus-TCP 4.4.1의 LTS 기한을 2028. 4. 30.으로 적는다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-LTS/202604.01-LTS/README.md",
+    "locator": "FreeRTOS-LTS 202604.01-LTS README.md 도입부와 LTS 표",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-LTS",
+    "claim": "FreeRTOS-LTS 202406.05 README는 202406 LTS의 FreeRTOS 커널 11.1.0과 FreeRTOS-Plus-TCP 4.2.6의 LTS 기한을 2026. 6. 30.으로 적는다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-LTS/202406.05-LTS/README.md",
+    "locator": "FreeRTOS-LTS 202406.05-LTS README.md LTS 표",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "조회일 2026. 10. 15. 기준 이 LTS 기한은 이미 지났다."
+   }
+  ],
+  "BM-01": [
+   {
+    "project": "ARM CMSIS",
+    "claim": "CMSIS_5의 gcc_arm.ld 링커 스크립트는 스택·힙 크기를 심볼로 정의하고 스택 한계가 힙 한계 아래로 내려가면 링크 시 ASSERT로 RAM 초과를 알린다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_5/5.9.0/Device/ARM/ARMCM4/Source/GCC/gcc_arm.ld",
+    "locator": "Device/ARM/ARMCM4/Source/GCC/gcc_arm.ld 46행, 마지막 ASSERT",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc 매뉴얼은 RAM이 매우 작은 AVR 기본 구성에서 함수 중첩이 깊지 않고 지역 변수가 스택을 많이 쓰지 않도록 해 스택-힙 충돌을 피하는 데 각별한 주의가 필요하다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/malloc.html",
+    "locator": "avr-libc user manual, Memory Areas and Using malloc()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BM-02": [
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc FAQ는 ISR에서 갱신한 변수를 메인 루프가 검사하는 예에서 최적화가 접근을 제거하므로 해당 변수를 volatile로 선언해야 한다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/FAQ.html",
+    "locator": "avr-libc FAQ, My program doesn't recognize a variable updated within an interrupt routine",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BM-03": [
+   {
+    "project": "mcu-tools/mcuboot",
+    "claim": "MCUboot v2.1.0의 security_cnt.h는 보안 카운터 값을 새 값이 더 클 때만 갱신하는 인터페이스를 정의하고 정전에도 안전하게 구현하거나 하드웨어 카운터를 쓰라고 요구한다.",
+    "url": "https://raw.githubusercontent.com/mcu-tools/mcuboot/v2.1.0/boot/bootutil/include/bootutil/security_cnt.h",
+    "locator": "boot/bootutil/include/bootutil/security_cnt.h",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "STM32 HAL",
+    "claim": "STM32F4 HAL v1.8.3의 플래시 확장 드라이버는 읽기 보호 레벨을 레벨 0(보호 없음), 레벨 1(메모리 읽기 보호), 레벨 2(전체 칩 보호)로 정의하고 레벨 2에서는 레벨 1이나 0으로 돌아갈 수 없다고 경고한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.3/Src/stm32f4xx_hal_flash_ex.c",
+    "locator": "Src/stm32f4xx_hal_flash_ex.c FLASH_OB_RDP_LevelConfig 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BM-04": [
+   {
+    "project": "ArduinoCore-avr",
+    "claim": "ArduinoCore-avr의 millis()는 timer0_millis를 읽는 동안 인터럽트를 끄고 이전 SREG 값을 복원하며 주석은 쓰기 도중 읽으면 일관되지 않은 값이 나올 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/arduino/ArduinoCore-avr/1.8.6/cores/arduino/wiring.c",
+    "locator": "cores/arduino/wiring.c millis()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc util/atomic.h 문서는 8비트 CPU에서 컴파일러가 16비트 변수를 원자적으로 접근할 수 없어 ISR과 공유하면 값이 어긋날 수 있고 ATOMIC_BLOCK 매크로가 인터럽트 상태를 복원한다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__util__atomic.html",
+    "locator": "avr-libc <util/atomic.h> 문서",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BM-05": [
+   {
+    "project": "SEI CERT C",
+    "claim": "SEI CERT INT32-C는 부호 있는 정수 오버플로가 정의되지 않은 동작이며 특히 오염된 출처에서 온 부호 있는 정수 값에 대한 연산이 중요하다고 설명한다.",
+    "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int32-c",
+    "locator": "INT32-C 도입부",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "ADC·통신 수신값 전용 근거는 아니며 일반 C 규칙이다. | 2026. 11. 1. 현행 공식 사이트 원문으로 재대조·일치"
+   }
+  ],
+  "BM-06": [
+   {
+    "project": "ARM CMSIS",
+    "claim": "CMSIS_5의 startup_ARMCM4.S는 기본 핸들러를 약한 심볼의 무한 루프로 정의하며 실제 핸들러로 덮어쓸 수 있다고 주석한다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_5/5.9.0/Device/ARM/ARMCM4/Source/GCC/startup_ARMCM4.S",
+    "locator": "Device/ARM/ARMCM4/Source/GCC/startup_ARMCM4.S Default_Handler 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc 매뉴얼은 핸들러 없이 인터럽트가 발생하면 기본 동작이 리셋 벡터로 점프해 장치를 리셋하는 것이며 BADISR_vect로 바꿀 수 있다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__avr__interrupts.html",
+    "locator": "avr-libc <avr/interrupt.h> Catch-all interrupt vector",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BM-08": [
+   {
+    "project": "GCC",
+    "claim": "GCC 매뉴얼은 자원이 제한된 임베디드 freestanding 타깃에서 계측된 애플리케이션이 타깃에서 실행되고 분석은 호스트에서 하는 코드 실행률(coverage) 측정 절차를 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Freestanding-Environments.html",
+    "locator": "GCC 13.2 매뉴얼 10.6",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "디버거·ETM 기반 코드 실행률 측정 우선이라는 지침 문구 자체를 직접 뒷받침하지는 않고, 계측 방식이 타깃 자원에 부담이 되는 환경을 문서가 다룬다는 점만 확인한다."
+   }
+  ],
+  "VXW-02": [
+   {
+    "project": "a653rs-linux",
+    "claim": "a653rs-linux 0.2.0 README는 메이저 프레임과 파티션별 주기·실행 시간·오프셋을 구성 파일로 정적으로 정하고, 파티션 간 데이터를 ARINC 653 샘플링 채널로 주고받는 예를 보인다.",
+    "url": "https://raw.githubusercontent.com/DLR-FT/a653rs-linux/0.2.0/README.md",
+    "locator": "README.md L11-35",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 653 고유 자료가 아니다. 공개 원문에서 VxWorks 653 구성 파일을 확인하지 못했다. 큐잉 포트와 헬스 모니터 정책은 이 위치로 뒷받침하지 않는다.",
+    "scope": "부분"
+   }
+  ],
+  "VXW-07": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 코드 실행률 문서는 gcov가 실행 중 RAM에 데이터를 모으므로 사용 가능한 RAM의 제약을 받으며, 작은 장치에서는 복잡한 시험이 코드 실행률 측정을 켠 상태로 비정상 종료할 수 있다고 적는다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/doc/develop/test/coverage.rst",
+    "locator": "doc/develop/test/coverage.rst L25-37",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 계측이 메모리에 주는 영향의 사례다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Rapita Systems",
+    "claim": "Rapita Systems는 임베디드 소프트웨어의 코드 실행률 측정이 계측 코드를 쓰며, 계측판과 비계측판의 실행 시간을 비교한 사례에서 일반 계측이 49% 느렸다고 보고한다.",
+    "url": "https://www.rapitasystems.com/blog/what-are-overheads-code-coverage-using-doom-example",
+    "locator": "What are the overheads of code coverage? 본문",
+    "tier": 3,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 벤더 블로그의 라즈베리 파이 측정값이므로 다른 타깃에 옮겨 쓰지 않는다.",
+    "scope": "부분"
+   }
+  ],
+  "PSOS-02": [
+   {
+    "project": "CISA ICSA-19-211-01",
+    "claim": "CISA 권고 ICSA-19-211-01(VxWorks IPnet)은 제어 장치의 네트워크 노출을 줄이고 인터넷에서 접근할 수 없게 하며 방화벽 뒤에 두고 업무망과 분리하도록 권고한다.",
+    "url": "https://raw.githubusercontent.com/cisagov/CSAF/3c2594d3dfa2ae5e36146f934b5e231ffbdb3d06/csaf_files/OT/white/2019/icsa-19-211-01.json",
+    "locator": "icsa-19-211-01.json L61-66",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 pSOS 고유 자료가 아니다. 구형 TCP/IP 스택 노출 최소화 원칙의 근거다. 응용에서 하는 중복 검증은 이 권고에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "PSOS-06": [
+   {
+    "project": "cppcheck",
+    "claim": "cppcheck 2.22.0 설명서는 임베디드 프로젝트에 흔한 비표준 문법과 컴파일러 확장도 검사 대상으로 삼고 -D로 이름 정의를 알려 주는 방법을 설명하며, 라이브러리 설정 gnu.cfg는 컴파일러 내장 함수를 매크로로 정의한다.",
+    "url": "https://raw.githubusercontent.com/cppcheck-opensource/cppcheck/2.22.0/man/manual.md",
+    "locator": "man/manual.md L14-18, L399-400",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 pSOS 고유 자료가 아니다. 수동 코드 리뷰로 대체하는 절차와 편차 기록은 이 문서에 없다. 내장 함수 매크로 예는 cfg/gnu.cfg L40.",
+    "scope": "부분"
+   }
+  ],
+  "PSOS-07": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 Twister 문서는 시험 묶음을 --device-testing으로 실제 보드에서 자동 실행하는 방법을 설명한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/doc/develop/test/twister.rst",
+    "locator": "doc/develop/test/twister.rst L1212",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 pSOS 고유 자료가 아니다. 실제 타깃 회귀 자동화 사례다. 장시간 부하·메모리 고갈 시험은 이 위치로 뒷받침하지 않는다.",
+    "scope": "부분"
+   }
+  ],
+  "PSOS-08": [
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 5.0.4 문서는 라이선스 준수 절에서 archiver 클래스로 빌드에 쓴 소스를 묶어 내는 방법을 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/dev-manual/licenses.html",
+    "locator": "Maintaining Open Source License Compliance During Your Product's Lifecycle, archiver 설명",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 pSOS 고유 자료가 아니다. 소스 보존 수단의 사례다. 라이선스 만료·인력 퇴직 대비 절차는 이 문서에 없다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Packer",
+    "claim": "Packer checksum 사후 처리기 문서는 빌드 결과물의 체크섬을 계산해 나중에 검증하는 용도를 설명한다.",
+    "url": "https://developer.hashicorp.com/packer/docs/post-processors/checksum",
+    "locator": "checksum post-processor reference 본문",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 pSOS 고유 자료가 아니다. VM 이미지 해시 관리 수단의 사례다.",
+    "scope": "부분"
+   }
+  ],
+  "BM-07": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel V11.1.0은 태스크 생성 때 스택을 고정 값으로 채우고, 그 값이 남아 있는 길이를 세어 스택 여유를 계산한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/tasks.c",
+    "locator": "tasks.c L120, L1824, L6311",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "RTOS 사례지만 스택 페인팅 기법은 베어메탈에도 같다."
+   },
+   {
+    "project": "GCC 매뉴얼",
+    "claim": "GCC 14.2.0 매뉴얼의 -fstack-usage는 함수별 스택 사용량 정보를 출력해 실측과 비교할 정적 자료를 준다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Developer-Options.html",
+    "locator": "Developer Options, -fstack-usage",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 예외 시험은 스택 센티널을 켜고 스택을 일부러 넘치게 해 예상한 치명 오류 처리로 이어지는지 확인한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/tests/kernel/fatal/exception/src/main.c",
+    "locator": "tests/kernel/fatal/exception/src/main.c L228, L243, L275-280",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "스택 침범 시 오류 처리를 시험하는 사례다."
+   }
+  ],
+  "BM-09": [
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 v1.17.0 문서는 센서·시스템 고장을 명령으로 주입하는 기능을 설명한다. 다만 개발 중이어서 고장 종류와 환경에 따라 지원이 다르다고 적는다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/debug/failure_injection.md",
+    "locator": "docs/en/debug/failure_injection.md L3, L9-15",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "인터럽트 폭주, 전원 순단, WCET 실측은 이 문서로 뒷받침하지 않는다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 워치독 시험은 시간 초과 때 리셋이 일어나는지 확인하고, 리셋 뒤에도 남는 변수로 시험 상태를 이어 간다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/tests/drivers/watchdog/wdt_basic_api/src/test_wdt.c",
+    "locator": "tests/drivers/watchdog/wdt_basic_api/src/test_wdt.c L10-16",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "scope": "부분"
+   }
+  ],
+  "BM-10": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0의 west.yml은 HAL 등 외부 모듈마다 revision을 지정해 형상을 고정한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/west.yml",
+    "locator": "west.yml L247-248(hal_stm32 예)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "scope": "부분"
+   },
+   {
+    "project": "stm32f4xx_hal_driver",
+    "claim": "ST HAL v1.8.3 릴리스 노트는 HAL 드라이버에 errata sheet 우회 코드를 반영한 내역을 기록한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.3/Release_Notes.html",
+    "locator": "Release_Notes.html L250",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "맵 파일·타이밍 재검증은 이 문서에 없다.",
+    "scope": "부분"
+   }
+  ]
+ },
+ "stats": {
+  "guides": 55,
+  "with_verified": 55,
+  "verified": 99,
+  "needs_review": 0,
+  "reject": 0,
+  "by_env": {
+   "WIN": {
+    "guides": 9,
+    "with_verified": 9
+   },
+   "LNX": {
+    "guides": 9,
+    "with_verified": 9
+   },
+   "VXW": {
+    "guides": 9,
+    "with_verified": 9
+   },
+   "PSOS": {
+    "guides": 9,
+    "with_verified": 9
+   },
+   "FRT": {
+    "guides": 9,
+    "with_verified": 9
+   },
+   "BM": {
+    "guides": 10,
+    "with_verified": 10
+   }
+  }
+ }
+}

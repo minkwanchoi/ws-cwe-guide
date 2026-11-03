@@ -1,0 +1,108 @@
+{
+ "cwe": "327",
+ "scenario_ko": "임무 계획 파일(경로점 목록)을 암호화해 이동식 매체로 옮긴다. 경로점 기록은 같은 형식이 반복되는 고정 길이 레코드여서, 알고리즘이나 운용 모드가 약하면 키 없이도 내용의 패턴이나 평문이 드러난다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n\n/* 임무 계획의 경로점 레코드(16바이트 고정 길이)를 3DES-ECB로 암호화한다 */\nstatic int encrypt_plan(const unsigned char *key, const unsigned char *in, int n, unsigned char *out)\n{\n    int len = 0, tail = 0, ok = 0;\n    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();\n    if (ctx != NULL && EVP_EncryptInit_ex(ctx, EVP_des_ede3_ecb(), NULL, key, NULL) == 1\n        && EVP_EncryptUpdate(ctx, out, &len, in, n) == 1\n        && EVP_EncryptFinal_ex(ctx, out + len, &tail) == 1) {\n        ok = 1;\n    }\n    EVP_CIPHER_CTX_free(ctx);\n    return ok ? len + tail : -1;\n}\n\nint main(void)\n{\n    unsigned char key[24];   /* 시험용 키: 실제로는 키 관리 체계에서 받는다 */\n    if (RAND_bytes(key, sizeof key) != 1) {\n        return 1;\n    }\n    /* 같은 체공 지시가 두 번 연속된 경로 */\n    const char plan[] = \"WP3 HOLD ALT1500WP3 HOLD ALT1500WP4 RTB         \";\n    unsigned char ct[64];\n    int n = encrypt_plan(key, (const unsigned char *)plan, 48, ct);\n    if (n < 32) {\n        return 1;\n    }\n    /* 관측자는 키 없이도 같은 레코드가 반복됐다는 사실을 암호문에서 읽는다 */\n    puts(memcmp(ct, ct + 16, 16) == 0 ? \"REPEATED CIPHERTEXT BLOCKS\" : \"no repetition visible\");\n    return 0;\n}\n",
+    "explain_ko": "3DES를 ECB 모드로 쓴다. 3DES는 블록 크기가 64비트인 옛 알고리즘이고, ECB는 같은 평문 블록을 같은 암호문 블록으로 만들어 반복된 경로점이 암호문에서 그대로 보인다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n\n/* 승인 알고리즘·인증 암호 모드(AES-256-GCM): 무작위 IV, 태그로 변조 탐지 */\nstatic int encrypt_plan(const unsigned char *key, const unsigned char *in, int n,\n                        unsigned char iv[12], unsigned char tag[16], unsigned char *out)\n{\n    int len = 0, tail = 0, ok = 0;\n    if (RAND_bytes(iv, 12) != 1) {\n        return -1;\n    }\n    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();\n    if (ctx != NULL && EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, key, iv) == 1\n        && EVP_EncryptUpdate(ctx, out, &len, in, n) == 1\n        && EVP_EncryptFinal_ex(ctx, out + len, &tail) == 1\n        && EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag) == 1) {\n        ok = 1;\n    }\n    EVP_CIPHER_CTX_free(ctx);\n    return ok ? len + tail : -1;\n}\n\nint main(void)\n{\n    unsigned char key[32];   /* 시험용 키: 실제로는 키 관리 체계에서 받는다 */\n    if (RAND_bytes(key, sizeof key) != 1) {\n        return 1;\n    }\n    const char plan[] = \"WP3 HOLD ALT1500WP3 HOLD ALT1500WP4 RTB         \";\n    unsigned char iv[12], tag[16], ct[64];\n    int n = encrypt_plan(key, (const unsigned char *)plan, 48, iv, tag, ct);\n    if (n < 32) {\n        return 1;\n    }\n    puts(memcmp(ct, ct + 16, 16) == 0 ? \"REPEATED CIPHERTEXT BLOCKS\" : \"no repetition visible\");\n    return 0;\n}\n",
+    "explain_ko": "승인 알고리즘과 인증 암호 모드(AES-256-GCM)로 바꾸고 호출마다 무작위 IV(논스)를 쓴다. 같은 레코드도 다른 암호문이 되고, 태그로 변조를 탐지한다. 알고리즘은 직접 구현하지 않고 검증된 암호 모듈에서 고른다(D-03·D-05·OSS-04)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "REPEATED CIPHERTEXT BLOCKS",
+    "expect_good": "no repetition visible",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-327 Demonstrative Example 1(DES 사용) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-3 '취약한 암호화 알고리즘의 사용'(인쇄 84쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <openssl/rand.h>\n#include <array>\n#include <cstdio>\n#include <string>\n\n// 자체 고안 '암호': 8바이트 키를 반복해 XOR 한다\nstatic std::string scramble(const std::string &plain, const std::array<unsigned char, 8> &key) {\n    std::string out = plain;\n    for (std::size_t i = 0; i < out.size(); ++i) {\n        out[i] = static_cast<char>(out[i] ^ key[i % key.size()]);\n    }\n    return out;\n}\n\n// 공격자: 파일 머리말이 늘 \"MPLAN-V2\"라는 것만 안다(알려진 평문)\nstatic std::string known_header_attack(const std::string &cipher) {\n    const std::string header = \"MPLAN-V2\";\n    std::array<unsigned char, 8> guess{};\n    for (std::size_t i = 0; i < guess.size() && i < cipher.size(); ++i) {\n        guess[i] = static_cast<unsigned char>(cipher[i] ^ header[i]);\n    }\n    return scramble(cipher, guess);   // 추정한 키로 전체를 되돌린다\n}\n\nint main() {\n    std::array<unsigned char, 8> key{};   // 시험용 키\n    if (RAND_bytes(key.data(), static_cast<int>(key.size())) != 1) return 1;\n    const std::string plan = \"MPLAN-V2;MAINT=EXAMPLE-ONLY-BAY-52;ROUTE=WP1>WP2\";\n    const std::string recovered = known_header_attack(scramble(plan, key));\n    std::puts(recovered.find(\"MAINT=EXAMPLE-ONLY-BAY-52\") != std::string::npos ? \"PLAINTEXT RECOVERED\"\n                                                                               : \"attack failed\");\n    return 0;\n}\n",
+    "explain_ko": "자체 고안한 반복 키 XOR를 '암호'로 쓴다. 파일 머리말처럼 늘 같은 평문 8바이트만 알아도 키가 나오고, 그 키로 임무 계획 전체를 되돌릴 수 있다."
+   },
+   "good": {
+    "code": "#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <array>\n#include <cstdio>\n#include <memory>\n#include <stdexcept>\n#include <string>\n\nusing CtxPtr = std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)>;\n\n// 자체 고안 대신 검증된 라이브러리의 AES-256-GCM을 쓴다(IV 12바이트는 무작위)\nstatic std::string seal(const std::string &plain, const std::array<unsigned char, 32> &key) {\n    std::array<unsigned char, 12> iv{};\n    std::string body(plain.size(), '\\0');\n    std::array<unsigned char, 16> tag{};\n    CtxPtr ctx(EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free);\n    int n = 0;\n    if (RAND_bytes(iv.data(), static_cast<int>(iv.size())) != 1 || !ctx ||\n        EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, key.data(), iv.data()) != 1 ||\n        EVP_EncryptUpdate(ctx.get(), reinterpret_cast<unsigned char *>(body.data()), &n,\n                          reinterpret_cast<const unsigned char *>(plain.data()), static_cast<int>(plain.size())) != 1 ||\n        EVP_EncryptFinal_ex(ctx.get(), reinterpret_cast<unsigned char *>(body.data()) + n, &n) != 1 ||\n        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_GET_TAG, 16, tag.data()) != 1) {\n        throw std::runtime_error(\"encryption failed\");\n    }\n    return std::string(iv.begin(), iv.end()) + body + std::string(tag.begin(), tag.end());\n}\n\n// 같은 공격: 머리말 \"MPLAN-V2\"를 안다고 보고 반복 XOR 키를 추정해 본다\nstatic std::string known_header_attack(const std::string &cipher) {\n    const std::string header = \"MPLAN-V2\";\n    std::string out = cipher.substr(12);   // IV 뒤의 암호문\n    std::array<unsigned char, 8> guess{};\n    for (std::size_t i = 0; i < guess.size() && i < out.size(); ++i) {\n        guess[i] = static_cast<unsigned char>(out[i] ^ header[i]);\n    }\n    for (std::size_t i = 0; i < out.size(); ++i) {\n        out[i] = static_cast<char>(out[i] ^ guess[i % guess.size()]);\n    }\n    return out;\n}\n\nint main() {\n    std::array<unsigned char, 32> key{};   // 시험용 키: 실제로는 키 관리 체계에서 받는다\n    if (RAND_bytes(key.data(), static_cast<int>(key.size())) != 1) return 1;\n    const std::string plan = \"MPLAN-V2;MAINT=EXAMPLE-ONLY-BAY-52;ROUTE=WP1>WP2\";\n    const std::string recovered = known_header_attack(seal(plan, key));\n    std::puts(recovered.find(\"MAINT=EXAMPLE-ONLY-BAY-52\") != std::string::npos ? \"PLAINTEXT RECOVERED\"\n                                                                               : \"attack failed\");\n    return 0;\n}\n",
+    "explain_ko": "자체 알고리즘 대신 검증된 라이브러리의 AES-256-GCM을 쓴다. 같은 알려진 평문 공격을 해도 키나 평문이 나오지 않는다(OSS-04)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT RECOVERED",
+    "expect_good": "attack failed",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-327 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.nio.charset.StandardCharsets;\nimport java.security.GeneralSecurityException;\nimport java.util.Arrays;\nimport javax.crypto.Cipher;\nimport javax.crypto.KeyGenerator;\nimport javax.crypto.SecretKey;\n\npublic class Example {\n    // 변환 문자열에 \"AES\"만 쓰면 제공자 기본값인 ECB 모드가 선택된다\n    static byte[] encryptPlan(SecretKey key, byte[] plan) throws GeneralSecurityException {\n        Cipher c = Cipher.getInstance(\"AES\");\n        c.init(Cipher.ENCRYPT_MODE, key);\n        return c.doFinal(plan);\n    }\n\n    public static void main(String[] args) throws GeneralSecurityException {\n        KeyGenerator kg = KeyGenerator.getInstance(\"AES\");   // 시험용 키\n        kg.init(256);\n        // 16바이트 고정 길이 경로점 레코드, 같은 체공 지시가 두 번 연속된다\n        byte[] plan = \"WP3 HOLD ALT1500WP3 HOLD ALT1500WP4 RTB         \".getBytes(StandardCharsets.US_ASCII);\n        byte[] ct = encryptPlan(kg.generateKey(), plan);\n        // 관측자는 키 없이도 같은 레코드가 반복됐다는 사실을 암호문에서 읽는다\n        boolean repeated = Arrays.equals(ct, 0, 16, ct, 16, 32);\n        System.out.println(repeated ? \"REPEATED CIPHERTEXT BLOCKS\" : \"no repetition visible\");\n    }\n}\n",
+    "explain_ko": "Cipher.getInstance(\"AES\")처럼 모드를 적지 않으면 제공자 기본값인 ECB가 선택된다. 같은 경로점 레코드가 같은 암호문 블록으로 나와 키 없이도 반복 패턴이 보인다."
+   },
+   "good": {
+    "code": "import java.nio.charset.StandardCharsets;\nimport java.security.GeneralSecurityException;\nimport java.security.SecureRandom;\nimport java.util.Arrays;\nimport javax.crypto.Cipher;\nimport javax.crypto.KeyGenerator;\nimport javax.crypto.SecretKey;\nimport javax.crypto.spec.GCMParameterSpec;\n\npublic class Example {\n    static final SecureRandom RNG = new SecureRandom();\n\n    // 알고리즘·모드·패딩을 모두 적는다: AES-GCM, 호출마다 새 IV, 128비트 인증 태그\n    static byte[] encryptPlan(SecretKey key, byte[] iv, byte[] plan) throws GeneralSecurityException {\n        Cipher c = Cipher.getInstance(\"AES/GCM/NoPadding\");\n        c.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(128, iv));\n        return c.doFinal(plan);\n    }\n\n    public static void main(String[] args) throws GeneralSecurityException {\n        KeyGenerator kg = KeyGenerator.getInstance(\"AES\");   // 시험용 키: 실제로는 키 관리 체계에서 받는다\n        kg.init(256);\n        byte[] iv = new byte[12];\n        RNG.nextBytes(iv);\n        byte[] plan = \"WP3 HOLD ALT1500WP3 HOLD ALT1500WP4 RTB         \".getBytes(StandardCharsets.US_ASCII);\n        byte[] ct = encryptPlan(kg.generateKey(), iv, plan);\n        boolean repeated = Arrays.equals(ct, 0, 16, ct, 16, 32);\n        System.out.println(repeated ? \"REPEATED CIPHERTEXT BLOCKS\" : \"no repetition visible\");\n    }\n}\n",
+    "explain_ko": "\"AES/GCM/NoPadding\"으로 모드·패딩을 명시하고 호출마다 SecureRandom으로 새 IV를 만든다. 반복 패턴이 사라지고 128비트 태그로 변조를 탐지한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "REPEATED CIPHERTEXT BLOCKS",
+    "expect_good": "no repetition visible"
+   },
+   "refs": [
+    "MITRE CWE-327 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-4 '취약한 암호화 알고리즘의 사용'(인쇄 128쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Security.Cryptography;\nusing System.Text;\n\nbyte[] plan = Encoding.ASCII.GetBytes(\"WP3 HOLD ALT1500;WP4 RTB\");\n\n// 56비트 키의 DES로 임무 계획을 암호화한다\nusing var cipher = DES.Create();                  // CA5351: 깨진 암호 알고리즘\ncipher.GenerateKey();                             // 시험용 키\nbyte[] sealedPlan = cipher.EncryptCbc(plan, RandomNumberGenerator.GetBytes(8));\nConsole.WriteLine($\"sealed {sealedPlan.Length} bytes\");\n",
+    "explain_ko": "56비트 키의 DES로 임무 계획을 암호화한다. 키 길이가 짧아 무차별 대입으로 풀 수 있으며, .NET 분석기가 CA5351(깨진 암호 알고리즘)로 경고한다."
+   },
+   "good": {
+    "code": "using System.Security.Cryptography;\nusing System.Text;\n\nbyte[] plan = Encoding.ASCII.GetBytes(\"WP3 HOLD ALT1500;WP4 RTB\");\nbyte[] key = RandomNumberGenerator.GetBytes(32);  // 시험용 키: 실제로는 키 관리 체계에서 받는다\n\n// 승인 알고리즘·인증 암호 모드(AES-256-GCM)로 바꾼다\nbyte[] nonce = RandomNumberGenerator.GetBytes(AesGcm.NonceByteSizes.MaxSize);\nbyte[] tag = new byte[AesGcm.TagByteSizes.MaxSize];\nbyte[] sealedPlan = new byte[plan.Length];\nusing (var gcm = new AesGcm(key, tag.Length))\n{\n    gcm.Encrypt(nonce, plan, sealedPlan, tag);\n}\nCryptographicOperations.ZeroMemory(key);\nConsole.WriteLine($\"sealed {sealedPlan.Length} bytes\");\n",
+    "explain_ko": "AesGcm(AES-256-GCM)으로 바꾸고 논스는 RandomNumberGenerator로 만든다. MD5·SHA-1·DES·3DES를 쓰지 않는다(LCS-07)."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA5351"
+   },
+   "refs": [
+    "MITRE CWE-327 Demonstrative Example 1(DES 사용) 참고, 이 가이드가 새로 작성",
+    "Microsoft Learn 코드 분석 규칙 CA5351 'Do Not Use Broken Cryptographic Algorithms' 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes\n\nFILE_KEY = bytes(range(32))           # 예시용 키(실제로는 키 관리 체계에서 받는다)\n\n\n# 임무 계획 파일의 경로점 레코드(16바이트 고정 길이)를 암호화해 이동식 매체로 옮긴다\ndef seal_plan(records):\n    enc = Cipher(algorithms.AES(FILE_KEY), modes.ECB()).encryptor()   # 블록마다 따로 암호화하는 ECB\n    return enc.update(b\"\".join(records)) + enc.finalize()\n\n\nplan = [b\"WP HOLD 0090 FL1\", b\"WP TURN 0270 FL2\", b\"WP HOLD 0090 FL1\"]   # 같은 레코드가 반복된다\nblob = seal_plan(plan)\nblocks = [blob[i:i + 16] for i in range(0, len(blob), 16)]\nprint(\"REPEATED CIPHERTEXT BLOCKS\" if len(set(blocks)) < len(blocks) else \"blocks all distinct\")\n",
+    "explain_ko": "AES를 ECB 모드로 쓴다. ECB는 같은 평문 블록을 늘 같은 암호문 블록으로 바꾸므로, 형식이 반복되는 경로점 레코드는 어느 레코드가 같은지 암호문만 보고도 드러난다. 무결성 보호도 없어 블록을 바꿔 끼워도 알 수 없다. Bandit은 ECB 모드 사용을 B305(안전하지 않은 암호 모드)로 보고한다. DES·3DES·RC4 같은 알고리즘 자체도 쓰지 않는다(Bandit B304, hashlib의 MD5·SHA-1은 B324)."
+   },
+   "good": {
+    "code": "import os\n\nfrom cryptography.hazmat.primitives.ciphers.aead import AESGCM\n\nFILE_KEY = AESGCM.generate_key(bit_length=256)   # 실제로는 키 관리 체계에서 받는다\n\n\ndef seal_plan(records, plan_id):\n    nonce = os.urandom(12)                          # 파일마다 새 논스\n    sealed = AESGCM(FILE_KEY).encrypt(nonce, b\"\".join(records), plan_id)   # AES-256-GCM 인증 암호화\n    return nonce + sealed\n\n\nplan = [b\"WP HOLD 0090 FL1\", b\"WP TURN 0270 FL2\", b\"WP HOLD 0090 FL1\"]\nblob = seal_plan(plan, b\"plan-0412\")[12:-16]       # 논스·인증 태그를 뺀 암호문 부분\nblocks = [blob[i:i + 16] for i in range(0, len(blob), 16)]\nprint(\"REPEATED CIPHERTEXT BLOCKS\" if len(set(blocks)) < len(blocks) else \"blocks all distinct\")\n",
+    "explain_ko": "검증된 인증 암호화(AES-256-GCM, cryptography 패키지의 AESGCM)를 쓰고 파일마다 새 논스를 만든다(D-05, LPY-07). 같은 레코드가 반복되어도 암호문 블록이 달라지고, 바꿔치기는 복호화 때 인증 태그 검사에서 드러난다. 쓸 알고리즘·키 길이는 사업의 암호 정책(검증필 암호 모듈 목록 등)에서 정한다."
+   },
+   "check": {
+    "tool": "bandit",
+    "expect": "B305"
+   },
+   "refs": [
+    "MITRE CWE-327 Demonstrative Example 1(DES 사용) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-4 '취약한 암호화 알고리즘 사용'(인쇄 78쪽) 참고"
+   ]
+  }
+ }
+}

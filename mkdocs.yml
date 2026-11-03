@@ -1,0 +1,142 @@
+# 사이트 설정 — 원고는 source/, 이 설정이 읽는 docs/는 scripts/build.py가 만든다.
+site_name: 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+site_description: 무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드
+# 저장소를 만든 뒤 아래 값을 실제 주소로 바꾼다(README '처음 배포하기' 참고).
+site_url: https://minkwanchoi.github.io/ws-cwe-guide/
+# repo_url을 두면 머리글이 독자 브라우저에서 api.github.com을 호출한다. 저장소 링크는 꼬리말 social로 둔다
+edit_uri: ""
+docs_dir: docs
+copyright: '@BASIS@<br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="@NOTICES@">출처와 이용 조건</a>'
+
+theme:
+  name: material
+  language: ko
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  features:
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.highlight   # search.suggest는 켜지 않는다(9.7.6 이하의 검색 제안 DOM XSS, CVE-2026-73295 — 9.7.7로 올렸지만 쓰지 않는 기능은 끈 채로 둔다)
+    - toc.follow
+    - content.code.copy
+    - content.tooltips   # 링크 제목(표 머리글의 뜻 풀이)을 말풍선으로 보인다
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle: { icon: material/weather-night, name: 어두운 화면 }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle: { icon: material/weather-sunny, name: 밝은 화면 }
+  font:
+    text: IBM Plex Sans KR
+    code: IBM Plex Mono
+
+plugins:
+  - search:
+      separator: '[\s\-·,:!=\[\]()"/]+'
+  # 글꼴 등 외부 자원을 빌드 때 받아 사이트 안에 넣는다(온라인판도 외부 호출 없이 동작, 폐쇄망판의 전제)
+  - privacy:
+      cache_dir: .cache/privacy
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/minkwanchoi/ws-cwe-guide
+      name: GitHub 저장소
+  guide:              # 머리글·꼬리말·단일 문서판의 판 표시(판 번호는 VERSION 파일). 발행 때 status를 비운다
+    status: ""
+    base_date: 2026. 11. 2.
+    cwe: CWE 5.0
+    manual: 매뉴얼 제2024-6호
+  version:
+    provider: mike      # 판별 문서(v1.0, v1.1 …)와 latest·dev 별칭
+    default: latest
+
+extra_css:
+  - assets/extra.css
+extra_javascript:
+  - assets/view-filter.js   # 언어별 규칙 쪽·부록 B 표의 범위·분류 필터(스크립트가 없으면 표 전체가 보인다)
+
+hooks:                      # 외부 원문 링크를 새 창으로(scripts/mkdocs_hooks.py)
+  - scripts/mkdocs_hooks.py
+
+markdown_extensions:
+  - footnotes
+  - tables
+  - attr_list
+  - md_in_html
+  - admonition
+  - def_list
+  - pymdownx.details
+  - pymdownx.highlight:     # 코드 펜스(규칙별 해설의 예시 코드)
+      # Pygments 2.20과 pymdownx 10.11의 조합에서 Pygments 강조가 오류를 내고 superfences가 펜스를 문단으로 흘려보낸다.
+      # 색 입히기를 끄고 <pre><code class="language-…">로 낸다(외부 자원 없음).
+      use_pygments: false
+  - pymdownx.superfences
+  - pymdownx.magiclink:     # 참고문헌의 맨 URL을 링크로
+      hide_protocol: false
+  - toc:
+      permalink: true
+      permalink_title: 이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)
+      toc_depth: 3
+      # 한글 제목도 앵커에 남긴다(기본 slugify는 ASCII만 남겨 '## 문서 정보'가 '_1'이 된다). 절 번호 제목(## 2.5 …)은
+      # linkify.py가 고정 id(sec-2-5)를 달고, 지침·활동·부록 소절은 생성기·원고가 명시 id를 쓰므로 이 설정과 무관하다.
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+
+nav:
+  # nav 이름 규칙(하나): 페이지 H1에서 '부록 X.'의 마침표와 끝의 ' 지침'만 뺀다(홈·검증 기록 제외). 어긋나면 build-report.json links.nav_title_mismatch에 나온다.
+  - 홈: index.md
+  - 요약:
+      - 실무 요약본: brief.md
+      - 가이드 요약: summary.md
+  - 본문:
+      - 제1장 개요: ch1-general.md
+      - 제2장 지침 체계와 선택 절차: ch2-framework.md
+      - 제3장 요구사항 분석 단계: ch3-requirements.md
+      - 제4장 설계 단계: ch4-design.md
+      - 제5장 구현 단계: ch5-implementation.md
+      - 제6장 통합 및 시험 단계: ch6-integration-test.md
+      - 제7장 유지보수 단계: ch7-maintenance.md
+      - 제8장 개발환경별 고려사항: ch8-environments.md
+  - 지침 선택 도구: selection-tool.md
+  - CWE 버전 비교: cwe-versions.md
+  - 규칙별 해설:
+      - cwe/index.md
+      - 보안약점 점검 목록 규칙(44개): cwe/view-checklist.md
+      - C 규칙(CWE-658 뷰): cwe/view-c.md
+      - C++ 규칙(CWE-659 뷰): cwe/view-cpp.md
+      - Java 규칙(CWE-660 뷰): cwe/view-java.md
+      - C# 규칙(CWE 뷰 없음): cwe/view-cs.md
+      - Python 규칙(CWE 뷰 없음): cwe/view-py.md
+  - 부록:
+      - appendix/index.md
+      - 부록 A 보안약점 점검 목록(44개) 조견표: appendix/a-weakness-list.md
+      - 부록 B 언어 뷰 보안약점 153개와 적용성: appendix/b-language-views.md
+      - 부록 C 개발환경별 지침 245건: appendix/c-environment-guides.md
+      - 부록 D C#·Python 보안 규칙 대응표: appendix/d-security-rules.md
+      - 부록 E 참조 오픈소스 프로젝트와 근거 목록: appendix/e-oss-evidence.md
+      - 부록 F 용어 대조표: appendix/f-glossary.md
+      - 부록 G 선택 워크시트와 점검표: appendix/g-worksheets.md
+  - 내려받기: downloads.md
+  - 문서 정보:
+      - about.md
+      - 변경 이력: changelog.md
+      - 참고문헌: references.md
+      - 출처와 이용 조건: notices.md
+      - 검증 방법: evidence/index.md
+
+# 규칙별 해설 201쪽은 색인(cwe/index.md)에서 들어간다(사이드바에는 색인만)
+not_in_nav: |
+  /cwe/[0-9]*.md
+
+validation:
+  nav:
+    omitted_files: warn
+  links:
+    not_found: warn
+    anchors: warn

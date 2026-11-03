@@ -1,0 +1,45 @@
+{
+ "cwe": "467",
+ "scenario_ko": "정비 단말에서 받은 온도 보정 계수를 센서 설정 표에 복사한다(C). 원격측정(텔레메트리) 송신 프레임을 다음 주기 전에 0으로 비운다(C++). 두 경우 모두 크기를 sizeof로 구한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n\n#define COEF_COUNT 16\n\ntypedef struct {\n    uint16_t sensor_id;\n    int16_t coef[COEF_COUNT];      /* 온도 보정 계수 */\n} CalTable;\n\n/* 정비 단말에서 받은 보정 계수를 센서 설정 표에 적용한다 */\nstatic void apply_cal(CalTable *t, const int16_t *coef)\n{\n    memcpy(t->coef, coef, sizeof(coef));   /* 배열 크기가 아니라 포인터 크기만큼만 복사 */\n}\n\nint main(void)\n{\n    int16_t received[COEF_COUNT];\n    for (int i = 0; i < COEF_COUNT; ++i) {\n        received[i] = (int16_t)(100 + i);\n    }\n    CalTable t = {7, {0}};\n    apply_cal(&t, received);\n    printf(\"coef[15]=%d (expected 115)\\n\", t.coef[15]);\n    return 0;\n}\n",
+    "explain_ko": "함수 인자 coef는 배열이 아니라 포인터이므로 sizeof(coef)는 포인터 크기(64비트 호스트에서 8바이트)다. 계수 16개 중 앞의 4개만 복사되고 나머지는 0으로 남아 센서 값이 틀어진다. 타깃이 32비트면 복사량이 또 달라진다."
+   },
+   "good": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n\n#define COEF_COUNT 16\n\ntypedef struct {\n    uint16_t sensor_id;\n    int16_t coef[COEF_COUNT];      /* 온도 보정 계수 */\n} CalTable;\n\n/* 정비 단말에서 받은 보정 계수를 센서 설정 표에 적용한다. 성공 0, 개수 불일치 -1 */\nstatic int apply_cal(CalTable *t, const int16_t *coef, size_t count)\n{\n    if (count != COEF_COUNT) {\n        return -1;                          /* 개수는 호출자가 따로 알려 준다 */\n    }\n    memcpy(t->coef, coef, sizeof t->coef); /* 크기는 대상 배열에서 잰다 */\n    return 0;\n}\n\nint main(void)\n{\n    int16_t received[COEF_COUNT];\n    for (int i = 0; i < COEF_COUNT; ++i) {\n        received[i] = (int16_t)(100 + i);\n    }\n    CalTable t = {7, {0}};\n    if (apply_cal(&t, received, sizeof received / sizeof received[0]) != 0) {\n        puts(\"calibration rejected\");\n        return 1;\n    }\n    printf(\"coef[15]=%d (expected 115)\\n\", t.coef[15]);\n    return 0;\n}\n",
+    "explain_ko": "복사 크기는 대상 배열(sizeof t->coef)에서 재고, 원본 개수는 인자로 따로 받아 맞지 않으면 거부한다. 이런 실수는 컴파일러 경고로 잡을 수 있으므로 경고 0건을 빌드 통과 조건으로 둔다(LC-08)."
+   },
+   "check": {
+    "tool": "cc-warn",
+    "expect": "-Wsizeof-pointer-memaccess"
+   },
+   "refs": [
+    "MITRE CWE-467 Demonstrative Example 1·2(포인터에 sizeof를 적용해 할당·비교 크기를 계산) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdint>\n#include <cstdio>\n#include <cstring>\n\n// 원격측정(텔레메트리) 송신 프레임\nstruct TelemetryFrame {\n    std::uint16_t sync;\n    std::uint8_t body[60];\n    std::uint16_t crc;\n};\n\nclass Downlink {\npublic:\n    // 다음 주기 송신 전에 프레임을 비운다\n    void reset(TelemetryFrame *frame) {\n        std::memset(frame, 0, sizeof(frame));   // 구조체가 아니라 포인터 크기만큼만 지운다\n    }\n};\n\nint main() {\n    TelemetryFrame f{};\n    f.crc = 0xBEEF;                             // 이전 주기의 값\n    Downlink link;\n    link.reset(&f);\n    std::printf(\"crc after reset 0x%04X\\n\", static_cast<unsigned>(f.crc));\n    return 0;\n}\n",
+    "explain_ko": "frame은 구조체 포인터이므로 sizeof(frame)은 포인터 크기다. memset이 앞의 몇 바이트만 지우고 crc 등 뒤쪽 필드에는 이전 주기의 값이 남아 그대로 송신된다."
+   },
+   "good": {
+    "code": "#include <cstdint>\n#include <cstdio>\n\n// 원격측정(텔레메트리) 송신 프레임\nstruct TelemetryFrame {\n    std::uint16_t sync;\n    std::uint8_t body[60];\n    std::uint16_t crc;\n};\n\nclass Downlink {\npublic:\n    // 다음 주기 송신 전에 프레임을 비운다\n    void reset(TelemetryFrame &frame) {\n        frame = TelemetryFrame{};   // 값 초기화로 모든 멤버를 0으로: 크기 계산이 필요 없다\n    }\n};\n\nint main() {\n    TelemetryFrame f{};\n    f.crc = 0xBEEF;                 // 이전 주기의 값\n    Downlink link;\n    link.reset(f);\n    std::printf(\"crc after reset 0x%04X\\n\", static_cast<unsigned>(f.crc));\n    return 0;\n}\n",
+    "explain_ko": "포인터 대신 참조로 받고 값 초기화(frame = TelemetryFrame{})로 모든 멤버를 비운다. 크기 계산 자체가 없어져 같은 실수가 생길 여지가 없다."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "bugprone-sizeof-expression"
+   },
+   "refs": [
+    "MITRE CWE-467 Demonstrative Example 1(구조체 대신 구조체 포인터에 sizeof를 적용) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ },
+ "not_applicable": {
+  "Java": "Java에는 sizeof 연산자와 포인터가 없고 배열 크기는 length로 얻으므로 이 약점이 생기지 않는다. JNI로 부르는 네이티브 코드에는 C 예시를 적용한다(LJ-08).",
+  "C#": "C#의 관리 코드는 배열 Length를 쓰고 포인터 형식은 unsafe 코드에서만 쓸 수 있다. unsafe 코드의 sizeof와 P/Invoke 구조체 크기 계산(Marshal.SizeOf)에서는 포인터와 구조체를 혼동할 수 있으므로 그 범위에는 C 예시와 C 지침을 적용한다(LCS-02).",
+  "Python": "Python에는 sizeof 연산자와 포인터가 없고 크기는 len()으로 얻으므로 이 약점이 생기지 않는다. ctypes에서 ctypes.sizeof(POINTER(…))처럼 포인터 형의 크기를 구조체 크기로 잘못 쓰는 경우는 같은 문제가 생기므로 그 범위에는 C 예시와 C 지침을 적용한다."
+ }
+}

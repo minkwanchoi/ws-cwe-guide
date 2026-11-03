@@ -1,0 +1,1455 @@
+{
+ "meta": {
+  "title": "Microsoft .NET 보안 규칙(Security 범주 CA 규칙)과 CWE·이 가이드 지침 대응",
+  "source": "Microsoft Learn 「Security rules (code analysis)」와 규칙별 문서(원천 dotnet/docs 커밋 c1cd7d1ce319fa12d17e8d0fb6bb31c0def08a19, 2026-10-17), 조회 2026-10-18",
+  "list_url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/security-warnings",
+  "count": 94,
+  "cwe_note": "규칙 문서에는 CWE 번호가 없다. CWE 대응은 이 가이드가 MITRE CWE 정의와 대조한 판단이고, BinaryFormatter 보안 가이드가 CWE-502를 연결하는 7개(CA2300·2301·2302·2305·2310·2311·2312)만 'MS 문서 명시'다. cwe 목록의 첫 항목이 주 대응이다.",
+  "applicability_note": "무기체계 C# 소프트웨어(데스크톱·서비스) 기준 판정. 웹 UI(ASP.NET)를 두는 과제는 웹 전용 비해당 규칙이 해당으로 바뀐다.",
+  "mode_note": ".NET SDK 10.0.402에 든 분석 모드 구성(analysislevelsecurity_10_*.globalconfig) 기준. Default·Minimum 0개, Recommended 24개, All 94개. 'Recommended'는 Recommended 모드에서 켜지는 규칙, 'All'은 All 모드에서만 켜지는 규칙이다.",
+  "not_listed": "CA3005(LDAP 삽입)는 규칙 문서(Security 범주)는 있으나 Learn 보안 규칙 목록 표에 없어 싣지 않았다. SDK 10.0.402 All 구성에는 있다.",
+  "experiment": ".NET SDK 10.0.402, net10.0, AnalysisMode=All 빌드 실험(2026-10-18): CA3003·CA3006은 콘솔 입력을 쓰는 이 가이드의 C# CWE-22·78 나쁜 예에서 경고 0건, CA3075는 DtdProcessing.Parse·XmlTextReader 시험 코드에서 0건, CA5385는 RSA.Create(1024)를 경고하지 않음. CA5369·CA5389·CA5359·CA5397·CA5350·CA5358·CA5387·CA2100은 경고함. net48 대상 빌드 실험(2026-10-28, 참조 어셈블리 Microsoft.NETFramework.ReferenceAssemblies.net48 1.0.3, AnalysisLevel=latest-all): CA3075는 같은 DTD 처리 시험 코드와 XmlDocument.Load·InnerXml·XmlSerializer.Deserialize(Stream)·XPathDocument 생성자를, CA3077은 XmlDocument·XmlTextReader 파생 클래스를 경고함. 같은 코드를 net10.0으로 빌드하면 규칙 심각도를 직접 켜도 CA3075·CA3077 경고 0건. net48에서 AnalysisMode=All만 두면 어떤 분석 규칙도 경고하지 않음.",
+  "groups": [
+   "삽입(입력 추적)",
+   "역직렬화",
+   "XML",
+   "암호·키 유도·난수",
+   "인증서·TLS",
+   "기타"
+  ]
+ },
+ "rules": [
+  {
+   "id": "CA2100",
+   "title": "Review SQL queries for security vulnerabilities",
+   "ko": "상수가 아닌 문자열로 SQL 명령문(CommandText)을 만드는 것",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2100",
+   "cwe": [
+    "89"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "SQL 명령문에 입력이 섞이는 결함 = CWE-89 정의",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "지상 소프트웨어가 로컬 DB(정비 이력·임무 기록)를 SQL로 다룰 때 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2109",
+   "title": "Review visible event handlers",
+   "ko": "공개 이벤트 처리기 노출(폐기 규칙)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2109",
+   "cwe": [
+    "749"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "위험 메서드 노출(CWE-749)에 가장 가까움",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "규칙 폐기: .NET 7 SDK·NetAnalyzers 7.0.0까지만 배포",
+   "mode": "All"
+  },
+  {
+   "id": "CA2119",
+   "title": "Seal methods that satisfy private interfaces",
+   "ko": "내부 인터페이스를 구현한 메서드를 어셈블리 밖에서 재정의하는 것",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2119",
+   "cwe": [
+    "749"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "대응 CWE 약함. 외부 재정의로 내부 계약 우회 → CWE-749 근사",
+   "group": "기타",
+   "applicability": "조건부",
+   "applicability_note": "공개 라이브러리(플러그인 API)를 만들 때만",
+   "mode": "All"
+  },
+  {
+   "id": "CA2153",
+   "title": "Avoid Handling Corrupted State Exceptions",
+   "ko": "손상 상태 예외(CSE: 접근 위반 등)를 잡아 계속 실행하는 것",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2153",
+   "cwe": [
+    "396",
+    "755"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "일반 예외 catch(CWE-396), 예외 조건 처리 부적절(CWE-755)",
+   "group": "기타",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework 레거시 코드(HandleProcessCorruptedStateExceptions)에 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2300",
+   "title": "Do not use insecure deserializer BinaryFormatter",
+   "ko": "BinaryFormatter 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2300",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "BinaryFormatter 보안 가이드가 CWE-502를 연결(규칙 문서 자체에는 CWE 없음)",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": ".NET Framework 기반 지상 장비 레거시에 남아 있을 수 있음(.NET 9+는 내장 구현 제거)",
+   "mode": "All"
+  },
+  {
+   "id": "CA2301",
+   "title": "Do not call BinaryFormatter.Deserialize without first setting BinaryFormatter.Binder",
+   "ko": "Binder 없이 BinaryFormatter.Deserialize 호출",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2301",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드(CWE-502 연결)로 안내",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": ".NET Framework 기반 지상 장비 레거시에 남아 있을 수 있음(.NET 9+는 내장 구현 제거)",
+   "mode": "All"
+  },
+  {
+   "id": "CA2302",
+   "title": "Ensure BinaryFormatter.Binder is set before calling BinaryFormatter.Deserialize",
+   "ko": "BinaryFormatter.Binder가 null일 수 있는 상태로 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2302",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드(CWE-502 연결)로 안내",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": ".NET Framework 기반 지상 장비 레거시에 남아 있을 수 있음(.NET 9+는 내장 구현 제거)",
+   "mode": "All"
+  },
+  {
+   "id": "CA2305",
+   "title": "Do not use insecure deserializer LosFormatter",
+   "ko": "LosFormatter 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2305",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드로 안내",
+   "group": "역직렬화",
+   "applicability": "비해당",
+   "applicability_note": "ASP.NET Web Forms(System.Web.UI) 전용 형식",
+   "mode": "All"
+  },
+  {
+   "id": "CA2310",
+   "title": "Do not use insecure deserializer NetDataContractSerializer",
+   "ko": "NetDataContractSerializer 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2310",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드로 안내",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework WCF 레거시 서비스에 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2311",
+   "title": "Do not deserialize without first setting NetDataContractSerializer.Binder",
+   "ko": "Binder 없이 NetDataContractSerializer 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2311",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드로 안내",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework WCF 레거시 서비스에 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2312",
+   "title": "Ensure NetDataContractSerializer.Binder is set before deserializing",
+   "ko": "Binder가 null일 수 있는 NetDataContractSerializer 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2312",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "MS 문서 명시",
+   "cwe_note": "규칙 문서가 BinaryFormatter 보안 가이드로 안내",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework WCF 레거시 서비스에 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2315",
+   "title": "Do not use insecure deserializer ObjectStateFormatter",
+   "ko": "ObjectStateFormatter 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2315",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "BinaryFormatter 보안 가이드가 같은 위험 형식으로 듦(규칙 문서에서 보안 가이드 링크는 확인하지 못함)",
+   "group": "역직렬화",
+   "applicability": "비해당",
+   "applicability_note": "ASP.NET Web Forms 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA2321",
+   "title": "Do not deserialize with JavaScriptSerializer using a SimpleTypeResolver",
+   "ko": "SimpleTypeResolver를 쓴 JavaScriptSerializer 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2321",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 해석 역직렬화 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": "System.Web.Extensions(.NET Framework) 사용 시",
+   "mode": "All"
+  },
+  {
+   "id": "CA2322",
+   "title": "Ensure JavaScriptSerializer is not initialized with SimpleTypeResolver before deserializing",
+   "ko": "SimpleTypeResolver로 초기화됐을 수 있는 JavaScriptSerializer",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2322",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 해석 역직렬화 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": "System.Web.Extensions(.NET Framework) 사용 시",
+   "mode": "All"
+  },
+  {
+   "id": "CA2326",
+   "title": "Do not use TypeNameHandling values other than None",
+   "ko": "Newtonsoft.Json TypeNameHandling을 None 외 값으로 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2326",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 자동 해석 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Json.NET은 데스크톱·서비스에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2327",
+   "title": "Do not use insecure JsonSerializerSettings",
+   "ko": "안전하지 않은 JsonSerializerSettings",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2327",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 자동 해석 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Json.NET은 데스크톱·서비스에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2328",
+   "title": "Ensure that JsonSerializerSettings are secure",
+   "ko": "JsonSerializerSettings가 안전한지 확인",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2328",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 자동 해석 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Json.NET은 데스크톱·서비스에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2329",
+   "title": "Do not deserialize with JsonSerializer using an insecure configuration",
+   "ko": "안전하지 않은 설정의 JsonSerializer로 역직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2329",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 자동 해석 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Json.NET은 데스크톱·서비스에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2330",
+   "title": "Ensure that JsonSerializer has a secure configuration when deserializing",
+   "ko": "역직렬화 때 JsonSerializer 설정이 안전한지 확인",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2330",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "형식 이름 자동 해석 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Json.NET은 데스크톱·서비스에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2350",
+   "title": "Ensure DataTable.ReadXml()'s input is trusted",
+   "ko": "신뢰할 수 없는 입력으로 DataTable.ReadXml",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2350",
+   "cwe": [
+    "502",
+    "400"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "규칙 설명: 서비스 거부·원격 코드 실행 가능 → CWE-502(주), CWE-400",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2351",
+   "title": "Ensure DataSet.ReadXml()'s input is trusted",
+   "ko": "신뢰할 수 없는 입력으로 DataSet.ReadXml",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2351",
+   "cwe": [
+    "502",
+    "400"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "규칙 설명: 서비스 거부·원격 코드 실행 가능 → CWE-502(주), CWE-400",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2352",
+   "title": "Unsafe DataSet or DataTable in serializable type can be vulnerable to remote code execution attacks",
+   "ko": "직렬화 가능 형식 안의 DataSet·DataTable(원격 코드 실행 위험)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2352",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2353",
+   "title": "Unsafe DataSet or DataTable in serializable type",
+   "ko": "XML·DataContract 직렬화 형식 안의 DataSet·DataTable",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2353",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2354",
+   "title": "Unsafe DataSet or DataTable in deserialized object graph can be vulnerable to remote code execution attack",
+   "ko": "역직렬화 객체 그래프에 DataSet·DataTable 포함(IFormatter)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2354",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2355",
+   "title": "Unsafe DataSet or DataTable in deserialized object graph",
+   "ko": "역직렬화 객체 그래프에 DataSet·DataTable 포함",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2355",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "DataSet·DataTable은 데스크톱 정비·기록 도구에서 흔함",
+   "mode": "All"
+  },
+  {
+   "id": "CA2356",
+   "title": "Unsafe DataSet or DataTable in web deserialized object graph",
+   "ko": "웹 메서드(WebMethod·OperationContract) 매개변수의 DataSet·DataTable",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2356",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": "WCF(OperationContract) 서비스를 둔 지상 장비에 해당, ASMX 웹서비스는 비해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA2361",
+   "title": "Ensure autogenerated class containing DataSet.ReadXml() is not used with untrusted data",
+   "ko": "자동 생성 DataSet 클래스의 ReadXml에 신뢰할 수 없는 데이터",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2361",
+   "cwe": [
+    "502",
+    "400"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "규칙 설명: 서비스 거부·원격 코드 실행 가능 → CWE-502(주), CWE-400",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Visual Studio 형식화 DataSet을 쓰는 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA2362",
+   "title": "Unsafe DataSet or DataTable in autogenerated serializable type can be vulnerable to remote code execution attacks",
+   "ko": "자동 생성 직렬화 형식의 DataSet·DataTable",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2362",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 객체 그래프 위험 = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "Visual Studio 형식화 DataSet을 쓰는 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA3001",
+   "title": "Review code for SQL injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 SQL 명령문에 도달(SQL 삽입)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3001",
+   "cwe": [
+    "89"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-89 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "오염 원천이 HTTP 요청 입력이라 데스크톱·서비스(콘솔·파일·소켓 입력)는 경고하지 않음(실험 확인)",
+   "mode": "All"
+  },
+  {
+   "id": "CA3002",
+   "title": "Review code for XSS vulnerabilities",
+   "ko": "HTTP 요청 입력이 HTML 출력에 도달(XSS)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3002",
+   "cwe": [
+    "79"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-79 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "비해당",
+   "applicability_note": "웹 화면 없음",
+   "mode": "All"
+  },
+  {
+   "id": "CA3003",
+   "title": "Review code for file path injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 파일 경로에 도달(경로 조작)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3003",
+   "cwe": [
+    "22"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-22 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "HTTP 한정 → 이 가이드의 C# CWE-22 나쁜 예(콘솔 입력)를 AnalysisMode=All로 빌드해도 경고 없음",
+   "mode": "All"
+  },
+  {
+   "id": "CA3004",
+   "title": "Review code for information disclosure vulnerabilities",
+   "ko": "예외 메시지·스택 추적이 웹 출력에 도달(정보 노출)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3004",
+   "cwe": [
+    "209"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-209 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "비해당",
+   "applicability_note": "웹 출력 한정. 원칙은 LCS-08이 다룸",
+   "mode": "All"
+  },
+  {
+   "id": "CA3006",
+   "title": "Review code for process command injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 프로세스 명령에 도달(명령 삽입)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3006",
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-78 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "HTTP 한정 → 이 가이드의 C# CWE-78 나쁜 예·콘솔 입력 시험에서 경고 없음",
+   "mode": "All"
+  },
+  {
+   "id": "CA3007",
+   "title": "Review code for open redirect vulnerabilities",
+   "ko": "HTTP 요청 입력이 리디렉션에 도달(열린 리디렉션)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3007",
+   "cwe": [
+    "601"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-601 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA3008",
+   "title": "Review code for XPath injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 XPath 질의에 도달",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3008",
+   "cwe": [
+    "643"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-643 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "HTTP 한정. 설정 XML을 XPath로 조회하는 도구라면 원칙은 해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA3009",
+   "title": "Review code for XML injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 XML 출력에 도달(XML 삽입)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3009",
+   "cwe": [
+    "91"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-91 정의 그대로",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "HTTP 한정",
+   "mode": "All"
+  },
+  {
+   "id": "CA3010",
+   "title": "Review code for XAML injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 XamlReader.Load에 도달(XAML 삽입)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3010",
+   "cwe": [
+    "502",
+    "94"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "XAML 로드는 임의 객체 생성 → CWE-502(주), 코드 삽입 CWE-94",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "WPF 지상 통제 화면이 외부 XAML을 읽을 때 원칙 해당, 규칙은 HTTP 한정",
+   "mode": "All"
+  },
+  {
+   "id": "CA3011",
+   "title": "Review code for DLL injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 어셈블리 로드에 도달(DLL 삽입)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3011",
+   "cwe": [
+    "114",
+    "470"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "신뢰할 수 없는 출처의 라이브러리 로드(CWE-114 Process Control), 외부 입력으로 코드 선택(CWE-470)",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "플러그인·확장 모듈을 경로로 받는 임무 계획 도구에 원칙 해당, 규칙은 HTTP 한정",
+   "mode": "All"
+  },
+  {
+   "id": "CA3012",
+   "title": "Review code for regex injection vulnerabilities",
+   "ko": "HTTP 요청 입력이 정규식에 도달(정규식 삽입·ReDoS)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3012",
+   "cwe": [
+    "1333",
+    "400"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "비효율 정규식 복잡도(CWE-1333), 자원 소모(CWE-400)",
+   "group": "삽입(입력 추적)",
+   "applicability": "조건부",
+   "applicability_note": "HTTP 한정",
+   "mode": "All"
+  },
+  {
+   "id": "CA3061",
+   "title": "Do not add schema by URL",
+   "ko": "URL로 XML 스키마 추가(외부 참조)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3061",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "외부 엔터티·스키마 참조 = CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "ICD·설정 XML 스키마를 다루는 도구",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA3075",
+   "title": "Insecure DTD Processing",
+   "ko": "안전하지 않은 DTD 처리(외부 엔터티)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3075",
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "XXE(CWE-611), 엔터티 확장(CWE-776)",
+   "group": "XML",
+   "applicability": "조건부",
+   "applicability_note": "분석기가 .NET Framework 대상에서만 동작(소스 확인, 실험: net48 경고·net10.0 0건). .NET(Core 이후) 대상은 도구 미지원 → 대안 필요",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA3076",
+   "title": "Insecure XSLT Script Execution",
+   "ko": "안전하지 않은 XSLT 스크립트 실행",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3076",
+   "cwe": [
+    "94",
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "XSLT 스크립트 = 코드 실행(CWE-94), 외부 URI 해석(CWE-611)",
+   "group": "XML",
+   "applicability": "조건부",
+   "applicability_note": "보고서 변환에 XSLT를 쓰는 도구",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA3077",
+   "title": "Insecure Processing in API Design, XML Document and XML Text Reader",
+   "ko": "XmlDocument·XmlTextReader 파생 API의 안전하지 않은 DTD 처리",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3077",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-611",
+   "group": "XML",
+   "applicability": "조건부",
+   "applicability_note": "CA3075와 같이 .NET Framework 대상에서만 동작(소스 확인, 실험: net48에서 파생 클래스 경고)",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA3147",
+   "title": "Mark verb handlers with ValidateAntiForgeryToken",
+   "ko": "ASP.NET MVC 동사 처리기의 위조 방지 토큰",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca3147",
+   "cwe": [
+    "352"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CSRF = CWE-352",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5350",
+   "title": "Do Not Use Weak Cryptographic Algorithms",
+   "ko": "약한 암호(TripleDES·SHA1·RIPEMD160)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5350",
+   "cwe": [
+    "327",
+    "328"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "위험한 암호 알고리즘(CWE-327), 약한 해시(CWE-328)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "링크 보호·무결성 값",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5351",
+   "title": "Do Not Use Broken Cryptographic Algorithms",
+   "ko": "깨진 암호(MD5·DES·RC2)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5351",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-327",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "링크 보호·무결성 값",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5358",
+   "title": "Do Not Use Unsafe Cipher Modes",
+   "ko": "안전하지 않은 암호 운용 모드(ECB·OFB·CFB)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5358",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-327(운용 모드 포함)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "링크 보호·무결성 값",
+   "mode": "All"
+  },
+  {
+   "id": "CA5359",
+   "title": "Do not disable certificate validation",
+   "ko": "인증서 검증 비활성화(항상 true 콜백)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5359",
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-295 정의 그대로",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "지상국·정비 서버와 TLS 통신",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5360",
+   "title": "Do not call dangerous methods in deserialization",
+   "ko": "역직렬화 콜백에서 위험 메서드 호출",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5360",
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "역직렬화 중 부작용(가젯) = CWE-502",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "직렬화 형식을 직접 구현한 경우",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5361",
+   "title": "Do not disable SChannel use of strong crypto",
+   "ko": "SChannel 강한 암호 사용 끄기(AppContext 스위치)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5361",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "약한 TLS 암호 = CWE-327",
+   "group": "인증서·TLS",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework 대상",
+   "mode": "All"
+  },
+  {
+   "id": "CA5362",
+   "title": "Potential reference cycle in deserialized object graph",
+   "ko": "역직렬화 객체 그래프의 참조 순환",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5362",
+   "cwe": [
+    "835",
+    "400"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "규칙 설명: 순환을 처리하지 못해 무한 반복 → CWE-835, CWE-400",
+   "group": "역직렬화",
+   "applicability": "해당",
+   "applicability_note": "직렬화 그래프를 다루는 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA5363",
+   "title": "Do not disable request validation",
+   "ko": "요청 유효성 검사 끄기",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5363",
+   "cwe": [
+    "20",
+    "79"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "입력 검증(CWE-20)",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "ASP.NET 전용",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5364",
+   "title": "Do not use deprecated security protocols",
+   "ko": "폐기된 보안 프로토콜(SecurityProtocolType)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5364",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "폐기된 TLS 판 = CWE-327",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신 도구",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5365",
+   "title": "Do Not Disable HTTP Header Checking",
+   "ko": "HTTP 헤더 검사 끄기",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5365",
+   "cwe": [
+    "113"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "HTTP 응답 분할(CWE-113)",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "ASP.NET 전용",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5366",
+   "title": "Use XmlReader For DataSet Read XML",
+   "ko": "DataSet XML 읽기에 XmlReader 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5366",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "외부 참조 = CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "DataSet XML을 읽는 도구",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5367",
+   "title": "Do Not Serialize Types With Pointer Fields",
+   "ko": "포인터 필드가 있는 형식 직렬화",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5367",
+   "cwe": [
+    "822",
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "공격자가 포인터 값을 제어 → CWE-822(신뢰할 수 없는 포인터 역참조), CWE-502",
+   "group": "역직렬화",
+   "applicability": "조건부",
+   "applicability_note": "unsafe·P/Invoke 구조체를 직렬화할 때",
+   "mode": "All"
+  },
+  {
+   "id": "CA5368",
+   "title": "Set ViewStateUserKey For Classes Derived From Page",
+   "ko": "Page 파생 클래스의 ViewStateUserKey",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5368",
+   "cwe": [
+    "352"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CSRF = CWE-352",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "Web Forms 전용",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5369",
+   "title": "Use XmlReader for Deserialize",
+   "ko": "XmlSerializer.Deserialize에 XmlReader 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5369",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "DTD·스키마 외부 참조 = CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "임무 계획·설정 XML 역직렬화(실험에서 경고 확인)",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5370",
+   "title": "Use XmlReader for validating reader",
+   "ko": "검증 판독기에 XmlReader 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5370",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "XML 스키마 검증",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5371",
+   "title": "Use XmlReader for schema read",
+   "ko": "스키마 읽기에 XmlReader 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5371",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "XML 스키마 검증",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5372",
+   "title": "Use XmlReader for XPathDocument",
+   "ko": "XPathDocument에 XmlReader 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5372",
+   "cwe": [
+    "611"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-611",
+   "group": "XML",
+   "applicability": "해당",
+   "applicability_note": "XML 스키마 검증",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5373",
+   "title": "Do not use obsolete key derivation function",
+   "ko": "폐기된 키 유도 함수(PasswordDeriveBytes·CryptDeriveKey)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5373",
+   "cwe": [
+    "916",
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "계산량 부족 비밀번호 해시(CWE-916), CWE-327",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "비밀번호 기반 키 유도",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5374",
+   "title": "Do Not Use XslTransform",
+   "ko": "XslTransform 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5374",
+   "cwe": [
+    "611",
+    "94"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "외부 참조·스크립트 제한 없음 → CWE-611, CWE-94",
+   "group": "XML",
+   "applicability": "조건부",
+   "applicability_note": "XSLT 사용 도구",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5375",
+   "title": "Do not use account shared access signature",
+   "ko": "계정 공유 액세스 서명(Azure Storage) 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5375",
+   "cwe": [
+    "732"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "과도한 권한 위임 = CWE-732",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "클라우드(Azure Storage) 비해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA5376",
+   "title": "Use SharedAccessProtocol HttpsOnly",
+   "ko": "SAS를 HTTPS 전용으로",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5376",
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-319",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "클라우드(Azure Storage) 비해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA5377",
+   "title": "Use container level access policy",
+   "ko": "컨테이너 수준 액세스 정책 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5377",
+   "cwe": [
+    "732"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-732",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "클라우드(Azure Storage) 비해당",
+   "mode": "All"
+  },
+  {
+   "id": "CA5378",
+   "title": "Do not disable ServicePointManagerSecurityProtocols",
+   "ko": "ServicePointManagerSecurityProtocols 끄기(WCF TLS 1.0 고정)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5378",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-327",
+   "group": "인증서·TLS",
+   "applicability": "조건부",
+   "applicability_note": ".NET Framework WCF",
+   "mode": "All"
+  },
+  {
+   "id": "CA5379",
+   "title": "Ensure key derivation function algorithm is sufficiently strong",
+   "ko": "키 유도 함수 해시가 충분히 강한지(Rfc2898 기본 SHA1)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5379",
+   "cwe": [
+    "916",
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-916, CWE-327",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "비밀번호 기반 키 유도",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5380",
+   "title": "Do not add certificates to root store",
+   "ko": "루트 인증서 저장소에 인증서 추가",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5380",
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "신뢰할 수 없는 CA를 정당화 → 인증서 검증 실패(CWE-295)",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "설치·배포 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA5381",
+   "title": "Ensure certificates are not added to root store",
+   "ko": "루트 저장소에 추가될 수 있는 인증서",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5381",
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "신뢰할 수 없는 CA를 정당화 → 인증서 검증 실패(CWE-295)",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "설치·배포 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA5382",
+   "title": "Use secure cookies in ASP.NET Core",
+   "ko": "ASP.NET Core 보안 쿠키",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5382",
+   "cwe": [
+    "614"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-614",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA5383",
+   "title": "Ensure use secure cookies in ASP.NET Core",
+   "ko": "ASP.NET Core 보안 쿠키(가능성)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5383",
+   "cwe": [
+    "614"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-614",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA5384",
+   "title": "Do not use digital signature algorithm (DSA)",
+   "ko": "DSA 사용",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5384",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-327",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "전자서명(펌웨어·임무 자료 서명)",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5385",
+   "title": "Use Rivest–Shamir–Adleman (RSA) algorithm with sufficient key size",
+   "ko": "2048비트 미만 RSA",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5385",
+   "cwe": [
+    "326"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "부적절한 암호 강도(CWE-326)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "전자서명(펌웨어·임무 자료 서명)",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5386",
+   "title": "Avoid hardcoding SecurityProtocolType value",
+   "ko": "SecurityProtocolType 값 하드코드",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5386",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "대응 약함. 장래 폐기 판에 고정될 위험 → CWE-327 근사",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신 도구",
+   "mode": "All"
+  },
+  {
+   "id": "CA5387",
+   "title": "Do not use weak key derivation function with insufficient iteration count",
+   "ko": "반복 횟수가 부족한 약한 키 유도 함수",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5387",
+   "cwe": [
+    "916"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-916",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "비밀번호 기반 키 유도",
+   "mode": "All"
+  },
+  {
+   "id": "CA5388",
+   "title": "Ensure sufficient iteration count when using weak key derivation function",
+   "ko": "약한 키 유도 함수 반복 횟수가 충분한지",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5388",
+   "cwe": [
+    "916"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-916",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "비밀번호 기반 키 유도",
+   "mode": "All"
+  },
+  {
+   "id": "CA5389",
+   "title": "Do not add archive item's path to the target file system path",
+   "ko": "압축 항목 경로를 대상 파일 경로에 그대로 사용(zip slip)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5389",
+   "cwe": [
+    "22"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-22 정의 그대로",
+   "group": "기타",
+   "applicability": "해당",
+   "applicability_note": "정비·업데이트 패키지 압축 해제(실험에서 경고 확인)",
+   "mode": "All"
+  },
+  {
+   "id": "CA5390",
+   "title": "Do not hard-code encryption key",
+   "ko": "암호 키 하드코드",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5390",
+   "cwe": [
+    "321"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-321 정의 그대로",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "링크 보호 키",
+   "mode": "All"
+  },
+  {
+   "id": "CA5391",
+   "title": "Use antiforgery tokens in ASP.NET Core MVC controllers",
+   "ko": "ASP.NET Core MVC 위조 방지 토큰",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5391",
+   "cwe": [
+    "352"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-352",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA5392",
+   "title": "Use DefaultDllImportSearchPaths attribute for P/Invokes",
+   "ko": "P/Invoke에 DefaultDllImportSearchPaths 지정",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5392",
+   "cwe": [
+    "427"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "DLL 탐색 경로 하이재킹 = CWE-427",
+   "group": "기타",
+   "applicability": "해당",
+   "applicability_note": "네이티브 장치 드라이버·SDK 호출",
+   "mode": "All"
+  },
+  {
+   "id": "CA5393",
+   "title": "Do not use unsafe DllImportSearchPath value",
+   "ko": "안전하지 않은 DllImportSearchPath 값",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5393",
+   "cwe": [
+    "427"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-427",
+   "group": "기타",
+   "applicability": "해당",
+   "applicability_note": "네이티브 장치 드라이버·SDK 호출",
+   "mode": "All"
+  },
+  {
+   "id": "CA5394",
+   "title": "Do not use insecure randomness",
+   "ko": "안전하지 않은 난수(System.Random)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5394",
+   "cwe": [
+    "330",
+    "338"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-330, 약한 PRNG(CWE-338)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "도전값·세션 값",
+   "mode": "All"
+  },
+  {
+   "id": "CA5395",
+   "title": "Miss HttpVerb attribute for action methods",
+   "ko": "동작 메서드에 HttpVerb 특성",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5395",
+   "cwe": [
+    "352"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-352",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA5396",
+   "title": "Set HttpOnly to true for HttpCookie",
+   "ko": "HttpCookie.HttpOnly",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5396",
+   "cwe": [
+    "1004"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-1004",
+   "group": "기타",
+   "applicability": "비해당",
+   "applicability_note": "웹 전용",
+   "mode": "All"
+  },
+  {
+   "id": "CA5397",
+   "title": "Do not use deprecated SslProtocols values",
+   "ko": "폐기된 SslProtocols 값",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5397",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-327",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신(실험에서 경고 확인)",
+   "mode": "Recommended"
+  },
+  {
+   "id": "CA5398",
+   "title": "Avoid hardcoded SslProtocols values",
+   "ko": "SslProtocols 값 하드코드",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5398",
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "대응 약함. 장래 폐기 판에 고정될 위험 → CWE-327 근사",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신(실험에서 경고 확인)",
+   "mode": "All"
+  },
+  {
+   "id": "CA5399",
+   "title": "Definitely disable HttpClient certificate revocation list check",
+   "ko": "HttpClient 인증서 폐기 목록(CRL) 검사 끄기",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5399",
+   "cwe": [
+    "299"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "인증서 폐기 확인 부적절(CWE-299)",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신. 폐쇄망은 CRL 배포 수단을 함께 정해야 함",
+   "mode": "All"
+  },
+  {
+   "id": "CA5400",
+   "title": "Ensure HttpClient certificate revocation list check is not disabled",
+   "ko": "HttpClient CRL 검사가 꺼지지 않았는지",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5400",
+   "cwe": [
+    "299"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "CWE-299",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "TLS 통신. 폐쇄망은 CRL 배포 수단을 함께 정해야 함",
+   "mode": "All"
+  },
+  {
+   "id": "CA5401",
+   "title": "Do not use CreateEncryptor with non-default IV",
+   "ko": "기본값이 아닌 IV로 CreateEncryptor",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5401",
+   "cwe": [
+    "329",
+    "1204"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "예측 가능한 IV(CWE-329), 약한 IV(CWE-1204)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "대칭 암호",
+   "mode": "All"
+  },
+  {
+   "id": "CA5402",
+   "title": "Use CreateEncryptor with the default IV",
+   "ko": "CreateEncryptor는 기본 IV로",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5402",
+   "cwe": [
+    "329",
+    "1204"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "예측 가능한 IV(CWE-329), 약한 IV(CWE-1204)",
+   "group": "암호·키 유도·난수",
+   "applicability": "해당",
+   "applicability_note": "대칭 암호",
+   "mode": "All"
+  },
+  {
+   "id": "CA5403",
+   "title": "Do not hard-code certificate",
+   "ko": "인증서 하드코드",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5403",
+   "cwe": [
+    "798",
+    "321"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "하드코드 자격 증명(CWE-798), 키 하드코드(CWE-321)",
+   "group": "인증서·TLS",
+   "applicability": "해당",
+   "applicability_note": "단말 인증서",
+   "mode": "All"
+  },
+  {
+   "id": "CA5404",
+   "title": "Do not disable token validation checks",
+   "ko": "토큰 검증 항목 끄기(TokenValidationParameters)",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5404",
+   "cwe": [
+    "287",
+    "347"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "부적절한 인증(CWE-287), 서명 검증 부적절(CWE-347)",
+   "group": "기타",
+   "applicability": "조건부",
+   "applicability_note": "Microsoft.IdentityModel 토큰 인증을 쓰는 서비스",
+   "mode": "All"
+  },
+  {
+   "id": "CA5405",
+   "title": "Do not always skip token validation in delegates",
+   "ko": "위임에서 토큰 검증을 항상 건너뜀",
+   "url": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5405",
+   "cwe": [
+    "287",
+    "347"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "부적절한 인증(CWE-287), 서명 검증 부적절(CWE-347)",
+   "group": "기타",
+   "applicability": "조건부",
+   "applicability_note": "Microsoft.IdentityModel 토큰 인증을 쓰는 서비스",
+   "mode": "All"
+  }
+ ]
+}

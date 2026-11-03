@@ -1,0 +1,5 @@
+# 줄바꿈은 LF로 고정(GitHub Actions는 리눅스에서 빌드)
+* text=auto eol=lf
+*.xlsx binary
+*.png binary
+*.pdf binary

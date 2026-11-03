@@ -1,0 +1,98 @@
+{
+ "cwe": "400",
+ "scenario_ko": "데이터링크 센서 목록 메시지·임무 계획 파일·운용자 명령처럼 바깥에서 들어오는 입력이 '몇 개를 보낼지'나 '얼마나 클지'를 스스로 정한다. 받는 쪽이 상한 없이 그 값을 믿으면, 정해진 메모리 예산이나 큐를 한 번에 써 버려 다른 기능이 자원을 얻지 못한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stddef.h>\n#include <stdint.h>\n#include <stdio.h>\n\n#define HEAP_BUDGET 65536u                 /* 이 보드에 배정된 동적 메모리 예산 */\nstatic _Alignas(max_align_t) unsigned char arena[HEAP_BUDGET];\nstatic size_t arena_used;\n\nstatic void *arena_take(size_t n)          /* 예산 안에서만 내주는 단순 할당기 */\n{\n    const size_t align = _Alignof(max_align_t);\n    if (n > HEAP_BUDGET) {\n        return NULL;\n    }\n    n = (n + align - 1) & ~(align - 1);    /* 다음 할당의 정렬을 맞춘다 */\n    if (n > HEAP_BUDGET - arena_used) {\n        return NULL;\n    }\n    void *p = &arena[arena_used];\n    arena_used += n;\n    return p;\n}\n\ntypedef struct { uint16_t id; int32_t temp_mc; int32_t volt_mv; } Sensor;\n\n/* 센서 목록 메시지: 머리말이 알려 준 개수만큼 버퍼를 잡는다 */\nstatic void on_sensor_list(uint32_t announced)\n{\n    Sensor *buf = arena_take((size_t)announced * sizeof(Sensor));   /* 상한 없음 */\n    printf(\"sensor list (%u entries): %s\\n\", (unsigned)announced, buf ? \"buffered\" : \"dropped\");\n}\n\nint main(void)\n{\n    on_sensor_list(5400);                   /* 송신측 값을 그대로 믿는다 */\n    void *tlm = arena_take(1024);          /* 다음 주기의 원격측정 버퍼 */\n    printf(\"telemetry buffer: %s\\n\", tlm ? \"ok\" : \"OUT OF MEMORY\");\n    return 0;\n}\n",
+    "explain_ko": "머리말의 센서 수를 그대로 곱해 보드의 동적 메모리 예산에서 버퍼를 잡는다. 위조되거나 깨진 값 하나로 예산을 거의 다 써서, 다음 주기의 원격측정 버퍼 할당이 실패한다."
+   },
+   "good": {
+    "code": "#include <stddef.h>\n#include <stdint.h>\n#include <stdio.h>\n\n#define HEAP_BUDGET 65536u                 /* 이 보드에 배정된 동적 메모리 예산 */\n#define MAX_SENSORS_PER_MSG 256u            /* ICD에 정한 메시지당 최대 센서 수 */\nstatic _Alignas(max_align_t) unsigned char arena[HEAP_BUDGET];\nstatic size_t arena_used;\n\nstatic void *arena_take(size_t n)\n{\n    const size_t align = _Alignof(max_align_t);\n    if (n > HEAP_BUDGET) {\n        return NULL;\n    }\n    n = (n + align - 1) & ~(align - 1);    /* 다음 할당의 정렬을 맞춘다 */\n    if (n > HEAP_BUDGET - arena_used) {\n        return NULL;\n    }\n    void *p = &arena[arena_used];\n    arena_used += n;\n    return p;\n}\n\ntypedef struct { uint16_t id; int32_t temp_mc; int32_t volt_mv; } Sensor;\n\nstatic void on_sensor_list(uint32_t announced)\n{\n    if (announced == 0 || announced > MAX_SENSORS_PER_MSG) {\n        printf(\"sensor list (%u entries): rejected, limit %u\\n\", (unsigned)announced, MAX_SENSORS_PER_MSG);\n        return;                            /* 상한을 넘는 요청은 할당 전에 거부 */\n    }\n    Sensor *buf = arena_take((size_t)announced * sizeof(Sensor));\n    printf(\"sensor list (%u entries): %s\\n\", (unsigned)announced, buf ? \"buffered\" : \"dropped\");\n}\n\nint main(void)\n{\n    on_sensor_list(5400);\n    void *tlm = arena_take(1024);\n    printf(\"telemetry buffer: %s\\n\", tlm ? \"ok\" : \"OUT OF MEMORY\");\n    return 0;\n}\n",
+    "explain_ko": "ICD에 정한 메시지당 최대 센서 수를 넘으면 할당하기 전에 거부해, 한 메시지가 쓸 수 있는 메모리를 상한 안으로 묶는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "telemetry buffer: OUT OF MEMORY",
+    "expect_good": "rejected, limit 256"
+   },
+   "refs": [
+    "MITRE CWE-400 Demonstrative Example 4(메시지에 실린 길이 값을 상한 없이 믿고 처리) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 코드오류 5-9 '무한 자원 할당'(인쇄 185쪽) 참고 — 이 항목의 표 1 대응 CWE는 CWE-770이고, 참고문헌에 CWE-400이 함께 실려 있다"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <array>\n#include <cstddef>\n#include <cstdint>\n#include <cstdio>\n#include <memory_resource>\n#include <new>\n#include <vector>\n\nstruct Sensor { std::uint16_t id; std::int32_t temp_mc; std::int32_t volt_mv; };\n\n// 보드의 동적 메모리 예산(32 KB)을 넘으면 std::bad_alloc을 던지는 자원\nstd::array<std::byte, 32768> arena;\nstd::pmr::monotonic_buffer_resource pool{arena.data(), arena.size(), std::pmr::null_memory_resource()};\n\nbool prepare(std::pmr::vector<Sensor> &out, std::uint32_t announced) {\n    try {\n        out.reserve(announced);                 // 메시지가 말한 개수를 그대로 쓴다\n    } catch (const std::bad_alloc &) {\n        return false;\n    }\n    return true;\n}\n\nint main() {\n    std::pmr::vector<Sensor> sensors{&pool};\n    const std::uint32_t announced = 2700;       // 위조되거나 깨진 머리말 값\n    std::printf(\"sensors %u: %s\\n\", static_cast<unsigned>(announced), prepare(sensors, announced) ? \"reserved\" : \"dropped\");\n    try {\n        std::pmr::vector<char> status{&pool};\n        status.reserve(1024);                   // 다른 기능의 상태 버퍼\n        std::puts(\"status buffer: ok\");\n    } catch (const std::bad_alloc &) {\n        std::puts(\"status buffer: OUT OF MEMORY\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "메시지가 알려 준 개수로 reserve를 호출해 고정 예산(32 KB) 메모리 자원을 한 번에 소진한다. 그 뒤 다른 기능의 상태 버퍼는 std::bad_alloc으로 할당받지 못한다."
+   },
+   "good": {
+    "code": "#include <array>\n#include <cstddef>\n#include <cstdint>\n#include <cstdio>\n#include <memory_resource>\n#include <new>\n#include <vector>\n\nstruct Sensor { std::uint16_t id; std::int32_t temp_mc; std::int32_t volt_mv; };\n\nconstexpr std::uint32_t kMaxSensors = 128;      // ICD에 정한 메시지당 상한\n\nstd::array<std::byte, 32768> arena;\nstd::pmr::monotonic_buffer_resource pool{arena.data(), arena.size(), std::pmr::null_memory_resource()};\n\nbool prepare(std::pmr::vector<Sensor> &out, std::uint32_t announced) {\n    if (announced == 0 || announced > kMaxSensors) {\n        return false;                           // 할당 전에 상한으로 거부\n    }\n    try {\n        out.reserve(announced);\n    } catch (const std::bad_alloc &) {\n        return false;\n    }\n    return true;\n}\n\nint main() {\n    std::pmr::vector<Sensor> sensors{&pool};\n    const std::uint32_t announced = 2700;\n    std::printf(\"sensors %u: %s\\n\", static_cast<unsigned>(announced), prepare(sensors, announced) ? \"reserved\" : \"rejected by limit\");\n    try {\n        std::pmr::vector<char> status{&pool};\n        status.reserve(1024);\n        std::puts(\"status buffer: ok\");\n    } catch (const std::bad_alloc &) {\n        std::puts(\"status buffer: OUT OF MEMORY\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "reserve 전에 개수를 ICD 상한과 비교해 넘으면 거부한다. 고정 버퍼와 null_memory_resource를 쓰는 pmr 할당기는 예산을 넘는 할당을 숨기지 않고 실패로 알려 준다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "status buffer: OUT OF MEMORY",
+    "expect_good": "rejected by limit"
+   },
+   "refs": [
+    "MITRE CWE-400 Demonstrative Example 4(메시지에 실린 길이 값을 상한 없이 믿고 처리) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.IOException;\nimport java.io.InputStream;\n\npublic class Example {\n    // 정비 단말이 올리는 임무 계획 파일 스트림(시험용으로 8 MB를 만들어 내는 스트림)\n    static InputStream upload(int size) {\n        return new InputStream() {\n            private int left = size;\n            @Override public int read() {\n                return left-- > 0 ? 'W' : -1;\n            }\n        };\n    }\n\n    public static void main(String[] args) throws IOException {\n        try (InputStream in = upload(8 * 1024 * 1024)) {\n            byte[] plan = in.readAllBytes();             // 크기 제한 없이 끝까지 메모리에 올린다\n            System.out.println(\"mission plan loaded: \" + plan.length + \" bytes\");\n        }\n    }\n}\n",
+    "explain_ko": "readAllBytes()는 스트림이 끝날 때까지 크기 제한 없이 읽는다. 정비 단말이 비정상적으로 큰 파일을 올리면 그만큼 힙을 차지하고, 더 크면 OutOfMemoryError로 지상 통제 프로세스 전체가 멈출 수 있다."
+   },
+   "good": {
+    "code": "import java.io.IOException;\nimport java.io.InputStream;\n\npublic class Example {\n    static final int MAX_PLAN_BYTES = 64 * 1024;          // 요구사항에 정한 임무 계획 파일 상한\n\n    // 정비 단말이 올리는 임무 계획 파일 스트림(시험용으로 8 MB를 만들어 내는 스트림)\n    static InputStream upload(int size) {\n        return new InputStream() {\n            private int left = size;\n            @Override public int read() {\n                return left-- > 0 ? 'W' : -1;\n            }\n        };\n    }\n\n    public static void main(String[] args) throws IOException {\n        try (InputStream in = upload(8 * 1024 * 1024)) {\n            byte[] plan = in.readNBytes(MAX_PLAN_BYTES + 1);  // 상한보다 1바이트만 더 읽어 본다\n            if (plan.length > MAX_PLAN_BYTES) {\n                System.out.println(\"mission plan rejected: exceeds \" + MAX_PLAN_BYTES + \" bytes\");\n                return;\n            }\n            System.out.println(\"mission plan loaded: \" + plan.length + \" bytes\");\n        }\n    }\n}\n",
+    "explain_ko": "readNBytes(상한+1)로 상한보다 1바이트만 더 읽어 보고, 넘으면 파일 전체를 읽기 전에 거부한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "mission plan loaded: 8388608 bytes",
+    "expect_good": "mission plan rejected"
+   },
+   "refs": [
+    "MITRE CWE-400 Demonstrative Example 6(요청 본문을 끝까지 읽는 ReadAll과 크기 제한 판독기) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 코드오류 5-7 '무한 자원 할당'(인쇄 264쪽) 참고 — 이 항목의 표 1 대응 CWE는 CWE-770이고, 참고문헌에 CWE-400이 함께 실려 있다"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Threading.Channels;\n\n// 운용자 콘솔 명령을 처리 태스크로 넘기는 큐: 길이 상한이 없다\nvar inbox = Channel.CreateUnbounded<ServoCommand>();\n\n// 키 고착이나 재전송 폭주로 서보 구동 명령이 계속 들어오는 상황\nforeach (int seq in Enumerable.Range(0, 100_000))\n{\n    _ = inbox.Writer.TryWrite(new ServoCommand(seq, seq % 360));\n}\n\n// 처리 태스크는 한 주기에 명령 16개만 처리할 수 있다\nint handled = ServiceOneCycle(inbox.Reader, budget: 16);\n\n// 처리하지 못한 명령이 모두 메모리에 남아 계속 늘어난다\nConsole.WriteLine($\"handled {handled}, pending commands={inbox.Reader.Count}\");\n\nstatic int ServiceOneCycle(ChannelReader<ServoCommand> reader, int budget)\n{\n    int done = 0;\n    while (done < budget && reader.TryRead(out _)) done++;\n    return done;\n}\n\n// 서보 구동 명령: 일련번호와 목표 각도(도)\nreadonly record struct ServoCommand(int Seq, int AngleDeg);\n",
+    "explain_ko": "상한 없는 Channel에 명령을 넣어, 콘솔 오동작이나 재전송 폭주가 일어나면 한 주기에 처리하지 못한 명령이 상한 없이 쌓여 메모리를 계속 차지한다."
+   },
+   "good": {
+    "code": "using System.Threading.Channels;\n\n// 큐 길이에 상한을 두고, 가득 차면 새 명령을 버리면서 버린 수를 센다\nconst int MaxPending = 256;\nint dropped = 0;\nvar inbox = Channel.CreateBounded<ServoCommand>(\n    new BoundedChannelOptions(MaxPending) { SingleReader = true, FullMode = BoundedChannelFullMode.DropWrite },\n    _ => dropped++);\n\nforeach (int seq in Enumerable.Range(0, 100_000))\n{\n    _ = inbox.Writer.TryWrite(new ServoCommand(seq, seq % 360));\n}\n\nint handled = ServiceOneCycle(inbox.Reader, budget: 16);\n\n// 대기 명령은 상한 안에 머물고, 버린 수는 운용자에게 경고로 알린다\nConsole.WriteLine($\"handled {handled}, pending commands={inbox.Reader.Count} (limit {MaxPending}), dropped {dropped}\");\n\nstatic int ServiceOneCycle(ChannelReader<ServoCommand> reader, int budget)\n{\n    int done = 0;\n    while (done < budget && reader.TryRead(out _)) done++;\n    return done;\n}\n\n// 서보 구동 명령: 일련번호와 목표 각도(도)\nreadonly record struct ServoCommand(int Seq, int AngleDeg);\n",
+    "explain_ko": "BoundedChannelOptions로 큐 길이에 상한을 두고, 가득 차면 새 명령을 버리면서 버린 수를 세어 운용자에게 알린다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "pending commands=\\d{5,}",
+    "expect_good": "\\(limit 256\\), dropped \\d+"
+   },
+   "refs": [
+    "MITRE CWE-400 Demonstrative Example 1·5(처리할 작업·연결 수에 상한 없음) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import zlib\n\n\n# 시험 장비가 보낸 압축 원격측정 묶음을 풀어 판정 스크립트에 넘긴다\ndef unpack_bundle(payload):\n    return zlib.decompress(payload)          # 풀린 크기에 상한이 없다\n\n\nnormal = zlib.compress(b\"T=21.5;P=1013;\" * 100)\ncrafted = zlib.compress(b\"\\0\" * (64 * 1024 * 1024), 9)  # 수십 KiB가 64 MiB로 풀리는 묶음\nprint(f\"normal bundle: {len(normal)} -> {len(unpack_bundle(normal))} bytes\")\nprint(f\"crafted bundle: {len(crafted)} -> expanded to {len(unpack_bundle(crafted))} bytes\")\n",
+    "explain_ko": "압축을 풀 때 결과 크기에 상한을 두지 않는다. 같은 바이트가 반복되는 묶음은 수십 KiB가 수십~수백 MiB로 풀려 메모리를 다 쓰게 만든다(압축 데이터 증폭). 메시지의 개수·길이 필드를 믿고 리스트·bytearray를 미리 만드는 것, 소켓·파일을 read()로 끝까지 읽는 것도 같은 약점이다."
+   },
+   "good": {
+    "code": "import zlib\n\nMAX_BUNDLE = 1024 * 1024                     # 요구사항에서 정한 묶음 상한(1 MiB)\n\n\ndef unpack_bundle(payload):\n    d = zlib.decompressobj()\n    out = d.decompress(payload, MAX_BUNDLE)  # 상한까지만 풀고 멈춘다\n    if d.unconsumed_tail or not d.eof:       # 상한을 넘겨 남은 입력이 있으면 거부\n        raise ValueError(f\"bundle exceeds {MAX_BUNDLE} bytes\")\n    return out\n\n\nnormal = zlib.compress(b\"T=21.5;P=1013;\" * 100)\ncrafted = zlib.compress(b\"\\0\" * (64 * 1024 * 1024), 9)\nprint(f\"normal bundle: {len(normal)} -> {len(unpack_bundle(normal))} bytes\")\ntry:\n    unpack_bundle(crafted)\nexcept ValueError as e:\n    print(\"crafted bundle rejected:\", e)\n",
+    "explain_ko": "decompressobj().decompress(data, max_length)로 상한까지만 풀고, 남은 입력(unconsumed_tail)이 있거나 스트림이 끝나지 않았으면 거부한다. 상한은 자원 예산 설계에서 정한 값을 쓴다(D-07). tarfile·zipfile은 항목 수·전체 크기를 따로 확인하고, 해석기는 퍼징으로 큰 입력을 시험한다(T-04, LPY-11)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "expanded to 67108864 bytes",
+    "expect_good": "crafted bundle rejected"
+   },
+   "refs": [
+    "MITRE CWE-400 Demonstrative Example 6(요청 본문을 상한 없이 끝까지 읽음) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ }
+}

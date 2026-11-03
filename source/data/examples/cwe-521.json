@@ -1,0 +1,99 @@
+{
+ "cwe": "521",
+ "scenario_ko": "정비 콘솔·운용자 계정·정비 정보 시스템·임무 계획 도구의 관리자 계정에 새 비밀번호를 설정한다. 예시의 후보 가운데 앞의 것들은 짧거나, 계정 이름을 담거나, 흔히 쓰이는 약한 값이고 마지막 하나만 정책을 만족한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stddef.h>\n\n/* 정비 콘솔 계정의 새 비밀번호를 설정한다: 비어 있지만 않으면 받아들인다 */\nstatic int set_new_password(const char *account, const char *candidate)\n{\n    (void)account;\n    if (candidate == NULL || candidate[0] == '\\0') {\n        return 0;\n    }\n    /* (저장 단계는 생략) */\n    return 1;\n}\n\nint main(void)\n{\n    const char *account = \"maint\";\n    const char *candidates[] = { \"1234\", \"Maint#2026ops\", \"Password1234!\", \"EXAMPLE-Ridge-Falcon-42x\" };\n    for (size_t i = 0; i < sizeof candidates / sizeof candidates[0]; ++i) {\n        printf(\"%-24s -> %s\\n\", candidates[i],\n               set_new_password(account, candidates[i]) ? \"ACCEPTED\" : \"REJECTED\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "빈 값만 막아 '1234'나 계정 이름을 담은 비밀번호도 그대로 받는다. 이런 값은 사전 대입으로 금방 맞힐 수 있다."
+   },
+   "good": {
+    "code": "#include <ctype.h>\n#include <stdio.h>\n#include <stddef.h>\n#include <string.h>\n\n#define MIN_LENGTH 12   /* 길이 기준은 사업 보안 요구사항에서 정한다 */\n\nstatic const char *const DENYLIST[] = { \"password1234\", \"123456789012\", \"qwertyuiop12\" };\n\nstatic int contains_nocase(const char *text, const char *word)\n{\n    size_t n = strlen(text), m = strlen(word);\n    for (size_t i = 0; m > 0 && i + m <= n; ++i) {\n        size_t k = 0;\n        while (k < m && tolower((unsigned char)text[i + k]) == tolower((unsigned char)word[k])) ++k;\n        if (k == m) return 1;\n    }\n    return 0;\n}\n\n/* 정책을 통과하지 못한 이유를 돌려주고, 통과하면 NULL */\nstatic const char *policy_violation(const char *account, const char *pw)\n{\n    if (account == NULL || pw == NULL) return \"missing input\";\n    size_t len = strlen(pw);\n    int lower = 0, upper = 0, digit = 0, other = 0;\n    for (size_t i = 0; i < len; ++i) {\n        unsigned char ch = (unsigned char)pw[i];\n        if (islower(ch)) lower = 1; else if (isupper(ch)) upper = 1;\n        else if (isdigit(ch)) digit = 1; else other = 1;\n    }\n    if (len < MIN_LENGTH) return \"too short\";\n    if (lower + upper + digit + other < 3) return \"needs 3 character classes\";\n    if (contains_nocase(pw, account)) return \"contains account name\";\n    for (size_t i = 0; i < sizeof DENYLIST / sizeof DENYLIST[0]; ++i)\n        if (contains_nocase(pw, DENYLIST[i])) return \"commonly used password\";\n    return NULL;\n}\n\nint main(void)\n{\n    const char *account = \"maint\";\n    /* 예시 값이므로 실제 계정에 쓰지 않는다 */\n    const char *candidates[] = { \"1234\", \"Maint#2026ops\", \"Password1234!\", \"EXAMPLE-Ridge-Falcon-42x\" };\n    for (size_t i = 0; i < sizeof candidates / sizeof candidates[0]; ++i) {\n        const char *why = policy_violation(account, candidates[i]);\n        /* 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다 */\n        printf(\"%-24s -> %s%s\\n\", candidates[i], why ? \"REJECTED: \" : \"ACCEPTED\", why ? why : \"\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "최소 길이, 문자 종류 규칙(예: 3가지 이상, 사업 요구사항에 있을 때), 계정 이름 포함 금지, 흔한 비밀번호 금지 목록을 설정 시점에 검사하고 거부 사유를 알려 준다. 길이 같은 기준값은 사업 보안 요구사항에서 정한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "1234 +-> ACCEPTED",
+    "expect_good": "1234 +-> REJECTED"
+   },
+   "refs": [
+    "MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\n// 운용자 계정 등록 화면: 길이 4 이상이면 그대로 쓴다\nclass AccountRegistry {\npublic:\n    bool enroll(const std::string &user, const std::string &password) {\n        if (password.size() < 4) {\n            return false;\n        }\n        users_.push_back(user);  // 비밀번호 저장(해시)은 생략\n        return true;\n    }\n\nprivate:\n    std::vector<std::string> users_;\n};\n\nint main() {\n    AccountRegistry reg;\n    for (const std::string pw : {\"0000\", \"operatoroperator\", \"Console#OPR03-7\", \"EXAMPLE-Cobalt!Mesa-781\"}) {\n        std::cout << pw << \" -> \" << (reg.enroll(\"Opr03\", pw) ? \"ACCEPTED\" : \"REJECTED\") << '\\n';\n    }\n    return 0;\n}\n",
+    "explain_ko": "길이 4 이상만 확인해 '0000'이나 계정 이름을 담은 값 같은 약한 비밀번호를 받아들인다."
+   },
+   "good": {
+    "code": "#include <algorithm>\n#include <array>\n#include <cctype>\n#include <iostream>\n#include <optional>\n#include <string>\n#include <string_view>\n#include <vector>\n\n// 비밀번호 정책 검사: 위반 사유를 돌려주고, 통과하면 빈 값\nstd::optional<std::string_view> weak_reason(std::string_view user, std::string_view pw) {\n    constexpr std::size_t kMinLen = 12;  // 사업 보안 요구사항의 값으로 바꾼다\n    static constexpr std::array<std::string_view, 4> kCommon{\"0000\", \"password\", \"operator\", \"qwerty\"};\n    auto has = [&](auto pred) { return std::any_of(pw.begin(), pw.end(), [&](char c) { return pred(static_cast<unsigned char>(c)); }); };\n    int classes = has([](int c) { return std::islower(c); }) + has([](int c) { return std::isupper(c); }) +\n                  has([](int c) { return std::isdigit(c); }) + has([](int c) { return std::ispunct(c); });\n    if (pw.size() < kMinLen) return \"too short\";\n    if (classes < 3) return \"needs 3 character classes\";\n    auto lower = [](std::string_view s) {  // 대소문자를 무시하고 비교: 비밀번호와 계정 이름 모두 소문자로\n        std::string r(s);\n        std::transform(r.begin(), r.end(), r.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });\n        return r;\n    };\n    const std::string low = lower(pw);\n    if (low.find(lower(user)) != std::string::npos) return \"contains account name\";\n    for (auto w : kCommon) if (low.find(w) != std::string::npos) return \"commonly used password\";\n    return std::nullopt;\n}\n\nclass AccountRegistry {\npublic:\n    std::optional<std::string_view> enroll(const std::string &user, const std::string &password) {\n        if (auto why = weak_reason(user, password)) return why;  // 거부하고 사유를 화면에 알린다\n        users_.push_back(user);\n        return std::nullopt;\n    }\nprivate:\n    std::vector<std::string> users_;\n};\n\nint main() {\n    AccountRegistry reg;\n    // 예시 값이므로 실제 계정에 쓰지 않는다\n    for (const std::string pw : {\"0000\", \"operatoroperator\", \"Console#OPR03-7\", \"EXAMPLE-Cobalt!Mesa-781\"}) {\n        auto why = reg.enroll(\"Opr03\", pw);\n        // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다\n        std::cout << pw << \" -> \" << (why ? \"REJECTED: \" + std::string(*why) : \"ACCEPTED\") << '\\n';\n    }\n    return 0;\n}\n",
+    "explain_ko": "정책 검사 함수가 길이·문자 종류·계정 이름 포함(비밀번호와 계정 이름을 모두 소문자로 바꿔 비교)·흔한 값 여부를 확인해 위반 사유를 돌려주고, 등록은 이를 통과할 때만 한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "0000 -> ACCEPTED",
+    "expect_good": "0000 -> REJECTED"
+   },
+   "refs": [
+    "MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.List;\n\npublic class Example {\n    // 정비 정보 시스템의 비밀번호 변경: 이전 값과 다르기만 하면 바꾼다\n    static String changePassword(String user, String oldPw, String newPw) {\n        if (newPw.equals(oldPw)) {\n            return \"REJECTED: same as old\";\n        }\n        return \"ACCEPTED\";                       // 길이·조합·흔한 값 검사가 없다\n    }\n\n    public static void main(String[] args) {\n        for (String pw : List.of(\"abc\", \"Tech11-Station!\", \"Qwerty#Station9\", \"EXAMPLE-Harbor#Lantern-58\")) {\n            System.out.println(pw + \" -> \" + changePassword(\"tech11\", \"Start#2026-init\", pw));\n        }\n    }\n}\n",
+    "explain_ko": "이전 비밀번호와 다르기만 하면 바꾸어 주어 'abc'처럼 짧은 값이나 계정 이름을 담은 값도 받는다."
+   },
+   "good": {
+    "code": "import java.util.List;\nimport java.util.Locale;\nimport java.util.Optional;\nimport java.util.Set;\n\npublic class Example {\n    static final int MIN_LENGTH = 12;                        // 사업 보안 요구사항에서 정한다\n    static final Set<String> COMMON = Set.of(\"11111111\", \"password\", \"qwerty\", \"letmein\");\n\n    // 서버 쪽 정책 검사: 위반 사유를 돌려준다\n    static Optional<String> violation(String user, String pw) {\n        String lower = pw.toLowerCase(Locale.ROOT);\n        long classes = List.of(\"[a-z]\", \"[A-Z]\", \"[0-9]\", \"[^A-Za-z0-9]\").stream()\n                .filter(re -> pw.matches(\".*\" + re + \".*\")).count();\n        if (pw.length() < MIN_LENGTH) return Optional.of(\"too short\");\n        if (classes < 3) return Optional.of(\"needs 3 character classes\");\n        if (lower.contains(user.toLowerCase(Locale.ROOT))) return Optional.of(\"contains account name\");\n        if (COMMON.stream().anyMatch(lower::contains)) return Optional.of(\"commonly used password\");\n        return Optional.empty();\n    }\n\n    static String changePassword(String user, String oldPw, String newPw) {\n        if (newPw.equals(oldPw)) {\n            return \"REJECTED: same as old\";\n        }\n        return violation(user, newPw).map(v -> \"REJECTED: \" + v).orElse(\"ACCEPTED\");\n    }\n\n    public static void main(String[] args) {\n        // 예시 값이므로 실제 계정에 쓰지 않는다\n        for (String pw : List.of(\"abc\", \"Tech11-Station!\", \"Qwerty#Station9\", \"EXAMPLE-Harbor#Lantern-58\")) {\n            // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다\n            System.out.println(pw + \" -> \" + changePassword(\"tech11\", \"Start#2026-init\", pw));\n        }\n    }\n}\n",
+    "explain_ko": "서버 쪽에서 길이·문자 종류·계정 이름 포함·흔한 값 금지 목록을 검사하고 위반 사유를 돌려준다. 화면(클라이언트) 검사만으로는 우회되므로 서버에서 다시 검사한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "abc -> ACCEPTED",
+    "expect_good": "abc -> REJECTED"
+   },
+   "refs": [
+    "MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-11 '취약한 패스워드 허용'(인쇄 155쪽) 참고",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 에러처리 4-4 '취약한 패스워드 요구조건'(인쇄 240쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 임무 계획 도구의 최초 관리자 비밀번호 설정: 입력 확인란과 같기만 하면 받는다\nstatic string SetAdminPassword(string pw, string confirm) =>\n    pw == confirm ? \"ACCEPTED\" : \"REJECTED: confirmation mismatch\";\n\nforeach (string pw in new[] { \"admin\", \"aaaaaaaaaaaa\", \"Planner#2026-x\", \"EXAMPLE-Basalt?Quill-907\" })\n{\n    Console.WriteLine($\"{pw} -> {SetAdminPassword(pw, pw)}\");\n}\n",
+    "explain_ko": "확인란과 같기만 하면 받아 주어 'admin'이나 같은 글자를 반복한 값이 최초 관리자 비밀번호가 된다."
+   },
+   "good": {
+    "code": "// 최초 관리자 비밀번호 설정: 확인란 일치 + 정책 검사를 모두 통과해야 받는다\nstatic string? Weakness(string pw)\n{\n    const int MinLength = 12;                                // 사업 보안 요구사항의 값\n    string[] common = [\"admin\", \"password\", \"planner\", \"123456\"];\n    int classes = (pw.Any(char.IsLower) ? 1 : 0) + (pw.Any(char.IsUpper) ? 1 : 0)\n                + (pw.Any(char.IsDigit) ? 1 : 0) + (pw.Any(c => !char.IsLetterOrDigit(c)) ? 1 : 0);\n    if (pw.Length < MinLength) return \"too short\";\n    if (classes < 3) return \"needs 3 character classes\";\n    if (pw.Distinct().Count() < 5) return \"too few distinct characters\";\n    if (common.Any(w => pw.Contains(w, StringComparison.OrdinalIgnoreCase))) return \"commonly used password\";\n    return null;\n}\n\nstatic string SetAdminPassword(string pw, string confirm)\n{\n    if (pw != confirm) return \"REJECTED: confirmation mismatch\";\n    return Weakness(pw) is { } why ? $\"REJECTED: {why}\" : \"ACCEPTED\";\n}\n\n// 예시 값이므로 실제 계정에 쓰지 않는다\nforeach (string pw in new[] { \"admin\", \"aaaaaaaaaaaa\", \"Planner#2026-x\", \"EXAMPLE-Basalt?Quill-907\" })\n{\n    // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다\n    Console.WriteLine($\"{pw} -> {SetAdminPassword(pw, pw)}\");\n}\n",
+    "explain_ko": "확인란 일치와 함께 길이·문자 종류·서로 다른 글자 수·흔한 값 금지 목록을 검사한다. 기준값은 사업 보안 요구사항에서 정하고, 정책을 어긴 비밀번호 설정 시도를 시험 항목에 넣는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "admin -> ACCEPTED",
+    "expect_good": "admin -> REJECTED"
+   },
+   "refs": [
+    "MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "# 정비 정보 시스템의 관리자 계정에 새 비밀번호를 설정한다\ndef set_password(account, new_password):\n    return len(new_password) >= 4                 # 길이 4자 이상만 본다\n\n\nfor candidate in (\"admin\", \"1234\", \"maint2026\", \"EXAMPLE-Tq8%vLr2!xNw4#pe\"):\n    print(f\"{candidate} -> {'ACCEPTED' if set_password('admin', candidate) else 'REJECTED'}\")\n",
+    "explain_ko": "길이 4자 이상이면 어떤 비밀번호든 받는다. 'admin'(계정 이름과 같음)·'1234'·'정비(maint)+연도' 꼴의 'maint2026'처럼 사전 공격에서 가장 먼저 시도하는 비밀번호가 관리자 계정에 설정된다."
+   },
+   "good": {
+    "code": "MIN_LENGTH = 12\n# 실제로는 유출 비밀번호 목록·사전 단어·기관 이름·장비 이름을 담은 금지 목록 파일을 쓴다\nBLOCKED = (\"admin\", \"password\", \"1234\", \"maint2026\", \"qwerty\")\n\n\n# 정책 검사: 위반 사유만 돌려주고, 통과하면 None. 비밀번호 자체는 돌려주지 않는다\ndef password_problem(account, new_password):\n    lowered = new_password.lower()\n    if len(new_password) < MIN_LENGTH:\n        return f\"shorter than {MIN_LENGTH}\"\n    if account.lower() in lowered:\n        return \"contains account name\"\n    if any(word in lowered for word in BLOCKED):\n        return \"commonly used password\"\n    return None\n\n\n# 예시 값이므로 실제 계정에 쓰지 않는다\nfor candidate in (\"admin\", \"1234\", \"maint2026\", \"password1234\", \"EXAMPLE-Tq8%vLr2!xNw4#pe\"):\n    problem = password_problem(\"admin\", candidate)\n    # 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다\n    print(f\"{candidate} -> {'REJECTED: ' + problem if problem else 'ACCEPTED'}\")\n",
+    "explain_ko": "최소 길이(예: 12자)를 두고, 유출 비밀번호·사전 단어·계정 이름이 들어 있는지 금지 목록과 부분 일치로 대조한다. 문자 종류 규칙(대소문자·숫자·특수문자 강제)은 사업 요구사항에 있을 때 더한다. 기준값은 보안 요구사항에서 정한다(R-01). 검사 함수는 판정만 돌려주어 비밀번호가 로그로 새지 않게 한다. 관리자 계정은 비밀번호 외에 접속 위치 제한이나 2단계 인증을 함께 검토한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "admin -> ACCEPTED",
+    "expect_good": "admin -> REJECTED"
+   },
+   "refs": [
+    "MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-9 '취약한 패스워드 허용'(인쇄 95쪽) 참고"
+   ]
+  }
+ }
+}

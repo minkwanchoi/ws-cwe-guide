@@ -1,0 +1,643 @@
+{
+ "source": "MITRE CWE 5.0 XML (cwec_v5.0.xml, 2026-10-28): 197개 밖 보조 항목. cwe_original.json과 같은 형식이다",
+ "license_note": "Copyright © 2006–2026, The MITRE Corporation. CWE and the CWE logo are trademarks of The MITRE Corporation. Use per https://cwe.mitre.org/about/termsofuse.html CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.",
+ "weaknesses": {
+  "295": {
+   "id": "295",
+   "name": "Improper Certificate Validation",
+   "abstraction": "Base",
+   "status": "Draft",
+   "description": "The product does not validate, or incorrectly validates, a certificate.",
+   "extended": "",
+   "platforms": [
+    {
+     "Type": "Language",
+     "Class": "Not Language-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Language",
+     "Name": "Go",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Not Technology-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Web Based",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Mobile",
+     "Prevalence": "Undetermined"
+    }
+   ],
+   "intro": [
+    {
+     "phase": "Architecture and Design",
+     "note": ""
+    },
+    {
+     "phase": "Implementation",
+     "note": "REALIZATION: This weakness is caused during implementation of an architectural security tactic."
+    },
+    {
+     "phase": "Implementation",
+     "note": "When the product uses certificate pinning, the developer might not properly validate all relevant components of the certificate before pinning the certificate. This can make it difficult or expensive to test after the pinning is complete."
+    }
+   ],
+   "consequences": [
+    {
+     "scope": [
+      "Integrity",
+      "Authentication"
+     ],
+     "impact": [
+      "Bypass Protection Mechanism",
+      "Gain Privileges or Assume Identity"
+     ],
+     "likelihood": null,
+     "note": "When a certificate is invalid or malicious, it might allow an attacker to spoof a trusted entity by interfering in the communication path between the host and client. The product might connect to a malicious host while believing it is a trusted host, or the product might be deceived into accepting spoofed data that appears to originate from a trusted host."
+    }
+   ],
+   "mitigations": [
+    {
+     "id": null,
+     "phase": [
+      "Architecture and Design",
+      "Implementation"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "Certificates should be carefully managed and checked to assure that data are encrypted with the intended owner's public key."
+    },
+    {
+     "id": null,
+     "phase": [
+      "Implementation"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "If certificate pinning is being used, ensure that all relevant properties of the certificate are fully validated before the certificate is pinned, including the hostname."
+    }
+   ],
+   "detection": [
+    {
+     "method": "Automated Static Analysis - Binary or Bytecode",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tBytecode Weakness Analysis - including disassembler + source code weakness analysis\n\t\tBinary Weakness Analysis - including disassembler + source code weakness analysis"
+    },
+    {
+     "method": "Manual Static Analysis - Binary or Bytecode",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tBinary / Bytecode disassembler - then use manual analysis for vulnerabilities & anomalies"
+    },
+    {
+     "method": "Dynamic Analysis with Automated Results Interpretation",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tWeb Application Scanner"
+    },
+    {
+     "method": "Dynamic Analysis with Manual Results Interpretation",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tMan-in-the-middle attack tool"
+    },
+    {
+     "method": "Manual Static Analysis - Source Code",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tFocused Manual Spotcheck - Focused manual analysis of source\n\t\tManual Source Code Review (not inspections)"
+    },
+    {
+     "method": "Automated Static Analysis - Source Code",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tSource code Weakness Analyzer\n\t\tContext-configured Source Code Weakness Analyzer"
+    },
+    {
+     "method": "Architecture or Design Review",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tInspection (IEEE 1028 standard) (can apply to requirements, design, source code, etc.)"
+    }
+   ],
+   "observed": [
+    {
+     "ref": "CVE-2019-12496",
+     "desc": "A Go framework for robotics, drones, and IoT devices skips verification of root CA certificates by default."
+    },
+    {
+     "ref": "CVE-2014-1266",
+     "desc": "Chain: incorrect \"goto\" in Apple SSL product bypasses certificate validation, allowing Adversary-in-the-Middle (AITM) attack (Apple \"goto fail\" bug). CWE-705 (Incorrect Control Flow Scoping) -> CWE-561 (Dead Code) -> CWE-295 (Improper Certificate Validation) -> CWE-393 (Return of Wrong Status Code) -> CWE-300 (Channel Accessible by Non-Endpoint). The code's whitespace indentation did not reflect the actual control flow (CWE-1114) and did not explicitly delimit the block (CWE-483), which could have made it more difficult for human code auditors to detect the vulnerability."
+    },
+    {
+     "ref": "CVE-2021-22909",
+     "desc": "Chain: router's firmware update procedure uses curl with \"-k\" (insecure) option that disables certificate validation (CWE-295), allowing adversary-in-the-middle (AITM) compromise with a malicious firmware image (CWE-494)."
+    },
+    {
+     "ref": "CVE-2008-4989",
+     "desc": "Verification function trusts certificate chains in which the last certificate is self-signed."
+    },
+    {
+     "ref": "CVE-2012-5821",
+     "desc": "Chain: Web browser uses a TLS-related function incorrectly, preventing it from verifying that a server's certificate is signed by a trusted certification authority (CA)."
+    },
+    {
+     "ref": "CVE-2009-3046",
+     "desc": "Web browser does not check if any intermediate certificates are revoked."
+    },
+    {
+     "ref": "CVE-2011-0199",
+     "desc": "Operating system does not check Certificate Revocation List (CRL) in some cases, allowing spoofing using a revoked certificate."
+    },
+    {
+     "ref": "CVE-2012-5810",
+     "desc": "Mobile banking application does not verify hostname, leading to financial loss."
+    }
+   ],
+   "related": [
+    {
+     "nature": "ChildOf",
+     "id": "287",
+     "view": "1000"
+    },
+    {
+     "nature": "PeerOf",
+     "id": "322",
+     "view": "1000"
+    }
+   ],
+   "taxonomy": [
+    {
+     "name": "OWASP Top Ten 2004",
+     "id": "A10",
+     "entry": "Insecure Configuration Management"
+    },
+    {
+     "name": "OWASP Golang Secure Coding Practices Guide",
+     "id": null,
+     "entry": "Communication Security"
+    }
+   ],
+   "observed_total": 21,
+   "technical_nuance": "",
+   "background": [
+    "A certificate is a token that associates an identity (principal) to a cryptographic key. Certificates can be used to check if a public key belongs to the assumed owner."
+   ],
+   "dimensions": []
+  },
+  "299": {
+   "id": "299",
+   "name": "Improper Check for Certificate Revocation",
+   "abstraction": "Base",
+   "status": "Draft",
+   "description": "The product does not check or incorrectly checks the revocation status of a certificate.",
+   "extended": "",
+   "platforms": [
+    {
+     "Type": "Language",
+     "Class": "Not Language-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Not Technology-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Web Based",
+     "Prevalence": "Undetermined"
+    }
+   ],
+   "intro": [
+    {
+     "phase": "Implementation",
+     "note": "When the product uses certificate pinning, the developer might not properly validate all relevant components of the certificate before pinning the certificate. This can make it difficult or expensive to test after the pinning is complete."
+    },
+    {
+     "phase": "Implementation",
+     "note": "REALIZATION: This weakness is caused during implementation of an architectural security tactic."
+    }
+   ],
+   "consequences": [
+    {
+     "scope": [
+      "Access Control"
+     ],
+     "impact": [
+      "Gain Privileges or Assume Identity"
+     ],
+     "likelihood": null,
+     "note": "Trust may be assigned to an untrusted entity who somehow obtained the certificate, i.e., the entity is not who it claims to be."
+    },
+    {
+     "scope": [
+      "Integrity",
+      "Other"
+     ],
+     "impact": [
+      "Other"
+     ],
+     "likelihood": null,
+     "note": "Data from an untrusted (and possibly malicious) source may be integrated."
+    },
+    {
+     "scope": [
+      "Confidentiality"
+     ],
+     "impact": [
+      "Read Application Data"
+     ],
+     "likelihood": null,
+     "note": "Data may be disclosed to an untrusted entity that obtained access to the certificate, thereby impersonating a trusted entity, resulting in information disclosure."
+    }
+   ],
+   "mitigations": [
+    {
+     "id": null,
+     "phase": [
+      "Architecture and Design"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "Ensure that certificates are checked for revoked status."
+    },
+    {
+     "id": null,
+     "phase": [
+      "Implementation"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "If certificate pinning is being used, ensure that all relevant properties of the certificate are fully validated before the certificate is pinned, including the revoked status."
+    }
+   ],
+   "detection": [
+    {
+     "method": "Automated Static Analysis",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect \"sources\" (origins of input) with \"sinks\" (destinations where the data interacts with external components, a lower layer such as the OS, etc.)"
+    }
+   ],
+   "observed": [
+    {
+     "ref": "CVE-2011-2014",
+     "desc": "LDAP-over-SSL implementation does not check Certificate Revocation List (CRL), allowing spoofing using a revoked certificate."
+    },
+    {
+     "ref": "CVE-2011-0199",
+     "desc": "Operating system does not check Certificate Revocation List (CRL) in some cases, allowing spoofing using a revoked certificate."
+    },
+    {
+     "ref": "CVE-2010-5185",
+     "desc": "Antivirus product does not check whether certificates from signed executables have been revoked."
+    },
+    {
+     "ref": "CVE-2009-3046",
+     "desc": "Web browser does not check if any intermediate certificates are revoked."
+    },
+    {
+     "ref": "CVE-2009-0161",
+     "desc": "Chain: Ruby module for OCSP misinterprets a response, preventing detection of a revoked certificate."
+    },
+    {
+     "ref": "CVE-2011-2701",
+     "desc": "Chain: incorrect parsing of replies from OCSP responders allows bypass using a revoked certificate."
+    },
+    {
+     "ref": "CVE-2011-0935",
+     "desc": "Router can permanently cache certain public keys, which would allow bypass if the certificate is later revoked."
+    },
+    {
+     "ref": "CVE-2009-1358",
+     "desc": "Chain: OS package manager does not properly check the return value, allowing bypass using a revoked certificate."
+    }
+   ],
+   "related": [
+    {
+     "nature": "ChildOf",
+     "id": "295",
+     "view": "1000"
+    },
+    {
+     "nature": "ChildOf",
+     "id": "404",
+     "view": "1000"
+    }
+   ],
+   "taxonomy": [
+    {
+     "name": "CLASP",
+     "id": null,
+     "entry": "Failure to check for certificate revocation"
+    }
+   ],
+   "observed_total": 12,
+   "technical_nuance": "",
+   "background": [],
+   "dimensions": []
+  },
+  "611": {
+   "id": "611",
+   "name": "Improper Restriction of XML External Entity Reference",
+   "abstraction": "Base",
+   "status": "Draft",
+   "description": "The product processes an XML document that can contain XML entities with URIs that resolve to documents outside of the intended sphere of control, causing the product to embed incorrect documents into its output.",
+   "extended": "",
+   "platforms": [
+    {
+     "Type": "Language",
+     "Class": "Not Language-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Language",
+     "Name": "XML",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Not Technology-Specific",
+     "Prevalence": "Undetermined"
+    },
+    {
+     "Type": "Technology",
+     "Class": "Web Based",
+     "Prevalence": "Undetermined"
+    }
+   ],
+   "intro": [
+    {
+     "phase": "Implementation",
+     "note": "REALIZATION: This weakness is caused during implementation of an architectural security tactic."
+    }
+   ],
+   "consequences": [
+    {
+     "scope": [
+      "Confidentiality"
+     ],
+     "impact": [
+      "Read Application Data",
+      "Read Files or Directories"
+     ],
+     "likelihood": null,
+     "note": "If the attacker is able to include a crafted DTD and a default entity resolver is enabled, the attacker may be able to access arbitrary files on the system. By submitting an XML file that defines an external entity with a file:// URI, an attacker can cause the processing application to read the contents of a local file. For example, a URI such as \"file:///c:/winnt/win.ini\" designates (in Windows) the file C:\\Winnt\\win.ini, or file:///etc/passwd designates the password file in Unix-based systems. Once the content of the URI is read, it is fed back into the application that is processing the XML. This application may echo back the data (e.g., in an error message), thereby exposing the file contents."
+    },
+    {
+     "scope": [
+      "Integrity"
+     ],
+     "impact": [
+      "Bypass Protection Mechanism"
+     ],
+     "likelihood": null,
+     "note": "An attacker may supply a crafted DTD using URIs with schemes such as http://, forcing the application to make outgoing HTTP requests to servers that the attacker cannot reach directly, which can be used to bypass firewall restrictions; hide the source of attacks such as port scanning; or otherwise leverage the server's trust relationship with other entities."
+    },
+    {
+     "scope": [
+      "Availability"
+     ],
+     "impact": [
+      "DoS: Resource Consumption (CPU)",
+      "DoS: Resource Consumption (Memory)"
+     ],
+     "likelihood": null,
+     "note": "The product could consume excessive CPU cycles or memory using a URI that points to a large file, or a device that always returns data such as /dev/random. Alternately, the URI could reference a file that contains many nested or recursive entity references to further slow down parsing."
+    }
+   ],
+   "mitigations": [
+    {
+     "id": null,
+     "phase": [
+      "Implementation",
+      "System Configuration"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "Many XML parsers and validators can be configured to disable external entity expansion."
+    }
+   ],
+   "detection": [
+    {
+     "method": "Automated Static Analysis",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect \"sources\" (origins of input) with \"sinks\" (destinations where the data interacts with external components, a lower layer such as the OS, etc.)"
+    }
+   ],
+   "observed": [
+    {
+     "ref": "CVE-2022-42745",
+     "desc": "Recruiter software allows reading arbitrary files using XXE"
+    },
+    {
+     "ref": "CVE-2005-1306",
+     "desc": "A browser control can allow remote attackers to determine the existence of files via Javascript containing XML script."
+    },
+    {
+     "ref": "CVE-2012-5656",
+     "desc": "XXE during SVG image conversion"
+    },
+    {
+     "ref": "CVE-2012-2239",
+     "desc": "XXE in PHP application allows reading the application's configuration file."
+    },
+    {
+     "ref": "CVE-2012-3489",
+     "desc": "XXE in database server"
+    },
+    {
+     "ref": "CVE-2012-4399",
+     "desc": "XXE in rapid web application development framework allows reading arbitrary files."
+    },
+    {
+     "ref": "CVE-2012-3363",
+     "desc": "XXE via XML-RPC request."
+    },
+    {
+     "ref": "CVE-2012-0037",
+     "desc": "XXE in office document product using RDF."
+    }
+   ],
+   "related": [
+    {
+     "nature": "ChildOf",
+     "id": "610",
+     "view": "1000"
+    },
+    {
+     "nature": "PeerOf",
+     "id": "441",
+     "view": "1000"
+    }
+   ],
+   "taxonomy": [
+    {
+     "name": "WASC",
+     "id": "43",
+     "entry": "XML External Entities"
+    },
+    {
+     "name": "Software Fault Patterns",
+     "id": "SFP24",
+     "entry": "Tainted input to command"
+    }
+   ],
+   "observed_total": 11,
+   "technical_nuance": "",
+   "background": [
+    "XML documents optionally contain a Document Type Definition (DTD), which, among other features, enables the definition of XML entities. It is possible to define an entity by providing a substitution string in the form of a URI. The XML parser can access the contents of this URI and embed these contents back into the XML document for further processing."
+   ],
+   "dimensions": []
+  },
+  "916": {
+   "id": "916",
+   "name": "Use of Password Hash With Insufficient Computational Effort",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "description": "The product generates a hash for a password, but it uses a scheme that does not provide a sufficient level of computational effort that would make password cracking attacks infeasible or expensive.",
+   "extended": "Many password storage mechanisms compute a hash and store the hash, instead of storing the original password in plaintext. In this design, authentication involves accepting an incoming password, computing its hash, and comparing it to the stored hash.\n\nMany hash algorithms are designed to execute quickly with minimal overhead, even cryptographic hashes. However, this efficiency is a problem for password storage, because it can reduce an attacker's workload for brute-force password cracking. If an attacker can obtain the hashes through some other method (such as SQL injection on a database that stores hashes), then the attacker can store the hashes offline and use various techniques to crack the passwords by computing hashes efficiently. Without a built-in workload, modern attacks can compute large numbers of hashes, or even exhaust the entire space of all possible passwords, within a very short amount of time, using massively-parallel computing (such as cloud computing) and GPU, ASIC, or FPGA hardware. In such a scenario, an efficient hash algorithm helps the attacker.\n\nThere are several properties of a hash scheme that are relevant to its strength against an offline, massively-parallel attack:\n\n  - The amount of CPU time required to compute the hash (\"stretching\")\n\n  - The amount of memory required to compute the hash (\"memory-hard\" operations)\n\n  - Including a random value, along with the password, as input to the hash computation (\"salting\")\n\n  - Given a hash, there is no known way of determining an input (e.g., a password) that produces this hash value, other than by guessing possible inputs (\"one-way\" hashing)\n\n  - Relative to the number of all possible hashes that can be generated by the scheme, there is a low likelihood of producing the same hash for multiple different inputs (\"collision resistance\")\n\nNote that the security requirements for the product may vary depending on the environment and the value of the passwords. Different schemes might not provide all of these properties, yet may still provide sufficient security for the environment. Conversely, a solution might be very strong in preserving one property, which still being very weak for an attack against another property, or it might not be able to significantly reduce the efficiency of a massively-parallel attack.",
+   "platforms": [
+    {
+     "Type": "Language",
+     "Class": "Not Language-Specific",
+     "Prevalence": "Undetermined"
+    }
+   ],
+   "intro": [
+    {
+     "phase": "Architecture and Design",
+     "note": "REALIZATION: This weakness is caused during implementation of an architectural security tactic."
+    }
+   ],
+   "consequences": [
+    {
+     "scope": [
+      "Access Control"
+     ],
+     "impact": [
+      "Bypass Protection Mechanism",
+      "Gain Privileges or Assume Identity"
+     ],
+     "likelihood": null,
+     "note": "If an attacker can gain access to the hashes, then the lack of sufficient computational effort will make it easier to conduct brute force attacks using techniques such as rainbow tables, or specialized hardware such as GPUs, which can be much faster than general-purpose CPUs for computing hashes."
+    }
+   ],
+   "mitigations": [
+    {
+     "id": "MIT-51",
+     "phase": [
+      "Architecture and Design"
+     ],
+     "strategy": null,
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "Use an adaptive hash function that can be configured to change the amount of computational effort needed to compute the hash, such as the number of iterations (\"stretching\") or the amount of memory required. Some hash functions perform salting automatically. These functions can significantly increase the overhead for a brute force attack compared to intentionally-fast functions such as MD5. For example, rainbow table attacks can become infeasible due to the high computing overhead. Finally, since computing power gets faster and cheaper over time, the technique can be reconfigured to increase the workload without forcing an entire replacement of the algorithm in use.\n\nSome hash functions that have one or more of these desired properties include bcrypt [REF-291], scrypt [REF-292], and PBKDF2 [REF-293]. While there is active debate about which of these is the most effective, they are all stronger than using salts with hash functions with very little computing overhead.\n\nNote that using these functions can have an impact on performance, so they require special consideration to avoid denial-of-service attacks. However, their configurability provides finer control over how much CPU and memory is used, so it could be adjusted to suit the environment's needs."
+    },
+    {
+     "id": "MIT-25",
+     "phase": [
+      "Implementation",
+      "Architecture and Design"
+     ],
+     "strategy": null,
+     "effectiveness": null,
+     "eff_note": "",
+     "description": "When using industry-approved techniques, use them correctly. Don't cut corners by skipping resource-intensive steps (CWE-325). These steps are often essential for preventing common attacks."
+    }
+   ],
+   "detection": [
+    {
+     "method": "Automated Static Analysis - Binary or Bytecode",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tBytecode Weakness Analysis - including disassembler + source code weakness analysis\n\t\tBinary Weakness Analysis - including disassembler + source code weakness analysis"
+    },
+    {
+     "method": "Manual Static Analysis - Binary or Bytecode",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tBinary / Bytecode disassembler - then use manual analysis for vulnerabilities & anomalies"
+    },
+    {
+     "method": "Manual Static Analysis - Source Code",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tFocused Manual Spotcheck - Focused manual analysis of source\n\t\tManual Source Code Review (not inspections)"
+    },
+    {
+     "method": "Automated Static Analysis - Source Code",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tSource code Weakness Analyzer\n\t\tContext-configured Source Code Weakness Analyzer"
+    },
+    {
+     "method": "Automated Static Analysis",
+     "effectiveness": "SOAR Partial",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tCost effective for partial coverage:\n```\n\n\t\tConfiguration Checker"
+    },
+    {
+     "method": "Architecture or Design Review",
+     "effectiveness": "High",
+     "eff_note": "",
+     "description": "According to SOAR [REF-1479], the following detection techniques may be useful:\n\n```\n\t\tHighly cost effective:\n```\n\n\t\tFormal Methods / Correct-By-Construction\n\t```\n\t\tCost effective for partial coverage:\n```\n\n\t\tInspection (IEEE 1028 standard) (can apply to requirements, design, source code, etc.)"
+    }
+   ],
+   "observed": [
+    {
+     "ref": "CVE-2008-1526",
+     "desc": "Router does not use a salt with a hash, making it easier to crack passwords."
+    },
+    {
+     "ref": "CVE-2006-1058",
+     "desc": "Router does not use a salt with a hash, making it easier to crack passwords."
+    },
+    {
+     "ref": "CVE-2008-4905",
+     "desc": "Blogging software uses a hard-coded salt when calculating a password hash."
+    },
+    {
+     "ref": "CVE-2002-1657",
+     "desc": "Database server uses the username for a salt when encrypting passwords, simplifying brute force attacks."
+    },
+    {
+     "ref": "CVE-2001-0967",
+     "desc": "Server uses a constant salt when encrypting passwords, simplifying brute force attacks."
+    },
+    {
+     "ref": "CVE-2005-0408",
+     "desc": "Chain: product generates predictable MD5 hashes using a constant value combined with username, allowing authentication bypass."
+    }
+   ],
+   "related": [
+    {
+     "nature": "ChildOf",
+     "id": "328",
+     "view": "1000"
+    }
+   ],
+   "taxonomy": [],
+   "observed_total": 6,
+   "technical_nuance": "",
+   "background": [],
+   "dimensions": []
+  }
+ }
+}

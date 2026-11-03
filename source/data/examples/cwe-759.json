@@ -1,0 +1,109 @@
+{
+ "cwe": "759",
+ "scenario_ko": "정비 단말·운용자 콘솔이 운용자 비밀번호를 그대로 두지 않고 일방향 해시값(검증값)으로 바꿔 계정 파일에 저장한다. 계정 파일이 유출되면 공격자는 같은 검증값끼리 묶고 미리 계산한 해시 표와 대조해 비밀번호를 알아낼 수 있다. 예시는 같은 비밀번호를 쓰는 두 계정의 검증값이 같은지 비교한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <openssl/sha.h>\n\n/* 정비 단말 계정 파일에 저장할 검증값: SHA-256(비밀번호) */\ntypedef struct {\n    char operator_id[16];\n    unsigned char verifier[SHA256_DIGEST_LENGTH];\n} AccountRecord;\n\nstatic void enroll(AccountRecord *rec, const char *id, const char *password)\n{\n    snprintf(rec->operator_id, sizeof rec->operator_id, \"%s\", id);\n    SHA256((const unsigned char *)password, strlen(password), rec->verifier);   /* 솔트 없음 */\n}\n\nint main(void)\n{\n    AccountRecord a, b;\n    enroll(&a, \"maint-01\", \"EXAMPLE-ONLY-pw1\");\n    enroll(&b, \"maint-02\", \"EXAMPLE-ONLY-pw1\");   /* 우연히 같은 비밀번호 */\n\n    /* 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다 */\n    puts(memcmp(a.verifier, b.verifier, sizeof a.verifier) == 0 ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    return 0;\n}\n",
+    "explain_ko": "비밀번호를 솔트 없이 SHA-256 한 번으로 바꿔 저장한다. 같은 비밀번호는 같은 검증값이 되어 한 계정만 풀면 나머지도 풀리고, 미리 계산한 표(레인보 테이블)가 그대로 통한다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <openssl/crypto.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n\n#define PBKDF2_ROUNDS 600000   /* 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다 */\n\n/* 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256 검증값 */\ntypedef struct {\n    char operator_id[16];\n    unsigned char salt[16];\n    unsigned char verifier[32];\n} AccountRecord;\n\nstatic int derive(const char *pw, const unsigned char *salt, unsigned char *out)\n{\n    return PKCS5_PBKDF2_HMAC(pw, (int)strlen(pw), salt, 16, PBKDF2_ROUNDS, EVP_sha256(), 32, out) == 1 ? 0 : -1;\n}\n\nstatic int enroll(AccountRecord *rec, const char *id, const char *pw)\n{\n    snprintf(rec->operator_id, sizeof rec->operator_id, \"%s\", id);\n    if (RAND_bytes(rec->salt, sizeof rec->salt) != 1) return -1;\n    return derive(pw, rec->salt, rec->verifier);\n}\n\nstatic int verify(const AccountRecord *rec, const char *pw)\n{\n    unsigned char probe[32];\n    return derive(pw, rec->salt, probe) == 0 && CRYPTO_memcmp(probe, rec->verifier, 32) == 0;\n}\n\nint main(void)\n{\n    AccountRecord a, b;\n    if (enroll(&a, \"maint-01\", \"EXAMPLE-ONLY-pw1\") != 0 || enroll(&b, \"maint-02\", \"EXAMPLE-ONLY-pw1\") != 0) {\n        return 1;\n    }\n    printf(\"login maint-01: %s\\n\", verify(&a, \"EXAMPLE-ONLY-pw1\") ? \"ok\" : \"denied\");\n    puts(memcmp(a.verifier, b.verifier, sizeof a.verifier) == 0 ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    return 0;\n}\n",
+    "explain_ko": "계정마다 RAND_bytes로 16바이트 솔트를 만들고 PBKDF2-HMAC-SHA256(반복 600,000회는 예시 값)으로 검증값을 만든다. 같은 비밀번호도 검증값이 달라지고, 비교는 CRYPTO_memcmp로 상수 시간에 한다. 반복 횟수는 장비 성능·인증 지연 요구에 맞춰 정한다(D-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "IDENTICAL VERIFIERS",
+    "expect_good": "verifiers differ",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-759 Demonstrative Example 1·2(솔트 없는 해시로 비밀번호 검사·저장) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-11 '솔트 없이 일방향 해쉬 함수 사용'(인쇄 114쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <openssl/evp.h>\n#include <array>\n#include <cstdio>\n#include <map>\n#include <string>\n\nusing Digest = std::array<unsigned char, 32>;\n\n// 운용자 콘솔 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다\nstatic Digest hash_password(const std::string &pw) {\n    Digest d{};\n    unsigned int len = 0;\n    EVP_Digest(pw.data(), pw.size(), d.data(), &len, EVP_sha256(), nullptr);   // 솔트 없음\n    return d;\n}\n\nint main() {\n    std::map<std::string, Digest> accounts;\n    accounts[\"op-alpha\"] = hash_password(\"EXAMPLE-ONLY-pw1\");\n    accounts[\"op-bravo\"] = hash_password(\"EXAMPLE-ONLY-pw1\");   // 우연히 같은 비밀번호\n\n    // 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다\n    std::puts(accounts[\"op-alpha\"] == accounts[\"op-bravo\"] ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    return 0;\n}\n",
+    "explain_ko": "EVP_Digest로 비밀번호를 솔트 없이 SHA-256 한 번 해시한다. 두 운용자가 같은 비밀번호를 쓰면 검증값이 같아져 계정 파일만 보고도 알 수 있다."
+   },
+   "good": {
+    "code": "#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <array>\n#include <cstdio>\n#include <map>\n#include <stdexcept>\n#include <string>\n\nconstexpr int kRounds = 600000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\n\nstruct Verifier {\n    std::array<unsigned char, 16> salt{};\n    std::array<unsigned char, 32> dk{};\n};\n\n// 계정마다 무작위 솔트 + PBKDF2-HMAC-SHA256(키 유도 함수)\nstatic Verifier enroll(const std::string &pw) {\n    Verifier v;\n    if (RAND_bytes(v.salt.data(), static_cast<int>(v.salt.size())) != 1 ||\n        PKCS5_PBKDF2_HMAC(pw.data(), static_cast<int>(pw.size()), v.salt.data(), static_cast<int>(v.salt.size()),\n                          kRounds, EVP_sha256(), static_cast<int>(v.dk.size()), v.dk.data()) != 1) {\n        throw std::runtime_error(\"enrollment failed\");\n    }\n    return v;\n}\n\nint main() {\n    std::map<std::string, Verifier> accounts;\n    accounts[\"op-alpha\"] = enroll(\"EXAMPLE-ONLY-pw1\");\n    accounts[\"op-bravo\"] = enroll(\"EXAMPLE-ONLY-pw1\");\n    std::puts(accounts[\"op-alpha\"].dk == accounts[\"op-bravo\"].dk ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    return 0;\n}\n",
+    "explain_ko": "계정마다 무작위 솔트와 PBKDF2-HMAC-SHA256을 쓰고 솔트를 검증값과 함께 저장한다(반복 횟수도 함께 기록해 두면 나중에 올리기 쉽다). 실패하면 예외로 등록을 멈춘다(D-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "IDENTICAL VERIFIERS",
+    "expect_good": "verifiers differ",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-759 Demonstrative Example 1·2(솔트 없는 해시로 비밀번호 검사·저장) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.nio.charset.StandardCharsets;\nimport java.security.GeneralSecurityException;\nimport java.security.MessageDigest;\nimport java.util.Arrays;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class Example {\n    // 정비 단말 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다\n    static byte[] hashPassword(char[] password) throws GeneralSecurityException {\n        MessageDigest sha = MessageDigest.getInstance(\"SHA-256\");\n        return sha.digest(new String(password).getBytes(StandardCharsets.UTF_8));   // 솔트 없음\n    }\n\n    public static void main(String[] args) throws GeneralSecurityException {\n        Map<String, byte[]> accounts = new HashMap<>();\n        accounts.put(\"maint-01\", hashPassword(\"EXAMPLE-ONLY-pw1\".toCharArray()));\n        accounts.put(\"maint-02\", hashPassword(\"EXAMPLE-ONLY-pw1\".toCharArray()));   // 우연히 같은 비밀번호\n\n        // 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다\n        boolean same = Arrays.equals(accounts.get(\"maint-01\"), accounts.get(\"maint-02\"));\n        System.out.println(same ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    }\n}\n",
+    "explain_ko": "MessageDigest SHA-256으로 비밀번호를 솔트 없이 해시한다. 같은 비밀번호는 같은 검증값이 되고 미리 계산한 표가 그대로 통한다."
+   },
+   "good": {
+    "code": "import java.security.GeneralSecurityException;\nimport java.security.MessageDigest;\nimport java.security.SecureRandom;\nimport java.util.Arrays;\nimport java.util.HashMap;\nimport java.util.Map;\nimport javax.crypto.SecretKeyFactory;\nimport javax.crypto.spec.PBEKeySpec;\n\npublic class Example {\n    static final SecureRandom RNG = new SecureRandom();\n    static final int ROUNDS = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\n\n    record Verifier(byte[] salt, byte[] dk) {}\n\n    static byte[] derive(char[] password, byte[] salt) throws GeneralSecurityException {\n        PBEKeySpec spec = new PBEKeySpec(password, salt, ROUNDS, 256);\n        try {\n            return SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA256\").generateSecret(spec).getEncoded();\n        } finally {\n            spec.clearPassword();\n        }\n    }\n\n    // 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256\n    static Verifier enroll(char[] password) throws GeneralSecurityException {\n        byte[] salt = new byte[16];\n        RNG.nextBytes(salt);\n        return new Verifier(salt, derive(password, salt));\n    }\n\n    static boolean verify(Verifier v, char[] attempt) throws GeneralSecurityException {\n        return MessageDigest.isEqual(derive(attempt, v.salt()), v.dk());   // 상수 시간 비교\n    }\n\n    public static void main(String[] args) throws GeneralSecurityException {\n        Map<String, Verifier> accounts = new HashMap<>();\n        accounts.put(\"maint-01\", enroll(\"EXAMPLE-ONLY-pw1\".toCharArray()));\n        accounts.put(\"maint-02\", enroll(\"EXAMPLE-ONLY-pw1\".toCharArray()));\n        System.out.println(\"login maint-01: \" + (verify(accounts.get(\"maint-01\"), \"EXAMPLE-ONLY-pw1\".toCharArray()) ? \"ok\" : \"denied\"));\n        boolean same = Arrays.equals(accounts.get(\"maint-01\").dk(), accounts.get(\"maint-02\").dk());\n        System.out.println(same ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n    }\n}\n",
+    "explain_ko": "SecretKeyFactory(\"PBKDF2WithHmacSHA256\")에 SecureRandom 솔트 16바이트와 반복 횟수를 지정하고, 비교는 MessageDigest.isEqual로 한다. PBEKeySpec의 비밀번호는 사용 뒤 지운다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "IDENTICAL VERIFIERS",
+    "expect_good": "verifiers differ"
+   },
+   "refs": [
+    "MITRE CWE-759 Demonstrative Example 1(솔트 없는 해시로 비밀번호 검사) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-15 '솔트 없이 일방향 해쉬함수 사용'(인쇄 167쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Security.Cryptography;\nusing System.Text;\n\n// 운용자 콘솔 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다(솔트 없음)\nstatic byte[] HashPassword(string password) => SHA256.HashData(Encoding.UTF8.GetBytes(password));\n\nvar accounts = new Dictionary<string, byte[]>\n{\n    [\"op-alpha\"] = HashPassword(\"EXAMPLE-ONLY-pw1\"),\n    [\"op-bravo\"] = HashPassword(\"EXAMPLE-ONLY-pw1\"),   // 우연히 같은 비밀번호\n};\n\n// 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다\nbool same = accounts[\"op-alpha\"].AsSpan().SequenceEqual(accounts[\"op-bravo\"]);\nConsole.WriteLine(same ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n",
+    "explain_ko": "SHA256.HashData로 비밀번호를 솔트 없이 해시한다. 같은 비밀번호는 같은 검증값이 되어 계정 파일에서 바로 드러난다."
+   },
+   "good": {
+    "code": "using System.Security.Cryptography;\n\nconst int Rounds = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\n\n// 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256\nstatic (byte[] Salt, byte[] Dk) Enroll(string password)\n{\n    byte[] salt = RandomNumberGenerator.GetBytes(16);\n    return (salt, Rfc2898DeriveBytes.Pbkdf2(password, salt, Rounds, HashAlgorithmName.SHA256, 32));\n}\n\nstatic bool Verify((byte[] Salt, byte[] Dk) v, string attempt) =>\n    CryptographicOperations.FixedTimeEquals(\n        Rfc2898DeriveBytes.Pbkdf2(attempt, v.Salt, Rounds, HashAlgorithmName.SHA256, 32), v.Dk);\n\nvar accounts = new Dictionary<string, (byte[] Salt, byte[] Dk)>\n{\n    [\"op-alpha\"] = Enroll(\"EXAMPLE-ONLY-pw1\"),\n    [\"op-bravo\"] = Enroll(\"EXAMPLE-ONLY-pw1\"),\n};\nConsole.WriteLine($\"login op-alpha: {(Verify(accounts[\"op-alpha\"], \"EXAMPLE-ONLY-pw1\") ? \"ok\" : \"denied\")}\");\nbool same = accounts[\"op-alpha\"].Dk.AsSpan().SequenceEqual(accounts[\"op-bravo\"].Dk);\nConsole.WriteLine(same ? \"IDENTICAL VERIFIERS\" : \"verifiers differ\");\n",
+    "explain_ko": "RandomNumberGenerator로 계정마다 솔트를 만들고 Rfc2898DeriveBytes.Pbkdf2(SHA-256, 반복 600,000회는 예시 값)로 검증값을 만든다. 비교는 CryptographicOperations.FixedTimeEquals로 상수 시간에 한다. 반복 횟수는 장비 성능·인증 지연 요구에 맞춰 정한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "IDENTICAL VERIFIERS",
+    "expect_good": "verifiers differ"
+   },
+   "refs": [
+    "MITRE CWE-759 Demonstrative Example 2(솔트 없는 해시로 비밀번호 저장) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import hashlib\n\naccounts = {}\n\n\n# 정비 단말이 운용자 비밀번호를 검증값으로 바꿔 계정 파일에 저장한다\ndef enroll(user, password):\n    accounts[user] = hashlib.sha256(password.encode()).hexdigest()   # 솔트 없이 해시\n\n\nenroll(\"op-kim\", \"EXAMPLE-ONLY-pw1\")\nenroll(\"op-park\", \"EXAMPLE-ONLY-pw1\")         # 다른 운용자가 같은 비밀번호를 고름\nsame = accounts[\"op-kim\"] == accounts[\"op-park\"]\nprint(\"IDENTICAL VERIFIERS\" if same else \"verifiers differ\")\n",
+    "explain_ko": "비밀번호를 솔트 없이 SHA-256 한 번으로 해시한다. 같은 비밀번호는 늘 같은 검증값이 되어 계정 파일만 보고도 누가 같은 비밀번호를 쓰는지 드러나고, 미리 계산한 해시 표(레인보 테이블)로 한꺼번에 되찾을 수 있다. 빠른 해시 한 번이라 대입 공격도 쉽다(CWE-916)."
+   },
+   "good": {
+    "code": "import hashlib\nimport hmac\nimport os\n\naccounts = {}\nSCRYPT = {\"n\": 2 ** 14, \"r\": 8, \"p\": 1}          # 예시 값, 대상 장비에서 재어 정한다\n\n\ndef enroll(user, password):\n    salt = os.urandom(16)                        # 계정마다 새 솔트\n    params = dict(SCRYPT)                        # 비용 인자를 계정 기록에 함께 남겨 나중에 올려도 기존 계정을 확인한다\n    digest = hashlib.scrypt(password.encode(), salt=salt, dklen=32, **params)\n    accounts[user] = (params, salt, digest)\n\n\ndef verify(user, password):\n    params, salt, digest = accounts[user]\n    trial = hashlib.scrypt(password.encode(), salt=salt, dklen=32, **params)\n    return hmac.compare_digest(trial, digest)\n\n\nenroll(\"op-kim\", \"EXAMPLE-ONLY-pw1\")\nenroll(\"op-park\", \"EXAMPLE-ONLY-pw1\")\nsame = accounts[\"op-kim\"][2] == accounts[\"op-park\"][2]\nprint(\"IDENTICAL VERIFIERS\" if same else \"verifiers differ\")\nprint(\"login op-kim:\", verify(\"op-kim\", \"EXAMPLE-ONLY-pw1\"))\n",
+    "explain_ko": "계정마다 os.urandom으로 새 솔트를 만들고, 비밀번호용으로 설계된 느린 함수(hashlib.scrypt·hashlib.pbkdf2_hmac, 또는 argon2-cffi 패키지의 Argon2)로 검증값을 만든다(D-05). 솔트와 비용 인자를 검증값과 함께 저장해 나중에 비용을 올릴 수 있게 한다. 확인할 때는 hmac.compare_digest로 비교한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "IDENTICAL VERIFIERS",
+    "expect_good": "verifiers differ"
+   },
+   "refs": [
+    "MITRE CWE-759 Demonstrative Example 2(솔트 없는 해시로 새 계정 비밀번호 저장) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-14 '솔트 없이 일방향 해시 함수 사용'(인쇄 112쪽) 참고"
+   ]
+  }
+ }
+}

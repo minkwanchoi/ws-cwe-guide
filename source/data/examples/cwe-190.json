@@ -1,0 +1,97 @@
+{
+ "cwe": "190",
+ "scenario_ko": "임무 계획 파일에서 경로점 개수와 경로점 하나의 크기를 읽어 버퍼 크기를 계산한다. 두 값 모두 파일에서 온다. C++ 예시는 거리 센서 값과 이득의 곱, Java 예시는 누적 가동 시간, C# 예시는 수신 패킷 수 누적을 다룬다. Python 예시는 센서 목록 메시지 머리부의 16비트 길이 필드(ctypes 구조체)에 센서 수 × 레코드 크기를 넣는다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n/* 파일 헤더에서 읽었다고 가정한 값 */\nstatic int32_t waypoint_count = 0x10000001;\nstatic int32_t waypoint_size = 16;\n\nint main(void)\n{\n    int32_t total = waypoint_count * waypoint_size;   /* 부호 있는 곱셈이 넘친다 */\n    printf(\"alloc %ld bytes\\n\", (long)total);\n    void *buf = malloc((size_t)total);\n    free(buf);\n    return 0;\n}\n",
+    "explain_ko": "두 값의 곱이 int32_t 범위를 넘으면 부호 있는 정수 오버플로(정의되지 않은 동작)가 일어나고, 결과가 작은 값이나 음수가 되어 필요한 것보다 작은 버퍼를 할당하게 된다."
+   },
+   "good": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_WAYPOINTS 4096u\n#define MAX_WAYPOINT_SIZE 256u\n\nstatic int32_t waypoint_count = 0x10000001;\nstatic int32_t waypoint_size = 16;\n\nint main(void)\n{\n    if (waypoint_count <= 0 || waypoint_size <= 0 || (uint32_t)waypoint_count > MAX_WAYPOINTS ||\n        (uint32_t)waypoint_size > MAX_WAYPOINT_SIZE) {\n        puts(\"rejected: waypoint field out of range\");\n        return 0;\n    }\n    size_t count = (size_t)waypoint_count;\n    size_t size = (size_t)waypoint_size;\n    if (count > SIZE_MAX / size) {\n        puts(\"rejected: size overflow\");\n        return 0;\n    }\n    void *buf = malloc(count * size);\n    if (buf == NULL) {\n        puts(\"rejected: out of memory\");\n        return 0;\n    }\n    printf(\"alloc %zu bytes\\n\", count * size);\n    free(buf);\n    return 0;\n}\n",
+    "explain_ko": "계산 전에 개수와 크기를 설계 상한(MAX_WAYPOINTS·MAX_WAYPOINT_SIZE)으로 제한하고, 곱셈은 넘치지 않는지(count > SIZE_MAX / size) 먼저 검사한 뒤 부호 없는 size_t로 하며, 할당 실패도 확인한다(I-05)."
+   },
+   "check": {
+    "tool": "ubsan",
+    "expect": "signed integer overflow"
+   },
+   "refs": [
+    "MITRE CWE-190 Demonstrative Example 1·2(곱셈 결과로 할당 크기 계산) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-7 '정수 오버플로우'(인쇄 29쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdint>\n#include <cstdio>\n\nstd::int32_t scale_range(std::int32_t raw_mm, std::int32_t gain) {\n    return raw_mm * gain;                    // 센서 원시값과 이득의 곱이 넘칠 수 있다\n}\n\nint main() {\n    std::int32_t raw = 900000;               // 거리 센서 값(mm)\n    std::int32_t gain = 4000;\n    std::printf(\"%d\\n\", scale_range(raw, gain));\n    return 0;\n}\n",
+    "explain_ko": "두 int32_t의 곱이 범위를 넘으면 정의되지 않은 동작이다. 최적화 수준에 따라 엉뚱한 거리값이 나오거나 뒤따르는 검사가 지워질 수 있다."
+   },
+   "good": {
+    "code": "#include <cstdint>\n#include <cstdio>\n#include <limits>\n#include <optional>\n\nstd::optional<std::int32_t> scale_range(std::int32_t raw_mm, std::int32_t gain) {\n    std::int64_t wide = static_cast<std::int64_t>(raw_mm) * gain;   // 넓은 형으로 계산\n    if (wide > std::numeric_limits<std::int32_t>::max() ||\n        wide < std::numeric_limits<std::int32_t>::min()) {\n        return std::nullopt;                 // 범위 밖은 상위에서 처리\n    }\n    return static_cast<std::int32_t>(wide);\n}\n\nint main() {\n    auto r = scale_range(900000, 4000);\n    if (!r) {\n        std::puts(\"rejected: range overflow\");\n        return 0;\n    }\n    std::printf(\"%d\\n\", *r);\n    return 0;\n}\n",
+    "explain_ko": "더 넓은 형(int64_t)으로 계산한 뒤 목표 형의 범위를 확인하고, 넘치면 값을 쓰지 않고 실패를 알린다."
+   },
+   "check": {
+    "tool": "ubsan",
+    "expect": "signed integer overflow"
+   },
+   "refs": [
+    "MITRE CWE-190 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "public class Example {\n    // 정비 기록에서 읽은 누적 가동 시간(초)과 추가 시간\n    static int addFlightSeconds(int total, int added) {\n        return total + added;                // 넘치면 조용히 음수가 된다\n    }\n\n    public static void main(String[] args) {\n        int total = Integer.MAX_VALUE - 10;\n        int next = addFlightSeconds(total, 3600);\n        if (next < 0) {\n            System.out.println(\"WRAPPED total=\" + next);\n        }\n    }\n}\n",
+    "explain_ko": "Java의 int 덧셈은 넘쳐도 예외 없이 값이 감긴다. 누적 가동 시간이 음수가 되어 정비 주기 판정이 틀어진다."
+   },
+   "good": {
+    "code": "public class Example {\n    static int addFlightSeconds(int total, int added) {\n        return Math.addExact(total, added);  // 넘치면 ArithmeticException\n    }\n\n    public static void main(String[] args) {\n        int total = Integer.MAX_VALUE - 10;\n        try {\n            int next = addFlightSeconds(total, 3600);\n            System.out.println(\"total=\" + next);\n        } catch (ArithmeticException e) {\n            System.out.println(\"rejected: counter overflow\");\n        }\n    }\n}\n",
+    "explain_ko": "Math.addExact로 넘침을 예외로 바꾸고, 예외를 받아 값을 저장하지 않는다(LJ-07)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "WRAPPED total=-",
+    "expect_good": "rejected: counter overflow"
+   },
+   "refs": [
+    "MITRE CWE-190 Demonstrative Example 4(합계를 더하다 넘침, 원문은 C) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-13 '정수 오버플로우'(인쇄 59쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 지상 통제 소프트웨어: 수신 패킷 수 누적\nint received = int.MaxValue - 1;\nint batch = 5;\nint total = received + batch;               // unchecked 기본값: 감긴다\nif (total < 0)\n{\n    Console.WriteLine($\"WRAPPED total={total}\");\n}\n",
+    "explain_ko": "C#은 기본이 unchecked 문맥이라 정수 덧셈이 넘쳐도 예외가 나지 않고 값이 감긴다."
+   },
+   "good": {
+    "code": "// 지상 통제 소프트웨어: 수신 패킷 수 누적\nint received = int.MaxValue - 1;\nint batch = 5;\ntry\n{\n    int total = checked(received + batch);  // 넘치면 OverflowException\n    Console.WriteLine($\"total={total}\");\n}\ncatch (OverflowException)\n{\n    Console.WriteLine(\"rejected: counter overflow\");\n}\n",
+    "explain_ko": "checked 문맥으로 넘침을 예외로 바꾸고 처리한다. 프로젝트 전체에 CheckForOverflowUnderflow를 켜는 방법도 있다(LCS-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "WRAPPED total=-",
+    "expect_good": "rejected: counter overflow"
+   },
+   "refs": [
+    "MITRE CWE-190 Demonstrative Example 4(합계를 더하다 넘침, 원문은 C) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import ctypes\n\n\nclass Header(ctypes.LittleEndianStructure):      # ICD 메시지 머리부(본문 길이 필드는 16비트)\n    _pack_ = 1\n    _fields_ = [(\"msg_id\", ctypes.c_uint16), (\"body_len\", ctypes.c_uint16)]\n\n\n# 센서 목록 메시지의 머리부를 만든다: 본문 길이 = 센서 수 × 센서 레코드 크기\ndef build_header(sensor_count, record_size):\n    hdr = Header()\n    hdr.msg_id = 0x2A1\n    hdr.body_len = sensor_count * record_size    # 65535를 넘으면 경고 없이 하위 16비트만 남는다\n    return hdr\n\n\nprint(\"body_len:\", build_header(20, 48).body_len)\nprint(\"body_len:\", build_header(1400, 48).body_len, \"(needed 67200)\")   # 수신 측은 1664바이트만 읽는다\n",
+    "explain_ko": "Python의 int는 임의 정밀도라 계산 자체는 넘치지 않는다. 그러나 ctypes 구조체·numpy 배열 같은 고정 폭 형에 값을 넣으면 C와 같이 하위 비트만 남는다. 엄밀히는 대입 때의 잘림(CWE-197)이며, Python에서 이 약점이 나타나는 대표 경로다. 예시는 67200을 16비트 길이 필드에 넣어 1664가 되고, 수신 측은 본문을 짧게 읽어 레코드를 잘못 해석한다. ctypes 필드 대입은 예외도 경고도 내지 않는다."
+   },
+   "good": {
+    "code": "import ctypes\n\nU16_MAX = 0xFFFF\n\n\nclass Header(ctypes.LittleEndianStructure):\n    _pack_ = 1\n    _fields_ = [(\"msg_id\", ctypes.c_uint16), (\"body_len\", ctypes.c_uint16)]\n\n\ndef build_header(sensor_count, record_size):\n    body_len = sensor_count * record_size        # Python int로 먼저 계산(넘침 없음)\n    if not 0 <= body_len <= U16_MAX:             # 고정 폭 필드에 넣기 전에 범위를 확인\n        raise ValueError(f\"body too long for 16-bit length field: {body_len}\")\n    hdr = Header()\n    hdr.msg_id = 0x2A1\n    hdr.body_len = body_len\n    return hdr\n\n\nprint(\"body_len:\", build_header(20, 48).body_len)\ntry:\n    build_header(1400, 48)\nexcept ValueError as e:\n    print(\"rejected:\", e)                        # 메시지를 나눠 보내거나 센서 수를 제한한다\n",
+    "explain_ko": "길이는 Python int로 먼저 계산하고, 고정 폭 필드에 넣기 전에 그 필드가 담을 수 있는 범위(0~65535)인지 확인해 넘으면 거부한다(I-05). struct.pack과 int.to_bytes는 범위를 넘으면 예외를 내지만 ctypes 필드와 numpy 정수 배열 연산은 조용히 넘치므로, ICD 구조체를 ctypes·numpy로 다룰 때는 이 확인을 직접 넣는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "body_len: 1664",
+    "expect_good": "rejected: body too long for 16-bit length field"
+   },
+   "refs": [
+    "MITRE CWE-190 Demonstrative Example 1(개수×크기로 버퍼 크기를 계산) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 입력데이터 검증 및 표현 1-14 '정수형 오버플로우'(인쇄 61쪽) 참고"
+   ]
+  }
+ }
+}

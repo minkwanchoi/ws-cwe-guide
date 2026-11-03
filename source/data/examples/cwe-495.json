@@ -1,0 +1,97 @@
+{
+ "cwe": "495",
+ "scenario_ko": "고도 제한표·무선 허용 모드·서보 구동 금지 각도·승인 채널표처럼 안전에 직결되는 표를 모듈이나 클래스 안에 감춰 두고, 화면 표시 등 다른 코드가 읽어 간다. 읽기용으로 내준 배열이 내부 저장소 그 자체이면, 받은 쪽이 단위 변환·정렬·편집을 하는 순간 내부 상태가 바뀐다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n\n/* ---- 비행 제한 모듈(fence.c): 고도 제한표는 모듈 내부(static) 자료다 ---- */\nstatic int altitude_limit_m[3] = {120, 300, 1500};   /* 구역별 최대 고도 */\n\nint *fence_limits(void)                  /* 내부 배열의 쓰기 가능한 주소를 그대로 내준다 */\n{\n    return altitude_limit_m;\n}\n\nint fence_allows(int zone, int alt_m)\n{\n    return alt_m <= altitude_limit_m[zone];\n}\n\n/* ---- 다른 모듈(표시 장치): 화면 단위 변환을 하려다 내부 표를 바꿔 버린다 ---- */\nstatic void show_limits_in_feet(void)\n{\n    int *lim = fence_limits();\n    for (int i = 0; i < 3; ++i) {\n        lim[i] = lim[i] * 328 / 100;      /* 복사본이라 생각하고 덮어씀 */\n        printf(\"zone %d: %d ft\\n\", i, lim[i]);\n    }\n}\n\nint main(void)\n{\n    show_limits_in_feet();\n    printf(\"zone 0 allows 350 m? %s\\n\", fence_allows(0, 350) ? \"YES (limit table corrupted)\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "모듈 내부 static 배열의 쓰기 가능한 주소를 그대로 돌려준다. 표시 모듈이 단위를 피트로 바꾸려고 덮어쓰자 비행 제한 판정이 바뀌어 350 m 비행이 허용된다. C에는 접근 제어가 없지만 파일 범위 static이 private 역할을 하므로 같은 약점이 생긴다."
+   },
+   "good": {
+    "code": "#include <stddef.h>\n#include <stdio.h>\n\n/* ---- 비행 제한 모듈(fence.c) ---- */\nstatic int altitude_limit_m[3] = {120, 300, 1500};\n\n/* 호출자 버퍼에 복사해 준다: 내부 표의 주소는 모듈 밖으로 나가지 않는다 */\nsize_t fence_copy_limits(int *out, size_t cap)\n{\n    size_t n = sizeof altitude_limit_m / sizeof altitude_limit_m[0];\n    if (out == NULL || cap < n) {\n        return 0;\n    }\n    for (size_t i = 0; i < n; ++i) {\n        out[i] = altitude_limit_m[i];\n    }\n    return n;\n}\n\nint fence_allows(int zone, int alt_m)\n{\n    if (zone < 0 || (size_t)zone >= sizeof altitude_limit_m / sizeof altitude_limit_m[0]) {\n        return 0;                         /* 알 수 없는 구역은 허용하지 않는다 */\n    }\n    return alt_m <= altitude_limit_m[zone];\n}\n\n/* ---- 다른 모듈(표시 장치) ---- */\nstatic void show_limits_in_feet(void)\n{\n    int lim[3];\n    size_t n = fence_copy_limits(lim, 3);\n    for (size_t i = 0; i < n; ++i) {\n        lim[i] = lim[i] * 328 / 100;      /* 복사본만 바뀐다 */\n        printf(\"zone %u: %d ft\\n\", (unsigned)i, lim[i]);\n    }\n}\n\nint main(void)\n{\n    show_limits_in_feet();\n    printf(\"zone 0 allows 350 m? %s\\n\", fence_allows(0, 350) ? \"YES (limit table corrupted)\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "호출자 버퍼에 복사해 주는 함수로 바꿔 내부 표의 주소가 모듈 밖으로 나가지 않게 하고, 구역 번호도 범위를 검사해 알 수 없는 구역은 허용하지 않는다. const 포인터를 돌려주는 방법도 있지만 형 변환으로 const를 벗길 수 있으므로 안전 관련 표는 복사가 낫다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "YES \\(limit table corrupted\\)",
+    "expect_good": "zone 0 allows 350 m\\? no"
+   },
+   "refs": [
+    "MITRE CWE-495 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <array>\n#include <cstdio>\n\n// 무선 통신 제어기: 허용 모드 코드표는 private 멤버다\nclass RadioController {\n    std::array<int, 3> allowedModes_{1, 2, 5};\npublic:\n    std::array<int, 3> &AllowedModes() { return allowedModes_; }   // 내부 배열의 참조를 내준다\n    bool Accepts(int mode) const {\n        for (int m : allowedModes_) {\n            if (m == mode) return true;\n        }\n        return false;\n    }\n};\n\nint main() {\n    RadioController radio;\n    auto &modes = radio.AllowedModes();\n    modes[2] = 4;                      // 화면용 정렬·편집이 그대로 내부 상태를 바꾼다\n    std::printf(\"mode 5 accepted: %s\\n\", radio.Accepts(5) ? \"yes\" : \"NO (private table changed from outside)\");\n    std::printf(\"mode 4 accepted: %s\\n\", radio.Accepts(4) ? \"YES (private table changed from outside)\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "private 멤버 배열의 비-const 참조를 반환한다. 받은 쪽이 요소를 고치면 제어기의 허용 모드표가 바뀌어, 허용되지 않은 모드를 받아들인다."
+   },
+   "good": {
+    "code": "#include <array>\n#include <cstdio>\n\n// 무선 통신 제어기\nclass RadioController {\n    std::array<int, 3> allowedModes_{1, 2, 5};\npublic:\n    std::array<int, 3> AllowedModes() const { return allowedModes_; }  // 값(복사본)으로 돌려준다\n    // 복사 비용이 문제면 const 참조: const std::array<int, 3> &AllowedModesView() const\n    bool Accepts(int mode) const {\n        for (int m : allowedModes_) {\n            if (m == mode) return true;\n        }\n        return false;\n    }\n};\n\nint main() {\n    RadioController radio;\n    auto modes = radio.AllowedModes();\n    modes[2] = 4;                      // 복사본만 바뀐다\n    std::printf(\"mode 5 accepted: %s\\n\", radio.Accepts(5) ? \"yes\" : \"NO (private table changed from outside)\");\n    std::printf(\"mode 4 accepted: %s\\n\", radio.Accepts(4) ? \"YES (private table changed from outside)\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "값(복사본)으로 돌려주도록 바꾼다. 복사 비용이 부담되면 const 참조를 돌려주되, 비-const 참조·포인터는 내주지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "\\(private table changed from outside\\)",
+    "expect_good": "mode 4 accepted: no"
+   },
+   "refs": [
+    "MITRE CWE-495 Demonstrative Example 2(private 멤버의 비-const 참조 반환) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 무인기 지상통제: 승인된 데이터링크 주파수 채널표\nvar plan = new LinkPlan();\nint[] shown = plan.ApprovedChannels;\nshown[0] = 99;                                   // 외부 코드가 받은 배열을 고친다\nConsole.WriteLine($\"channel 99 approved: {(plan.IsApproved(99) ? \"YES (private array modified)\" : \"no\")}\");\n\npublic sealed class LinkPlan\n{\n    private readonly int[] _approvedChannels = [12, 17, 23];\n\n    public int[] ApprovedChannels => _approvedChannels;   // CA1819: 속성이 내부 배열을 그대로 반환\n\n    public bool IsApproved(int channel) => Array.IndexOf(_approvedChannels, channel) >= 0;\n}\n",
+    "explain_ko": "public 속성이 private 배열을 그대로 반환한다. 받은 쪽이 요소를 바꾸면 승인 채널표가 바뀐다. .NET 분석기가 CA1819(속성은 배열을 반환하면 안 됨)로 알려 준다."
+   },
+   "good": {
+    "code": "// 무인기 지상통제: 승인된 데이터링크 주파수 채널표\nvar plan = new LinkPlan();\nint[] shown = plan.CopyApprovedChannels();       // 필요하면 복사본을 받는다\nshown[0] = 99;                                   // 복사본만 바뀐다\nConsole.WriteLine($\"channels: {string.Join(\",\", plan.ApprovedChannels)}\");\nConsole.WriteLine($\"channel 99 approved: {(plan.IsApproved(99) ? \"YES (private array modified)\" : \"no\")}\");\n\npublic sealed class LinkPlan\n{\n    private readonly int[] _approvedChannels = [12, 17, 23];\n\n    // 읽기 전용 뷰: 호출자는 요소를 바꿀 수 없다\n    public IReadOnlyList<int> ApprovedChannels => Array.AsReadOnly(_approvedChannels);\n\n    public int[] CopyApprovedChannels() => (int[])_approvedChannels.Clone();\n\n    public bool IsApproved(int channel) => Array.IndexOf(_approvedChannels, channel) >= 0;\n}\n",
+    "explain_ko": "속성은 Array.AsReadOnly()로 만든 읽기 전용 뷰(IReadOnlyList<int>)를 내주고, 배열이 꼭 필요하면 복사본을 돌려주는 메서드를 따로 둔다."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA1819"
+   },
+   "refs": [
+    "MITRE CWE-495 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.stream.IntStream;\n\n// 서보 제어: 기구 간섭 구역 중심 각도(도) 목록, 앞뒤 5도까지 구동 금지\nfinal class ServoControl {\n    private final int[] blockedAngles = {0, 90, 180};\n\n    public int[] getBlockedAngles() {\n        return blockedAngles;                    // private 배열의 참조를 그대로 반환\n    }\n\n    public boolean mayMoveTo(int angle) {\n        return IntStream.of(blockedAngles).allMatch(a -> Math.abs(a - angle) > 5);\n    }\n}\n\npublic class Example {\n    public static void main(String[] args) {\n        ServoControl servo = new ServoControl();\n        // 외부 화면 코드: 화면 기준(45도 회전)으로 바꾸려고 받은 배열을 고친다\n        int[] screen = servo.getBlockedAngles();\n        for (int i = 0; i < screen.length; i++) {\n            screen[i] = (screen[i] + 45) % 360;\n        }\n        String verdict = servo.mayMoveTo(92) ? \"ALLOWED (private array modified)\" : \"blocked\";\n        System.out.println(\"move to 92 deg: \" + verdict);\n    }\n}\n",
+    "explain_ko": "private 배열 필드의 참조를 getter가 그대로 반환한다. final은 참조만 고정할 뿐 요소 변경을 막지 못하므로, 화면 코드가 표시용으로 값을 바꾸자 구동 금지 구역이 옮겨져 92도 구동이 허용된다."
+   },
+   "good": {
+    "code": "import java.util.List;\nimport java.util.stream.IntStream;\n\n// 서보 제어: 기구 간섭 구역 중심 각도(도) 목록, 앞뒤 5도까지 구동 금지\nfinal class ServoControl {\n    private final int[] blockedAngles = {0, 90, 180};\n\n    public int[] getBlockedAngles() {\n        return blockedAngles.clone();            // 복사본을 반환\n    }\n\n    public List<Integer> blockedAngleList() {    // 또는 수정할 수 없는 목록으로\n        return IntStream.of(blockedAngles).boxed().toList();\n    }\n\n    public boolean mayMoveTo(int angle) {\n        return IntStream.of(blockedAngles).allMatch(a -> Math.abs(a - angle) > 5);\n    }\n}\n\npublic class Example {\n    public static void main(String[] args) {\n        ServoControl servo = new ServoControl();\n        int[] screen = servo.getBlockedAngles();\n        for (int i = 0; i < screen.length; i++) {\n            screen[i] = (screen[i] + 45) % 360;   // 복사본만 바뀐다\n        }\n        String verdict = servo.mayMoveTo(92) ? \"ALLOWED (private array modified)\" : \"blocked\";\n        System.out.println(\"move to 92 deg: \" + verdict + \", list=\" + servo.blockedAngleList());\n    }\n}\n",
+    "explain_ko": "clone()으로 복사본을 반환하거나, 수정할 수 없는 목록(Stream.toList()·List.copyOf())으로 내준다. SpotBugs를 쓰면 EI_EXPOSE_REP로도 찾을 수 있다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "ALLOWED \\(private array modified\\)",
+    "expect_good": "move to 92 deg: blocked"
+   },
+   "refs": [
+    "MITRE CWE-495 Demonstrative Example 1(public 메서드가 private 배열의 참조 반환) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 캡슐화 6-4 'Public 메소드부터 반환된 private 배열'(인쇄 277쪽) 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "class RadioPolicy:\n    \"\"\"무선 허용 모드 표를 감춰 두고 화면에 보여 줄 때만 꺼내 준다.\"\"\"\n\n    def __init__(self):\n        self._allowed_modes = [1, 2, 4]           # 밑줄은 '내부용'이라는 약속일 뿐\n\n    def allowed_modes(self):\n        return self._allowed_modes                # 내부 리스트를 그대로 돌려준다\n\n\npolicy = RadioPolicy()\nshown = policy.allowed_modes()                    # 화면 모듈이 받은 리스트\nshown.append(3)                                   # 화면 정렬·편집 코드가 리스트를 바꾼다\nprint(\"mode 3\", \"ALLOWED (internal table modified)\" if 3 in policy.allowed_modes() else \"denied\")\n",
+    "explain_ko": "Python에는 private 접근 제한이 없고 밑줄(_)은 관례다. 문제는 접근자가 내부의 바꿀 수 있는 리스트를 그대로 돌려주는 것이다. 받은 쪽이 리스트를 바꾸면 객체 안의 안전 표가 함께 바뀌어, 허용하지 않은 모드 3이 허용된다."
+   },
+   "good": {
+    "code": "class RadioPolicy:\n    \"\"\"무선 허용 모드 표를 감춰 두고 화면에 보여 줄 때만 꺼내 준다.\"\"\"\n\n    def __init__(self):\n        self._allowed_modes = (1, 2, 4)           # 바꿀 수 없는 튜플로 보관\n\n    def allowed_modes(self):\n        return list(self._allowed_modes)          # 호출자에게는 사본을 준다\n\n\npolicy = RadioPolicy()\nshown = policy.allowed_modes()\nshown.append(3)                                   # 사본만 바뀐다\nprint(\"mode 3\", \"ALLOWED (internal table modified)\" if 3 in policy.allowed_modes() else \"denied\")\n",
+    "explain_ko": "안전에 직결되는 표는 튜플·frozenset처럼 바꿀 수 없는 형으로 보관하고, 밖으로는 사본(list(…))이나 읽기 전용 뷰(types.MappingProxyType)를 준다. 리스트 안에 바꿀 수 있는 객체가 들어 있으면 copy.deepcopy로 사본을 만들거나 원소도 바꿀 수 없는 형(frozen dataclass)으로 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "ALLOWED \\(internal table modified\\)",
+    "expect_good": "mode 3 denied"
+   },
+   "refs": [
+    "MITRE CWE-495 Demonstrative Example 1(public 메서드가 private 배열 참조를 반환) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 캡슐화 6-3 'Public 메소드로부터 반환된 Private 배열'(인쇄 151쪽) 참고"
+   ]
+  }
+ }
+}

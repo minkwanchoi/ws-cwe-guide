@@ -1,0 +1,102 @@
+{
+ "cwe": "489",
+ "scenario_ko": "장비의 정비 명령 처리기와 운용자 콘솔에는 개발 중 벤치 시험 편의를 위해 인증이나 자체 시험(BIT)을 건너뛰는 디버그 명령·실행 옵션을 두곤 한다. 이것이 출하 빌드에 남으면 정비 단말에 접근한 누구나 인증 없이 파라미터를 바꾸거나, 자체 시험에 실패한 장비를 운용 모드로 올릴 수 있다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n\ntypedef struct {\n    const char *name;\n    void (*run)(void);\n} MaintCmd;\n\nstatic int authenticated;\nstatic int servo_gain = 400;\n\nstatic void cmd_param_set(void)\n{\n    if (!authenticated) {\n        puts(\"param-set: denied (login required)\");\n        return;\n    }\n    servo_gain = 900;\n    printf(\"param-set: gain=%d\\n\", servo_gain);\n}\n\nstatic void cmd_dbg_unlock(void)     /* 개발 중 벤치 시험 편의를 위해 만든 명령 */\n{\n    authenticated = 1;\n    puts(\"dbg-unlock: login skipped\");\n}\n\nstatic const MaintCmd commands[] = {\n    {\"param-set\", cmd_param_set},\n    {\"dbg-unlock\", cmd_dbg_unlock},  /* 출하 빌드에도 그대로 남았다 */\n};\n\nstatic void dispatch(const char *name)\n{\n    for (size_t i = 0; i < sizeof commands / sizeof commands[0]; ++i) {\n        if (strcmp(commands[i].name, name) == 0) {\n            commands[i].run();\n            return;\n        }\n    }\n    printf(\"%s: unknown command\\n\", name);\n}\n\nint main(void)\n{\n    const char *session[] = {\"dbg-unlock\", \"param-set\"};  /* 로그인 없이 접속한 정비 단말 */\n    for (size_t i = 0; i < 2; ++i) dispatch(session[i]);\n    return 0;\n}\n",
+    "explain_ko": "벤치 시험용 dbg-unlock 명령이 출하 빌드의 명령 표에 그대로 남아, 로그인 없이 접속한 단말이 이 명령 하나로 인증을 건너뛰고 서보 이득을 바꾼다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <string.h>\n\ntypedef struct {\n    const char *name;\n    void (*run)(void);\n} MaintCmd;\n\nstatic int authenticated;\nstatic int servo_gain = 400;\n\nstatic void cmd_param_set(void)\n{\n    if (!authenticated) {\n        puts(\"param-set: denied (login required)\");\n        return;\n    }\n    servo_gain = 900;\n    printf(\"param-set: gain=%d\\n\", servo_gain);\n}\n\n/* 벤치 시험 명령은 bench_cmds.c에만 두고, 그 파일은 시험 빌드의 소스 목록에만 넣는다.\n   출하 빌드의 명령 표에는 운용 명령만 있다. */\nstatic const MaintCmd commands[] = {\n    {\"param-set\", cmd_param_set},\n};\n\nstatic void dispatch(const char *name)\n{\n    for (size_t i = 0; i < sizeof commands / sizeof commands[0]; ++i) {\n        if (strcmp(commands[i].name, name) == 0) {\n            commands[i].run();\n            return;\n        }\n    }\n    printf(\"%s: unknown command\\n\", name);\n}\n\nint main(void)\n{\n    const char *session[] = {\"dbg-unlock\", \"param-set\"};  /* 시연용 입력: 출하 코드에는 없다 */\n    for (size_t i = 0; i < 2; ++i) dispatch(session[i]);\n    return 0;\n}\n",
+    "explain_ko": "시험 명령을 별도 소스 파일로 분리해 시험 빌드의 소스 목록에만 넣고, 출하 빌드의 명령 표에는 운용 명령만 둔다. 출하 바이너리에 디버그 명령 문자열이 없는지 통합 및 시험 단계에서 확인한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "gain=900",
+    "expect_good": "dbg-unlock: unknown command"
+   },
+   "refs": [
+    "MITRE CWE-489 Demonstrative Example 1(debug 매개변수로 인증 우회) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 캡슐화 6-1 '제거되지 않고 남은 디버그 코드'(인쇄 188쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <string_view>\n\n// 운용자 콘솔 실행 파일의 시작 옵션 처리\nint main(int argc, char *argv[]) {\n    bool login_done = false;\n    for (int i = 1; i < argc; ++i) {\n        std::string_view opt(argv[i]);\n        if (opt == \"--bench-noauth\") {      // 벤치 시험 때 쓰던 옵션이 출하판에 남았다\n            login_done = true;\n        } else {\n            std::cout << \"unknown option \" << opt << '\\n';\n        }\n    }\n    if (login_done) {\n        std::cout << \"console: maintenance mode opened without login\\n\";\n    } else {\n        std::cout << \"console: login required\\n\";\n    }\n    return 0;\n}\n",
+    "explain_ko": "벤치 시험 때 쓰던 --bench-noauth 시작 옵션이 출하판에 남아 있어, 이 옵션만 주면 로그인 없이 정비 모드가 열린다."
+   },
+   "good": {
+    "code": "#include <array>\n#include <iostream>\n#include <string_view>\n\n// 출하 빌드가 받아들이는 옵션(시험 전용 옵션은 시험 빌드 대상에만 있다)\nconstexpr std::array<std::string_view, 2> kReleaseOptions = {\"--verbose\", \"--night-palette\"};\n\nint main(int argc, char *argv[]) {\n    for (int i = 1; i < argc; ++i) {\n        std::string_view opt(argv[i]);\n        bool known = false;\n        for (std::string_view k : kReleaseOptions) {\n            known = known || (opt == k);\n        }\n        if (!known) {\n            std::cout << \"unknown option \" << opt << \": ignored\\n\";\n        }\n    }\n    std::cout << \"console: login required\\n\";   // 인증을 건너뛰는 경로가 없다\n    return 0;\n}\n",
+    "explain_ko": "출하 빌드가 받아들이는 옵션을 허용목록으로 고정하고 인증 우회 경로 자체를 두지 않는다. 시험 전용 옵션은 시험 빌드 대상에만 넣는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "opened without login",
+    "expect_good": "unknown option --bench-noauth: ignored",
+    "args": [
+     "--bench-noauth"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-489 Demonstrative Example 1(debug 매개변수로 인증 우회) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class Example {\n    static boolean bitPassed = false;     // 자체 시험(BIT) 결과\n\n    static boolean runBit() {\n        return false;                     // 시험용 모의: 관성 센서 BIT 실패\n    }\n\n    public static void main(String[] args) {\n        Map<String, Runnable> console = new LinkedHashMap<>();\n        console.put(\"bit.run\", () -> bitPassed = runBit());\n        console.put(\"mode.operate\", () -> System.out.println(\n                bitPassed ? \"OPERATE mode entered\" : \"BIT failed: stay in MAINT\"));\n        // 개발 중 BIT를 건너뛰려고 넣은 명령이 배포본에 남았다\n        console.put(\"dbg.skipbit\", () -> bitPassed = true);\n\n        for (String cmd : new String[] {\"bit.run\", \"dbg.skipbit\", \"mode.operate\"}) {\n            console.getOrDefault(cmd, () -> System.out.println(cmd + \": unknown command\")).run();\n        }\n    }\n}\n",
+    "explain_ko": "개발 중 BIT를 건너뛰려고 넣은 dbg.skipbit 명령이 배포본에 남아, 관성 센서 BIT에 실패한 장비가 운용 모드로 올라간다."
+   },
+   "good": {
+    "code": "import java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class Example {\n    // 빌드 스크립트가 생성하는 상수: 출하 빌드에서는 false\n    static final class BuildFlags {\n        static final boolean BENCH = false;\n    }\n\n    static boolean bitPassed = false;     // 자체 시험(BIT) 결과\n\n    static boolean runBit() {\n        return false;                     // 시험용 모의: 관성 센서 BIT 실패\n    }\n\n    public static void main(String[] args) {\n        Map<String, Runnable> console = new LinkedHashMap<>();\n        console.put(\"bit.run\", () -> bitPassed = runBit());\n        console.put(\"mode.operate\", () -> System.out.println(\n                bitPassed ? \"OPERATE mode entered\" : \"BIT failed: stay in MAINT\"));\n        if (BuildFlags.BENCH) {\n            // 상수 false 조건이라 등록 문장은 실행 경로에서 빠진다(람다 본문은 클래스 파일에 남을 수 있다)\n            console.put(\"dbg.skipbit\", () -> bitPassed = true);\n        }\n\n        // 시연용 입력: 출하 코드에는 없다\n        for (String cmd : new String[] {\"bit.run\", \"dbg.skipbit\", \"mode.operate\"}) {\n            console.getOrDefault(cmd, () -> System.out.println(cmd + \": unknown command\")).run();\n        }\n    }\n}\n",
+    "explain_ko": "빌드가 생성하는 상수(출하 빌드는 false)로 시험 명령 등록을 감싸, 출하 빌드에서는 등록 문장이 실행 경로에서 빠진다(람다 본문은 합성 메서드로 클래스 파일에 남을 수 있다). 확실히 하려면 C 예시처럼 시험 명령을 시험 빌드 전용 소스 세트로 분리한다. 배포물 문자열 검사로 남은 명령이 없는지 확인한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "OPERATE mode entered",
+    "expect_good": "dbg\\.skipbit: unknown command"
+   },
+   "refs": [
+    "MITRE CWE-489 Demonstrative Example 1(debug 매개변수로 인증 우회) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 캡슐화 6-2 '제거되지 않고 남은 디버그 코드'(인쇄 272쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "bool authenticated = false;\nint gain = 400;\n\n// 정비 단말 명령 처리\nvoid Handle(string cmd)\n{\n    switch (cmd)\n    {\n        case \"param-set\":\n            if (!authenticated)\n            {\n                Console.WriteLine(\"param-set: denied (login required)\");\n                return;\n            }\n            gain = 900;\n            Console.WriteLine($\"param-set: gain={gain}\");\n            break;\n        case \"dbg-unlock\":                  // 개발 중 쓰던 인증 우회 명령이 그대로 빌드된다\n            authenticated = true;\n            Console.WriteLine(\"dbg-unlock: login skipped\");\n            break;\n        default:\n            Console.WriteLine($\"{cmd}: unknown command\");\n            break;\n    }\n}\n\nforeach (string c in new[] { \"dbg-unlock\", \"param-set\" })\n{\n    Handle(c);\n}\n",
+    "explain_ko": "인증 우회용 dbg-unlock 명령이 아무 조건 없이 빌드되어, 출하판에서도 이 명령으로 로그인 없이 파라미터를 바꿀 수 있다."
+   },
+   "good": {
+    "code": "bool authenticated = false;\nint gain = 400;\n\nvoid Handle(string cmd)\n{\n    switch (cmd)\n    {\n        case \"param-set\":\n            if (!authenticated)\n            {\n                Console.WriteLine(\"param-set: denied (login required)\");\n                return;\n            }\n            gain = 900;\n            Console.WriteLine($\"param-set: gain={gain}\");\n            break;\n#if MAINT_BENCH\n        // 벤치 시험 빌드 구성에서만 정의하는 기호. 출하 구성(Release)에는 없다\n        case \"dbg-unlock\":\n            authenticated = true;\n            Console.WriteLine(\"dbg-unlock: login skipped\");\n            break;\n#endif\n        default:\n            Console.WriteLine($\"{cmd}: unknown command\");\n            break;\n    }\n}\n\nforeach (string c in new[] { \"dbg-unlock\", \"param-set\" })\n{\n    Handle(c);\n}\n",
+    "explain_ko": "시험 명령을 벤치 시험 빌드 구성에서만 정의하는 기호(MAINT_BENCH)로 감싸 출하 구성에서는 컴파일되지 않게 한다. DEBUG 기호는 일반 디버그 빌드에도 켜지므로 시험 전용 기호를 따로 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "gain=900",
+    "expect_good": "dbg-unlock: unknown command"
+   },
+   "refs": [
+    "MITRE CWE-489 Demonstrative Example 1(debug 매개변수로 인증 우회) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import hashlib\nimport hmac\nimport os\n\n# 시험 준비: 실제로는 등록 절차에서 만든 솔트와 검증값을 보호 저장소에서 읽는다\nPIN_SALT = os.urandom(16)\n\n\ndef pin_hash(pin):\n    return hashlib.scrypt(pin.encode(), salt=PIN_SALT, n=2 ** 14, r=8, p=1, dklen=32)\n\n\nOPERATOR_PIN_HASH = pin_hash(\"EXAMPLE-ONLY\")\n\n\n# 장비 정비 명령 처리기\ndef handle(command, pin=\"\"):\n    if command == \"DBG_SKIP_AUTH\":                   # 벤치 시험 때 쓰던 디버그 명령이 그대로 남음\n        return \"OPERATE mode entered (auth skipped)\"\n    if command == \"OPERATE\":\n        if hmac.compare_digest(pin_hash(pin), OPERATOR_PIN_HASH):\n            return \"OPERATE mode entered\"\n        return \"auth failed\"\n    return \"unknown command\"\n\n\nprint(handle(\"OPERATE\", \"wrong\"))\nprint(handle(\"DBG_SKIP_AUTH\"))                       # 운용 배포본에서도 인증 없이 운용 모드\n",
+    "explain_ko": "벤치 시험 때 인증을 건너뛰려고 넣은 디버그 명령이 운용 배포본에 남았다. 정비 포트에 이 명령 이름만 보내면 인증 없이 운용 모드로 들어간다. Python에서는 breakpoint() 호출·import pdb, 웹 프레임워크의 debug=True(Bandit B201: Flask 디버그 모드), 디버그용 원격 셸이 같은 꼴로 남는다."
+   },
+   "good": {
+    "code": "import hashlib\nimport hmac\nimport os\n\n# 시험 준비: 실제로는 등록 절차에서 만든 솔트와 검증값을 보호 저장소에서 읽는다\nPIN_SALT = os.urandom(16)\n\n\ndef pin_hash(pin):\n    return hashlib.scrypt(pin.encode(), salt=PIN_SALT, n=2 ** 14, r=8, p=1, dklen=32)\n\n\nOPERATOR_PIN_HASH = pin_hash(\"EXAMPLE-ONLY\")\n\n\n# 운용 배포본의 명령 처리기에는 인증을 건너뛰는 경로가 없다.\n# 벤치 시험용 명령은 별도 시험 모듈(tests/bench_tools.py)에 두고 운용 배포 묶음에서 빼며,\n# 배포 전 검사가 'DBG_' 명령·breakpoint()·pdb 가져오기가 남았는지 확인한다.\ndef handle(command, pin=\"\"):\n    if command == \"OPERATE\":\n        if hmac.compare_digest(pin_hash(pin), OPERATOR_PIN_HASH):\n            return \"OPERATE mode entered\"\n        return \"auth failed\"\n    return \"unknown command\"\n\n\nprint(handle(\"OPERATE\", \"wrong\"))\nprint(handle(\"DBG_SKIP_AUTH\"))\n",
+    "explain_ko": "운용 처리기에서 디버그 경로를 없애고, 벤치 시험 도구는 별도 시험 모듈로 분리해 운용 배포 묶음에서 뺀다(M-02). 배포 전 검사로 디버그 명령 이름·breakpoint()·pdb·debug=True가 남았는지 확인한다(T-08, LPY-12). assert와 __debug__는 python -O로 실행하면 사라지므로 이것에 보안 판단을 맡기지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "auth skipped",
+    "expect_good": "(?s)auth failed.*unknown command"
+   },
+   "refs": [
+    "MITRE CWE-489 Demonstrative Example 1(debug 매개변수로 인증 우회) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 캡슐화 6-2 '제거되지 않고 남은 디버그 코드'(인쇄 147쪽) 참고"
+   ]
+  }
+ }
+}

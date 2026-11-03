@@ -1,0 +1,96 @@
+{
+ "cwe": "390",
+ "scenario_ko": "비행 제어 보조 소프트웨어와 지상 통제 소프트웨어가 센서 읽기 실패, 데이터링크 메시지 필드 변환 실패, 정비 단말 설정값 오류를 감지한다. 실패를 감지해 놓고도 아무 처리를 하지 않으면 직전 값이나 쓰레기 값으로 제어와 표시가 계속된다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n/* 시험용 모의 I2C 드라이버: 세 번째 읽기에서 장치가 응답하지 않는다(NACK) */\nstatic int i2c_read_angle(int sample, uint16_t *raw)\n{\n    static const uint16_t bus[] = {33768u, 32718u};\n    if (sample >= 2) {\n        *raw = 0xFFFFu;          /* 응답 없음: 버스가 high로 남아 0xFFFF를 읽는다 */\n        return -5;\n    }\n    *raw = bus[sample];\n    return 0;\n}\n\nint main(void)\n{\n    for (int s = 0; s < 3; ++s) {\n        uint16_t raw = 0;\n        int rc = i2c_read_angle(s, &raw);\n        if (rc != 0) {\n            /* 오류를 알아차렸지만 아무것도 하지 않는다 */\n        }\n        int cdeg = (int)raw - 32768;           /* 0.01도 단위 각도 */\n        printf(\"actuator cmd %s%d.%02d deg\\n\", cdeg < 0 ? \"-\" : \"\", abs(cdeg) / 100, abs(cdeg) % 100);\n    }\n    return 0;\n}\n",
+    "explain_ko": "I2C 읽기가 NACK(-5)를 돌려줘 오류를 알아차렸지만 if 블록이 비어 있다. 버스에서 읽힌 0xFFFF가 그대로 각도로 바뀌어 구동기에 327.67도 명령이 나간다."
+   },
+   "good": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int i2c_read_angle(int sample, uint16_t *raw)\n{\n    static const uint16_t bus[] = {33768u, 32718u};\n    if (sample >= 2) {\n        *raw = 0xFFFFu;\n        return -5;\n    }\n    *raw = bus[sample];\n    return 0;\n}\n\nint main(void)\n{\n    int faults = 0;\n    for (int s = 0; s < 3; ++s) {\n        uint16_t raw = 0;\n        int rc = i2c_read_angle(s, &raw);\n        if (rc != 0) {\n            ++faults;                          /* 고장 기록 */\n            printf(\"sensor fault rc=%d: actuator held at neutral (faults=%d)\\n\", rc, faults);\n            continue;                          /* 설계에서 정한 안전 상태로 */\n        }\n        int cdeg = (int)raw - 32768;\n        printf(\"actuator cmd %s%d.%02d deg\\n\", cdeg < 0 ? \"-\" : \"\", abs(cdeg) / 100, abs(cdeg) % 100);\n    }\n    return 0;\n}\n",
+    "explain_ko": "오류이면 고장 횟수를 기록하고 설계에서 정한 안전 상태(중립 유지)로 처리한 뒤 그 표본은 쓰지 않는다(MCU-02)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "actuator cmd 327\\.67",
+    "expect_good": "actuator held at neutral"
+   },
+   "refs": [
+    "MITRE CWE-390 Demonstrative Example 1(실패를 감지하고도 처리하지 않음) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 에러처리 4-2 '오류상황 대응 부재'(인쇄 156쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <stdexcept>\n#include <string>\n\nstruct SensorMsg {\n    int id = -1;\n    int range_m = 0;\n};\n\n// 데이터링크 센서 정보 메시지의 문자 필드를 숫자로 바꾼다\nSensorMsg decode(const std::string &id_field, const std::string &range_field) {\n    SensorMsg m;\n    try {\n        m.id = std::stoi(id_field);\n        m.range_m = std::stoi(range_field);\n    } catch (const std::exception &) {\n    }\n    return m;    // 변환에 실패해도 반쯤 채운 메시지를 그대로 돌려준다\n}\n\nint main() {\n    SensorMsg m = decode(\"17\", \"x42\");\n    std::printf(\"sensor %d range %d m\\n\", m.id, m.range_m);\n    return 0;\n}\n",
+    "explain_ko": "변환 예외를 빈 catch 블록으로 삼키고 반쯤 채운 메시지를 돌려준다. 거리 필드가 잘못돼도 '거리 0 m' 센서 값으로 처리된다."
+   },
+   "good": {
+    "code": "#include <cstdio>\n#include <optional>\n#include <stdexcept>\n#include <string>\n\nstruct SensorMsg {\n    int id = -1;\n    int range_m = 0;\n};\n\n// std::stoi는 \"42x\"를 42로 받으므로 소비한 길이까지 확인한다\nint to_int(const std::string &field) {\n    std::size_t used = 0;\n    const int value = std::stoi(field, &used);\n    if (used != field.size()) throw std::invalid_argument(\"trailing characters\");\n    return value;\n}\n\nstd::optional<SensorMsg> decode(const std::string &id_field, const std::string &range_field) {\n    try {\n        SensorMsg m;\n        m.id = to_int(id_field);\n        m.range_m = to_int(range_field);\n        return m;\n    } catch (const std::invalid_argument &) {\n        std::puts(\"sensor msg rejected: field is not a number\");\n    } catch (const std::out_of_range &) {\n        std::puts(\"sensor msg rejected: field out of range\");\n    }\n    return std::nullopt;   // 실패를 호출자에게 알린다\n}\n\nint main() {\n    if (auto m = decode(\"17\", \"x42\")) {\n        std::printf(\"sensor %d range %d m\\n\", m->id, m->range_m);\n    } else {\n        std::puts(\"keep previous sensor picture\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "예외 형식별로 잡아 거부 사유를 남기고 std::optional로 실패를 호출자에게 알린다. 호출자는 직전 센서 화면을 유지한다."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "bugprone-empty-catch"
+   },
+   "refs": [
+    "MITRE CWE-390 Demonstrative Example 2(처리 없는 catch 블록) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "public class Example {\n    // 임무 계획 경로점의 고도 필드(ft)를 읽는다\n    static int altitudeFeet(String field) {\n        int alt = 0;\n        try {\n            alt = Integer.parseInt(field.trim());\n        } catch (NumberFormatException e) {\n            // 변환 실패를 알지만 아무 처리도 하지 않는다\n        }\n        return alt;\n    }\n\n    public static void main(String[] args) {\n        String[] fields = {\"12000\", \"1Z000\"};\n        for (String f : fields) {\n            System.out.println(\"waypoint alt=\" + altitudeFeet(f) + \" ft\");\n        }\n    }\n}\n",
+    "explain_ko": "NumberFormatException을 잡고 아무것도 하지 않아 초깃값 0이 고도로 돌아간다. 잘못된 필드가 '고도 0 ft' 경로점으로 바뀐다."
+   },
+   "good": {
+    "code": "import java.util.OptionalInt;\n\npublic class Example {\n    static OptionalInt altitudeFeet(String field) {\n        try {\n            return OptionalInt.of(Integer.parseInt(field.trim()));\n        } catch (NumberFormatException e) {\n            System.out.println(\"altitude field rejected: \" + e.getClass().getSimpleName());\n            return OptionalInt.empty();          // 실패를 호출자에게 알린다\n        }\n    }\n\n    public static void main(String[] args) {\n        String[] fields = {\"12000\", \"1Z000\"};\n        for (String f : fields) {\n            OptionalInt alt = altitudeFeet(f);\n            if (alt.isPresent()) {\n                System.out.println(\"waypoint alt=\" + alt.getAsInt() + \" ft\");\n            } else {\n                System.out.println(\"waypoint held: plan needs operator review\");\n            }\n        }\n    }\n}\n",
+    "explain_ko": "실패를 OptionalInt.empty()로 돌려주고 호출자가 경로점을 보류해 운용자 검토로 넘긴다. 빈 catch 블록을 쓰지 않는다(LJ-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "alt=0 ft",
+    "expect_good": "altitude field rejected"
+   },
+   "refs": [
+    "MITRE CWE-390 Demonstrative Example 3(처리 없는 catch 블록) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 에러처리 4-2 '오류 상황 대응 부재'(인쇄 231쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Globalization;\n\n// 정비 단말에서 받은 서보 이득 설정값을 읽는다\nint ReadGain(string text)\n{\n    int gain = 0;\n    try\n    {\n        gain = int.Parse(text, CultureInfo.InvariantCulture);\n    }\n    catch (Exception)\n    {\n        // 어떤 예외든 받아서 버린다\n    }\n    return gain;\n}\n\nConsole.WriteLine($\"servo gain set to {ReadGain(\"4O\")}\");\n",
+    "explain_ko": "catch (Exception)으로 모든 예외를 받아 버리고 이득 0을 적용한다. 일반 예외 형식을 잡는 코드는 CA1031로 경고된다."
+   },
+   "good": {
+    "code": "using System.Globalization;\n\nbool TryReadGain(string text, out int gain)\n{\n    // 예외 대신 성공 여부를 돌려받고, 범위도 함께 확인한다\n    return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out gain)\n           && gain is >= 1 and <= 1000;\n}\n\nvoid ApplyGain(string text)\n{\n    if (TryReadGain(text, out int g))\n    {\n        Console.WriteLine($\"servo gain set to {g}\");\n    }\n    else\n    {\n        Console.WriteLine($\"servo gain '{text}' rejected: keep current value and report to operator\");\n    }\n}\n\nApplyGain(\"4O\");\n",
+    "explain_ko": "예외에 기대지 않고 TryParse로 성공 여부와 범위를 확인해, 실패하면 현재 값을 유지하고 운용자에게 알린다(LCS-08)."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA1031"
+   },
+   "refs": [
+    "MITRE CWE-390 Demonstrative Example 3(처리 없는 catch 블록) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "altitude_ft = 0                         # 마지막으로 읽은 기압 고도\n\n\n# 센서 보조 소프트웨어: 기압 고도 문자열을 읽어 고도 값을 갱신한다\ndef update_altitude(raw):\n    global altitude_ft\n    try:\n        altitude_ft = int(raw)\n    except Exception:\n        pass                            # 실패를 알아차리고도 아무것도 하지 않는다\n\n\nupdate_altitude(\"ERR:SENSOR\")           # 센서 고장 문자열\nprint(f\"alt={altitude_ft} ft (valid?)\")  # 초깃값 0이 정상 고도처럼 쓰인다\n",
+    "explain_ko": "숫자 변환 실패를 except Exception: pass로 삼킨다. 오류는 감지했지만 아무 조치가 없어 초깃값 0이 정상 고도처럼 쓰인다. Bandit은 이 꼴을 B110(try/except/pass)으로 보고한다(기본 설정에서는 except Exception·맨 except만 본다)."
+   },
+   "good": {
+    "code": "import logging\n\nlogging.basicConfig(level=logging.WARNING, format=\"%(levelname)s %(message)s\")\nlog = logging.getLogger(\"sensor.baro\")\naltitude_ft = None\naltitude_valid = False\n\n\ndef update_altitude(raw):\n    global altitude_ft, altitude_valid\n    try:\n        altitude_ft, altitude_valid = int(raw), True\n    except ValueError:\n        # 실패를 기록하고 값을 '무효'로 표시해 쓰는 쪽이 대체 수단(GPS 고도 등)으로 넘어가게 한다\n        altitude_valid = False\n        log.warning(\"baro altitude invalid: %r\", raw)\n\n\nupdate_altitude(\"ERR:SENSOR\")\nprint(f\"alt={altitude_ft} ft valid={altitude_valid}\")\n",
+    "explain_ko": "실패하면 기록을 남기고 값을 '무효'로 표시해, 쓰는 쪽이 대체 수단으로 넘어가거나 안전 상태로 가게 한다(I-06, LPY-08). 실패를 어디서 어떻게 처리할지는 설계 단계의 오류 처리 규약에서 정한다(D-08). 예외를 잡으면 잡은 자리에서 기록·상태 표시·다시 던지기 중 하나를 한다. 잡을 예외도 ValueError처럼 구체적으로 적는다."
+   },
+   "check": {
+    "tool": "bandit",
+    "expect": "B110"
+   },
+   "refs": [
+    "MITRE CWE-390 Demonstrative Example 3(예외를 잡고 아무것도 하지 않음) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 에러처리 4-2 '오류상황 대응 부재'(인쇄 130쪽) 참고"
+   ]
+  }
+ }
+}

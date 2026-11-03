@@ -1,0 +1,20 @@
+# 생성물(빌드 때마다 다시 만든다)
+docs/
+site/
+site-offline/
+site-single/
+dist/
+.cache/
+build-report.json
+linkcheck-report.json
+verify-report.json
+# 파이썬
+__pycache__/
+*.pyc
+.venv/
+# 편집기·OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*.xlsx

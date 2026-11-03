@@ -1,0 +1,95 @@
+{
+ "cwe": "628",
+ "scenario_ko": "수신 프레임 버퍼 비우기, 고도 경계 설정, 냉각 펌프 구동 명령, 펌웨어 이미지 백업처럼 같은 형의 인자를 여러 개 받는 함수를 부르면서 인자의 순서를 함수 원형과 다르게 넘긴다. 형이 같아 컴파일은 되지만(Python은 실행 전 형 검사가 없다) 값이 엉뚱한 매개변수로 들어가 기능이 조용히 잘못 동작한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n\n/* 수신 프레임 버퍼를 다음 프레임 전에 비운다 */\nstatic unsigned char rx_frame[32];\n\nstatic void receive(const char *payload)\n{\n    memset(rx_frame, sizeof rx_frame, 0);      /* 인자 순서가 뒤바뀌어 0바이트만 지운다 */\n    memcpy(rx_frame, payload, strlen(payload));\n}\n\nint main(void)\n{\n    receive(\"WAYPOINT,00.00,000.00,450\");\n    receive(\"HOLD\");                           /* 짧은 프레임 */\n    /* 지워지지 않은 이전 프레임 꼬리가 남아 다음 처리 단계로 넘어간다 */\n    printf(\"frame tail after HOLD: '%.20s'\\n\", (const char *)rx_frame + 4);\n    return 0;\n}\n",
+    "explain_ko": "memset(대상, 값, 크기)의 값과 크기 순서를 바꿔 0바이트만 지운다. 짧은 프레임을 받으면 이전 프레임의 꼬리가 버퍼에 남아 다음 처리 단계로 넘어간다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <string.h>\n\nstatic unsigned char rx_frame[32];\n\nstatic void receive(const char *payload)\n{\n    size_t n = strlen(payload);\n    memset(rx_frame, 0, sizeof rx_frame);      /* 원형 memset(dst, 값, 크기) 순서대로 */\n    if (n >= sizeof rx_frame) {\n        n = sizeof rx_frame - 1;               /* 버퍼 크기를 넘지 않게 자른다 */\n    }\n    memcpy(rx_frame, payload, n);\n}\n\nint main(void)\n{\n    receive(\"WAYPOINT,00.00,000.00,450\");\n    receive(\"HOLD\");\n    printf(\"frame tail after HOLD: '%.20s'\\n\", (const char *)rx_frame + 4);\n    return 0;\n}\n",
+    "explain_ko": "원형 순서대로 memset(대상, 0, 크기)로 호출하고, 복사 길이도 버퍼 크기를 넘지 않게 한다. 컴파일러 경고를 오류로 다루면(-Werror) 이런 호출은 빌드 단계에서 막힌다."
+   },
+   "check": {
+    "tool": "cc-warn",
+    "expect": "-Wmemset-transposed-args"
+   },
+   "refs": [
+    "MITRE CWE-628 Demonstrative Example 1(매개변수 순서를 거꾸로 넘긴 호출) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n\n// 비행 금지 고도 경계(geofence) 설정: (하한, 상한) 순서\nstruct AltitudeFence {\n    int floor_m = 0;\n    int ceiling_m = 0;\n    bool allows(int alt_m) const { return alt_m >= floor_m && alt_m <= ceiling_m; }\n};\n\nAltitudeFence make_fence(int floor_m, int ceiling_m) {\n    return AltitudeFence{floor_m, ceiling_m};\n}\n\nint main() {\n    const int ceiling_m = 3000;\n    const int floor_m = 150;\n    // 같은 int 두 개라 순서를 바꿔 넘겨도 컴파일된다\n    AltitudeFence fence = make_fence(ceiling_m, floor_m);\n    std::printf(\"cruise at 1200 m allowed: %s\\n\", fence.allows(1200) ? \"yes\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "make_fence(하한, 상한)에 상한·하한 순서로 넘겨 모든 고도를 금지하는 경계가 만들어진다. 같은 int라 컴파일러는 막지 못하고 clang-tidy가 인자 이름과 매개변수 이름이 엇갈린 것을 알려 준다."
+   },
+   "good": {
+    "code": "#include <cstdio>\n\n// 매개변수마다 다른 형을 써서 순서가 바뀌면 컴파일 오류가 나게 한다\nstruct Floor { int m; };\nstruct Ceiling { int m; };\n\nstruct AltitudeFence {\n    int floor_m = 0;\n    int ceiling_m = 0;\n    bool allows(int alt_m) const { return alt_m >= floor_m && alt_m <= ceiling_m; }\n};\n\nAltitudeFence make_fence(Floor lower, Ceiling upper) {\n    return AltitudeFence{lower.m, upper.m};\n}\n\nint main() {\n    const Ceiling top{3000};\n    const Floor bottom{150};\n    // make_fence(top, bottom) 는 형이 맞지 않아 빌드되지 않는다\n    AltitudeFence fence = make_fence(bottom, top);\n    std::printf(\"cruise at 1200 m allowed: %s\\n\", fence.allows(1200) ? \"yes\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "하한·상한마다 다른 형(Floor, Ceiling)을 두어 순서를 바꾸면 컴파일 오류가 나게 한다."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "readability-suspicious-call-argument",
+    "checks": "readability-suspicious-call-argument"
+   },
+   "refs": [
+    "MITRE CWE-628 Demonstrative Example 1(매개변수 순서를 거꾸로 넘긴 호출) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "public class Example {\n    // 냉각 펌프 구동 명령: (펄스 폭 ms, 반복 주기 ms)\n    static void drivePulses(String pump, int pulseMs, int periodMs) {\n        int duty = pulseMs * 100 / periodMs;\n        System.out.println(pump + \" pulse=\" + pulseMs + \"ms period=\" + periodMs\n                + \"ms duty=\" + duty + \"%\");\n    }\n\n    public static void main(String[] args) {\n        int periodMs = 200;\n        int pulseMs = 50;\n        // 두 인자가 모두 int라 순서를 바꿔도 컴파일·실행된다\n        drivePulses(\"PUMP-3\", periodMs, pulseMs);\n    }\n}\n",
+    "explain_ko": "펄스 폭과 반복 주기가 모두 int라 순서를 바꿔 넘겨도 컴파일된다. 실행하면 듀티(구동 비율)가 400%로 계산되어 펌프가 의도보다 훨씬 오래 구동된다."
+   },
+   "good": {
+    "code": "public class Example {\n    // 의미마다 다른 값 형(record)을 두어 순서가 바뀌면 컴파일 오류가 나게 한다\n    record PulseWidth(int ms) {}\n    record Period(int ms) {}\n\n    static void drivePulses(String pump, PulseWidth pulse, Period period) {\n        if (pulse.ms() <= 0 || pulse.ms() > period.ms()) {\n            throw new IllegalArgumentException(\"pulse must be within period\");\n        }\n        int duty = pulse.ms() * 100 / period.ms();\n        System.out.println(pump + \" pulse=\" + pulse.ms() + \"ms period=\" + period.ms()\n                + \"ms duty=\" + duty + \"%\");\n    }\n\n    public static void main(String[] args) {\n        Period period = new Period(200);\n        PulseWidth pulse = new PulseWidth(50);\n        // drivePulses(\"PUMP-3\", period, pulse) 는 형이 달라 컴파일되지 않는다\n        drivePulses(\"PUMP-3\", pulse, period);\n    }\n}\n",
+    "explain_ko": "펄스 폭·주기를 서로 다른 record 형으로 만들어 순서가 바뀌면 컴파일 오류가 나게 하고, 펄스가 주기 안에 있는지도 검사한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "duty=\\d{3,}%",
+    "expect_good": "duty=25%"
+   },
+   "refs": [
+    "MITRE CWE-628 Demonstrative Example 1(매개변수 순서를 거꾸로 넘긴 호출) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 펌웨어 업데이트 전에 현재 이미지를 백업 영역으로 복사한다\nbyte[] current = new byte[64];\nfor (int i = 0; i < current.Length; i++) current[i] = (byte)(i + 1);\nint expected = Checksum(current);\nbyte[] backup = new byte[current.Length];\n\n// Array.Copy(원본, 대상, 길이)인데 순서를 거꾸로 넘겨 빈 백업이 현재 이미지를 덮는다\nArray.Copy(backup, current, current.Length);\n\nConsole.WriteLine(Checksum(current) == expected ? \"current image intact\" : \"current image CORRUPTED\");\nConsole.WriteLine(Checksum(backup) == expected ? \"backup valid\" : \"backup EMPTY\");\n\nstatic int Checksum(byte[] image)\n{\n    int s = 0;\n    foreach (byte b in image) s += b;\n    return s;\n}\n",
+    "explain_ko": "Array.Copy(원본, 대상, 길이)에 대상과 원본을 거꾸로 넘겨, 빈 백업 영역이 현재 펌웨어 이미지를 덮어쓴다. 형이 같아 컴파일러는 막지 못한다."
+   },
+   "good": {
+    "code": "// 펌웨어 업데이트 전에 현재 이미지를 백업 영역으로 복사한다\nbyte[] current = new byte[64];\nfor (int i = 0; i < current.Length; i++) current[i] = (byte)(i + 1);\nint expected = Checksum(current);\nbyte[] backup = new byte[current.Length];\n\n// 명명 인자로 원본·대상을 드러내 순서 실수를 코드 리뷰에서 보이게 한다(또는 current.AsSpan().CopyTo(backup))\nArray.Copy(sourceArray: current, destinationArray: backup, length: current.Length);\n\nConsole.WriteLine(Checksum(current) == expected ? \"current image intact\" : \"current image CORRUPTED\");\nConsole.WriteLine(Checksum(backup) == expected ? \"backup valid\" : \"backup EMPTY\");\n\nstatic int Checksum(byte[] image)\n{\n    int s = 0;\n    foreach (byte b in image) s += b;\n    return s;\n}\n",
+    "explain_ko": "명명 인자(sourceArray:, destinationArray:)로 원본·대상을 드러내 순서 실수를 코드 리뷰에서 바로 보이게 한다. 방향이 메서드 이름에 드러나는 Span.CopyTo를 써도 된다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "current image CORRUPTED",
+    "expect_good": "current image intact"
+   },
+   "refs": [
+    "MITRE CWE-628 Demonstrative Example 1(매개변수 순서를 거꾸로 넘긴 호출) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "# 냉각 펌프를 구동한다(구동 시간 ms, 듀티 %)\ndef run_pump(pump_id, duration_ms, duty_pct):\n    return f\"pump {pump_id}: {duration_ms} ms at duty={duty_pct}%\"\n\n\n# 냉각 명령 처리: 인자 순서를 잘못 넘김\nprint(run_pump(2, 40, 200))       # 의도: 200 ms, 40 %\n",
+    "explain_ko": "구동 시간과 듀티(구동 비율)가 둘 다 정수라 순서를 바꿔 넘겨도 오류가 나지 않는다. 동적 타입 언어라 컴파일러가 막아 주지 않고, 듀티 200%라는 불가능한 값으로 명령이 만들어진다."
+   },
+   "good": {
+    "code": "# 같은 형의 인자가 여러 개이면 키워드 전용 인자(*)로 받아 이름을 적어야만 부를 수 있게 한다\ndef run_pump(pump_id, *, duration_ms, duty_pct):\n    if not 0 < duty_pct <= 100 or not 0 < duration_ms <= 500:    # 범위도 확인\n        raise ValueError(f\"out of range: duration_ms={duration_ms}, duty_pct={duty_pct}\")\n    return f\"pump {pump_id}: {duration_ms} ms at duty={duty_pct}%\"\n\n\nprint(run_pump(2, duration_ms=200, duty_pct=40))\ntry:\n    print(run_pump(2, 40, 200))   # 위치 인자로 부르면 TypeError\nexcept TypeError as e:\n    print(\"call rejected:\", e)\n",
+    "explain_ko": "같은 형의 인자가 여러 개인 함수는 키워드 전용 인자(*)로 정의해 호출할 때 이름을 적게 하고, 함수 안에서 값의 범위도 확인한다. 단위가 다른 값은 별도 형(NewType·dataclass)으로 나누면 mypy가 뒤바뀐 호출을 찾는다. 컴파일러 경고에 기대는 언어(C·C++)의 대책(I-08)을 Python에서는 키워드 인자와 타입 검사가 대신한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "duty=\\d{3,}%",
+    "expect_good": "call rejected"
+   },
+   "refs": [
+    "MITRE CWE-628 Demonstrative Example 1(매개변수 순서를 거꾸로 넘긴 호출) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ }
+}

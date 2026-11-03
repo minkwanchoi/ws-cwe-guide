@@ -1,0 +1,1179 @@
+{
+ "checked_at": "2026-10-15",
+ "projects": {
+  "PC": [
+   {
+    "name": "QGroundControl",
+    "url": "https://github.com/mavlink/qgroundcontrol",
+    "ref": "v5.1.5",
+    "why": "MAVLink 기반 C++/Qt 지상통제 소프트웨어로, 무인기 지상통제 워크스테이션 응용과 같은 PC·워크스테이션 환경(Windows·Linux·macOS)의 데이터링크 수신·로그·빌드 보호 기능을 보여 준다."
+   },
+   {
+    "name": "PX4-Autopilot",
+    "url": "https://github.com/PX4/PX4-Autopilot",
+    "ref": "v1.17.0",
+    "why": "무인기 비행 소프트웨어로, 호스트 PC에서 도는 SITL·단위시험·퍼징 시험 구조와 MAVLink 입력 처리 결함(CVE) 사례를 제공한다."
+   },
+   {
+    "name": "Yamcs",
+    "url": "https://github.com/yamcs/yamcs",
+    "ref": "yamcs-5.13.6",
+    "why": "위성·임무 관제 서버로 역할별 권한을 설정 파일로 정의해 운용자 권한 모델과 구조가 닮았다."
+   },
+   {
+    "name": "Attack Surface Analyzer",
+    "url": "https://github.com/microsoft/AttackSurfaceAnalyzer",
+    "ref": "v2.3.331",
+    "why": "설치 전후 운영체제 보안 구성을 비교하는 Microsoft 도구로 운용 구성 점검의 수단을 보여 준다."
+   },
+   {
+    "name": "NIST SP 800-40 Rev. 4",
+    "url": "https://doi.org/10.6028/NIST.SP.800-40r4",
+    "ref": "2022. 4.",
+    "why": "기업 패치 관리 계획의 공식 지침이다."
+   }
+  ],
+  "SBC": [
+   {
+    "name": "NASA cFE/OSAL (cFS)",
+    "url": "https://github.com/nasa/cFE",
+    "ref": "v7.0.1 (OSAL v7.0.1)",
+    "why": "우주 비행 소프트웨어 프레임워크로 Linux·VxWorks·RTEMS 위에서 소프트웨어 버스·태스크 우선순위·세마포어를 쓰는 임무 소프트웨어 구조가 무기체계 임베디드 컴퓨터와 유사하다."
+   },
+   {
+    "name": "PX4-Autopilot",
+    "url": "https://github.com/PX4/PX4-Autopilot",
+    "ref": "v1.17.0",
+    "why": "Linux 보드(POSIX 타깃)와 NuttX 타깃을 함께 지원하는 무인기 소프트웨어로, 호스트 새니타이저 시험과 직렬(CRSF)·MAVLink 입력 결함 사례가 있다."
+   },
+   {
+    "name": "U-Boot",
+    "url": "https://github.com/u-boot/u-boot",
+    "ref": "v2026.07",
+    "why": "임베디드 리눅스 SBC의 사실상 표준 부트로더로, 서명 부팅(verified boot)과 부트로더 콘솔 설정·결함 사례를 보여 준다."
+   },
+   {
+    "name": "Yocto Project (Poky)",
+    "url": "https://docs.yoctoproject.org/5.2.4/",
+    "ref": "5.2.4",
+    "why": "임베디드 리눅스 이미지 빌드 체계로, 읽기 전용 루트 파일시스템·SBOM·CVE 점검 기능이 SBC 이미지 최소화·취약점 추적 지침과 대응한다. LNX 행은 같은 프로젝트의 poky 저장소를 yocto-5.0.4 태그로 고정했다. 문서 근거와 저장소 근거의 고정 판이 달라 두 판을 함께 쓴다."
+   },
+   {
+    "name": "OSADL QA Farm",
+    "url": "https://www.osadl.org/qa",
+    "ref": "조회일 2026-11-02",
+    "why": "산업용 임베디드 Linux 보드의 장기 안정성과 메모리 누수를 감시하는 공개 시험 시설이다."
+   }
+  ],
+  "MCU": [
+   {
+    "name": "ArduPilot",
+    "url": "https://github.com/ArduPilot/ardupilot",
+    "ref": "Copter-4.7.1",
+    "why": "STM32 + ChibiOS 기반 무인기 비행 제어 펌웨어로, 워치독 복귀·서명 부트로더·호스트 새니타이저 시험 등 MCU 안전·보호 기능이 무기체계 MCU 환경과 유사하다."
+   },
+   {
+    "name": "PX4-Autopilot",
+    "url": "https://github.com/PX4/PX4-Autopilot",
+    "ref": "v1.17.0",
+    "why": "NuttX 위의 STM32 비행 제어 펌웨어로 failsafe 구성과 호스트 GTest 단위시험 구조를 제공한다."
+   },
+   {
+    "name": "ArduinoCore-avr / avr-libc",
+    "url": "https://github.com/arduino/ArduinoCore-avr",
+    "ref": "1.8.7 (avr-libc 사용자 매뉴얼)",
+    "why": "8비트 AVR(ATmega) 대상 코어와 C 라이브러리로, 16비트 int·ISR 공유변수 보호·퓨즈/락 비트 설정이 지침의 AVR 항목과 직접 대응한다. 같은 코어를 BM·AVR 행에서는 1.8.6으로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다."
+   },
+   {
+    "name": "Apache NuttX",
+    "url": "https://github.com/apache/nuttx",
+    "ref": "nuttx-13.1.0",
+    "why": "PX4가 쓰는 MCU용 RTOS로 스택 페인팅(NuttX 옵션명 stack coloration) 같은 스택 사용량 감시 옵션을 정의한다."
+   },
+   {
+    "name": "F Prime (F´)",
+    "url": "https://github.com/nasa/fprime",
+    "ref": "v4.4.1",
+    "why": "NASA 비행 소프트웨어 프레임워크로 초기화 때 메모리를 확보하는 설계를 문서화한다."
+   },
+   {
+    "name": "FreeRTOS-Kernel",
+    "url": "https://www.freertos.org/",
+    "ref": "조회일 2026-11-02",
+    "why": "MCU용 RTOS로 정적 할당의 장단점을 공식 문서로 설명한다."
+   },
+   {
+    "name": "STM32CubeF4 CMSIS Device",
+    "url": "https://github.com/STMicroelectronics/cmsis_device_f4",
+    "ref": "v2.6.9",
+    "why": "MCU 벤더 헤더가 고정 주소 레지스터를 정의하는 방식을 보여 준다."
+   },
+   {
+    "name": "stm32f4xx_hal_driver",
+    "url": "https://github.com/STMicroelectronics/stm32f4xx_hal_driver",
+    "ref": "v1.8.3",
+    "why": "MCU 벤더 HAL의 인자 검사를 보여 준다."
+   },
+   {
+    "name": "FreeRTOS-Plus-TCP",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Plus-TCP",
+    "ref": "V4.4.1",
+    "why": "MISRA 편차를 규칙별로 기록하는 형식을 공개한다."
+   }
+  ],
+  "DSP": [
+   {
+    "name": "C2000Ware (TI C28x)",
+    "url": "https://github.com/TexasInstruments/c2000ware-core-sdk",
+    "ref": "REL_C2000Ware_v6.00.01.00",
+    "why": "CHAR_BIT=16인 TI C2000 DSP 계열 SDK로 지침의 C2000 자료형·DMA·링커 영역·컴파일러 고정 항목을 직접 보여 준다."
+   },
+   {
+    "name": "CMSIS-DSP",
+    "url": "https://github.com/ARM-software/CMSIS-DSP",
+    "ref": "v1.17.0",
+    "why": "Q15/Q31 고정소수점 신호처리 라이브러리로 포화·0 나눗셈 처리와 기준 패턴 비교 시험 구조를 공개한다."
+   },
+   {
+    "name": "CMSIS_6 (Arm CMSIS-Core)",
+    "url": "https://github.com/ARM-software/CMSIS_6",
+    "ref": "v6.4.0",
+    "why": "Cortex-M DSP 코어의 D-Cache 무효화·정리 함수를 제공해 DMA 캐시 일관성 지침과 대응한다."
+   },
+   {
+    "name": "cppcheck",
+    "url": "https://github.com/danmar/cppcheck",
+    "ref": "2.22.0",
+    "why": "정적 분석 도구로 대상 플랫폼의 char_bit·자료형 크기를 플랫폼 파일로 설정하는 구조가 '정적 분석 타깃 설정' 지침과 대응한다."
+   },
+   {
+    "name": "Sound Open Firmware",
+    "url": "https://github.com/thesofproject/sof",
+    "ref": "v2.15.1",
+    "why": "오디오 DSP 펌웨어로 주기당 처리 예산과 과부하 처리를 데이터 구조에 둔다."
+   }
+  ],
+  "SOC": [
+   {
+    "name": "Xilinx embeddedsw (ZynqMP FSBL, xilskey)",
+    "url": "https://github.com/Xilinx/embeddedsw",
+    "ref": "xilinx_v2026.1",
+    "why": "Zynq UltraScale+ MPSoC(ARM + FPGA)의 FSBL·키 프로그래밍 라이브러리로, XMPU/XPPU 보호·eFUSE/BBRAM 키·비트스트림 인증 등 SoC 신뢰 기점 지침을 직접 보여 준다."
+   },
+   {
+    "name": "U-Boot",
+    "url": "https://github.com/u-boot/u-boot",
+    "ref": "v2026.07",
+    "why": "SoC 보드의 2단계 부트로더로 서명된 FIT 부팅 체인을 구현한다."
+   },
+   {
+    "name": "Linux kernel",
+    "url": "https://github.com/torvalds/linux",
+    "ref": "v6.6",
+    "why": "이기종 코어 메시지 전달(rpmsg) 드라이버가 수신 길이를 검증한다."
+   },
+   {
+    "name": "TF-A Tests",
+    "url": "https://github.com/TrustedFirmware-A/tf-a-tests",
+    "ref": "v2.15.0",
+    "why": "Arm 보안 펌웨어 시험 묶음으로 DMA 격리 부정 시험을 담는다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "메모리 보호 경계 위반을 기대 결과로 삼는 시험을 공개한다."
+   }
+  ]
+ },
+ "evidence": {
+  "PC-02": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl의 MAVLinkProtocol::receiveBytes는 mavlink_parse_char가 MAVLINK_FRAMING_OK를 반환하지 않은 프레임을 건너뛰고(continue) 정상 프레임만 후속 처리한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/src/Comms/MAVLinkProtocol.cc",
+    "locator": "src/Comms/MAVLinkProtocol.cc L124-126 (MAVLinkProtocol::receiveBytes)",
+    "locators": [
+     "src/Comms/MAVLinkProtocol.cc L124-126 (MAVLinkProtocol::receiveBytes)"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C001"
+   },
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 Autopilot 1.17.0-rc2 이하 버전은 MAVLink 로그 요청을 처리하는 MavlinkLogHandler에서 스택 기반 버퍼 오버플로가 발생하는 결함이 있었다(CVE-2026-32743).",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2026-32743",
+    "locator": "CVE 기록 설명(description)",
+    "locators": [
+     "CVE 기록 설명(description)",
+     "cveMetadata.cveId"
+    ],
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "ledger_id": "C002"
+   }
+  ],
+  "PC-03": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl은 MAVLink 메시지를 로그 파일에 기록할 때 비밀키를 담은 SETUP_SIGNING 메시지를 기록에서 제외한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/src/Comms/MAVLinkProtocol.cc",
+    "locator": "src/Comms/MAVLinkProtocol.cc L227 (MAVLinkProtocol::_logData)",
+    "locators": [
+     "src/Comms/MAVLinkProtocol.cc L227 (MAVLinkProtocol::_logData)",
+     "src/Comms/MAVLinkProtocol.cc L228"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C003"
+   }
+  ],
+  "PC-04": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl의 Hardening.cmake는 QGC_ENABLE_HARDENING이 켜진 비디버그 빌드에, 컴파일러·링커의 지원 여부를 검사한 뒤 MSVC에서는 /guard:cf·/DYNAMICBASE·/NXCOMPAT를, GCC 계열에서는 -D_FORTIFY_SOURCE=3·-fstack-protector-strong·-Wl,-z,relro·-Wl,-z,now를 적용한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/cmake/modules/Hardening.cmake",
+    "locator": "cmake/modules/Hardening.cmake L5(옵션 정의), qgc_apply_global_hardening()",
+    "locators": [
+     "cmake/modules/Hardening.cmake L5",
+     "L60",
+     "L62",
+     "L64",
+     "L66",
+     "L67",
+     "L86",
+     "L87"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C004"
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 /GS 문서는 /GS(버퍼 보안 검사)가 기본으로 켜져 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/reference/gs-buffer-security-check",
+    "locator": "/GS (Buffer Security Check) 문서, 'Remarks' 절",
+    "locators": [
+     "/GS (Buffer Security Check) 문서, 'Remarks' 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C005"
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn은 CFG를 쓰려면 컴파일러에 /guard:cf를, 링커에 /GUARD:CF를 전달하고, 컴파일과 링크를 나누면 양쪽 명령에 모두 지정하며 /DYNAMICBASE 링커 옵션도 필요하다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/reference/guard-enable-control-flow-guard",
+    "locator": "/guard (Enable Control Flow Guard), Remarks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "PC-05": [
+   {
+    "project": "Qt (QGroundControl 기반 프레임워크)",
+    "claim": "Qt 6.8 QProcess 문서는 QProcess::start가 실행할 프로그램과 인자를 QStringList의 개별 문자열로 분리해 받도록 정의하고 있다.",
+    "url": "https://doc.qt.io/qt-6.8/qprocess.html",
+    "locator": "QProcess 문서, Public Functions",
+    "locators": [
+     "QProcess 문서, Public Functions",
+     "QProcess 문서, 'Detailed Description'"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C006"
+   },
+   {
+    "project": "Microsoft Learn",
+    "claim": "Microsoft Learn의 CreateProcess 문서는 lpCommandLine을 실행할 명령줄 문자열 하나로 정의하고, lpApplicationName을 NULL로 주면서 공백 있는 경로를 따옴표 없이 넘기면 다른 실행 파일이 실행될 수 있다고 경고하며, 배치 파일 실행은 cmd.exe를 거친다고 적는다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa",
+    "locator": "CreateProcessA, Parameters(lpCommandLine)·Security Remarks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인, MicrosoftDocs/sdk-api 원천으로 읽음",
+    "autolink": false
+   }
+  ],
+  "PC-06": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl의 Sanitizers.cmake는 CMake 옵션 QGC_ENABLE_ASAN·QGC_ENABLE_UBSAN으로 AddressSanitizer(-fsanitize=address)와 UBSan(-fsanitize=undefined) 빌드를 켤 수 있게 한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/cmake/modules/Sanitizers.cmake",
+    "locator": "cmake/modules/Sanitizers.cmake (QGC_ENABLE_ASAN 블록)",
+    "locators": [
+     "cmake/modules/Sanitizers.cmake (QGC_ENABLE_ASAN 블록)",
+     "cmake/modules/Sanitizers.cmake (QGC_ENABLE_UBSAN 블록)"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C007"
+   },
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 퍼징 시험(fuzz test) 문서는 퍼징 도구가 코드를 비정상 종료시키거나 단언을 위반하게 만드는 입력을 찾으며 이때 Address Sanitizer가 자동으로 켜진다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/test_and_ci/fuzz_tests.md",
+    "locator": "docs/en/test_and_ci/fuzz_tests.md L7",
+    "locators": [
+     "docs/en/test_and_ci/fuzz_tests.md L7",
+     "docs/en/test_and_ci/fuzz_tests.md L7"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C008"
+   }
+  ],
+  "SBC-01": [
+   {
+    "project": "U-Boot",
+    "claim": "U-Boot FIT 서명 검증 문서는 FIT의 해시 검사만으로는 이미지를 다른 것으로 바꿔치는 것을 막지 못하며, 서명된 해시를 공개키로 검증하는 서명 기능이 이를 보완한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/u-boot/u-boot/v2026.07/doc/usage/fit/signature.rst",
+    "locator": "doc/usage/fit/signature.rst L10-11 (Introduction)",
+    "locators": [
+     "doc/usage/fit/signature.rst L10-11 (Introduction)",
+     "doc/usage/fit/signature.rst L13-14"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C009"
+   },
+   {
+    "project": "U-Boot",
+    "claim": "Das U-Boot 2020.01까지는 조작된 FIT 이미지를 기본 구성으로 부팅하는 시스템에서 verified boot 제한을 우회해 임의 이미지를 부팅할 수 있는 결함이 있었다(CVE-2020-10648).",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2020-10648",
+    "locator": "CVE 기록 설명(description)",
+    "locators": [
+     "CVE 기록 설명(description)",
+     "cveMetadata.cveId"
+    ],
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "ledger_id": "C010"
+   }
+  ],
+  "SBC-02": [
+   {
+    "project": "NASA cFE",
+    "claim": "cFE 응용 개발 안내서는 Software Bus 메시지의 목적지를 파이프(큐)로 부르며 파이프 하나는 하나의 응용만 읽을 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/nasa/cFE/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md",
+    "locator": "docs/cFE Application Developers Guide.md L1628 (6.1.2 Pipes)",
+    "locators": [
+     "docs/cFE Application Developers Guide.md L1628 (6.1.2 Pipes)",
+     "같은 문서 L1630-1631"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C011"
+   }
+  ],
+  "SBC-03": [
+   {
+    "project": "NASA cFE",
+    "claim": "cFE 응용 개발 안내서는 응답이 느린 응용 하나 때문에 다른 응용의 메시지 전달이 밀리지 않게 하는 장치로 파이프 깊이와 메시지 ID별 메시지 한도를 설명한다. 한도를 넘는 메시지는 거부된다.",
+    "url": "https://raw.githubusercontent.com/nasa/cFE/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md",
+    "locator": "docs/cFE Application Developers Guide.md L1640 (6.1.2.1)",
+    "locators": [
+     "docs/cFE Application Developers Guide.md L1640 (6.1.2.1)",
+     "L1645-1646",
+     "L1647-1649"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C012"
+   },
+   {
+    "project": "NASA cFE",
+    "claim": "cFE의 CFE_SB_CreatePipe는 Depth가 0이거나 OS_QUEUE_MAX_DEPTH를 초과하면 CFE_SB_BAD_ARGUMENT로 처리한다.",
+    "url": "https://raw.githubusercontent.com/nasa/cFE/v7.0.1/modules/sb/fsw/src/cfe_sb_api.c",
+    "locator": "modules/sb/fsw/src/cfe_sb_api.c L126 (CFE_SB_CreatePipe)",
+    "locators": [
+     "modules/sb/fsw/src/cfe_sb_api.c L126 (CFE_SB_CreatePipe)",
+     "L129"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C013"
+   }
+  ],
+  "SBC-04": [
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 참조 매뉴얼은 read-only-rootfs 이미지 기능을 루트 파일시스템이 읽기 전용인 이미지를 만드는 기능으로 정의한다.",
+    "url": "https://docs.yoctoproject.org/5.2.4/ref-manual/features.html",
+    "locator": "ref-manual/features.html, Image Features 절",
+    "locators": [
+     "ref-manual/features.html, Image Features 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C014"
+   }
+  ],
+  "SBC-05": [
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 1.17.0-rc2 이전 버전의 crsf_rc 파서는 길이가 가변인 패킷이 지나치게 커도 경계 검사 없이 64바이트 고정 전역 버퍼로 복사했고, CRSF 시리얼 포트가 켜진 구성에서 인접 또는 시리얼 접근 공격자가 메모리 손상과 PX4 비정상 종료를 일으킬 수 있었다(CVE-2026-32706).",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2026-32706",
+    "locator": "CVE 기록 설명(description)",
+    "locators": [
+     "CVE 기록 설명(description)",
+     "CVE 기록 설명(description)",
+     "cveMetadata.cveId"
+    ],
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "ledger_id": "C015"
+   },
+   {
+    "project": "MAVLink",
+    "claim": "MAVLink 개요 문서는 CRC-16/MCRF4XX 체크섬이 전송 중 데이터가 링크에서 바뀌지 않았음만 보장할 뿐 데이터 정의와의 일관성은 보장하지 않는다고 설명한다.",
+    "url": "https://mavlink.io/en/about/overview.html",
+    "locator": "mavlink.io about/overview, 'Integrity Checks / Checksum' 절",
+    "locators": [
+     "mavlink.io about/overview, 'Integrity Checks / Checksum' 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C016"
+   }
+  ],
+  "SBC-06": [
+   {
+    "project": "NASA cFE",
+    "claim": "cFE 응용 개발 안내서는 하드웨어 서비스 응용의 ISR 함수가 인터럽트 시 ISR 컨텍스트에서 실행되고, 끝나면 cFE가 등록 때 만든 장치 처리 태스크에 인터럽트 발생을 알려 후속 콜백이 태스크 컨텍스트에서 실행되게 한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/nasa/cFE/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md",
+    "locator": "docs/cFE Application Developers Guide.md L568-569",
+    "locators": [
+     "docs/cFE Application Developers Guide.md L568-569",
+     "L571",
+     "L572"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C017"
+   },
+   {
+    "project": "NASA OSAL",
+    "claim": "NASA OSAL의 POSIX 카운팅 세마포어 구현 주석은 give가 시그널·ISR 컨텍스트에서 수행될 수 있고 예기치 않은 태스크 전환이나 블로킹을 일으키지 않아야 한다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/os/posix/src/os-impl-countsem.c",
+    "locator": "src/os/posix/src/os-impl-countsem.c L52",
+    "locators": [
+     "src/os/posix/src/os-impl-countsem.c L52",
+     "L53"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C018"
+   }
+  ],
+  "SBC-07": [
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 시뮬레이션 디버깅 문서는 호스트에서 PX4_ASAN=1 make px4_sitl jmavsim으로 Clang AddressSanitizer 빌드를 하여 정렬 오류와 세그먼트 오류 같은 메모리 결함을 찾는 방법을 제시한다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/debug/simulation_debugging.md",
+    "locator": "docs/en/debug/simulation_debugging.md L7",
+    "locators": [
+     "docs/en/debug/simulation_debugging.md L7",
+     "L11"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C019"
+   },
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 퍼징 시험(fuzz test) 문서는 퍼징 시험이 풀 리퀘스트마다 CI의 일반 단위시험에 포함되어 실행되고, main 브랜치에서는 매일 15분간 추가로 실행된다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/test_and_ci/fuzz_tests.md",
+    "locator": "docs/en/test_and_ci/fuzz_tests.md, CI 절",
+    "locators": [
+     "docs/en/test_and_ci/fuzz_tests.md, CI 절",
+     "같은 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C020"
+   }
+  ],
+  "SBC-09": [
+   {
+    "project": "U-Boot",
+    "claim": "U-Boot의 cmd/Kconfig는 명령행 인터페이스 전체를 CMDLINE 옵션 하나로 켜고 끌 수 있게 정의하며 기본값은 y이다.",
+    "url": "https://raw.githubusercontent.com/u-boot/u-boot/v2026.07/cmd/Kconfig",
+    "locator": "cmd/Kconfig L1-3",
+    "locators": [
+     "cmd/Kconfig L1-3"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C021"
+   },
+   {
+    "project": "U-Boot",
+    "claim": "Das U-Boot 2022.07-rc5까지는 부트로더 콘솔 명령 i2c md에서 정수 부호 오류로 인한 스택 버퍼 오버플로가 있어 do_i2c_md 함수의 복귀 주소 포인터가 손상될 수 있었다(CVE-2022-34835).",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2022-34835",
+    "locator": "CVE 기록 설명(description)",
+    "locators": [
+     "CVE 기록 설명(description)",
+     "CVE 기록 설명(description)",
+     "cveMetadata.cveId"
+    ],
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "ledger_id": "C022"
+   }
+  ],
+  "SBC-10": [
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 개발 매뉴얼은 create-spdx 클래스를 상속하면 소프트웨어 자재 명세(SBOM)가 SPDX 표준 형식으로 생성된다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.2.4/dev-manual/sbom.html",
+    "locator": "dev-manual/sbom.html 도입부",
+    "locators": [
+     "dev-manual/sbom.html 도입부",
+     "dev-manual/sbom.html"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C023"
+   },
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 개발 매뉴얼은 cve-check 클래스를 상속하면 빌드 중인 이미지에 대해 CVE 보안 취약점 점검이 활성화된다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.2.4/dev-manual/vulnerabilities.html",
+    "locator": "dev-manual/vulnerabilities.html, Checking for Vulnerabilities 절",
+    "locators": [
+     "dev-manual/vulnerabilities.html, Checking for Vulnerabilities 절",
+     "같은 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C024"
+   }
+  ],
+  "MCU-02": [
+   {
+    "project": "ArduPilot",
+    "claim": "ArduPilot HAL의 Util 클래스는 워치독 리셋 여부를 알려 주고, 워치독 리셋으로 부팅했을 때 리셋 직전에 시동(arm) 상태였는지를 persistent_data로 질의하는 was_watchdog_armed()를 제공한다.",
+    "url": "https://raw.githubusercontent.com/ArduPilot/ardupilot/Copter-4.7.1/libraries/AP_HAL/Util.h",
+    "locator": "libraries/AP_HAL/Util.h L24-33, was_watchdog_armed()",
+    "locators": [
+     "libraries/AP_HAL/Util.h L24-33",
+     "libraries/AP_HAL/Util.h L33"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C025"
+   },
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 안전(Failsafe) 설정 문서는 failsafe가 발동되면 대부분의 failsafe가 기본적으로 Hold로 들어간 뒤 관련 failsafe 동작을 수행하며, 동작의 종류를 심각도가 커지는 순서로 나열한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/config/safety.md",
+    "locator": "docs/en/config/safety.md L19",
+    "locators": [
+     "docs/en/config/safety.md L19",
+     "L19",
+     "L23"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C026"
+   }
+  ],
+  "MCU-03": [
+   {
+    "project": "ArduPilot",
+    "claim": "ArduPilot의 AP_CheckFirmware는 부트로더에 내장된 공개키가 모두 0이면 서명 검증 없이 통과시키고, 그렇지 않으면 서명 길이·버전·공개키 일치를 검사해 실패 시 FAIL_REASON_BAD_FIRMWARE_SIGNATURE 또는 FAIL_REASON_VERIFICATION을 반환한다.",
+    "url": "https://raw.githubusercontent.com/ArduPilot/ardupilot/Copter-4.7.1/libraries/AP_CheckFirmware/AP_CheckFirmware.cpp",
+    "locator": "libraries/AP_CheckFirmware/AP_CheckFirmware.cpp L44-46, check_firmware_signature()",
+    "locators": [
+     "libraries/AP_CheckFirmware/AP_CheckFirmware.cpp L44-46",
+     "libraries/AP_CheckFirmware/AP_CheckFirmware.cpp L19-20 (all_zero_public_keys 주석)",
+     "L45-47",
+     "L51",
+     "L74"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C027"
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc 문서는 부트로더 락 비트가 한 번 설정되면 칩 소거 없이는 해제할 수 없으며 칩 소거는 부트로더 자체도 지운다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__avr__boot.html",
+    "locator": "avr-libc <avr/boot.h> 문서, boot_lock_bits_set 항목",
+    "locators": [
+     "avr-libc <avr/boot.h> 문서, boot_lock_bits_set 항목"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C028"
+   }
+  ],
+  "MCU-04": [
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc의 <stdint.h> 문서는 int16_t를 signed int로, uint16_t를 unsigned int로 정의한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__avr__stdint.html",
+    "locator": "avr-libc <stdint.h> 문서, Typedefs",
+    "locators": [
+     "avr-libc <stdint.h> 문서, Typedefs",
+     "같은 절"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C029"
+   }
+  ],
+  "MCU-05": [
+   {
+    "project": "ArduinoCore-avr",
+    "claim": "ArduinoCore-avr의 millis()는 SREG를 저장하고 cli()로 인터럽트를 끈 채 timer0_millis를 읽는데, 주석은 쓰기 도중에 읽으면 불일치 값(inconsistent value)이 나올 수 있기 때문이라고 설명하며, timer0_millis는 volatile unsigned long으로 선언돼 있다.",
+    "url": "https://raw.githubusercontent.com/arduino/ArduinoCore-avr/1.8.7/cores/arduino/wiring.c",
+    "locator": "cores/arduino/wiring.c L39(timer0_millis 선언), millis()",
+    "locators": [
+     "cores/arduino/wiring.c L39",
+     "L70",
+     "L71",
+     "L72"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C030"
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc의 <util/atomic.h> 문서는 8비트 CPU에서 컴파일러가 16비트 변수를 원자적으로 접근할 수 없어 ISR 때문에 값이 불일치할 수 있다고 설명하고 ATOMIC_BLOCK 사용을 제시한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__util__atomic.html",
+    "locator": "avr-libc <util/atomic.h> 문서, 본문 예제 설명",
+    "locators": [
+     "avr-libc <util/atomic.h> 문서, 본문 예제 설명",
+     "같은 문서 예제"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C031"
+   }
+  ],
+  "MCU-07": [
+   {
+    "project": "GCC",
+    "claim": "GCC 13.2 문서는 -fstack-usage 옵션이 컴파일러가 프로그램의 함수별 스택 사용 정보를 출력하게 한다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Developer-Options.html",
+    "locator": "GCC 13.2.0 Developer Options, -fstack-usage",
+    "locators": [
+     "GCC 13.2.0 Developer Options, -fstack-usage"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C032"
+   },
+   {
+    "project": "NuttX",
+    "claim": "NuttX Kconfig는 STACK_COLORATION을 스택 메모리를 STACK_COLOR 값으로 초기화하고 스택 사용 수준을 감시하는 스택 점검 API를 켜는 옵션으로 정의한다.",
+    "url": "https://raw.githubusercontent.com/apache/nuttx/nuttx-13.1.0/Kconfig",
+    "locator": "Kconfig L2641-2650 (config STACK_COLORATION)",
+    "locators": [
+     "Kconfig L2641-2650 (config STACK_COLORATION)"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C033"
+   }
+  ],
+  "MCU-08": [
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 단위시험 문서는 최소한의 내부 의존성만 가진 시험을 GoogleTest로 작성해 make tests로 실행하게 하고, 전체 SITL이 필요한 시험은 느리고 디버깅이 어려우므로 가능하면 GTest를 쓰라고 권고한다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/docs/en/test_and_ci/unit_tests.md",
+    "locator": "docs/en/test_and_ci/unit_tests.md L7",
+    "locators": [
+     "docs/en/test_and_ci/unit_tests.md L7",
+     "L9",
+     "L21"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C034"
+   },
+   {
+    "project": "ArduPilot",
+    "claim": "ArduPilot의 SITL 보드 설정(Tools/ardupilotwaf/boards.py)은 --ubsan 옵션이면 -fsanitize=undefined와 -fsanitize=float-cast-overflow를, clang++에서 --asan 옵션이면 -fsanitize=address를 컴파일 옵션에 추가한다.",
+    "url": "https://raw.githubusercontent.com/ArduPilot/ardupilot/Copter-4.7.1/Tools/ardupilotwaf/boards.py",
+    "locator": "Tools/ardupilotwaf/boards.py L858",
+    "locators": [
+     "Tools/ardupilotwaf/boards.py L858",
+     "L859",
+     "L879"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C035"
+   }
+  ],
+  "MCU-09": [
+   {
+    "project": "ArduinoCore-avr",
+    "claim": "ArduinoCore-avr의 boards.txt는 Uno 부트로더 기록 설정으로 low_fuses=0xFF, high_fuses=0xDE, extended_fuses=0xFD, unlock_bits=0x3F, lock_bits=0x0F를 명시한다.",
+    "url": "https://raw.githubusercontent.com/arduino/ArduinoCore-avr/1.8.7/boards.txt",
+    "locator": "boards.txt L95 이하(uno.bootloader.*)",
+    "locators": [
+     "boards.txt L95",
+     "L96",
+     "L97",
+     "L98",
+     "L99"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C036"
+   },
+   {
+    "project": "avr-libc",
+    "claim": "avr-libc의 <avr/fuse.h> 문서는 플래시 기록 도구가 기록 전에 퓨즈 프로그래밍 여부를 판단하는 자료로, 소스에 지정해 링크 후 ELF의 전용 섹션에 담긴 퓨즈 정보를 든다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__avr__fuse.html",
+    "locator": "avr-libc <avr/fuse.h> 문서 도입부",
+    "locators": [
+     "avr-libc <avr/fuse.h> 문서 도입부",
+     "같은 문서"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C037"
+   }
+  ],
+  "DSP-01": [
+   {
+    "project": "CMSIS-DSP",
+    "claim": "CMSIS-DSP의 arm_add_q15 소스 주석은 이 함수가 포화 연산을 쓰며 Q15 허용 범위 [0x8000 0x7FFF]를 벗어난 결과는 포화된다고 문서화한다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS-DSP/v1.17.0/Source/BasicMathFunctions/arm_add_q15.c",
+    "locator": "Source/BasicMathFunctions/arm_add_q15.c L51",
+    "locators": [
+     "Source/BasicMathFunctions/arm_add_q15.c L51",
+     "L52"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C038"
+   }
+  ],
+  "DSP-02": [
+   {
+    "project": "C2000Ware",
+    "claim": "C2000Ware의 DMA 예제 dma_ex1_gsram_transfer.c는 #pragma DATA_SECTION으로 송신 버퍼 sData를 ramgs0 섹션에, 수신 버퍼 rData를 ramgs1 섹션에 배치한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v6.00.01.00/driverlib/f28004x/examples/dma/dma_ex1_gsram_transfer.c",
+    "locator": "driverlib/f28004x/examples/dma/dma_ex1_gsram_transfer.c L72 이하(sData·rData 선언)",
+    "locators": [
+     "driverlib/f28004x/examples/dma/dma_ex1_gsram_transfer.c L72",
+     "L73"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C039"
+   },
+   {
+    "project": "C2000Ware",
+    "claim": "C2000Ware의 F28004x용 범용 RAM 링커 명령 파일은 ramgs0 출력 섹션을 RAMGS0 메모리 영역에 배치한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v6.00.01.00/device_support/f28004x/common/cmd/28004x_generic_ram_lnk.cmd",
+    "locator": "device_support/f28004x/common/cmd/28004x_generic_ram_lnk.cmd L99",
+    "locators": [
+     "device_support/f28004x/common/cmd/28004x_generic_ram_lnk.cmd L99"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C040"
+   }
+  ],
+  "DSP-04": [
+   {
+    "project": "CMSIS-DSP",
+    "claim": "CMSIS-DSP의 arm_divide_q15 소스 주석은 0으로 나누면 오류 ARM_MATH_NANINF를 반환하고 몫을 포화된 음수 또는 양수 값으로 강제한다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS-DSP/v1.17.0/Source/FastMathFunctions/arm_divide_q15.c",
+    "locator": "Source/FastMathFunctions/arm_divide_q15.c L63-64",
+    "locators": [
+     "Source/FastMathFunctions/arm_divide_q15.c L63-64"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C041"
+   },
+   {
+    "project": "CMSIS-DSP",
+    "claim": "CMSIS-DSP의 arm_add_q15 스칼라 경로는 두 q15 값의 합을 __SSAT로 16비트로 포화시킨다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS-DSP/v1.17.0/Source/BasicMathFunctions/arm_add_q15.c",
+    "locator": "Source/BasicMathFunctions/arm_add_q15.c L139",
+    "locators": [
+     "Source/BasicMathFunctions/arm_add_q15.c L139"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C042"
+   }
+  ],
+  "DSP-05": [
+   {
+    "project": "TI C2000 컴파일러",
+    "claim": "TI TMS320C28x 컴파일러 사용 설명서(SPRU514Q)는 8비트 단위 접근 수단으로 __byte() 내장 함수를 들고, 그 배경으로 C28x의 바이트가 char와 같은 16비트이며 sizeof(int)의 값이 1이라는 점을 적는다.",
+    "url": "https://downloads.ti.com/docs/esd/SPRU514Q/data-types-stdz0555922.html",
+    "locator": "SPRU514Q, Data Types 절 NOTE 'TMS320C28x Byte is 16 Bits'",
+    "locators": [
+     "SPRU514Q, Data Types 절 NOTE 'TMS320C28x Byte is 16 Bits'",
+     "같은 NOTE",
+     "같은 NOTE"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C043",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "C2000Ware",
+    "claim": "C2000Ware의 hw_types.h는 바이트 단위 레지스터 접근 매크로 HWREGB를 컴파일러 내장 함수 __byte로 정의한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v6.00.01.00/driverlib/f28004x/driverlib/inc/hw_types.h",
+    "locator": "driverlib/f28004x/driverlib/inc/hw_types.h L63",
+    "locators": [
+     "driverlib/f28004x/driverlib/inc/hw_types.h L63",
+     "L64"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C044"
+   }
+  ],
+  "DSP-06": [
+   {
+    "project": "CMSIS_6",
+    "claim": "Arm CMSIS_6의 Cortex-M 캐시 헤더는 D-Cache를 주소 범위 단위로 무효화하는 SCB_InvalidateDCache_by_Addr와 정리(clean)하는 SCB_CleanDCache_by_Addr 함수를 제공한다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS_6/v6.4.0/CMSIS/Core/Include/m-profile/armv7m_cachel1.h",
+    "locator": "CMSIS/Core/Include/m-profile/armv7m_cachel1.h L355",
+    "locators": [
+     "CMSIS/Core/Include/m-profile/armv7m_cachel1.h L355",
+     "L385"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C045"
+   }
+  ],
+  "DSP-07": [
+   {
+    "project": "CMSIS-DSP",
+    "claim": "CMSIS-DSP 시험 프레임워크(Test Framework) 문서는 시험이 입력 패턴, 기준(reference) 패턴과 출력을 요구하며 출력을 기준과 비교한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS-DSP/v1.17.0/Testing/README.md",
+    "locator": "Testing/README.md L199",
+    "locators": [
+     "Testing/README.md L199"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C046"
+   },
+   {
+    "project": "CMSIS-DSP",
+    "claim": "CMSIS-DSP의 q15 기본 연산 시험(BasicTestsQ15.cpp)은 출력과 기준 패턴을 ASSERT_SNR로 비교하며 SNR_THRESHOLD를 70으로 정의한다.",
+    "url": "https://raw.githubusercontent.com/ARM-software/CMSIS-DSP/v1.17.0/Testing/Source/Tests/BasicTestsQ15.cpp",
+    "locator": "Testing/Source/Tests/BasicTestsQ15.cpp L5(SNR_THRESHOLD), ASSERT_SNR 호출부",
+    "locators": [
+     "Testing/Source/Tests/BasicTestsQ15.cpp L5",
+     "L39"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C047"
+   }
+  ],
+  "DSP-08": [
+   {
+    "project": "cppcheck",
+    "claim": "cppcheck 소스 저장소의 platforms/avr8.xml은 대상 플랫폼의 char_bit를 8, int 크기를 2바이트로 지정하는 플랫폼 정의 파일이다.",
+    "url": "https://raw.githubusercontent.com/danmar/cppcheck/2.22.0/platforms/avr8.xml",
+    "locator": "platforms/avr8.xml L3",
+    "locators": [
+     "platforms/avr8.xml L3",
+     "L9"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C048"
+   },
+   {
+    "project": "cppcheck",
+    "claim": "cppcheck 매뉴얼은 내장 플랫폼 구성 외에 char_bit와 자료형 크기(sizeof)를 적은 XML 파일로 사용자 정의 플랫폼 구성을 만들 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/danmar/cppcheck/2.22.0/man/manual.md",
+    "locator": "man/manual.md L461",
+    "locators": [
+     "man/manual.md L461",
+     "man/manual.md L465 (예시 XML)"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C049"
+   }
+  ],
+  "DSP-09": [
+   {
+    "project": "C2000Ware",
+    "claim": "C2000Ware F28004x 예제의 CCS 프로젝트 사양(adc_ex1_soc_epwm.projectspec)은 TI 컴파일러(CGT) 버전을 cgtVersion=\"22.6.2.LTS\"로 지정한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v6.00.01.00/device_support/f28004x/examples/adc/CCS/adc_ex1_soc_epwm.projectspec",
+    "locator": "device_support/f28004x/examples/adc/CCS/adc_ex1_soc_epwm.projectspec L5",
+    "locators": [
+     "device_support/f28004x/examples/adc/CCS/adc_ex1_soc_epwm.projectspec L5"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C050"
+   }
+  ],
+  "SOC-01": [
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx ZynqMP FSBL의 XFsbl_ProtectionConfig는 XFSBL_PROT_BYPASS가 정의되지 않은 경우 psu_protection()으로 보호 구성을 적용한 뒤 psu_protection_lock()으로 XMPU/XPPU를 잠그며, 주석은 FSBL이 XPPU와 FPD XMPU 구성을 기본으로 우회한다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_handoff.c",
+    "locator": "lib/sw_apps/zynqmp_fsbl/src/xfsbl_handoff.c L1183",
+    "locators": [
+     "lib/sw_apps/zynqmp_fsbl/src/xfsbl_handoff.c L1183",
+     "L1192",
+     "L1199",
+     "L1200"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C051"
+   },
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx ZynqMP FSBL의 xfsbl_hw.h는 FSBL_PROT_BYPASS_EXCLUDE가 정의되지 않으면 XFSBL_PROT_BYPASS를 정의한다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_hw.h",
+    "locator": "lib/sw_apps/zynqmp_fsbl/src/xfsbl_hw.h L958-960",
+    "locators": [
+     "lib/sw_apps/zynqmp_fsbl/src/xfsbl_hw.h L958-960"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C052"
+   }
+  ],
+  "SOC-02": [
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx ZynqMP FSBL의 xfsbl_authentication.c는 eFUSE RSA 인증이 켜진 경우의 PPK 해시와 SPK ID 검증을 포함하며, XFsbl_SpkVer는 EFUSE_SEC_CTRL 레지스터를 읽어 eFUSE RSA 인증 활성 여부를 확인한다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_authentication.c",
+    "locator": "lib/sw_apps/zynqmp_fsbl/src/xfsbl_authentication.c L21(변경 이력), XFsbl_SpkVer()",
+    "locators": [
+     "lib/sw_apps/zynqmp_fsbl/src/xfsbl_authentication.c L21 (변경 이력)",
+     "L98 (XFsbl_SpkVer)"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C053"
+   }
+  ],
+  "SOC-04": [
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx xilskey 라이브러리는 ZynqMP BBRAM에 AES 키를 기록하는 XilSKey_ZynqMp_Bbram_Program(const u32 *AesKey)와 BBRAM 키를 소거하는 XilSKey_ZynqMp_Bbram_Zeroise()를 제공한다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_services/xilskey/src/xilskey_bbramps_zynqmp.c",
+    "locator": "lib/sw_services/xilskey/src/xilskey_bbramps_zynqmp.c L80, XilSKey_ZynqMp_Bbram_Zeroise()",
+    "locators": [
+     "lib/sw_services/xilskey/src/xilskey_bbramps_zynqmp.c L80",
+     "L145",
+     "L150"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C054"
+   }
+  ],
+  "SOC-07": [
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx xilskey의 ZynqMP eFUSE 보안 제어 비트 정의에는 JTAG 비활성화 비트 XSK_ZYNQMP_EFUSEPS_SEC_JTAG_DIS와 이를 담는 JtagDisable 필드가 있다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_services/xilskey/src/include/xilskey_eps_zynqmp.h",
+    "locator": "lib/sw_services/xilskey/src/include/xilskey_eps_zynqmp.h L214",
+    "locators": [
+     "lib/sw_services/xilskey/src/include/xilskey_eps_zynqmp.h L214",
+     "L287"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C055"
+   }
+  ],
+  "SOC-08": [
+   {
+    "project": "Xilinx embeddedsw",
+    "claim": "Xilinx ZynqMP FSBL의 파티션 적재 코드는 PL(비트스트림) 대상 파티션에 대해서도 인증 여부(IsAuthenticated)와 암호화 여부(IsEncrypted)를 적재 파라미터에 설정한다.",
+    "url": "https://raw.githubusercontent.com/Xilinx/embeddedsw/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_partition_load.c",
+    "locator": "lib/sw_apps/zynqmp_fsbl/src/xfsbl_partition_load.c L1411",
+    "locators": [
+     "lib/sw_apps/zynqmp_fsbl/src/xfsbl_partition_load.c L1411",
+     "L1413"
+    ],
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "ledger_id": "C056"
+   }
+  ],
+  "PC-01": [
+   {
+    "project": "QGroundControl",
+    "claim": "QGroundControl v5.1.5는 Linux·FreeBSD에서 root 권한 실행을 확인하면 오류 안내를 띄우고 실행을 끝내 관리자 권한 없이 동작하도록 강제한다.",
+    "url": "https://raw.githubusercontent.com/mavlink/qgroundcontrol/v5.1.5/src/Utilities/Platform/Platform.cc",
+    "locator": "src/Utilities/Platform/Platform.cc L249, L255-257",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "권한 매트릭스 부분은 Yamcs 근거를 함께 본다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Yamcs",
+    "claim": "Yamcs 5.13.6 서버 문서는 어떤 역할에 어떤 권한이 속하는지를 etc/roles.yaml에 정의하고, 사용자에게 시스템 권한과 객체 권한을 나누어 부여하도록 설명한다.",
+    "url": "https://raw.githubusercontent.com/yamcs/yamcs/yamcs-5.13.6/docs/server-manual/security/configuration.rst",
+    "locator": "docs/server-manual/security/configuration.rst L37",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "운용 소프트웨어의 역할·권한 정의 사례다. OS 계정과 맞추는 절차는 이 문서에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "PC-07": [
+   {
+    "project": "Attack Surface Analyzer",
+    "claim": "Microsoft Attack Surface Analyzer v2.3.331은 소프트웨어 설치 전후의 운영체제 보안 구성을 비교해 파일 시스템, 사용자 계정, 서비스, 네트워크 포트, 레지스트리 변화를 보고한다.",
+    "url": "https://raw.githubusercontent.com/microsoft/AttackSurfaceAnalyzer/v2.3.331/README.md",
+    "locator": "README.md L36-45",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "구성 점검을 시험 항목에 넣을 때 쓸 수 있는 도구 사례다."
+   }
+  ],
+  "PC-08": [
+   {
+    "project": "NIST SP 800-40 Rev. 4",
+    "claim": "NIST SP 800-40 Rev. 4는 패치를 이동식 매체로 받을 수도 있다고 보고, 시험·설치 전에 패치의 진위와 무결성을 확인하며 운영 투입 전에 문제를 찾도록 시험할 수 있다고 설명한다.",
+    "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-40r4.pdf",
+    "locator": "2.3.1절(PDF 12쪽)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": "반입 주기는 과제가 정한다.",
+    "scope": "부분"
+   }
+  ],
+  "SBC-08": [
+   {
+    "project": "OSADL QA Farm",
+    "claim": "OSADL QA Farm 안내는 산업용 임베디드 시스템을 대상으로 메모리 누수 등을 찾는 감시형 부하 시험을 수행하고, 장기 안정성 측정이 끊기지 않도록 시스템 가용성을 감시한다고 설명한다.",
+    "url": "https://www.osadl.org/qa",
+    "locator": "OSADL QA Farm, About, Networking monitoring(조회일 2026-11-02)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "Linux 커널 품질 활동의 사례다. 핸들·큐 사용량 증가 확인은 이 문서로 뒷받침하지 않는다.",
+    "scope": "부분"
+   }
+  ],
+  "MCU-01": [
+   {
+    "project": "F Prime (F´)",
+    "claim": "F´ v4.4.1 메모리 관리 문서는 비행 소프트웨어 코딩 표준이 운용 중 동적 할당을 대체로 금지한다고 적고, 메모리 블록을 시스템 초기화 때 할당해 운용 중에 쓰는 방식을 설명한다.",
+    "url": "https://raw.githubusercontent.com/nasa/fprime/v4.4.1/docs/user-manual/framework/memory-management/index.md",
+    "locator": "docs/user-manual/framework/memory-management/index.md L7, L11",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS 문서는 정적 할당을 쓰면 최대 RAM 사용량을 실행 시점이 아니라 링크 시점에 정할 수 있다고 설명한다. 다만 정적·동적 중 어느 쪽이 나은지는 응용에 따라 다르다고 적는다.",
+    "url": "https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/09-Memory-management/03-Static-vs-Dynamic-memory-allocation",
+    "locator": "Static Vs Dynamic Memory Allocation, Creating an RTOS Object Using Statically Allocated RAM(문서 표시 Updated Oct 2026)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "자동 접속이 빈 본문이라 내장 브라우저로 대조했다."
+   }
+  ],
+  "MCU-06": [
+   {
+    "project": "STM32CubeF4 CMSIS Device",
+    "claim": "ST cmsis_device_f4 v2.6.9의 stm32f407xx.h는 주변장치 고정 주소를 벤더 헤더 안에서 구조체 포인터 매크로로 정의한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis_device_f4/v2.6.9/Include/stm32f407xx.h",
+    "locator": "Include/stm32f407xx.h L981, L1102",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "scope": "부분"
+   },
+   {
+    "project": "stm32f4xx_hal_driver",
+    "claim": "ST HAL v1.8.3의 HAL_SPI_Init은 핸들이 NULL인지 먼저 검사한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.3/Src/stm32f4xx_hal_spi.c",
+    "locator": "Src/stm32f4xx_hal_spi.c L314",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "scope": "부분"
+   },
+   {
+    "project": "FreeRTOS-Plus-TCP",
+    "claim": "FreeRTOS-Plus-TCP V4.4.1의 MISRA.md는 포인터와 정수 변환에 관한 Rule 11.4 위반을 참조 번호와 사유로 기록한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Plus-TCP/V4.4.1/MISRA.md",
+    "locator": "MISRA.md L142-157",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "편차 기록 방식의 사례이며, 기록 대상은 레지스터 접근이 아니라 소켓 값이다.",
+    "scope": "부분"
+   }
+  ],
+  "DSP-03": [
+   {
+    "project": "Sound Open Firmware",
+    "claim": "Sound Open Firmware v2.15.1의 파이프라인 정의는 실행 주기, 주기당 최악 명령 수, xrun 보고 한도를 필드로 두고, 초과·미달 때 스트림 정지, 0 전송, 데이터 버림 같은 동작을 고르게 한다.",
+    "url": "https://raw.githubusercontent.com/thesofproject/sof/v2.15.1/src/include/ipc/topology.h",
+    "locator": "src/include/ipc/topology.h L56-59, L295-299",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "오디오 DSP 펌웨어 사례다. 입력 최대 크기 정의는 이 위치에서 확인하지 않았다.",
+    "scope": "부분"
+   }
+  ],
+  "SOC-03": [
+   {
+    "project": "Linux kernel",
+    "claim": "Linux v6.6 rpmsg virtio 드라이버는 원격 프로세서가 보낸 메시지의 길이를 받은 버퍼 크기·헤더 크기와 비교해 초과하면 메시지를 거부한다.",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.6/drivers/rpmsg/virtio_rpmsg_bus.c",
+    "locator": "drivers/rpmsg/virtio_rpmsg_bus.c L727-735",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "길이 검증 사례다. 순서번호 검증은 이 위치에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "SOC-05": [
+   {
+    "project": "TF-A Tests",
+    "claim": "TF-A Tests v2.15.0의 test_smmu_spm_invalid_access는 보안 영역 DMA로 Realm 영역에 접근을 시도하고, SMMU 검사에서 실패하는 것을 기대 결과로 삼는 부정 시험이다.",
+    "url": "https://raw.githubusercontent.com/TrustedFirmware-A/tf-a-tests/v2.15.0/tftf/tests/runtime_services/secure_service/test_spm_smmu.c",
+    "locator": "tftf/tests/runtime_services/secure_service/test_spm_smmu.c L120-127",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 userspace 시험은 사용자 모드에서 커널 메모리에 쓰기를 시도하고 예상한 CPU 예외가 나는지 확인한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/tests/kernel/mem_protect/userspace/src/main.c",
+    "locator": "tests/kernel/mem_protect/userspace/src/main.c L53-54, L325, L343",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "코어 하나의 MPU·MMU 경계 시험 사례다."
+   }
+  ]
+ },
+ "stats": {
+  "guides": 44,
+  "with_verified": 43,
+  "verified": 72,
+  "needs_review": 0,
+  "reject": 0
+ }
+}

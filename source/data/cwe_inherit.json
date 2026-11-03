@@ -1,0 +1,393 @@
+{
+ "source": "MITRE CWE 5.0 XML(cwec_v5.0.xml, 2026-10-28). 상위 = ChildOf(View 1000) 계통에서 완화책·탐지 방법이 처음 나오는 가장 가까운 항목",
+ "mitigation": {
+  "110": [
+   {
+    "id": "710",
+    "name": "Improper Adherence to Coding Standards",
+    "abstraction": "Pillar",
+    "n": 2,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "126": [
+   {
+    "id": "125",
+    "name": "Out-of-bounds Read",
+    "abstraction": "Base",
+    "n": 2,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "127": [
+   {
+    "id": "125",
+    "name": "Out-of-bounds Read",
+    "abstraction": "Base",
+    "n": 2,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "191": [
+   {
+    "id": "682",
+    "name": "Incorrect Calculation",
+    "abstraction": "Pillar",
+    "n": 6,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "195": [
+   {
+    "id": "681",
+    "name": "Incorrect Conversion between Numeric Types",
+    "abstraction": "Base",
+    "n": 1,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "243": [
+   {
+    "id": "573",
+    "name": "Improper Following of Specification by Caller",
+    "abstraction": "Class",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "244": [
+   {
+    "id": "226",
+    "name": "Sensitive Information in Resource Not Removed Before Reuse",
+    "abstraction": "Base",
+    "n": 3,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "245": [
+   {
+    "id": "573",
+    "name": "Improper Following of Specification by Caller",
+    "abstraction": "Class",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "369": [
+   {
+    "id": "682",
+    "name": "Incorrect Calculation",
+    "abstraction": "Pillar",
+    "n": 6,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "396": [],
+  "397": [],
+  "403": [],
+  "466": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "480": [],
+  "536": [
+   {
+    "id": "211",
+    "name": "Externally-Generated Error Message Containing Sensitive Information",
+    "abstraction": "Base",
+    "n": 5,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "680": [
+   {
+    "id": "190",
+    "name": "Integer Overflow or Wraparound",
+    "abstraction": "Base",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "689": [
+   {
+    "id": "362",
+    "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+    "abstraction": "Class",
+    "n": 10,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "690": [
+   {
+    "id": "252",
+    "name": "Unchecked Return Value",
+    "abstraction": "Base",
+    "n": 4,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "704": [
+   {
+    "id": "1474",
+    "name": "Non-Equivalent Data Transformation",
+    "abstraction": "Class",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "733": [
+   {
+    "id": "710",
+    "name": "Improper Adherence to Coding Standards",
+    "abstraction": "Pillar",
+    "n": 2,
+    "dist": 3,
+    "in197": false
+   }
+  ],
+  "755": [],
+  "786": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "788": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "822": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "823": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "824": [
+   {
+    "id": "119",
+    "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+    "abstraction": "Class",
+    "n": 7,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "843": [
+   {
+    "id": "1474",
+    "name": "Non-Equivalent Data Transformation",
+    "abstraction": "Class",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "910": [
+   {
+    "id": "666",
+    "name": "Operation on Resource in Wrong Phase of Lifetime",
+    "abstraction": "Class",
+    "n": 2,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "911": []
+ },
+ "detection": {
+  "158": [
+   {
+    "id": "707",
+    "name": "Improper Neutralization",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "374": [
+   {
+    "id": "664",
+    "name": "Improper Control of a Resource Through its Lifetime",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "375": [
+   {
+    "id": "664",
+    "name": "Improper Control of a Resource Through its Lifetime",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "463": [
+   {
+    "id": "707",
+    "name": "Improper Neutralization",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "464": [
+   {
+    "id": "707",
+    "name": "Improper Neutralization",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "536": [
+   {
+    "id": "209",
+    "name": "Generation of Error Message Containing Sensitive Information",
+    "abstraction": "Base",
+    "n": 5,
+    "dist": 2,
+    "in197": true
+   }
+  ],
+  "537": [
+   {
+    "id": "209",
+    "name": "Generation of Error Message Containing Sensitive Information",
+    "abstraction": "Base",
+    "n": 5,
+    "dist": 2,
+    "in197": true
+   }
+  ],
+  "594": [
+   {
+    "id": "1076",
+    "name": "Insufficient Adherence to Expected Conventions",
+    "abstraction": "Class",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "600": [
+   {
+    "id": "248",
+    "name": "Uncaught Exception",
+    "abstraction": "Base",
+    "n": 1,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "689": [
+   {
+    "id": "362",
+    "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+    "abstraction": "Class",
+    "n": 9,
+    "dist": 1,
+    "in197": true
+   }
+  ],
+  "767": [
+   {
+    "id": "664",
+    "name": "Improper Control of a Resource Through its Lifetime",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 2,
+    "in197": false
+   }
+  ],
+  "781": [
+   {
+    "id": "1285",
+    "name": "Improper Validation of Specified Index, Position, or Offset in Input",
+    "abstraction": "Base",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "782": [
+   {
+    "id": "749",
+    "name": "Exposed Dangerous Method or Function",
+    "abstraction": "Base",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "911": [
+   {
+    "id": "664",
+    "name": "Improper Control of a Resource Through its Lifetime",
+    "abstraction": "Pillar",
+    "n": 1,
+    "dist": 1,
+    "in197": false
+   }
+  ],
+  "1325": [
+   {
+    "id": "770",
+    "name": "Allocation of Resources Without Limits or Throttling",
+    "abstraction": "Base",
+    "n": 4,
+    "dist": 1,
+    "in197": false
+   }
+  ]
+ }
+}

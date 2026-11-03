@@ -1,0 +1,100 @@
+{
+ "cwe": "22",
+ "scenario_ko": "정비 단말이나 운용자 콘솔이 보낸 파일 이름으로 기준 디렉터리(임무 계획·정비 기록·지도 타일·펌웨어 이미지) 안의 파일을 읽는다. 공격자는 이름에 '../'를 넣어 기준 디렉터리 밖에 있는 키·비밀번호 파일을 읽게 한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <sys/stat.h>\n\n/* 시험 준비용: 파일 하나를 만든다 */\nstatic void put(const char *path, const char *text)\n{\n    FILE *f = fopen(path, \"w\");\n    if (f != NULL) { fputs(text, f); fclose(f); }\n}\n\n/* 정비 단말이 보낸 임무 계획 파일 이름으로 계획을 읽는다 */\nstatic void load_plan(const char *req)\n{\n    char path[256];\n    char line[64] = \"\";\n    snprintf(path, sizeof path, \"plans/%s\", req);   /* 받은 이름을 그대로 이어 붙임 */\n    FILE *f = fopen(path, \"r\");\n    if (f == NULL) { puts(\"plan not found\"); return; }\n    if (fgets(line, sizeof line, f) == NULL) { line[0] = '\\0'; }\n    fclose(f);\n    printf(\"loaded: %s\\n\", line);\n}\n\nint main(void)\n{\n    mkdir(\"plans\", 0700);\n    put(\"plans/route1.txt\", \"WP1 WP2 WP3\");\n    put(\"crypto.key\", \"KEYDATA-7F3A\");      /* 기준 디렉터리 밖의 중요 파일 */\n    load_plan(\"route1.txt\");\n    load_plan(\"../crypto.key\");             /* 상위 디렉터리로 벗어나는 요청 */\n    return 0;\n}\n",
+    "explain_ko": "받은 이름을 기준 디렉터리 경로에 그대로 이어 붙여 연다. '../crypto.key'처럼 상위 디렉터리로 올라가는 이름이면 기준 디렉터리 밖의 키 파일 내용이 그대로 읽힌다."
+   },
+   "good": {
+    "code": "#include <limits.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <sys/stat.h>\n\nstatic void put(const char *path, const char *text)\n{\n    FILE *f = fopen(path, \"w\");\n    if (f != NULL) { fputs(text, f); fclose(f); }\n}\n\nstatic void load_plan(const char *req)\n{\n    char base[PATH_MAX], full[PATH_MAX], path[PATH_MAX];\n    char line[64] = \"\";\n    snprintf(path, sizeof path, \"plans/%s\", req);\n    /* 정규화(.., 링크 해석)한 실제 경로가 기준 디렉터리 안인지 확인 */\n    if (realpath(\"plans\", base) == NULL || realpath(path, full) == NULL) {\n        puts(\"plan not found\");\n        return;\n    }\n    size_t n = strlen(base);\n    if (strncmp(full, base, n) != 0 || full[n] != '/') {\n        puts(\"rejected: outside plans directory\");\n        return;\n    }\n    FILE *f = fopen(full, \"r\");\n    if (f == NULL) { puts(\"plan not found\"); return; }\n    if (fgets(line, sizeof line, f) == NULL) { line[0] = '\\0'; }\n    fclose(f);\n    printf(\"loaded: %s\\n\", line);\n}\n\nint main(void)\n{\n    mkdir(\"plans\", 0700);\n    put(\"plans/route1.txt\", \"WP1 WP2 WP3\");\n    put(\"crypto.key\", \"KEYDATA-7F3A\");\n    load_plan(\"route1.txt\");\n    load_plan(\"../crypto.key\");\n    return 0;\n}\n",
+    "explain_ko": "realpath()로 '..'와 링크를 모두 푼 실제 경로를 구하고, 그 경로가 기준 디렉터리 경로 + '/'로 시작할 때만 연다(I-04). 실제 경로 기준으로 비교하므로 '../'·절대 경로·링크를 모두 막는다. 기준 디렉터리를 다른 계정이 쓸 수 없게 두고, Linux 5.6 이상은 openat2(RESOLVE_BENEATH)도 검토한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "loaded: KEYDATA",
+    "expect_good": "rejected: outside plans directory",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-22 Demonstrative Example 1(받은 이름을 기준 경로에 그대로 붙임) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-6 '디렉터리 경로 조작'(인쇄 21쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <filesystem>\n#include <fstream>\n#include <iostream>\n#include <string>\n\nnamespace fs = std::filesystem;\n\n// 정비 단말이 보낸 이름으로 정비 기록 파일을 읽어 보여 준다\nstd::string readRecord(const std::string &name) {\n    std::ifstream in(fs::path(\"records\") / name);   // 이름을 검증 없이 경로에 붙임\n    std::string text;\n    if (!in || !std::getline(in, text)) {\n        return \"<none>\";\n    }\n    return text;\n}\n\nint main() {\n    fs::create_directories(\"records\");\n    std::ofstream(\"records/eng-0412.log\") << \"engine check ok\";\n    std::ofstream(\"operator.pin\") << \"PIN=4711\";      // 기준 디렉터리 밖 파일\n    std::cout << \"record: \" << readRecord(\"eng-0412.log\") << '\\n';\n    std::cout << \"record: \" << readRecord(\"../operator.pin\") << '\\n';\n}\n",
+    "explain_ko": "std::filesystem의 / 연산으로 이름을 붙이기만 하고 검증하지 않는다. '../operator.pin'이면 records 폴더 밖 파일이 읽힌다."
+   },
+   "good": {
+    "code": "#include <filesystem>\n#include <fstream>\n#include <iostream>\n#include <string>\n\nnamespace fs = std::filesystem;\n\nstd::string readRecord(const std::string &name) {\n    const fs::path root = fs::canonical(\"records\");\n    const fs::path target = fs::weakly_canonical(root / name);\n    // 정규화한 경로를 기준 디렉터리 기준으로 다시 표현해 밖으로 나가는지 본다\n    const fs::path rel = target.lexically_relative(root);\n    if (rel.empty() || *rel.begin() == \"..\") {\n        return \"<rejected: outside records>\";\n    }\n    std::ifstream in(target);\n    std::string text;\n    if (!in || !std::getline(in, text)) {\n        return \"<none>\";\n    }\n    return text;\n}\n\nint main() {\n    fs::create_directories(\"records\");\n    std::ofstream(\"records/eng-0412.log\") << \"engine check ok\";\n    std::ofstream(\"operator.pin\") << \"PIN=4711\";\n    std::cout << \"record: \" << readRecord(\"eng-0412.log\") << '\\n';\n    std::cout << \"record: \" << readRecord(\"../operator.pin\") << '\\n';\n}\n",
+    "explain_ko": "fs::canonical·fs::weakly_canonical로 정규화한 뒤 lexically_relative로 기준 디렉터리 기준 상대 경로를 구해, 비어 있거나 '..'로 시작하면 거부한다(I-04)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "record: PIN=4711",
+    "expect_good": "<rejected: outside records>"
+   },
+   "refs": [
+    "MITRE CWE-22 Demonstrative Example 1(받은 이름을 기준 경로에 그대로 붙임) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.IOException;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\n\npublic class Example {\n    static final Path MAPS = Path.of(\"maps\");\n\n    // 운용자 콘솔이 고른 지도 타일 이름으로 파일을 읽는다\n    static String openTile(String tileName) throws IOException {\n        Path p = MAPS.resolve(tileName);          // \"../\" 가 섞여도 그대로 해석됨\n        return Files.readString(p);\n    }\n\n    public static void main(String[] args) throws IOException {\n        Files.createDirectories(MAPS);\n        Files.writeString(MAPS.resolve(\"grid-37-127.tile\"), \"terrain data\");\n        Files.writeString(Path.of(\"link.cfg\"), \"LINK-KEY=9C21\");   // 지도 폴더 밖\n        System.out.println(\"tile: \" + openTile(\"grid-37-127.tile\"));\n        System.out.println(\"tile: \" + openTile(\"../link.cfg\"));\n    }\n}\n",
+    "explain_ko": "Path.resolve는 '../'를 걸러 주지 않는다. 받은 이름을 그대로 붙여 읽으므로 지도 폴더 밖의 링크 키 파일이 읽힌다."
+   },
+   "good": {
+    "code": "import java.io.IOException;\nimport java.nio.file.Files;\nimport java.nio.file.NoSuchFileException;\nimport java.nio.file.Path;\nimport java.util.regex.Pattern;\n\npublic class Example {\n    static final Path MAPS = Path.of(\"maps\");\n    static final Pattern TILE = Pattern.compile(\"[A-Za-z0-9._-]{1,64}\");\n\n    static String openTile(String tileName) throws IOException {\n        // 1) 이름 허용목록 2) 링크까지 푼 실제 경로가 기준 디렉터리 안인지 확인\n        if (!TILE.matcher(tileName).matches() || tileName.contains(\"..\")) {\n            return \"<rejected name>\";\n        }\n        Path root = MAPS.toRealPath();\n        Path p;\n        try {\n            p = root.resolve(tileName).toRealPath();      // 링크를 푼 경로로 검사하고 그 경로를 읽는다\n        } catch (NoSuchFileException e) {\n            return \"<rejected path>\";\n        }\n        if (!p.startsWith(root) || !Files.isRegularFile(p)) {\n            return \"<rejected path>\";\n        }\n        return Files.readString(p);\n    }\n\n    public static void main(String[] args) throws IOException {\n        Files.createDirectories(MAPS);\n        Files.writeString(MAPS.resolve(\"grid-37-127.tile\"), \"terrain data\");\n        Files.writeString(Path.of(\"link.cfg\"), \"LINK-KEY=9C21\");\n        System.out.println(\"tile: \" + openTile(\"grid-37-127.tile\"));\n        System.out.println(\"tile: \" + openTile(\"../link.cfg\"));\n    }\n}\n",
+    "explain_ko": "이름을 허용목록 정규식([A-Za-z0-9._-])으로 먼저 제한하고, toRealPath()로 링크까지 푼 경로가 역시 toRealPath()로 구한 기준 디렉터리 안에 있는지 startsWith로 확인한 뒤 그 경로를 읽는다(I-04). normalize()는 링크를 풀지 않으므로 검사에 쓰지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "tile: LINK-KEY",
+    "expect_good": "<rejected name>"
+   },
+   "refs": [
+    "MITRE CWE-22 Demonstrative Example 2(검증 없이 입력 경로로 File 생성) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-11 '디렉터리 경로 조작'(인쇄 47쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 펌웨어 업데이트 도구: 정비 단말이 지정한 이미지 이름을 images 폴더에서 읽는다\nDirectory.CreateDirectory(\"images\");\nFile.WriteAllText(Path.Combine(\"images\", \"fcu-2.4.1.bin\"), \"FCU IMAGE\");\nFile.WriteAllText(\"signing.key\", \"SIGN-KEY=A55A\");       // images 폴더 밖\n\nConsole.WriteLine(\"image: \" + ReadImage(\"fcu-2.4.1.bin\"));\nConsole.WriteLine(\"image: \" + ReadImage(\"../signing.key\"));\nConsole.WriteLine(\"image: \" + ReadImage(Path.GetFullPath(\"signing.key\")));   // 절대 경로\n\nstatic string ReadImage(string name)\n{\n    // 받은 이름을 그대로 결합: \"../\"나 절대 경로가 그대로 통한다\n    return File.ReadAllText(Path.Combine(\"images\", name));\n}\n",
+    "explain_ko": "Path.Combine은 '../'를 그대로 두고, 두 번째 인자가 절대 경로이면 앞 경로를 버린다. 받은 이름을 결합만 해서 읽으므로 '../signing.key'로도, 절대 경로로도 images 폴더 밖 서명 키가 읽힌다."
+   },
+   "good": {
+    "code": "Directory.CreateDirectory(\"images\");\nFile.WriteAllText(Path.Combine(\"images\", \"fcu-2.4.1.bin\"), \"FCU IMAGE\");\nFile.WriteAllText(\"signing.key\", \"SIGN-KEY=A55A\");\n\nConsole.WriteLine(\"image: \" + ReadImage(\"fcu-2.4.1.bin\"));\nConsole.WriteLine(\"image: \" + ReadImage(\"../signing.key\"));\nConsole.WriteLine(\"image: \" + ReadImage(Path.GetFullPath(\"signing.key\")));   // 절대 경로도 거부\n\nstatic string ReadImage(string name)\n{\n    string root = Path.GetFullPath(\"images\") + Path.DirectorySeparatorChar;\n    string full = Path.GetFullPath(Path.Combine(root, name));   // \"..\", 절대 경로를 먼저 풀어 낸다\n    if (!full.StartsWith(root, StringComparison.OrdinalIgnoreCase)\n        || Path.GetFileName(full) != name)\n    {\n        return \"<rejected: outside images>\";\n    }\n    return File.ReadAllText(full);\n}\n",
+    "explain_ko": "Path.GetFullPath로 '..'와 절대 경로를 먼저 풀어 낸 전체 경로가 기준 폴더 경로(끝에 구분자 포함)로 시작하고 하위 폴더가 아닌 파일 이름 그대로일 때만 읽는다(I-04). 예시는 '../' 이름과 절대 경로를 모두 거부하는지 함께 확인한다. GetFullPath는 심볼릭 링크를 풀지 않으므로 기준 폴더를 다른 계정이 쓸 수 없게 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "image: SIGN-KEY",
+    "expect_good": "<rejected: outside images>"
+   },
+   "refs": [
+    "MITRE CWE-22 Demonstrative Example 6(절대 경로가 기준 경로를 대체) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import os\n\nRECORDS = \"records\"\n\n\n# 정비 단말이 보낸 이름으로 정비 기록 파일을 읽어 돌려준다\ndef read_record(name):\n    path = os.path.join(RECORDS, name)        # 받은 이름을 검증 없이 결합\n    with open(path, encoding=\"utf-8\") as f:\n        return f.read()\n\n\nos.makedirs(RECORDS, exist_ok=True)\nwith open(os.path.join(RECORDS, \"eng-0412.log\"), \"w\", encoding=\"utf-8\") as f:\n    f.write(\"engine check ok\")\nwith open(\"loader.key\", \"w\", encoding=\"utf-8\") as f:      # 기준 디렉터리 밖 파일\n    f.write(\"LOADER-KEY=5D1C\")\n\nprint(\"record:\", read_record(\"eng-0412.log\"))\nprint(\"record:\", read_record(\"../loader.key\"))\nprint(\"record:\", read_record(os.path.abspath(\"loader.key\")))   # 절대 경로면 앞 경로가 버려진다\n",
+    "explain_ko": "os.path.join은 '../'를 걸러 주지 않고, 뒤 인자가 절대 경로이면 앞 경로를 버린다. 받은 이름을 결합만 해서 열므로 '../loader.key'로도, 절대 경로로도 기준 디렉터리 밖의 키 파일이 읽힌다."
+   },
+   "good": {
+    "code": "import os\nfrom pathlib import Path\n\nRECORDS = Path(\"records\")\n\n\ndef read_record(name):\n    root = RECORDS.resolve()\n    target = (root / name).resolve()          # \"..\", 절대 경로, 심볼릭 링크를 먼저 풀어 낸다\n    if not target.is_relative_to(root) or not target.is_file():\n        return \"<rejected: outside records>\"\n    return target.read_text(encoding=\"utf-8\")\n\n\nRECORDS.mkdir(exist_ok=True)\n(RECORDS / \"eng-0412.log\").write_text(\"engine check ok\", encoding=\"utf-8\")\nPath(\"loader.key\").write_text(\"LOADER-KEY=5D1C\", encoding=\"utf-8\")\n\nprint(\"record:\", read_record(\"eng-0412.log\"))\nprint(\"record:\", read_record(\"../loader.key\"))\nprint(\"record:\", read_record(os.path.abspath(\"loader.key\")))\n",
+    "explain_ko": "Path.resolve()로 '..'·절대 경로·심볼릭 링크를 모두 푼 실제 경로를 구하고, 그 경로가 기준 디렉터리 안(is_relative_to)의 일반 파일일 때만 읽는다(I-04, LPY-06). 문자열 startswith 비교는 'records2' 같은 이웃 디렉터리를 통과시키므로 쓰지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "record: LOADER-KEY",
+    "expect_good": "<rejected: outside records>"
+   },
+   "refs": [
+    "MITRE CWE-22 Demonstrative Example 6(사용자가 준 상대 경로를 현재 디렉터리에 결합) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 입력데이터 검증 및 표현 1-3 '경로 조작 및 자원 삽입'(인쇄 18쪽) 참고"
+   ]
+  }
+ }
+}

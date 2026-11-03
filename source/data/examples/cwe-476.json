@@ -1,0 +1,96 @@
+{
+ "cwe": "476",
+ "scenario_ko": "장비 구성 표에서 채널 번호로 장치 설정을 찾는다. 등록되지 않은 채널이면 찾기 함수가 '없음'을 돌려준다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stddef.h>\n\ntypedef struct { int channel; int gain; } DeviceCfg;\n\nstatic DeviceCfg table[] = {{1, 10}, {2, 20}};\n\nstatic DeviceCfg *find_cfg(int channel)\n{\n    for (size_t i = 0; i < sizeof table / sizeof table[0]; ++i) {\n        if (table[i].channel == channel) {\n            return &table[i];\n        }\n    }\n    return NULL;\n}\n\nint main(void)\n{\n    DeviceCfg *cfg = find_cfg(7);            /* 등록되지 않은 채널 */\n    printf(\"gain %d\\n\", cfg->gain);          /* NULL 검사 없이 역참조 */\n    return 0;\n}\n",
+    "explain_ko": "찾기 함수가 NULL을 돌려줄 수 있는데 검사하지 않고 역참조한다. MMU가 없는 MCU에서는 0번지 근처를 읽거나 써서 오동작이 바로 드러나지 않을 수도 있다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <stddef.h>\n\ntypedef struct { int channel; int gain; } DeviceCfg;\n\nstatic DeviceCfg table[] = {{1, 10}, {2, 20}};\n\nstatic const DeviceCfg *find_cfg(int channel)\n{\n    for (size_t i = 0; i < sizeof table / sizeof table[0]; ++i) {\n        if (table[i].channel == channel) {\n            return &table[i];\n        }\n    }\n    return NULL;\n}\n\nint main(void)\n{\n    const DeviceCfg *cfg = find_cfg(7);\n    if (cfg == NULL) {\n        puts(\"channel not configured: safe default\");\n        return 0;                            /* 안전 상태로 전환(D-08) */\n    }\n    printf(\"gain %d\\n\", cfg->gain);\n    return 0;\n}\n",
+    "explain_ko": "반환값을 쓰기 전에 NULL인지 검사하고, 없으면 설계에서 정한 안전 상태로 처리한다(I-06·D-08)."
+   },
+   "check": {
+    "tool": "asan",
+    "expect": "AddressSanitizer: (SEGV|access-violation)"
+   },
+   "refs": [
+    "MITRE CWE-476 Demonstrative Example 1(조회 함수가 돌려준 NULL을 검사 없이 사용) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 코드오류 5-1 '널(Null)포인터 역참조'(인쇄 162쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <map>\n#include <string>\n\nstruct Link { int baud; };\n\nstd::map<std::string, Link*> links;\n\nLink *lookup(const std::string &name) {\n    auto it = links.find(name);\n    return it == links.end() ? nullptr : it->second;\n}\n\nint main() {\n    static Link uart0{115200};\n    links[\"uart0\"] = &uart0;\n    Link *l = lookup(\"uart3\");               // 없는 링크\n    std::printf(\"%d\\n\", l->baud);             // nullptr 역참조\n    return 0;\n}\n",
+    "explain_ko": "없는 이름이면 nullptr을 돌려주는 함수의 결과를 검사 없이 역참조한다."
+   },
+   "good": {
+    "code": "#include <cstdio>\n#include <map>\n#include <optional>\n#include <string>\n\nstruct Link { int baud; };\n\nstd::map<std::string, Link> links;\n\nstd::optional<Link> lookup(const std::string &name) {\n    auto it = links.find(name);\n    if (it == links.end()) {\n        return std::nullopt;                 // '없음'을 형으로 표현\n    }\n    return it->second;\n}\n\nint main() {\n    links[\"uart0\"] = Link{115200};\n    if (auto l = lookup(\"uart3\")) {\n        std::printf(\"%d\\n\", l->baud);\n    } else {\n        std::puts(\"link not configured\");\n    }\n    return 0;\n}\n",
+    "explain_ko": "'없을 수 있음'을 반환형(std::optional)에 드러내 호출자가 검사를 빠뜨리기 어렵게 한다. 값은 if (auto l = …)처럼 확인한 뒤에만 꺼낸다(검사 없이 ->·*를 쓰면 여전히 미정의 동작)."
+   },
+   "check": {
+    "tool": "asan",
+    "expect": "AddressSanitizer: (SEGV|access-violation)"
+   },
+   "refs": [
+    "MITRE CWE-476 Demonstrative Example 1(조회 함수가 돌려준 NULL을 검사 없이 사용) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class Example {\n    record Profile(String unit, int maxRate) {}\n\n    static final Map<String, Profile> PROFILES = new HashMap<>();\n\n    public static void main(String[] args) {\n        PROFILES.put(\"imu\", new Profile(\"deg/s\", 400));\n        Profile p = PROFILES.get(\"gps\");     // 없는 키면 null\n        System.out.println(p.maxRate());     // NullPointerException\n    }\n}\n",
+    "explain_ko": "Map.get은 키가 없으면 null을 돌려준다. 검사 없이 메서드를 부르면 NullPointerException으로 처리 스레드가 멈춘다."
+   },
+   "good": {
+    "code": "import java.util.HashMap;\nimport java.util.Map;\nimport java.util.Optional;\n\npublic class Example {\n    record Profile(String unit, int maxRate) {}\n\n    static final Map<String, Profile> PROFILES = new HashMap<>();\n\n    public static void main(String[] args) {\n        PROFILES.put(\"imu\", new Profile(\"deg/s\", 400));\n        Optional<Profile> p = Optional.ofNullable(PROFILES.get(\"gps\"));\n        System.out.println(p.map(Profile::maxRate)\n                            .map(String::valueOf)\n                            .orElse(\"profile missing: using safe default\"));\n    }\n}\n",
+    "explain_ko": "없을 수 있는 값을 Optional로 감싸 기본값 처리를 코드에 드러낸다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "NullPointerException",
+    "expect_good": "using safe default"
+   },
+   "refs": [
+    "MITRE CWE-476 Demonstrative Example 2·3(없을 수 있는 속성·인텐트 값을 검사 없이 사용) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 코드오류 5-1 '널(Null)포인터 역참조'(인쇄 247쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "var sensors = new Dictionary<string, string?> { [\"imu\"] = \"IMU-A\", [\"gps\"] = null };\nstring? model = sensors[\"gps\"];          // 값이 null일 수 있다\nConsole.WriteLine(model.Length);           // CS8602: null일 수 있는 참조를 역참조\n",
+    "explain_ko": "null 허용 참조를 검사 없이 역참조한다. Nullable 분석을 켜면 컴파일 경고(CS8602)로 잡힌다."
+   },
+   "good": {
+    "code": "var sensors = new Dictionary<string, string?> { [\"imu\"] = \"IMU-A\", [\"gps\"] = null };\nif (sensors.TryGetValue(\"gps\", out string? model) && model is not null)\n{\n    Console.WriteLine(model.Length);\n}\nelse\n{\n    Console.WriteLine(\"sensor model missing\");\n}\n",
+    "explain_ko": "TryGetValue와 null 검사로 두 경우(키 없음, 값이 null)를 모두 처리한다. Nullable 경고는 오류로 올린다(LCS-08)."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CS8602"
+   },
+   "refs": [
+    "MITRE CWE-476 Demonstrative Example 2(없을 수 있는 속성 값을 검사 없이 사용) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass ChannelConfig:\n    device: str\n    rate_hz: int\n\n\nCONFIG = {1: ChannelConfig(\"imu\", 200), 2: ChannelConfig(\"baro\", 50)}\n\n\n# 장비 구성 표에서 채널 번호로 설정을 찾아 표본 주기를 정한다\ndef sample_period_ms(channel):\n    cfg = CONFIG.get(channel)            # 등록되지 않은 채널이면 None\n    return 1000 // cfg.rate_hz           # None을 확인하지 않고 속성을 읽는다\n\n\nprint(\"ch1 period:\", sample_period_ms(1), \"ms\")\nprint(\"ch7 period:\", sample_period_ms(7), \"ms\")\n",
+    "explain_ko": "dict.get()은 키가 없으면 None을 돌려주는데, 확인 없이 속성을 읽는다. 등록되지 않은 채널 번호가 들어오면 AttributeError('NoneType' object has no attribute)로 처리기가 비정상 종료한다. re.match()·찾기 함수처럼 '없음'을 None으로 돌려주는 API에서 흔하다."
+   },
+   "good": {
+    "code": "from dataclasses import dataclass\nfrom typing import Optional\n\n\n@dataclass\nclass ChannelConfig:\n    device: str\n    rate_hz: int\n\n\nCONFIG = {1: ChannelConfig(\"imu\", 200), 2: ChannelConfig(\"baro\", 50)}\n\n\ndef sample_period_ms(channel) -> Optional[int]:\n    cfg = CONFIG.get(channel)\n    if cfg is None:                      # '없음'을 먼저 처리한다\n        return None\n    return 1000 // cfg.rate_hz\n\n\nfor ch in (1, 7):\n    period = sample_period_ms(ch)\n    print(f\"ch{ch} period:\", \"unregistered channel\" if period is None else f\"{period} ms\")\n",
+    "explain_ko": "'없음'을 돌려줄 수 있는 함수는 반환형에 Optional을 적고, 쓰는 쪽에서 is None으로 먼저 처리한다(I-06). mypy·pyright로 타입 검사를 하면 Optional 값을 확인 없이 쓰는 곳을 찾을 수 있다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "AttributeError: 'NoneType' object has no attribute",
+    "expect_good": "ch7 period: unregistered channel"
+   },
+   "refs": [
+    "MITRE CWE-476 Demonstrative Example 2(속성이 늘 있다고 가정하고 반환값을 씀) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 코드오류 5-1 'Null Pointer 역참조'(인쇄 135쪽) 참고"
+   ]
+  }
+ }
+}

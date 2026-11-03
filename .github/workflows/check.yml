@@ -1,0 +1,52 @@
+# 점검: 끌어오기 요청(PR)마다 온라인판·폐쇄망판이 엄격 모드로 빌드되고 외부 자원 없이 동작하는지, 주 1회 근거 링크가 살아 있는지 확인한다.
+name: check
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 1"    # 매주 월요일 09:00 KST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install --require-hashes --no-deps -r requirements-lock.txt
+      - run: python scripts/build.py
+      - run: mkdocs build --strict
+      - run: python scripts/check_internal_links.py site --dir-urls
+      - run: python scripts/check_offline.py site
+      - run: python scripts/check_assets.py site
+      - name: 폐쇄망판(사이트·단일 문서)도 빌드되는지
+        run: python scripts/site_build.py --offline
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: build-report
+          path: build-report.json
+
+  links:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install --require-hashes --no-deps -r requirements-lock.txt
+      - name: 근거 링크 확인(404/410이 있으면 실패)
+        run: python scripts/check_links.py --strict
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: linkcheck-report
+          path: linkcheck-report.json

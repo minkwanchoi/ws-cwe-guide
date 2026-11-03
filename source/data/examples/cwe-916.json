@@ -1,0 +1,106 @@
+{
+ "cwe": "916",
+ "scenario_ko": "정비 콘솔·정비 기록 서버가 운용자 비밀번호를 검증값으로 바꿔 계정 파일에 저장한다. 솔트를 넣더라도 해시 한 번이나 적은 반복으로 만든 검증값은 계정 파일이 유출되면 공격자가 GPU 등으로 빠르게 대입해 비밀번호를 찾는다. 예시는 유출된 검증값 하나를 두고 코어 하나로 1초에 몇 번 추측할 수 있는지 재어 예시 기준(초당 100회)을 넘는지 본다. C# 예시는 .NET 분석기 규칙으로 반복 횟수를 점검한다. Bandit은 SHA-256 한 번을 잡지 못하므로 Python 예시도 추측 속도로 판정한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <time.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <openssl/sha.h>\n\n/* 정비 콘솔 계정 파일의 한 줄: 솔트 16바이트 + SHA-256(솔트 || 비밀번호) */\ntypedef struct {\n    unsigned char salt[16];\n    unsigned char verifier[SHA256_DIGEST_LENGTH];\n} ConsoleAccount;\n\nstatic void make_verifier(const unsigned char salt[16], const char *pw, unsigned char out[SHA256_DIGEST_LENGTH])\n{\n    EVP_MD_CTX *h = EVP_MD_CTX_new();\n    if (h == NULL) return;\n    EVP_DigestInit_ex(h, EVP_sha256(), NULL);\n    EVP_DigestUpdate(h, salt, 16);\n    EVP_DigestUpdate(h, pw, strlen(pw));\n    EVP_DigestFinal_ex(h, out, NULL);   /* 해시 한 번으로 끝난다 */\n    EVP_MD_CTX_free(h);\n}\n\n/* 계정 파일을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다 */\nstatic double guesses_per_second(const ConsoleAccount *acct)\n{\n    unsigned char probe[SHA256_DIGEST_LENGTH];\n    struct timespec t0, t1;\n    long tries = 0;\n    double spent = 0.0;\n    clock_gettime(CLOCK_MONOTONIC, &t0);\n    do {\n        make_verifier(acct->salt, \"guess-0000\", probe);\n        tries++;\n        clock_gettime(CLOCK_MONOTONIC, &t1);\n        spent = (double)(t1.tv_sec - t0.tv_sec) + (double)(t1.tv_nsec - t0.tv_nsec) / 1e9;\n    } while (spent < 0.5);\n    return (double)tries / spent;\n}\n\nint main(void)\n{\n    ConsoleAccount acct;\n    if (RAND_bytes(acct.salt, sizeof acct.salt) != 1) return 1;\n    make_verifier(acct.salt, \"EXAMPLE-ONLY-pw1\", acct.verifier);\n\n    /* 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다 */\n    double rate = guesses_per_second(&acct);\n    printf(\"offline guesses per second per core: %.0f\\n\", rate);\n    puts(rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    return 0;\n}\n",
+    "explain_ko": "솔트는 넣었지만 SHA-256 한 번으로 검증값을 만든다. 범용 해시는 빠르게 계산하도록 설계되어 예시 환경의 코어 하나로도 초당 수백만 번 추측할 수 있고, GPU를 쓰면 더 빠르다. 솔트는 같은 비밀번호를 서로 다른 검증값으로 만들 뿐 추측 속도를 늦추지 못한다."
+   },
+   "good": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n#include <time.h>\n#include <openssl/crypto.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n\n/* 정비 콘솔 계정 파일의 한 줄: scrypt 매개변수 + 솔트 + 검증값. 매개변수를 함께 저장해 기준을 올린 뒤에도 기존 계정을 검증한다 */\ntypedef struct {\n    uint64_t n;            /* 반복·메모리 비용(2의 거듭제곱) */\n    uint64_t r, p;\n    unsigned char salt[16];\n    unsigned char verifier[32];\n} ConsoleAccount;\n\nstatic int make_verifier(const ConsoleAccount *a, const char *pw, unsigned char out[32])\n{\n    /* 메모리를 많이 쓰는 키 유도 함수(scrypt): N=2^15, r=8이면 한 번에 약 32 MiB를 쓴다.\n       메모리 상한은 레코드의 매개변수로 계산해 기준을 올려도 실패하지 않게 한다 */\n    const uint64_t maxmem = 128u * a->r * (a->n + a->p + 2);\n    return EVP_PBE_scrypt(pw, strlen(pw), a->salt, sizeof a->salt, a->n, a->r, a->p,\n                          maxmem, out, 32) == 1 ? 0 : -1;\n}\n\nstatic int enroll(ConsoleAccount *a, const char *pw)\n{\n    a->n = 1u << 15;       /* 예시 값, 대상 장비에서 재어 정한다. 인증 지연 요구에 맞춰 주기적으로 올린다 */\n    a->r = 8;\n    a->p = 1;\n    if (RAND_bytes(a->salt, sizeof a->salt) != 1) return -1;\n    return make_verifier(a, pw, a->verifier);\n}\n\nstatic int login(const ConsoleAccount *a, const char *pw)\n{\n    unsigned char probe[32];\n    return make_verifier(a, pw, probe) == 0 && CRYPTO_memcmp(probe, a->verifier, 32) == 0;\n}\n\n/* 계정 파일을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다 */\nstatic double guesses_per_second(const ConsoleAccount *acct)\n{\n    unsigned char probe[32];\n    struct timespec t0, t1;\n    long tries = 0;\n    double spent = 0.0;\n    clock_gettime(CLOCK_MONOTONIC, &t0);\n    do {\n        if (make_verifier(acct, \"guess-0000\", probe) != 0) return -1.0;\n        tries++;\n        clock_gettime(CLOCK_MONOTONIC, &t1);\n        spent = (double)(t1.tv_sec - t0.tv_sec) + (double)(t1.tv_nsec - t0.tv_nsec) / 1e9;\n    } while (spent < 0.5);\n    return (double)tries / spent;\n}\n\nint main(void)\n{\n    ConsoleAccount acct;\n    if (enroll(&acct, \"EXAMPLE-ONLY-pw1\") != 0) return 1;\n    printf(\"login: %s\\n\", login(&acct, \"EXAMPLE-ONLY-pw1\") ? \"ok\" : \"denied\");\n\n    /* 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다 */\n    double rate = guesses_per_second(&acct);\n    printf(\"offline guesses per second per core: %.0f\\n\", rate);\n    puts(rate < 0 ? \"derivation failed\" : rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    return 0;\n}\n",
+    "explain_ko": "메모리를 많이 쓰는 키 유도 함수 scrypt(N=2^15, r=8, p=1은 예시 값)로 검증값을 만든다. 한 번 계산에 약 32 MiB의 메모리와 수십 밀리초가 들어 예시 환경에서 코어당 초당 수십 번 이하로 줄고, 메모리 요구 때문에 GPU 병렬 대입도 비싸진다. 매개변수는 레코드에 함께 저장해 기준을 올린 뒤에도 기존 계정을 검증하고, 비교는 CRYPTO_memcmp로 상수 시간에 한다(D-05). OpenSSL 3.2 이상이나 다른 검증된 라이브러리를 쓸 수 있으면 Argon2id도 검토한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "CHEAP TO GUESS",
+    "expect_good": "costly to guess",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-916 Demonstrative Example 1(빠른 해시로 비밀번호 저장) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <array>\n#include <chrono>\n#include <cstdio>\n#include <string>\n\n// 정비 콘솔 계정 저장소: 옛 판에서 물려받은 PBKDF2 설정(HMAC-SHA1, 반복 1,000회)\nstruct OperatorRecord {\n    std::array<unsigned char, 16> salt{};\n    std::array<unsigned char, 20> dk{};\n};\n\nstatic bool derive(const std::string &pw, const OperatorRecord &rec, unsigned char *out) {\n    return PKCS5_PBKDF2_HMAC(pw.data(), static_cast<int>(pw.size()), rec.salt.data(), static_cast<int>(rec.salt.size()),\n                             1000, EVP_sha1(), static_cast<int>(rec.dk.size()), out) == 1;\n}\n\n// 계정 파일을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\nstatic double guesses_per_second(const OperatorRecord &rec) {\n    using clock = std::chrono::steady_clock;\n    std::array<unsigned char, 20> probe{};\n    long tries = 0;\n    const auto start = clock::now();\n    std::chrono::duration<double> spent{};\n    do {\n        if (!derive(\"guess-0000\", rec, probe.data())) return -1.0;\n        ++tries;\n        spent = clock::now() - start;\n    } while (spent.count() < 0.5);\n    return static_cast<double>(tries) / spent.count();\n}\n\nint main() {\n    OperatorRecord rec;\n    if (RAND_bytes(rec.salt.data(), static_cast<int>(rec.salt.size())) != 1 || !derive(\"EXAMPLE-ONLY-pw1\", rec, rec.dk.data())) {\n        return 1;\n    }\n    // 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\n    const double rate = guesses_per_second(rec);\n    std::printf(\"offline guesses per second per core: %.0f\\n\", rate);\n    std::puts(rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    return 0;\n}\n",
+    "explain_ko": "PBKDF2를 쓰지만 HMAC-SHA1에 반복 1,000회라는 옛 설정을 그대로 둔다. 예시 환경의 코어 하나로 초당 수천 번 추측할 수 있어 계정 파일이 유출되면 흔한 비밀번호는 금방 찾는다. 반복 횟수가 코드 상수로 박혀 있고 레코드에 저장되지 않아, 기준을 올리려면 모든 계정을 한꺼번에 다시 등록해야 한다."
+   },
+   "good": {
+    "code": "#include <openssl/crypto.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <array>\n#include <chrono>\n#include <cstdio>\n#include <string>\n\nconstexpr int kCurrentRounds = 600000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\n\n// 정비 콘솔 계정 저장소: 반복 횟수를 레코드에 함께 저장하고, 기준을 올리면 로그인 때 계정별로 옮긴다\nstruct OperatorRecord {\n    int rounds = kCurrentRounds;\n    std::array<unsigned char, 16> salt{};\n    std::array<unsigned char, 32> dk{};\n};\n\nstatic bool derive(const std::string &pw, const OperatorRecord &rec, unsigned char *out) {\n    return PKCS5_PBKDF2_HMAC(pw.data(), static_cast<int>(pw.size()), rec.salt.data(), static_cast<int>(rec.salt.size()),\n                             rec.rounds, EVP_sha256(), static_cast<int>(rec.dk.size()), out) == 1;\n}\n\nstatic bool enroll(OperatorRecord &rec, const std::string &pw) {\n    rec.rounds = kCurrentRounds;\n    return RAND_bytes(rec.salt.data(), static_cast<int>(rec.salt.size())) == 1 && derive(pw, rec, rec.dk.data());\n}\n\n// 로그인에 성공했는데 저장된 반복 횟수가 현재 기준보다 낮으면 새 솔트·새 기준으로 다시 만든다\nstatic bool login(OperatorRecord &rec, const std::string &pw) {\n    std::array<unsigned char, 32> probe{};\n    if (!derive(pw, rec, probe.data()) || CRYPTO_memcmp(probe.data(), rec.dk.data(), probe.size()) != 0) return false;\n    if (rec.rounds < kCurrentRounds) {\n        OperatorRecord fresh;                // 임시 레코드에 만들고 성공할 때만 바꾼다. 실패하면 옛 검증값이 그대로 남는다\n        if (enroll(fresh, pw)) rec = fresh;\n    }\n    return true;\n}\n\n// 계정 파일을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\nstatic double guesses_per_second(const OperatorRecord &rec) {\n    using clock = std::chrono::steady_clock;\n    std::array<unsigned char, 32> probe{};\n    long tries = 0;\n    const auto start = clock::now();\n    std::chrono::duration<double> spent{};\n    do {\n        if (!derive(\"guess-0000\", rec, probe.data())) return -1.0;\n        ++tries;\n        spent = clock::now() - start;\n    } while (spent.count() < 0.5);\n    return static_cast<double>(tries) / spent.count();\n}\n\nint main() {\n    OperatorRecord rec;\n    if (!enroll(rec, \"EXAMPLE-ONLY-pw1\")) return 1;\n    std::printf(\"login: %s\\n\", login(rec, \"EXAMPLE-ONLY-pw1\") ? \"ok\" : \"denied\");\n    // 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\n    const double rate = guesses_per_second(rec);\n    std::printf(\"offline guesses per second per core: %.0f\\n\", rate);\n    std::puts(rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    return 0;\n}\n",
+    "explain_ko": "PBKDF2-HMAC-SHA256에 반복 600,000회(예시 값)를 쓰고 반복 횟수를 레코드에 함께 저장한다. 로그인에 성공했는데 저장된 반복 횟수가 현재 기준보다 낮으면 새 솔트·새 기준으로 임시 레코드에 검증값을 다시 만들어, 성공할 때만 계정을 옮긴다. 비교는 CRYPTO_memcmp로 한다(D-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "CHEAP TO GUESS",
+    "expect_good": "costly to guess",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-916 설명·완화책(반복 횟수를 조정할 수 있는 적응형 해시 사용) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.nio.charset.StandardCharsets;\nimport java.security.MessageDigest;\nimport java.security.SecureRandom;\n\npublic class Example {\n    // 정비 기록 서버 계정 테이블에 저장할 검증값: SHA-512(솔트 || 비밀번호) 한 번\n    static byte[] verifier(byte[] salt, String password) throws Exception {\n        MessageDigest sha = MessageDigest.getInstance(\"SHA-512\");\n        sha.update(salt);\n        return sha.digest(password.getBytes(StandardCharsets.UTF_8));\n    }\n\n    // 계정 테이블을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\n    static double guessesPerSecond(byte[] salt) throws Exception {\n        long start = System.nanoTime(), tries = 0;\n        double spent;\n        do {\n            verifier(salt, \"guess-0000\");\n            tries++;\n            spent = (System.nanoTime() - start) / 1e9;\n        } while (spent < 0.5);\n        return tries / spent;\n    }\n\n    public static void main(String[] args) throws Exception {\n        byte[] salt = new byte[16];\n        new SecureRandom().nextBytes(salt);\n        verifier(salt, \"EXAMPLE-ONLY-pw1\");\n        // 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\n        double rate = guessesPerSecond(salt);\n        System.out.printf(\"offline guesses per second per core: %.0f%n\", rate);\n        System.out.println(rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    }\n}\n",
+    "explain_ko": "솔트를 붙여 SHA-512 한 번으로 검증값을 만든다. 해시 길이가 길어도 계산량은 늘지 않아 예시 환경의 코어 하나로 초당 수백만 번 추측할 수 있다."
+   },
+   "good": {
+    "code": "import java.security.MessageDigest;\nimport java.security.SecureRandom;\nimport java.util.Arrays;\nimport javax.crypto.SecretKeyFactory;\nimport javax.crypto.spec.PBEKeySpec;\n\npublic class Example {\n    static final int CURRENT_ROUNDS = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\n\n    // 정비 기록 서버 계정 테이블의 한 행: 반복 횟수·솔트·검증값을 함께 저장한다\n    record Account(int rounds, byte[] salt, byte[] verifier) { }\n\n    static byte[] derive(char[] password, byte[] salt, int rounds) throws Exception {\n        PBEKeySpec spec = new PBEKeySpec(password, salt, rounds, 256);\n        try {\n            return SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA256\").generateSecret(spec).getEncoded();\n        } finally {\n            spec.clearPassword();\n        }\n    }\n\n    static Account enroll(char[] password) throws Exception {\n        byte[] salt = new byte[16];\n        new SecureRandom().nextBytes(salt);\n        return new Account(CURRENT_ROUNDS, salt, derive(password, salt, CURRENT_ROUNDS));\n    }\n\n    static boolean login(Account a, char[] password) throws Exception {\n        return MessageDigest.isEqual(derive(password, a.salt(), a.rounds()), a.verifier());   // 상수 시간 비교\n    }\n\n    // 계정 테이블을 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\n    static double guessesPerSecond(Account a) throws Exception {\n        long start = System.nanoTime(), tries = 0;\n        double spent;\n        do {\n            derive(\"guess-0000\".toCharArray(), a.salt(), a.rounds());\n            tries++;\n            spent = (System.nanoTime() - start) / 1e9;\n        } while (spent < 0.5);\n        return tries / spent;\n    }\n\n    public static void main(String[] args) throws Exception {\n        char[] typed = \"EXAMPLE-ONLY-pw1\".toCharArray();\n        Account acct = enroll(typed);\n        System.out.println(\"login: \" + (login(acct, typed) ? \"ok\" : \"denied\"));\n        Arrays.fill(typed, '\\0');\n        // 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\n        double rate = guessesPerSecond(acct);\n        System.out.printf(\"offline guesses per second per core: %.0f%n\", rate);\n        System.out.println(rate > 100.0 ? \"CHEAP TO GUESS\" : \"costly to guess\");\n    }\n}\n",
+    "explain_ko": "PBKDF2WithHmacSHA256에 반복 600,000회(예시 값)로 256비트 검증값을 만들고 반복 횟수·솔트와 함께 저장한다. 비교는 MessageDigest.isEqual로 상수 시간에 하고, 비밀번호는 char[]로 받아 쓴 뒤 지운다(D-05). JDK에는 scrypt·Argon2가 없으므로 이 함수가 필요하면 검증된 외부 라이브러리를 공급망 점검을 거쳐 들인다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "CHEAP TO GUESS",
+    "expect_good": "costly to guess"
+   },
+   "refs": [
+    "MITRE CWE-916 Demonstrative Example 1(빠른 해시로 비밀번호 저장) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Security.Cryptography;\n\n// 정비 콘솔 계정 파일에 저장할 비밀번호 검증값을 만든다(옛 판에서 옮겨 온 코드)\nbyte[] salt = RandomNumberGenerator.GetBytes(16);\nbyte[] verifier = MakeVerifier(\"EXAMPLE-ONLY-pw1\", salt);\nConsole.WriteLine($\"verifier {Convert.ToHexString(verifier)[..16]}...\");\n\nstatic byte[] MakeVerifier(string password, byte[] salt)\n{\n    using var kdf = new Rfc2898DeriveBytes(password, salt, 1000, HashAlgorithmName.SHA256);   // 반복 1,000회\n    return kdf.GetBytes(32);\n}\n",
+    "explain_ko": "옛 판에서 옮겨 온 Rfc2898DeriveBytes 생성자에 반복 1,000회를 준다. .NET 분석기가 CA5387(반복 횟수가 부족한 약한 키 유도 함수)로 경고하고, 이 생성자는 .NET 10에서 사용 중단(SYSLIB0060) 경고도 난다."
+   },
+   "good": {
+    "code": "using System.Security.Cryptography;\n\n// 계정 파일 한 줄: 알고리즘·반복 횟수·솔트·검증값을 함께 저장해 반복 횟수를 올린 뒤에도 기존 계정을 검증한다\nconst int Iterations = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다\nbyte[] salt = RandomNumberGenerator.GetBytes(16);\nbyte[] verifier = MakeVerifier(\"EXAMPLE-ONLY-pw1\", salt, Iterations);\nstring record = $\"pbkdf2-sha256${Iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(verifier)}\";\nConsole.WriteLine($\"stored {record[..22]}...\");\nConsole.WriteLine($\"login: {(Verify(\"EXAMPLE-ONLY-pw1\", record) ? \"ok\" : \"denied\")}\");\n\nstatic byte[] MakeVerifier(string password, byte[] salt, int iterations) =>\n    Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, 32);\n\nstatic bool Verify(string password, string record)\n{\n    string[] f = record.Split('$');\n    if (f.Length != 4 || f[0] != \"pbkdf2-sha256\" || !int.TryParse(f[1], out int n) || n < 1) return false;\n    // n이 현재 기준(Iterations)보다 작으면 로그인에 성공한 뒤 새 기준으로 검증값을 다시 만든다(이 예시에서는 생략)\n    byte[] probe = MakeVerifier(password, Convert.FromBase64String(f[2]), n);\n    return CryptographicOperations.FixedTimeEquals(probe, Convert.FromBase64String(f[3]));   // 상수 시간 비교\n}\n",
+    "explain_ko": "정적 메서드 Rfc2898DeriveBytes.Pbkdf2에 SHA-256과 반복 600,000회(예시 값)를 주고, 알고리즘·반복 횟수·솔트·검증값을 한 줄에 저장한다. 비교는 CryptographicOperations.FixedTimeEquals로 한다(D-05). net10.0 실험에서 CA5387은 생성자만 검사하고 정적 메서드 Pbkdf2의 반복 횟수는 경고하지 않았으므로, 반복 횟수는 코드 리뷰로도 확인한다."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA5387"
+   },
+   "refs": [
+    "MITRE CWE-916 설명·완화책(반복 횟수를 조정할 수 있는 적응형 해시 사용) 참고, 이 가이드가 새로 작성",
+    "Microsoft Learn 코드 분석 규칙 CA5387 'Do not use weak key derivation function with insufficient iteration count' 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import hashlib\nimport hmac\nimport os\nimport time\n\naccounts = {}\n\n\n# 정비 기록 서버의 계정 DB: 솔트는 붙였지만 빠른 해시 한 번으로 검증값을 만든다\ndef enroll(user, password):\n    salt = os.urandom(16)\n    accounts[user] = (salt, hashlib.sha256(salt + password.encode()).digest())\n\n\ndef verify(user, password):\n    salt, digest = accounts[user]\n    return hmac.compare_digest(hashlib.sha256(salt + password.encode()).digest(), digest)\n\n\n# 계정 DB를 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\ndef guesses_per_second(check_one):\n    start, tries = time.perf_counter(), 0\n    while True:\n        check_one(\"guess-0000\")\n        tries += 1\n        spent = time.perf_counter() - start\n        if spent >= 0.5:\n            return tries / spent\n\n\nenroll(\"op-12\", \"EXAMPLE-ONLY-pw1\")\nprint(\"login:\", verify(\"op-12\", \"EXAMPLE-ONLY-pw1\"))\n# 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\nrate = guesses_per_second(lambda pw: verify(\"op-12\", pw))\nprint(f\"offline guesses per second per core: {rate:.0f}\")\nprint(\"CHEAP TO GUESS\" if rate > 100.0 else \"costly to guess\")\n",
+    "explain_ko": "솔트는 붙였지만 SHA-256 한 번으로 검증값을 만든다. 범용 해시는 빠르게 계산하도록 설계되어 GPU 같은 병렬 장비로 짧은 시간에 매우 많은 후보를 시도할 수 있으므로, 계정 DB가 유출되면 흔한 비밀번호는 금방 되찾는다. 예시 환경의 코어 하나로도 초당 백만 번 넘게 추측할 수 있다. Bandit은 보안 용도의 hashlib MD5·SHA-1만 B324로 보고하므로 SHA-256 한 번은 잡지 못한다. 그래서 이 예시는 C·C++·Java 예시와 같이 실행해 초당 추측 횟수로 판정하고, 실제 코드에서는 코드 리뷰로 본다."
+   },
+   "good": {
+    "code": "import hashlib\nimport hmac\nimport os\nimport time\n\nITERATIONS = 600_000                 # 대상 장비에서 한 번 확인에 걸리는 시간을 재어 정하고 저장 형식에 남긴다\naccounts = {}\n\n\ndef enroll(user, password):\n    salt = os.urandom(16)\n    digest = hashlib.pbkdf2_hmac(\"sha256\", password.encode(), salt, ITERATIONS)\n    accounts[user] = (\"pbkdf2_sha256\", ITERATIONS, salt, digest)\n\n\ndef verify(user, password):\n    scheme, rounds, salt, digest = accounts[user]\n    trial = hashlib.pbkdf2_hmac(\"sha256\", password.encode(), salt, rounds)\n    ok = hmac.compare_digest(trial, digest)\n    if ok and rounds < ITERATIONS:   # 예전 기준으로 만든 검증값은 로그인에 성공할 때 새 기준으로 바꾼다\n        enroll(user, password)\n    return ok\n\n\n# 계정 DB를 빼낸 공격자가 코어 하나로 1초에 몇 번 추측해 볼 수 있는지 잰다\ndef guesses_per_second(check_one):\n    start, tries = time.perf_counter(), 0\n    while True:\n        check_one(\"guess-0000\")\n        tries += 1\n        spent = time.perf_counter() - start\n        if spent >= 0.5:\n            return tries / spent\n\n\nenroll(\"op-12\", \"EXAMPLE-ONLY-pw1\")\nprint(\"login:\", verify(\"op-12\", \"EXAMPLE-ONLY-pw1\"))\n# 예시 기준: 코어 하나에서 초당 100회보다 많이 추측할 수 있으면 계산량이 부족하다고 본다\nrate = guesses_per_second(lambda pw: verify(\"op-12\", pw))\nprint(f\"offline guesses per second per core: {rate:.0f}\")\nprint(\"CHEAP TO GUESS\" if rate > 100.0 else \"costly to guess\")\n",
+    "explain_ko": "비밀번호용으로 설계해 계산 비용을 조절할 수 있는 함수(hashlib.pbkdf2_hmac·hashlib.scrypt, 또는 argon2-cffi 패키지의 Argon2)를 쓰고, 반복 횟수는 대상 장비에서 한 번 확인에 걸리는 시간을 재어 정한다(D-05, LPY-07). 방식·반복 횟수·솔트를 검증값과 함께 저장해 두고, 예전 기준의 검증값은 로그인에 성공할 때 새 기준으로 바꾼다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "CHEAP TO GUESS",
+    "expect_good": "costly to guess"
+   },
+   "refs": [
+    "MITRE CWE-916 Demonstrative Example 1(빠른 해시로 비밀번호 저장) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ }
+}

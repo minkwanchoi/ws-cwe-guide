@@ -1,0 +1,572 @@
+<!doctype html>
+<!--
+{{LICENSE}}
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>지침 선택 도구 · {{TITLE}}</title>
+<!-- 폐쇄망에서도 동작하도록 외부 글꼴을 불러오지 않는다(IBM Plex가 없으면 운영체제 글꼴) -->
+<style>
+/* Layout: 머리말 → ①간편 질문 → ②단계별 지침(누르면 펼침, 확인 필요는 접음) → 상세 설정(접음: 축·새 환경 / 특성 프로파일) → 부록 A·C 링크 */
+:root{
+  --bg:#ffffff; --paper:#ffffff; --ink:#1b2422; --muted:#5d6a67; --line:#d5dcda; --soft:#eaefed;
+  --accent:#28575f; --accent-ink:#ffffff; --warn:#9a5b12; --warn-bg:#fbf1e3; --ok:#2e7d4f; --ok-bg:#e6f2ea;
+  --p0:#2f6f8f; --p1:#5a7a2e; --p2:#a8662a; --p3:#7a4f86; --p4:#55606e;
+  --hi:#b0413e; --hi-bg:#f8e8e7; --mid:#2f6f8f; --low:#a8761a;
+  --f-body:"IBM Plex Sans KR","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR","NanumGothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",Consolas,"D2Coding",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121817; --paper:#18201f; --ink:#e3e9e7; --muted:#9aa8a5; --line:#2e3a38; --soft:#1f2928;
+  --accent:#7fb5bd; --accent-ink:#0e1514; --warn:#e2a95c; --warn-bg:#2b2216; --ok:#5fbf86; --ok-bg:#16261d;
+  --p0:#5fa3c4; --p1:#8fb35a; --p2:#d6955a; --p3:#b08ac0; --p4:#9aa6b5;
+  --hi:#e07a76; --hi-bg:#2c1b1a; --mid:#5fa3c4; --low:#d8a84a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121817; --paper:#18201f; --ink:#e3e9e7; --muted:#9aa8a5; --line:#2e3a38; --soft:#1f2928;
+  --accent:#7fb5bd; --accent-ink:#0e1514; --warn:#e2a95c; --warn-bg:#2b2216; --ok:#5fbf86; --ok-bg:#16261d;
+  --p0:#5fa3c4; --p1:#8fb35a; --p2:#d6955a; --p3:#b08ac0; --p4:#9aa6b5;
+  --hi:#e07a76; --hi-bg:#2c1b1a; --mid:#5fa3c4; --low:#d8a84a; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65;padding-inline:16px;padding-block:0 64px;word-break:keep-all;overflow-wrap:anywhere}
+.wrap{max-width:1220px;margin:0 auto}
+header.top{padding-block:0 18px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+{{SITEBAR_CSS}}
+.sitebar{margin-inline:-16px}
+.to-top{position:fixed;right:16px;bottom:16px;padding:7px 14px;border-radius:18px;background:#28575f;color:#fff;font-size:13px;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.3);z-index:5}
+.to-top:hover{background:#1d4148}
+@media print{.to-top{display:none}}
+.sitemenu{display:flex;flex-wrap:wrap;gap:2px 14px;background:var(--soft);padding:6px 16px;font-size:13.5px;margin-inline:-16px}
+.sitemenu a{color:var(--ink);text-decoration:none}
+.sitemenu a:hover{text-decoration:underline}
+.sitemenu a[aria-current]{color:var(--accent);font-weight:700}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sitebar{background:#1d4148}}
+:root[data-theme="dark"] .sitebar{background:#1d4148}
+h1{font-weight:600;font-size:calc(1.6*var(--u));letter-spacing:-.01em;line-height:1.3;margin:20px 0 0;text-wrap:balance}
+.lede{color:var(--muted);max-width:56rem;margin:0}
+h2{font-weight:600;font-size:20px;margin:44px 0 10px;display:flex;gap:12px;align-items:baseline}
+h2 .no{font-family:var(--f-mono);font-size:14px;color:var(--accent);font-weight:500}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:0 0 10px}
+.caption{font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:16px;min-width:0}
+fieldset{border:0;padding:0;margin:0 0 12px;min-width:0}
+legend{font-weight:700;font-size:13px;margin-bottom:6px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;border:1px solid var(--line);padding:3px 9px;cursor:pointer;background:var(--paper);user-select:none}
+.opt input{margin:0;accent-color:var(--accent)}
+.opt:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.opt.custom{border-style:dashed}
+button,select,input[type=text],textarea{font:inherit;font-size:13px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:5px 9px}
+button{cursor:pointer;background:var(--soft)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+details.add{margin-top:6px;border-top:1px dashed var(--line);padding-top:10px}
+details.more{margin:4px 0 10px;border:1px dashed var(--line);padding:6px 10px}
+details.more>summary{cursor:pointer;font-weight:700;font-size:13.5px}
+details.more[open]>summary{margin-bottom:8px}
+details.more fieldset{margin-top:8px}
+#prof tr.quiet{display:none}
+#prof.all tr.quiet{display:table-row}
+#prof tr.flash td{background:var(--warn-bg)}
+.chip.chk[data-tr]{cursor:pointer;text-decoration:underline dotted}
+details.add summary{cursor:pointer;font-weight:700;font-size:13.5px}
+.attrgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:6px 10px;align-items:center;margin:10px 0;font-size:13px}
+.attrgrid label{color:var(--muted)}
+.attrgrid select{width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{background:var(--soft);font-size:12px;white-space:nowrap}
+.mono{font-family:var(--f-mono)}
+.src{font-size:11.5px;color:var(--muted)}
+.mixed{color:var(--warn);font-weight:700}
+.counts{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--muted);margin-bottom:6px}
+.counts b{font-family:var(--f-mono);font-size:20px;color:var(--ink);font-weight:500;margin-right:3px;font-variant-numeric:tabular-nums}
+.filters{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:8px 0;font-size:13px}
+.phasecol{background:var(--paper);border:1px solid var(--line);margin-top:12px}
+.phasecol>h3{margin:0;padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.phasecol>h3 .n{font-family:var(--f-mono);font-weight:400;color:var(--muted);font-size:12.5px}
+.ph0>h3{box-shadow:inset 4px 0 0 var(--p4)}.ph1>h3{box-shadow:inset 4px 0 0 var(--p0)}.ph2>h3{box-shadow:inset 4px 0 0 var(--p1)}.ph3>h3{box-shadow:inset 4px 0 0 var(--p2)}.ph4>h3{box-shadow:inset 4px 0 0 var(--p3)}
+ol.glist{list-style:none;margin:0;padding:0}
+ol.glist>li{border-bottom:1px solid var(--line)}
+ol.glist>li:last-child{border-bottom:0}
+details.gi>summary{cursor:pointer;list-style:none;padding:9px 14px;display:grid;grid-template-columns:86px minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+details.gi>summary::-webkit-details-marker{display:none}
+details.gi>summary .gt::before{content:"▸ ";color:var(--muted)}
+details.gi[open]>summary .gt::before{content:"▾ "}
+details.gi>summary:hover,details.gi[open]>summary{background:var(--soft)}
+details.gi .gb{padding:4px 14px 12px 112px}
+.gsrc{font-size:11.5px;color:var(--muted);text-align:right}
+@media (max-width:560px){details.gi>summary{grid-template-columns:1fr}.gsrc{text-align:left}details.gi .gb{padding-left:14px}}
+details.chkbox{border-top:1px dashed var(--line)}
+details.chkbox>summary{cursor:pointer;padding:8px 14px;font-size:13px;color:var(--warn)}
+details.cwebox{margin-top:16px;border:1px solid var(--line);background:var(--paper)}
+details.cwebox>summary{cursor:pointer;padding:10px 14px;font-weight:700}
+details.cwebox .cb{padding:0 14px 12px}
+details.cwebox h4{font-size:13.5px;margin:12px 0 4px}
+ul.cwel{margin:0;padding-left:18px;font-size:13px;columns:2;column-gap:28px}
+ul.cwel li{break-inside:avoid;margin:2px 0}
+@media (max-width:700px){ul.cwel{columns:1}}
+details.cwen>summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:10px}
+fieldset.q{border-top:1px solid var(--line);padding-top:10px;margin:0 0 12px}
+fieldset.q:first-child{border-top:0;padding-top:0}
+fieldset.q>legend{font-size:14px;float:left;width:100%;margin-bottom:6px}
+fieldset.q .sub{clear:both;font-size:12.5px;color:var(--muted);margin:6px 0 4px}
+fieldset.q .opts{clear:both}
+details.adv{margin-top:36px;border:1px solid var(--line);background:var(--paper);padding:10px 16px}
+details.adv>summary{cursor:pointer;font-weight:700}
+details.adv .panel{border-color:var(--soft)}
+.gid{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+.gt{font-weight:700;font-size:14px}
+.gd{font-size:13.5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:4px;font-size:11.5px}
+.chip{border:1px solid var(--line);padding:0 6px;color:var(--muted)}
+.chip.base{border-color:var(--accent);color:var(--accent)}
+.chip.match{border-color:var(--ok);color:var(--ok)}
+.chip.env{border-color:var(--p0);color:var(--p0)}
+.chip.inh,.chip.chk{border-color:var(--warn);color:var(--warn);background:var(--warn-bg)}
+.cwe{font-family:var(--f-mono)}
+details.ev summary{cursor:pointer;font-size:12px;color:var(--ok)}
+details.ev ul{margin:4px 0 0;padding-left:18px;font-size:12.5px}
+.empty{padding:12px 14px;color:var(--muted);font-size:13px}
+.note{background:var(--warn-bg);border-left:3px solid var(--warn);padding:8px 12px;font-size:13px;margin:8px 0}
+.qnote{border-left:3px solid;padding:6px 10px;font-size:12.5px;margin:6px 0 2px;clear:both}
+.qnote>b{margin-right:6px} .qnote ul{margin:4px 0 0 18px;padding:0}
+.qnote.bad{background:var(--hi-bg);border-color:var(--hi)} .qnote.bad>b{color:var(--hi)}
+.qnote.maybe{background:var(--warn-bg);border-color:var(--warn)} .qnote.maybe>b{color:var(--warn)}
+.opt.bad{border-color:var(--hi)} .opt .badtag{font-size:11.5px;color:var(--hi);margin-left:4px}
+.opt.bad:has(input:checked) .badtag{color:var(--accent-ink)}
+button.linkbtn{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:inherit}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);background:var(--paper)}
+td.m{text-align:center;width:58px}
+.m-hi{color:var(--hi)}.m-mid{color:var(--mid)}.m-low{color:var(--low)}.m-na{color:var(--muted)}
+details.env{background:var(--paper);border:1px solid var(--line);margin:6px 0}
+details.env summary{cursor:pointer;padding:9px 14px;font-weight:700}
+details.env .body{padding:0 14px 12px;font-size:13px}
+textarea{width:100%;min-height:90px;font-family:var(--f-mono);font-size:12px}
+a{color:var(--accent)}
+a.chip{text-decoration:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+{{SITEBAR}}
+{{MENU}}
+<div class="wrap">
+<header class="top">
+  <h1>지침 선택 도구</h1>
+  <p class="lede">개발 언어, 운용 환경, 사용하는 기능, 개발 환경에 답하면 필요한 보안 지침이 요구사항 분석·설계·구현·통합 및 시험·유지보수 단계별로 모인다. 지침을 누르면 내용과 근거가 펼쳐지고, ID를 누르면 본문 설명으로 간다.</p>
+</header>
+
+<h2><span class="no">1</span>질문에 답하기</h2>
+<div class="panel">
+  <p class="caption" style="margin:0 0 10px">처음 화면은 예시(ATmega 제어기: C·마이크로컨트롤러·운영체제 없음·폐쇄망)를 고른 상태다. <button type="button" id="s-clear">모두 지우기</button></p>
+  <form id="simple">{{SIMPLE}}</form>
+</div>
+
+<h2><span class="no">2</span>단계별 지침</h2>
+<div class="counts" id="counts" aria-live="polite"></div>
+<div class="filters">
+  <label for="f-q">검색</label><input type="text" id="f-q" placeholder="ID·CWE·낱말" style="min-width:180px">
+  <button type="button" id="copy-md">결과를 표로 복사</button><span class="caption" id="copy-msg" role="status"></span>
+</div>
+<div id="warns"></div>
+<div id="phases"></div>
+<div id="cwes"></div>
+
+<details class="adv" id="adv">
+<summary>상세 설정 — 환경 직접 고르기·특성 프로파일·목록에 없는 환경 추가</summary>
+<p class="caption" style="margin-top:8px">위 질문의 답은 여기의 환경 선택과 특성 프로파일에 그대로 반영된다. 여기서 바꾼 값도 위 질문과 결과에 반영된다.</p>
+<div class="grid">
+  <div class="panel">
+    <form id="ctl">{{CONTROLS}}</form>
+    <details class="add" id="addbox">
+      <summary>목록에 없는 환경 추가</summary>
+      <p class="caption" style="margin-top:8px">특성 값을 모르면 '모름'으로 둔다. 그 특성을 조건으로 쓰는 지침은 모두 포함되고 '확인 필요' 표시가 붙는다. 가장 가까운 기존 환경을 지정하면 그 환경의 고유 지침을 '상속·검토' 표시와 함께 가져온다. 추가한 환경은 이 브라우저에만 저장된다(아래 내보내기로 공유).</p>
+      <div class="row"><label for="n-name">환경 이름</label><input type="text" id="n-name" placeholder="예: Zephyr RTOS 4.2 (Cortex-M33)" style="flex:1;min-width:200px"></div>
+      <div class="row" style="margin-top:6px"><label for="n-axis">분류 축</label><select id="n-axis">{{AXIS_OPTS}}</select>
+        <label for="n-closest">가장 가까운 기존 환경</label><select id="n-closest"><option value="">(지정 안 함)</option>{{ENV_OPTS}}</select></div>
+      <div class="attrgrid" id="n-attrs"></div>
+      <div class="row"><button type="button" class="primary" id="n-save">환경 추가</button><span class="caption" id="n-msg" role="status"></span></div>
+      <details style="margin-top:10px"><summary class="caption">추가한 환경 내보내기·가져오기</summary>
+        <textarea id="io" aria-label="추가 환경 JSON"></textarea>
+        <div class="row"><button type="button" id="io-export">내보내기(복사)</button><button type="button" id="io-import">붙여넣은 JSON 가져오기</button><span class="caption" id="io-msg" role="status"></span></div>
+      </details>
+    </details>
+  </div>
+  <div class="panel">
+    <h3>특성 프로파일</h3>
+    <p class="caption">고른 환경이 기본값을 정해 주는 특성은 접어 두고, <b>직접 정할 것</b>만 보인다: 과제가 정하는 값(동적 메모리 정책), 환경끼리 값이 다른 <span class="mixed">혼합</span>, 아직 모르는 값. 이 행이 비어 있으면 '확인 필요' 지침이 붙는다.</p>
+    <div class="row" style="margin-bottom:6px"><label class="opt"><input type="checkbox" id="prof-all">모든 특성 보기</label><span class="caption" id="prof-note" role="status"></span></div>
+    <div class="tablewrap"><table><thead><tr><th>특성</th><th>값</th><th>출처</th></tr></thead><tbody id="prof"></tbody></table></div>
+  </div>
+</div>
+</details>
+
+<p class="caption" style="margin-top:20px">더 보기: 보안약점 점검 목록 44개의 단계별 지침은 <a href="{{APX_A}}">부록 A</a>, 환경별 전체 지침 245건은 <a href="{{APX_C}}">부록 C</a>에 있다.</p>
+
+<p class="caption" style="margin-top:28px">근거: MITRE CWE 5.0, 방위사업청 「무기체계 소프트웨어 개발 및 관리 매뉴얼」(매뉴얼 제2024-6호), SEI CERT, MISRA, 행정안전부·KISA 「소프트웨어 개발보안 가이드」, 벤더 공식 문서, 참조 오픈소스 프로젝트(태그 고정, 원문 대조 2026. 10. 15.). 오픈소스 사례는 지침이 실제 임베디드 코드에서 쓰이는 방식의 예이며, 무기체계 적합성을 입증하지 않는다.</p>
+</div>
+
+<script id="data" type="application/json">{{DATA}}</script>
+<script>
+(function(){
+  var D=JSON.parse(document.getElementById('data').textContent);
+  // 폼은 보내지 않는다(Enter로 쪽이 다시 열리지 않게). 인라인 onsubmit 대신 여기서 막는다(CSP)
+  ['simple','ctl'].forEach(function(id){var f=document.getElementById(id); if(f) f.addEventListener('submit',function(e){e.preventDefault();});});
+  var CWEP={}; (D.cwe_pages||[]).forEach(function(x){CWEP[x]=1;});
+  // 해설 페이지가 있으면 사이트 안 해설로, 없으면 MITRE 원문(새 창)으로
+  function cweA(n){n=String(n); return CWEP[n]?'href="'+D.cwe_href.replace('{n}',n)+'" title="CWE-'+n+' 규칙별 해설"':'href="https://cwe.mitre.org/data/definitions/'+n+'.html" target="_blank" rel="noopener"';}
+  var PH=D.phases;
+  var ctl=document.getElementById('ctl');
+  var envBy={};D.envs.forEach(function(e){envBy[e.code]=e;});
+  var LS='wsg-custom-envs-v1', custom=[], MAXC=50;
+  // 저장소·가져오기에서 온 사용자 정의 환경은 형식을 검증해 남긴다(축·최근접 환경·특성값은 이 도구가 아는 값만, 이름 100자, 최대 50개)
+  var HAS=function(o,k){return Object.prototype.hasOwnProperty.call(o,k);};
+  var AXN={}; D.axes.forEach(function(a){AXN[a.name]=1;});
+  var VOC={}; D.vocab.forEach(function(v){VOC[v.code]=v.values;});
+  function cleanEnv(c){
+    if(!c||typeof c!=='object'||typeof c.name!=='string'||typeof c.axis!=='string') return null;
+    var name=c.name.trim().slice(0,100); if(!name||!HAS(AXN,c.axis)) return null;
+    var closest=(typeof c.closest==='string'&&HAS(envBy,c.closest))?c.closest:'';
+    var attrs={}; if(c.attrs&&typeof c.attrs==='object'){Object.keys(c.attrs).forEach(function(k){var x=c.attrs[k]; if(HAS(VOC,k)&&typeof x==='string'&&VOC[k].indexOf(x)>=0) attrs[k]=x;});}
+    return {name:name,axis:c.axis,closest:closest,attrs:attrs};
+  }
+  function cleanList(a){return (Array.isArray(a)?a:[]).map(cleanEnv).filter(Boolean).slice(0,MAXC);}
+  try{custom=cleanList(JSON.parse(localStorage.getItem(LS)||'[]'));}catch(e){custom=[];}
+  var overrides={};
+  // 특성마다 기본값을 주는 축(접힌 축을 고르면 '확인 필요'가 얼마나 줄지 알리는 데 쓴다)과 어느 축도 기본값을 주지 않는 과제 결정 특성
+  var traitAxes={}; Object.keys(D.env_defaults).forEach(function(c){var e=envBy[c]; if(!e) return; Object.keys(D.env_defaults[c]).forEach(function(k){traitAxes[k]=traitAxes[k]||[]; if(traitAxes[k].indexOf(e.axis)<0) traitAxes[k].push(e.axis);});});
+  var PROJECT=D.vocab.filter(function(v){return !traitAxes[v.code];}).map(function(v){return v.code;});
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  // 지침·활동 ID → 본문(기준선 활동은 단계 장, 환경 지침은 부록 C 행). 주소는 빌드 형태(온라인·폐쇄망·단일 문서)에 맞춰 생성기가 넣는다.
+  var GRE=new RegExp('(^|[^A-Za-z0-9/#._-])('+D.gre+')(?![A-Za-z0-9_-])','g');
+  function gidA(id){var u=D.ghref[id]; return u?'<a href="'+esc(u)+'" title="'+esc(id)+' 본문">'+esc(id)+'</a>':esc(id);}
+  function linkify(t){
+    var h=esc(t);
+    h=h.replace(GRE,function(m,pre,id){return pre+gidA(id);});
+    h=h.replace(/CWE-(\d+)/g,function(m,n){return '<a '+cweA(n)+'>'+m+'</a>';});
+    h=h.replace(/(CWE-\d+<\/a>)((?:[\/·]\d{1,4})+)/g,function(m,a,rest){return a+rest.replace(/(\d+)/g,function(n){return '<a '+cweA(n)+'>'+n+'</a>';});});  // CWE-658/659/660의 뒤 번호도 링크
+    h=h.replace(/\b([A-Z]{3}\d{2}-(?:C|CPP|J))\b/g,function(m){var u=D.links[m];return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+m+'</a>':m;});
+    D.phrases.forEach(function(p){var k=esc(p[0]);var i=h.indexOf(k);if(i>=0){h=h.slice(0,i)+'<a href="'+esc(p[1])+'" target="_blank" rel="noopener">'+k+'</a>'+h.slice(i+k.length);}});
+    return h;
+  }
+  function saveCustom(){try{localStorage.setItem(LS,JSON.stringify(custom));}catch(e){}}
+  // ---- 사용자 정의 환경 체크박스 렌더 ----
+  function renderCustomOpts(){
+    document.querySelectorAll('.opt.custom').forEach(function(x){x.remove();});
+    custom.forEach(function(c,i){
+      var f=[].filter.call(ctl.querySelectorAll('fieldset[data-axis]'),function(x){return x.dataset.axis===c.axis;})[0], fs=f&&f.querySelector('.opts'); if(!fs) return;
+      var l=document.createElement('label'); l.className='opt custom';
+      l.innerHTML='<input type="checkbox" id="c-'+i+'" value="C:'+i+'" checked>'+esc(c.name)+' <button type="button" data-del="'+i+'" aria-label="'+esc(c.name)+' 삭제" style="padding:0 5px;font-size:11px">×</button>';
+      fs.appendChild(l);
+    });
+  }
+  // ---- 새 환경 특성 폼 ----
+  var na=document.getElementById('n-attrs');
+  na.innerHTML=D.vocab.map(function(v){return '<label for="na-'+v.code+'">'+v.code+' '+esc(v.name)+'</label><select id="na-'+v.code+'" data-code="'+v.code+'"><option value="">모름</option>'+v.values.map(function(x){return '<option>'+esc(x)+'</option>';}).join('')+'</select>';}).join('');
+  document.getElementById('n-closest').addEventListener('change',function(){
+    var d=D.env_defaults[this.value]||{};
+    D.vocab.forEach(function(v){var s=document.getElementById('na-'+v.code); var val=d[v.code]; if(val && !Array.isArray(val)) s.value=val;});
+  });
+  document.getElementById('n-save').addEventListener('click',function(){
+    var name=document.getElementById('n-name').value.trim(), msg=document.getElementById('n-msg');
+    if(!name){msg.textContent='환경 이름을 입력한다.';return;}
+    if(custom.length>=MAXC){msg.textContent='추가한 환경은 '+MAXC+'개까지 둘 수 있다.';return;}
+    name=name.slice(0,100);
+    var attrs={};D.vocab.forEach(function(v){var x=document.getElementById('na-'+v.code).value; if(x) attrs[v.code]=x;});
+    custom.push({name:name,axis:document.getElementById('n-axis').value,closest:document.getElementById('n-closest').value,attrs:attrs});
+    saveCustom(); renderCustomOpts(); render(); msg.textContent='"'+name+'"을(를) 추가했다.';
+  });
+  ctl.addEventListener('click',function(ev){var b=ev.target.closest('[data-del]'); if(!b) return; ev.preventDefault(); custom.splice(+b.dataset.del,1); saveCustom(); renderCustomOpts(); render();});
+  document.getElementById('io-export').addEventListener('click',function(){
+    var t=document.getElementById('io'), m=document.getElementById('io-msg'); t.value=JSON.stringify(custom,null,1);
+    if(navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){m.textContent='복사했다.';},function(){t.select();m.textContent='선택된 내용을 복사한다.';});}else{t.select();m.textContent='선택된 내용을 복사한다.';}
+  });
+  document.getElementById('io-import').addEventListener('click',function(){
+    var m=document.getElementById('io-msg');
+    try{var arr=JSON.parse(document.getElementById('io').value); if(!Array.isArray(arr)) throw 0;
+      var ok=cleanList(arr).slice(0,Math.max(0,MAXC-custom.length)); custom=custom.concat(ok);
+      saveCustom(); renderCustomOpts(); render(); m.textContent=ok.length+'개 환경을 가져왔다.'+(ok.length<arr.length?' 형식이 맞지 않거나 개수 상한('+MAXC+'개)을 넘은 '+(arr.length-ok.length)+'개는 뺐다.':'');
+    }catch(e){m.textContent='JSON 형식이 아니다. 내보내기로 만든 목록을 그대로 붙여 넣는다.';}
+  });
+  // ---- 선택 상태 ----
+  function selected(){
+    var envs=[],cust=[];
+    ctl.querySelectorAll('input:checked').forEach(function(i){ if(!i.value) return; if(i.value.indexOf('C:')===0) cust.push(custom[+i.value.slice(2)]); else envs.push(i.value);});
+    return {envs:envs,cust:cust.filter(Boolean)};
+  }
+  function profile(sel){
+    var p=Object.create(null);
+    D.vocab.forEach(function(v){p[v.code]={vals:[],src:[]};});
+    sel.envs.forEach(function(c){var d=D.env_defaults[c]||{};Object.keys(d).forEach(function(k){var vs=Array.isArray(d[k])?d[k]:[d[k]]; vs.forEach(function(x){if(p[k].vals.indexOf(x)<0)p[k].vals.push(x);}); p[k].src.push(c);});});
+    sel.cust.forEach(function(c){Object.keys(c.attrs||{}).forEach(function(k){var x=c.attrs[k]; if(p[k]&&p[k].vals.indexOf(x)<0)p[k].vals.push(x); if(p[k])p[k].src.push(c.name);});});
+    Object.keys(overrides).forEach(function(k){ if(overrides[k]&&overrides[k].length){p[k]={vals:[].concat(overrides[k]),src:['직접 지정']};}});
+    return p;
+  }
+  // ---- 조건 평가: 결과 'y'(충족) 'c'(확인 필요) 'n'(불충족) ----
+  function evalCond(cond,prof,envset){
+    if(!cond||cond==='항상') return {r:'y',why:'항상'};
+    var parts=cond.split(/\s*∧\s*/), r='y', why=[];
+    for(var i=0;i<parts.length;i++){
+      var s=parts[i].trim(), m;
+      if((m=s.match(/^ENV\s*∋\s*(\S+)$/))){ if(!envset[m[1]]) return {r:'n'}; continue; }
+      if((m=s.match(/^(\w+)\s*∈\s*\{(.*)\}$/))){
+        var want=m[2].split(',').map(function(x){return x.trim();}), have=(prof[m[1]]||{vals:[]}).vals;
+        if(!have.length){ r='c'; why.push(m[1]+' 모름'); continue; }
+        var hit=have.filter(function(x){return want.indexOf(x)>=0;});
+        if(!hit.length) return {r:'n'};
+        if(hit.length<have.length){ r='c'; why.push(m[1]+' 혼합'); }
+        else why.push(s);
+        continue;
+      }
+      r='c'; why.push(s);
+    }
+    return {r:r,why:why.join(' · ')};
+  }
+  var lastRows=[];
+  function render(){
+    if(typeof clearCopy==='function'&&document.getElementById('copy-box')){ clearCopy(); document.getElementById('copy-msg').textContent=''; }
+    var sel=selected(), prof=profile(sel), envset={};
+    sel.envs.forEach(function(c){envset[c]=1;});
+    // 고른 언어·운영체제에 따라서만 보이는 기능 항목(네이티브 호출·POSIX·Windows 드라이버)
+    var langs=LANGS.filter(function(c){return envset[c];}), oses=D.os_codes.filter(function(c){return envset[c];});
+    S.querySelectorAll('label.opt').forEach(function(l){ var h=hideWhy(l.dataset,envset,langs,oses); l.style.display=h===null?'':'none'; l.dataset.hid=h||''; });
+    if(!overrides.S3) autoFS();  // 결과를 계산하기 전에 파일시스템 체크를 환경 기본값에 맞춘다
+    var inherit={}; sel.cust.forEach(function(c){ if(c.closest) inherit[c.closest]=c.name; });
+    // 프로파일 표
+    document.getElementById('prof').innerHTML=D.vocab.map(function(v){
+      var cur=overrides[v.code]||'', pv=prof[v.code], mixed=pv.vals.length>1;
+      var opts='<option value="">'+(pv.vals.length?(mixed?'혼합: ':'')+esc(pv.vals.join(' / ')):'모름')+'</option>'+v.values.map(function(x){return '<option'+(cur===x?' selected':'')+'>'+esc(x)+'</option>';}).join('');
+      var ask=mixed||!pv.vals.length||PROJECT.indexOf(v.code)>=0||!!cur;
+      return '<tr id="pr-'+v.code+'"'+(ask?'':' class="quiet"')+'><td><span class="mono">'+v.code+'</span> '+esc(v.name)+(PROJECT.indexOf(v.code)>=0?' <span class="caption">(과제 결정)</span>':'')+'</td><td><select data-ov="'+v.code+'" aria-label="'+esc(v.name)+'">'+opts+'</select>'+(mixed&&!cur?' <span class="mixed">혼합</span>':'')+'</td><td class="src">'+esc(pv.src.filter(function(x,i,a){return a.indexOf(x)===i;}).join(', '))+'</td></tr>';
+    }).join('');
+    var quiet=document.querySelectorAll('#prof tr.quiet').length;
+    document.getElementById('prof').className=document.getElementById('prof-all').checked?'all':'';
+    document.getElementById('prof-note').textContent=quiet?('나머지 '+quiet+'개 특성은 고른 환경의 기본값으로 정해졌다.'):'';
+    var q=document.getElementById('f-q').value.trim().toLowerCase();
+    var rows=[];
+    D.baseline.forEach(function(b){var e=evalCond(b.applies_if,prof,envset);
+      if(e.r==='n') return;
+      var g=useGate(b.id,prof); if(g.r==='n') return;
+      var why=e.r==='c'?['chk','확인 필요: '+e.why]:(g.r==='c'?['chk','확인 필요: '+g.why]:['base','기준선']);
+      // D-06: 보안 부팅 수단이 없고 현장·원격 업데이트도 없으면 [보완] 해시 검증으로 대체한다(4.4)
+      if(b.id==='D-06'&&why[0]==='base'&&usesTouched&&!uses().upd&&(prof.H3||{vals:[]}).vals.join()==='없음') why=['base','기준선(H3 = 없음이고 현장·원격 업데이트가 없으면 [보완] 해시 검증으로 대체, 4.4)'];
+      rows.push({id:b.id,phase:b.phase,title:b.title,text:b.activity,cwe:b.cwe||[],why:why,env:'기준선',basis:b.basis,ev:[]});});
+    D.envs.forEach(function(en){ en.guides.forEach(function(g){
+      var t=D.tags[g.id]; if(!t) return; var e=evalCond(t.applies_if,prof,envset), why=null;
+      if(t.scope==='일반'){ if(e.r==='y') why=['match','특성 일치: '+e.why]; else if(e.r==='c') why=['chk','확인 필요: '+e.why]; }
+      else { if(e.r!=='n') why=e.r==='y'?['env','선택 환경']:['chk','확인 필요: '+e.why];
+             else if(inherit[en.code]){ var e2=evalCond(t.applies_if.replace(/ENV\s*∋\s*\S+\s*(∧\s*)?/,'').replace(/\s*∧\s*$/,'')||'항상',prof,envset); if(e2.r!=='n') why=['inh','상속: '+inherit[en.code]+' ← '+en.env+' — 검토']; } }
+      if(!why) return;
+      rows.push({id:g.id,phase:g.phase,title:g.title,text:g.guide,cwe:g.cwe||[],why:why,env:en.env,basis:g.basis,op:t.op,ev:D.ev[g.id]||[]});
+    });});
+    if(q) rows=rows.filter(function(r){return (r.id+' '+r.title+' '+r.text+' '+r.cwe.join(' ')).toLowerCase().indexOf(q)>=0;});
+    lastRows=rows;
+    var nchk=rows.filter(isChk).length;
+    document.getElementById('counts').innerHTML='<span>지침 <b>'+(rows.length-nchk)+'</b>건</span>'+(nchk?'<span><b>'+nchk+'</b>확인 필요(단계마다 접어 둠)</span>':'');
+    var w=[]; if(!sel.envs.length&&!sel.cust.length) w.push('개발 언어와 운용 환경을 하나 이상 고르면 그 환경에 맞는 지침이 모인다. 지금은 기준선 활동만 보인다.');
+    if(!usesTouched&&rows.some(function(r){return /사용하는 기능/.test(r.why[1]);})) w.push('3번 사용하는 기능에 답하면 확인 필요 지침이 줄어든다.');
+    // 언어와 환경 조합(2.5 ②, 도구 안내의 조합 안내 기준 표): 고른 질문 바로 아래에 알린다. 맞지 않는 조합은 붉은색, 성립하지만 확인이 필요한 드문 조합은 주황색. 어느 쪽도 막지 않는다
+    var nm=function(c){return envBy[c]?envBy[c].env:c;}, act=D.combos.filter(function(r){return ruleOn(r,envset,langs);}), custOS=sel.cust.some(function(c){return c.axis==='운영체제/런타임';});
+    function qn(level,items,btn){ return items.length?'<div class="qnote '+(level==='mismatch'?'bad':'maybe')+'"><b>'+(level==='mismatch'?'맞지 않는 조합':'드문 조합')+'</b>'
+      +(items.length>1?'<ul>'+items.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>':items[0])+(btn?' <button type="button" class="linkbtn" data-act="addenv">목록에 없는 환경 추가 열기</button>':'')+'</div>':''; }
+    function it(r){return esc(nm(r.a))+' + '+esc(nm(r.b))+': '+esc(r.msg);}
+    var envR=act.filter(function(r){return r.pair==='hw-os'||r.pair==='lang-hw'||r.pair==='lang-os';}), ccR=act.filter(function(r){return r.pair==='hw-cc'||r.pair==='os-cc';});
+    var rl=D.runtime_langs.filter(function(c){return envset[c];}), st=D.small_targets.filter(function(c){return envset[c];});
+    var envRare=envR.filter(function(r){return r.level==='rare'&&!(custOS&&r.pair.indexOf('lang')===0);}).map(it);
+    if(rl.length&&st.length&&!custOS&&!envR.some(function(r){return r.pair.indexOf('lang')===0;}))
+      envRare.push('고른 언어('+esc(envNames(rl))+')는 보통 운영체제와 언어 런타임(JVM·.NET·Python 인터프리터) 위에서 돈다. 고른 환경('+esc(envNames(st))+')에서 쓰려면 그 환경용 런타임이 있어야 한다(예: C#의 .NET nanoFramework, Python의 MicroPython). 런타임을 운영체제/런타임 축에 새 환경으로 추가하고 최근접 환경을 지정한다. 그대로 두면 C 코드를 전제로 한 MCU·베어메탈 지침이 함께 나온다.');
+    var needAdd=!custOS&&(envR.some(function(r){return r.level==='rare'&&r.pair.indexOf('lang')===0;})||(rl.length&&st.length));
+    S.querySelector('[data-slot="env"]').innerHTML=qn('mismatch',envR.filter(function(r){return r.level==='mismatch';}).map(it))+qn('rare',envRare,needAdd);
+    var ccM=[]; Object.keys(D.compiler_langs).forEach(function(c){ if(envset[c]&&langs.length&&!D.compiler_langs[c].split(' ').some(function(x){return langs.indexOf(x)>=0;}))
+      ccM.push(esc(nm(c))+': 고른 언어('+esc(envNames(langs))+')를 컴파일하지 않는다. 네이티브 코드(JNI·P/Invoke·C 확장 모듈)를 이 컴파일러로 빌드하면 상세 설정에서 언어에 C·C++도 함께 고르고, 그렇지 않으면 컴파일러를 \'고르지 않음\'으로 둔다.'); });
+    ccM=ccM.concat(ccR.filter(function(r){return r.level==='mismatch';}).map(it));
+    S.querySelector('[data-slot="cc"]').innerHTML=qn('mismatch',ccM)+qn('rare',ccR.filter(function(r){return r.level==='rare';}).map(it));
+    // 상세 설정: 맞지 않는 컴파일러·운영체제 항목에 표시
+    function mark(c,why){var b=box(c); if(!b) return; var l=b.closest('label'), t=l.querySelector('.badtag'); l.classList.toggle('bad',!!why);
+      if(why&&!t){t=document.createElement('span'); t.className='badtag'; l.appendChild(t);} if(why) t.textContent=why; else if(t) t.remove();}
+    Object.keys(D.compiler_langs).forEach(function(c){ mark(c,envset[c]?ccBad(c,envset,langs).join(', '):''); });
+    D.os_codes.forEach(function(c){ var w=act.filter(function(r){return r.pair==='hw-os'&&r.level==='mismatch'&&r.b===c;}).map(function(r){return nm(r.a)+'와 맞지 않음';}); mark(c,w.join(', ')); });
+    var unk={}; rows.forEach(function(r){ if(r.why[0]!=='chk') return; (r.why[1].match(/[A-Z]\d(?= (모름|혼합))/g)||[]).forEach(function(t){unk[t]=1;}); });
+    if(rows.some(function(r){return r.why[0]==='match';})) w.push("'특성 일치'로 표시한 지침은 다른 환경을 위해 쓴 것이지만 고른 환경과 특성이 같아 들어왔다. 지침을 펼치면 원래 환경과 일치한 조건이 보인다.");
+    var uk=Object.keys(unk); if(uk.length&&(sel.envs.length||sel.cust.length)) w.push('정하지 않았거나 환경끼리 다른 특성('+uk.slice(0,4).map(function(t){var v=D.vocab.filter(function(x){return x.code===t;})[0]; return t+' '+(v?v.name:'');}).join(', ')+(uk.length>4?' 외 '+(uk.length-4)+'개':'')+') 때문에 확인 필요 지침이 있다. 아래 상세 설정의 특성 프로파일에서 정하면 줄어든다.');
+    var picked=sel.envs.filter(function(c){return envBy[c]&&!D.axes.some(function(a){return a.required&&a.name===envBy[c].axis;});}).map(function(c){return envBy[c].env;});
+    document.getElementById('more-hint').textContent=picked.length?('— 선택: '+picked.join(', ')):'— 아직 고르지 않음';
+    document.getElementById('warns').innerHTML=w.map(function(x){return '<div class="note">'+esc(x)+'</div>';}).join('');
+    function item(r){
+      var evs=r.ev.filter(function(x){return x.v==='VERIFIED';}), part=evs.some(function(x){return x.s;});
+      // 기준선 활동 설명이 제목으로 시작하면 제목을 떼고, 제목과 같으면 설명을 싣지 않는다
+      var tx=r.text.indexOf(r.title+': ')===0?r.text.slice(r.title.length+2):(r.text===r.title?'':r.text);
+      var evh=evs.length?'<details class="ev"><summary>오픈소스 사례 확인 '+evs.length+'건'+(part?'(지침의 일부만 확인)':'')+'</summary><ul>'+evs.map(function(x){return '<li>'+(x.s?'(부분) ':'')+esc(x.p)+' — '+esc(x.c)+(x.u?' <a href="'+esc(x.u)+'" target="_blank" rel="noopener">원문</a>':' (오프라인 자료)')+'</li>';}).join('')+'</ul></details>':'';
+      var tr=r.why[0]==='chk'&&/[A-Z]\d (모름|혼합)/.test(r.why[1])?' data-tr="'+(r.why[1].match(/[A-Z]\d(?= (모름|혼합))/)||[''])[0]+'" title="누르면 상세 설정의 특성 프로파일 해당 행으로 이동" role="button" tabindex="0"':'';
+      return '<li><details class="gi" data-id="'+esc(r.id)+'"'+(openG[r.id]?' open':'')+'><summary><span class="gid">'+gidA(r.id)+'</span><span class="gt">'+esc(r.title)+'</span><span class="gsrc">'+esc(r.why[0]==='match'?'특성 일치':r.why[0]==='chk'?'확인 필요':r.env)+'</span></summary>'
+        +'<div class="gb">'+(tx?'<div class="gd">'+linkify(tx)+'</div>':'')+'<div class="chips"><span class="chip '+r.why[0]+'"'+tr+'>'+esc(r.why[1])+'</span>'+(r.why[0]==='match'?'<span class="chip">원래 환경: '+esc(r.env)+'</span>':'')+(r.op?'<span class="chip">'+esc(r.op)+'</span>':'')
+        +r.cwe.map(function(x){return '<a class="chip cwe" '+cweA(x)+'>CWE-'+esc(x)+'</a>';}).join('')+'<span class="src">근거: '+linkify(r.basis)+'</span></div>'+evh+'</div></details></li>';
+    }
+    var PHS=document.getElementById('phases'), openG={}, openC={};
+    PHS.querySelectorAll('details.gi[open]').forEach(function(x){openG[x.dataset.id]=1;}); PHS.querySelectorAll('details.chkbox[open]').forEach(function(x){openC[x.dataset.ph]=1;});
+    PHS.innerHTML=PH.map(function(p,k){
+      var it=rows.filter(function(r){return r.phase===p;}), main=it.filter(function(r){return !isChk(r);}), chk=it.filter(isChk);
+      return '<section class="phasecol ph'+k+'"><h3>'+p+' 단계<span class="n">'+main.length+'건'+(chk.length?' · 확인 필요 '+chk.length+'건':'')+'</span></h3>'
+        +(main.length?'<ol class="glist">'+main.map(item).join('')+'</ol>':'<div class="empty">해당 지침이 없다.</div>')
+        +(chk.length?'<details class="chkbox" data-ph="'+k+'"'+(openC[k]?' open':'')+'><summary>확인 필요 '+chk.length+'건 — 답하지 않은 질문이나 정하지 않은 특성에 따라 들어갈 수 있는 지침(상속 지침 포함)</summary><ol class="glist">'+chk.map(item).join('')+'</ol></details>':'')+'</section>';
+    }).join('');
+    renderCwes(prof,envset);
+    syncSimple();
+    saveState();
+  }
+  function isChk(r){return r.why[0]==='chk'||r.why[0]==='inh';}
+  // ---- 간편 질문: 답을 상세 설정(환경 체크박스·망 라디오·특성 프로파일)으로 넘기고, 사용하는 기능으로 기준선 I-04·T-04·T-06을 거른다 ----
+  var S=document.getElementById('simple'), usesTouched=false, fsTouched=false;
+  function box(code){return document.getElementById('o-'+code);}
+  // 질문 항목을 숨길 사유(null이면 보임). show: 이 환경 중 하나를 골랐을 때만, lang: 언어를 골랐다면 이 언어일 때만,
+  // hide-os·hide-lang: 고른 운영체제·언어가 모두 이 값이면 숨김, 컴파일러(data-one)는 언어(compiler_langs)와 맞지 않는 조합 규칙으로 숨긴다
+  function hideWhy(d,envset,langs,oses){
+    var any=function(s,a){return s.split(' ').some(function(c){return a?a.indexOf(c)>=0:envset[c];});}, all=function(s,a){return a.length&&a.every(function(c){return s.split(' ').indexOf(c)>=0;});};
+    if(d.show&&!any(d.show)) return d.why||'';
+    if(d.lang&&langs.length&&!any(d.lang,langs)) return '';
+    if(d.hideOs&&all(d.hideOs,oses)) return d.why||'';
+    if(d.hideLang&&all(d.hideLang,langs)) return '';
+    if(d.cc&&ccBad(d.cc,envset,langs).length) return '';
+    return null;
+  }
+  function ruleOn(r,envset,langs){var w=r.when||{}; return envset[r.a]&&envset[r.b]&&(!w.lang||w.lang.some(function(c){return langs.indexOf(c)>=0;}))&&(!w.lang_not||!w.lang_not.some(function(c){return langs.indexOf(c)>=0;}));}
+  // 이 컴파일러가 지금 선택과 맞지 않는 사유 목록(언어를 컴파일하지 않음, 하드웨어·운영체제와 맞지 않는 조합 규칙)
+  function ccBad(c,envset,langs){
+    var out=[], es={}; Object.keys(envset).forEach(function(k){es[k]=1;}); es[c]=1;  // 아직 고르지 않은 컴파일러도 골랐다고 보고 따진다(질문에서 숨기기)
+    if(langs.length&&!D.compiler_langs[c].split(' ').some(function(x){return langs.indexOf(x)>=0;})) out.push('고른 언어를 컴파일하지 않음');
+    D.combos.forEach(function(r){ if(r.level==='mismatch'&&(r.pair==='hw-cc'||r.pair==='os-cc')&&r.b===c&&ruleOn(r,es,langs)) out.push((envBy[r.a]?envBy[r.a].env:r.a)+'와 맞지 않음'); });
+    return out;
+  }
+  var LANGS=['LC','LCPP','LJ','LCS','LPY'];
+  function envNames(a){return a.map(function(c){return envBy[c]?envBy[c].env:c;}).join('·');}
+  function uses(){var u={}; S.querySelectorAll('input[data-use]:checked').forEach(function(i){ if(i.parentElement.style.display!=='none') u[i.dataset.use]=1;}); return u;}
+  function shown(key){var i=S.querySelector('input[data-use="'+key+'"]'); return !!i&&i.parentElement.style.display!=='none';}
+  var OS=['BM','FRT','VXW','PSOS','LNX','WIN'];
+  function osChosen(){return OS.some(function(c){var b=box(c); return b&&b.checked;});}
+  // 해당 보안약점(CWE): 보안약점 점검 목록 44개 + 고른 언어의 CWE 언어 뷰 + 보조 항목 4개. 조건부 항목은 사용하는 기능·특성으로 해당·비해당·확인 필요를 가른다(부록 G-4-1과 같은 규칙).
+  function cweStatus(c,prof,u){
+    var k=c.k; if(!k) return ['y',''];
+    if(k==='fs'){var v=(prof.S3||{vals:[]}).vals; if(!v.length) return ['c','파일시스템 사용 여부 미정']; return v.some(function(x){return x!=='없음';})?['y','파일시스템 사용']:['n','파일시스템 없음'];}
+    if(k==='access') return ['c','접근 범위가 있는 자료구조(클래스·모듈 정적 배열)를 외부에 노출하는지 확인(부록 G-4-1 ⑯)'];
+    if(!shown(k)){ var hl=S.querySelector('input[data-use="'+k+'"]'), hid=hl?hl.parentElement.dataset.hid:''; if(hid) return osChosen()?['n',hid]:['c','운영체제 미정']; }
+    if(k==='kdrv'&&c.id==='781'&&osChosen()&&!box('WIN').checked) return ['n','Windows가 아님(CWE-781은 Windows NT 드라이버)'];
+    if(k==='signal'&&!shown(k)) return ['c','시그널 핸들러 사용 여부 확인(부록 G-4-1 ⑨)'];
+    var i=S.querySelector('input[data-use="'+k+'"]'), lab=i?i.parentElement.textContent:k;
+    if(!usesTouched) return ['c',lab+' 사용 여부 미응답'];
+    return u[k]?['y',lab+' 사용']:['n',lab+' 사용 안 함'];
+  }
+  var lastCwe=null;
+  function renderCwes(prof,envset){
+    var box_=document.getElementById('cwes'), was=box_.querySelector('details.cwebox'), open=!!(was&&was.open), nopen=!!(was&&was.querySelector('details.cwen[open]'));
+    var u=uses(), lk=[], ln=[]; [['LC','c','C'],['LCPP','cpp','C++'],['LJ','java','Java']].forEach(function(x){ if(envset[x[0]]){lk.push(x[1]); ln.push(x[2]);} });
+    // C#·Python은 CWE 언어 뷰가 없으므로 MITRE 적용 플랫폼에 그 언어가 적힌 언어 뷰 항목을 더한다(C#·Python 규칙 페이지의 '적용 언어' 묶음)
+    var lp=[], lpn=[]; [['LCS','cs','C#'],['LPY','py','Python']].forEach(function(x){ if(envset[x[0]]){lp.push(x[1]); lpn.push(x[2]);} });
+    var list=D.cwes.filter(function(c){return c.m||c.s||lk.some(function(k){return c.v.indexOf(k)>=0;})||lp.some(function(k){return (c.p||[]).indexOf(k)>=0;});});
+    var g={y:[],c:[],n:[]}; list.forEach(function(c){var st=cweStatus(c,prof,u); g[st[0]].push([c,st[1]]);}); lastCwe=g;
+    function src(c){if(c.m) return '보안약점 점검 목록'; if(c.s) return '보조 항목'; var d=lpn.filter(function(n,j){return (c.p||[]).indexOf(lp[j])>=0;}); return lk.some(function(k){return c.v.indexOf(k)>=0;})||!d.length?'언어 뷰':'언어 뷰(적용 언어 '+d.join('·')+')';}
+    function ul(a){return '<ul class="cwel">'+a.map(function(x){var c=x[0]; return '<li><a '+cweA(c.id)+'>CWE-'+esc(c.id)+'</a> '+esc(c.n)+' <span class="caption">'+esc(src(c))+(x[1]?' · '+esc(x[1]):'')+'</span></li>';}).join('')+'</ul>';}
+    var scope='보안약점 점검 목록 44개'+(ln.length?' + '+ln.join('·')+' 언어 뷰':'')+(lpn.length?' + 언어 뷰 중 적용 언어 '+lpn.join('·')+' 항목':'')+' + 보조 항목 4개'+(ln.length||lpn.length?'':'(언어를 고르지 않음)');
+    var cspy=envset.LCS&&!ln.length&&(u.serial||u.dyn)?'<p class="note">MITRE CWE 5.0은 객체 직렬화·동적 코드 실행 약점(CWE-502·95·1336)의 적용 언어에 C#을 적지 않아 이 목록 범위에 들지 않는다. C# 지침(5.6)과 규칙별 해설에서 확인한다.</p>':'';
+    var kisa=(u.web||u.xml)&&!envset.LJ?'<p class="note">'+(u.web?'웹 서버·HTTP':'XML')+'를 고른 경우다. 이 가이드 범위(197개)의 웹 약점은 Java 언어 뷰에만 있어 '+(u.web?'이 목록이 바뀌지 않는다':'XML은 보조 항목 CWE-611만 판정한다')+'. 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 구현단계 입력데이터 검증 및 표현의 '
+      +(u.web?'크로스사이트 스크립트(인쇄 152쪽), 위험한 형식 파일 업로드(162쪽), 신뢰되지 않는 URL 주소로 자동접속 연결(166쪽), 크로스사이트 요청 위조(188쪽), 서버사이드 요청 위조(191쪽), HTTP 응답분할(193쪽)':'')
+      +(u.web&&u.xml?', ':'')+(u.xml?'XML 삽입(174쪽), LDAP 삽입(183쪽)':'')+' 항목을 함께 확인한다.</p>':'';
+    var nat=u.native?'<p class="note">네이티브 코드 호출을 고른 경우다. 네이티브 경계 코드에는 C·C++ 언어 뷰 항목도 해당하므로 <a href="'+esc(D.cwe_href.replace('{n}','view-c'))+'">C 규칙</a>·<a href="'+esc(D.cwe_href.replace('{n}','view-cpp'))+'">C++ 규칙</a> 페이지를 함께 확인한다.</p>':'';
+    box_.innerHTML='<details class="cwebox"'+(open?' open':'')+'><summary>이 과제에 해당하는 보안약점(CWE) — 해당 '+g.y.length+'개 · 확인 필요 '+g.c.length+'개 · 비해당 '+g.n.length+'개</summary><div class="cb">'
+      +'<p class="caption">범위: '+esc(scope)+'. 조건부 항목은 사용하는 기능과 특성으로 가르며 부록 G-4-1 사용 기술 체크리스트와 같은 규칙이다. 판정 결과와 사유는 부록 G-4에 기록한다.</p>'+nat+cspy+kisa
+      +'<h4>해당 '+g.y.length+'개</h4>'+ul(g.y)+(g.c.length?'<h4>확인 필요 '+g.c.length+'개</h4>'+ul(g.c):'')
+      +(g.n.length?'<details class="cwen"'+(nopen?' open':'')+'><summary>비해당 '+g.n.length+'개</summary>'+ul(g.n)+'</details>':'')+'</div></details>';
+  }
+  function defaults(code){var vals=[]; selected().envs.forEach(function(c){var d=(D.env_defaults[c]||{})[code]; (Array.isArray(d)?d:(d?[d]:[])).forEach(function(x){if(vals.indexOf(x)<0) vals.push(x);});}); return vals;}
+  function useGate(id,prof){
+    var u=uses(), s4=(prof.S4||{vals:[]}).vals;
+    if(id==='I-04'){ if(u.db||u.cmd||u.fs||u.ext) return {r:'y'}; return usesTouched?{r:'n'}:{r:'c',why:'사용하는 기능(데이터베이스·OS 명령·파일시스템·외부 입력) 미응답'}; }
+    if(id==='T-04'){ if(u.ext||s4.some(function(x){return x!=='없음';})) return {r:'y'}; return usesTouched&&s4.length?{r:'n'}:{r:'c',why:'사용하는 기능(외부 입력)·외부 통신 미응답'}; }
+    // T-06: '인증 없는 중요기능' 같은 약점은 인증이 없는 것이 문제이므로, 외부 통신이 있으면 인증·암호 체크와 관계없이 넣는다
+    if(id==='T-06'){ if(u.auth||u.crypto||u.upd||s4.some(function(x){return x!=='없음';})) return {r:'y'}; return usesTouched&&s4.length?{r:'n'}:{r:'c',why:'사용하는 기능(인증·암호·현장·원격 업데이트)·외부 통신 미응답'}; }
+    return {r:'y'};
+  }
+  function autoFS(){ if(fsTouched) return; var v=defaults('S3'); S.querySelector('input[data-use="fs"]').checked=v.some(function(x){return x!=='없음';}); }
+  function syncSimple(){
+    S.querySelectorAll('input[data-env]').forEach(function(i){var b=box(i.dataset.env); i.checked=!!(b&&b.checked);});
+    // 하나만 고르는 질문: 상세 설정에서 그 묶음의 첫 번째로 체크된 환경을 보인다(아무것도 없으면 '고르지 않음'이 있으면 그것)
+    var seen={}; S.querySelectorAll('input[data-one]').forEach(function(i){
+      var g=i.name, on=(i.dataset.group||'').split(' ').filter(function(c){var b=box(c); return b&&b.checked;});
+      i.checked=on.length>1?false:(i.dataset.one?(on[0]===i.dataset.one):!on.length); seen[g]=1; });
+    var nb=ctl.querySelector('input[name="net"]:checked'), NV={'인터넷 연결':'INET','내부망':'NET-IN','폐쇄망':'NET-CL'};
+    var nv=overrides.N1?(NV[overrides.N1]||''):(nb&&nb.value?nb.value:'');
+    S.querySelectorAll('input[name="s-net"]').forEach(function(i){i.checked=(i.value===nv);});
+    // 외부 통신: 덮어쓰지 않았으면 환경 기본값이 하나일 때 그 값을 체크해 보인다
+    var s4v=overrides.S4||''; if(!s4v){var dv=defaults('S4'); if(dv.length===1) s4v=dv[0];}
+    var hit=S.querySelector('input[data-ov="S4"][value="'+s4v+'"]'); S.querySelectorAll('input[data-ov="S4"]').forEach(function(i){i.checked=hit?(i===hit):(i.value==='');});
+    if(overrides.S3) S.querySelector('input[data-use="fs"]').checked=overrides.S3!=='없음'; else autoFS();
+  }
+  S.addEventListener('change',function(ev){
+    var t=ev.target;
+    if(t.dataset.group!==undefined){ (t.dataset.group||'').split(' ').forEach(function(c){var b=box(c); if(b) b.checked=(c===t.dataset.one);});
+      // 질문에서 언어를 바꾸면 그 언어를 컴파일하지 않는 컴파일러 선택을 푼다(상세 설정에서 직접 고른 조합은 경고만 한다)
+      if(!D.compiler_langs[t.dataset.one]){ var es={}; selected().envs.forEach(function(c){es[c]=1;}); var lg=LANGS.filter(function(c){return es[c];});
+        Object.keys(D.compiler_langs).forEach(function(c){var b=box(c); if(b&&b.checked&&ccBad(c,es,lg).length) b.checked=false;}); } }
+    else if(t.dataset.env){ var b=box(t.dataset.env); if(b) b.checked=t.checked; }
+    else if(t.name==='s-net'){ var r=(t.value==='NET-IN'||t.value==='NET-CL')?box(t.value):document.getElementById('o-net-none'); if(r) r.checked=true; overrides.N1=t.value==='INET'?'인터넷 연결':''; }
+    else if(t.id==='s-none'){ usesTouched=true; if(t.checked){ S.querySelectorAll('input[data-use]').forEach(function(i){i.checked=false;}); fsTouched=true; overrides.S3='없음'; } }
+    else if(t.dataset.ov){ overrides[t.dataset.ov]=t.value; }
+    else if(t.dataset.use){ usesTouched=true; if(t.checked) document.getElementById('s-none').checked=false;
+      // 파일시스템: 켜면 환경 기본값 가운데 '없음'이 아닌 값(없으면 '단순 FS'), 끄면 '없음'으로 특성 S3를 직접 정한다
+      if(t.dataset.use==='fs'){ fsTouched=true; var dv=defaults('S3').filter(function(x){return x!=='없음';}); overrides.S3=t.checked?(dv[0]||'단순 FS'):'없음'; } }
+    if(t.id==='s-none'||t.dataset.use){ usesTouched=!!(S.querySelector('input[data-use]:checked')||document.getElementById('s-none').checked);
+      if(!usesTouched&&fsTouched){ fsTouched=false; delete overrides.S3; } }
+    render();
+  });
+  document.getElementById('s-clear').addEventListener('click',function(){
+    ctl.querySelectorAll('input[type=checkbox]').forEach(function(i){i.checked=false;}); var n=document.getElementById('o-net-none'); if(n) n.checked=true;
+    S.querySelectorAll('input[data-use]').forEach(function(i){i.checked=false;}); document.getElementById('s-none').checked=false; document.getElementById('f-q').value='';
+    overrides={}; usesTouched=false; fsTouched=false; render();
+  });
+  document.getElementById('prof').addEventListener('change',function(ev){var s=ev.target.closest('[data-ov]'); if(!s) return; overrides[s.dataset.ov]=s.value; render();});
+  ctl.addEventListener('change',render);
+  document.getElementById('prof-all').addEventListener('change',function(){document.getElementById('prof').className=this.checked?'all':'';});
+  document.getElementById('phases').addEventListener('click',function(ev){var c=ev.target.closest('.chip.chk[data-tr]'); if(!c) return; var tr=document.getElementById('pr-'+c.dataset.tr); if(!tr) return;
+    document.getElementById('adv').open=true;
+    if(tr.classList.contains('quiet')){document.getElementById('prof-all').checked=true;document.getElementById('prof').className='all';}
+    tr.scrollIntoView({behavior:'smooth',block:'center'}); tr.classList.add('flash'); setTimeout(function(){tr.classList.remove('flash');},1600); var s=tr.querySelector('select'); if(s) s.focus({preventScroll:true});});
+  document.getElementById('phases').addEventListener('keydown',function(ev){ if((ev.key==='Enter'||ev.key===' ')&&ev.target.closest('.chip.chk[data-tr]')){ ev.preventDefault(); ev.target.click(); } });
+  // http 주소처럼 클립보드를 쓸 수 없으면 글상자에 표를 넣고 선택해 준다
+  function clearCopy(){ var b=document.getElementById('copy-box'); if(b) b.parentNode.removeChild(b); }
+  function showCopy(t,m){ var b=document.getElementById('copy-box'); if(!b){ b=document.createElement('textarea'); b.id='copy-box'; b.setAttribute('aria-label','복사할 표'); b.rows=6; b.style.width='100%'; m.parentNode.insertBefore(b,m.nextSibling); } b.value=t; b.focus(); b.select(); m.textContent='선택된 내용을 Ctrl+C로 복사한다.'; }
+  S.addEventListener('click',function(ev){ if(!ev.target.closest('[data-act="addenv"]')) return;
+    document.getElementById('adv').open=true; var a=document.getElementById('addbox'); a.open=true;
+    var want=ev.target.closest('[data-act="addenv"]').getAttribute('data-axis')||'운영체제/런타임'; var ax=document.getElementById('n-axis'); [].forEach.call(ax.options,function(o){ if(o.text===want) ax.value=o.value; });
+    a.scrollIntoView({behavior:'smooth',block:'start'}); document.getElementById('n-name').focus({preventScroll:true}); });
+  document.getElementById('f-q').addEventListener('input',render);
+  document.getElementById('copy-md').addEventListener('click',function(){
+    var m=document.getElementById('copy-msg');
+    var nc=lastRows.filter(isChk).length;
+    var t='| 단계 | 구분 | ID | 지침 | 포함 사유 | 대상 CWE |\n|---|---|---|---|---|---|\n'+lastRows.map(function(r){return '| '+r.phase+' | '+(isChk(r)?'확인 필요':'지침')+' | '+r.id+' | '+(r.text.indexOf(r.title)===0?r.text:r.title+' — '+r.text).replace(/\|/g,'\\|')+' | '+r.why[1].replace(/\|/g,'\\|')+' | '+r.cwe.map(function(x){return 'CWE-'+x;}).join(', ')+' |';}).join('\n');
+    if(lastCwe){ var lab={y:'해당',c:'확인 필요',n:'비해당'}; t+='\n\n| 판정 | CWE | 이름 | 사유 |\n|---|---|---|---|\n'+['y','c','n'].map(function(k){return lastCwe[k].map(function(x){return '| '+lab[k]+' | CWE-'+x[0].id+' | '+x[0].n.replace(/\|/g,'\\|')+' | '+(x[1]||'').replace(/\|/g,'\\|')+' |';}).join('\n');}).filter(Boolean).join('\n'); }
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){clearCopy();m.textContent='표를 복사했다(지침 '+(lastRows.length-nc)+'건, 확인 필요 '+nc+'건, 보안약점 판정 표 포함).';},function(){showCopy(t,m);});}else{showCopy(t,m);}
+  });
+  // 뒤로 가기로 돌아왔을 때 화면의 입력과 결과가 어긋나지 않게 입력 상태를 되살려 다시 계산한다. 저장은 이 브라우저 탭 안에서만 한다
+  var stateReady=false;
+  function saveState(){if(!stateReady) return; try{var c={};ctl.querySelectorAll('input[id]').forEach(function(i){c[i.id]=i.checked;});var u={};S.querySelectorAll('input[data-use]').forEach(function(i){u[i.dataset.use]=i.checked;});
+    sessionStorage.setItem('cwe-tool-state',JSON.stringify({c:c,u:u,n:document.getElementById('s-none').checked,o:overrides,ut:usesTouched,ft:fsTouched,q:document.getElementById('f-q').value}));}catch(e){}}
+  function restoreState(){try{var s=JSON.parse(sessionStorage.getItem('cwe-tool-state')||'null'); if(!s) return;
+    Object.keys(s.c).forEach(function(k){var i=document.getElementById(k); if(i) i.checked=s.c[k];});
+    S.querySelectorAll('input[data-use]').forEach(function(i){i.checked=!!s.u[i.dataset.use];}); document.getElementById('s-none').checked=!!s.n;
+    overrides=s.o||{}; usesTouched=!!s.ut; fsTouched=!!s.ft; document.getElementById('f-q').value=s.q||'';}catch(e){}}
+  window.addEventListener('pageshow',function(ev){ if(ev.persisted) return;
+    var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{}; if(nav.type==='back_forward') restoreState(); stateReady=true; render(); });
+  renderCustomOpts(); render();
+})();
+</script>
+{{SITEFOOT}}
+<a class="to-top" id="to-top" href="#" hidden>↑ 맨 위로</a>
+<script>(function(){var b=document.getElementById("to-top");function f(){b.hidden=window.pageYOffset<300}window.addEventListener("scroll",f,{passive:true});f();b.addEventListener("click",function(e){e.preventDefault();window.scrollTo(0,0)})})();</script>
+</body>
+</html>

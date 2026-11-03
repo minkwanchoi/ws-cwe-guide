@@ -1,0 +1,3121 @@
+{
+ "meta": {
+  "source": "이 가이드의 적용 조건 태깅(본문 2.3)",
+  "date": "2026-10-15",
+  "syntax": "절은 '특성 ∈ {값…}', 절 사이 ' ∧ '(AND), 절 안의 값은 OR. 무조건은 '항상'. 고유 지침은 'ENV ∋ 환경코드' 절을 포함한다.",
+  "values_note": "값 이름에서 괄호 속 설명은 떼어 vocab[].value_notes에 두었다(예: '단순 FS(권한 없음)' → '단순 FS'). 모든 특성에 '모름'을 쓸 수 있다.",
+  "env_defaults_note": "담당 축이 정하는 특성만 적었다. 배열은 그 환경 안에서 제품·구성에 따라 갈리는 후보값이며 과제에서 하나로 확정한다(확정 전에는 겹치면 일치·'조건 확인'). S5는 과제 결정이라 기본값이 없다. 기반 소프트웨어(BSP·OSS)의 M3는 제품마다 달라 비워 두었다.",
+  "vocab_count_note": "특성은 15개(H1·H3~H5, S1~S5, L1~L3, M2·M3, N1)다. 2026. 11. 2. 개정에서 M1(업데이트 방식)을 없애고 H2(MPU 유무)를 S2의 '태스크 보호(MPU)'에 흡수했으며, M1·H2 코드는 다시 쓰지 않는다.",
+  "scope_note": "BSP·OSS·언어(LC 일부·LCPP·LCS·LJ·LPY) 지침은 '해당 기반 소프트웨어·언어를 쓴다'는 사실 자체가 조건이라 고유(ENV ∋ 코드)로 두었다. 특성 목록에 없는 기술 특성(고정소수점·DMA·캐시) 때문에 고유로 둔 지침만 unexpressible로 표시했다.",
+  "flag_note": "flag='조건 확인'은 경계가 애매해 넓게 잡은 조건이다."
+ },
+ "vocab": [
+  {
+   "code": "H1",
+   "name": "MMU 유무",
+   "values": [
+    "있음",
+    "없음"
+   ],
+   "axis": "탑재 환경"
+  },
+  {
+   "code": "H3",
+   "name": "하드웨어 신뢰 기점",
+   "values": [
+    "없음",
+    "읽기보호·퓨즈",
+    "보안 부팅·보안 키 저장"
+   ],
+   "axis": "탑재 환경"
+  },
+  {
+   "code": "H4",
+   "name": "이기종 다중 실행 단위",
+   "values": [
+    "단일",
+    "다중"
+   ],
+   "axis": "탑재 환경",
+   "value_notes": {
+    "다중": "코어·PL 공유 메모리"
+   }
+  },
+  {
+   "code": "H5",
+   "name": "자료형 모델",
+   "values": [
+    "표준",
+    "비표준"
+   ],
+   "axis": "탑재 환경 + 컴파일러",
+   "value_notes": {
+    "표준": "char 8비트·int 32비트 이상",
+    "비표준": "int 16비트, char 16비트 등"
+   }
+  },
+  {
+   "code": "S1",
+   "name": "OS 유형",
+   "values": [
+    "범용 OS",
+    "RTOS",
+    "베어메탈"
+   ],
+   "axis": "운영체제/런타임"
+  },
+  {
+   "code": "S2",
+   "name": "실행 격리",
+   "values": [
+    "프로세스·파티션 격리",
+    "태스크 보호",
+    "단일 주소공간"
+   ],
+   "axis": "운영체제/런타임 + 과제 결정",
+   "value_notes": {
+    "태스크 보호": "MPU"
+   }
+  },
+  {
+   "code": "S3",
+   "name": "파일시스템",
+   "values": [
+    "권한 있는 FS",
+    "단순 FS",
+    "없음"
+   ],
+   "axis": "운영체제/런타임 + 과제 결정",
+   "value_notes": {
+    "단순 FS": "권한 없음"
+   }
+  },
+  {
+   "code": "S4",
+   "name": "외부 통신 스택",
+   "values": [
+    "IP 스택",
+    "직렬·버스 링크만",
+    "없음"
+   ],
+   "axis": "운영체제/런타임 + 과제 결정"
+  },
+  {
+   "code": "S5",
+   "name": "동적 메모리 정책",
+   "values": [
+    "허용",
+    "초기화 단계 한정",
+    "금지"
+   ],
+   "axis": "과제 결정"
+  },
+  {
+   "code": "L1",
+   "name": "언어 런타임",
+   "values": [
+    "네이티브-비안전",
+    "네이티브-메모리 안전",
+    "관리형",
+    "인터프리터"
+   ],
+   "axis": "개발 언어",
+   "value_notes": {
+    "네이티브-비안전": "C·C++",
+    "네이티브-메모리 안전": "Ada·Rust 등",
+    "관리형": "JVM·.NET",
+    "인터프리터": "Python 등"
+   }
+  },
+  {
+   "code": "L2",
+   "name": "컴파일러 보호 기능 지원",
+   "values": [
+    "완전",
+    "부분",
+    "없음"
+   ],
+   "axis": "IDE/컴파일러",
+   "value_notes": {
+    "완전": "hosted GCC/Clang, MSVC",
+    "부분": "카나리 등 일부"
+   }
+  },
+  {
+   "code": "L3",
+   "name": "타깃 외(호스트) 빌드",
+   "values": [
+    "가능",
+    "불가"
+   ],
+   "axis": "IDE/컴파일러 + 과제 결정"
+  },
+  {
+   "code": "M2",
+   "name": "디버그 인터페이스",
+   "values": [
+    "있음",
+    "없음"
+   ],
+   "axis": "탑재 환경 + 과제 결정",
+   "value_notes": {
+    "있음": "운용 시 노출·봉인 가능"
+   }
+  },
+  {
+   "code": "M3",
+   "name": "공급 수명",
+   "values": [
+    "지원 중",
+    "단종·레거시"
+   ],
+   "axis": "운영체제/런타임·IDE/컴파일러·기반 소프트웨어"
+  },
+  {
+   "code": "N1",
+   "name": "개발·시험 망",
+   "values": [
+    "인터넷 연결",
+    "내부망",
+    "폐쇄망"
+   ],
+   "axis": "개발·시험 망"
+  }
+ ],
+ "env_defaults": {
+  "PC": {
+   "H1": "있음",
+   "H3": [
+    "없음",
+    "보안 부팅·보안 키 저장"
+   ],
+   "H4": "단일",
+   "H5": "표준"
+  },
+  "SBC": {
+   "H1": "있음",
+   "H3": [
+    "읽기보호·퓨즈",
+    "보안 부팅·보안 키 저장"
+   ],
+   "H4": "단일",
+   "H5": "표준",
+   "M2": "있음"
+  },
+  "MCU": {
+   "H1": "없음",
+   "H3": [
+    "읽기보호·퓨즈",
+    "보안 부팅·보안 키 저장"
+   ],
+   "H4": "단일",
+   "H5": [
+    "표준",
+    "비표준"
+   ],
+   "M2": "있음"
+  },
+  "DSP": {
+   "H1": "없음",
+   "H3": "읽기보호·퓨즈",
+   "H4": "단일",
+   "H5": "비표준",
+   "M2": "있음"
+  },
+  "SOC": {
+   "H1": "있음",
+   "H3": "보안 부팅·보안 키 저장",
+   "H4": "다중",
+   "H5": "표준",
+   "M2": "있음"
+  },
+  "WIN": {
+   "S1": "범용 OS",
+   "S2": "프로세스·파티션 격리",
+   "S3": "권한 있는 FS",
+   "S4": "IP 스택",
+   "M3": "지원 중"
+  },
+  "LNX": {
+   "S1": "범용 OS",
+   "S2": "프로세스·파티션 격리",
+   "S3": "권한 있는 FS",
+   "S4": "IP 스택",
+   "M3": "지원 중"
+  },
+  "VXW": {
+   "S1": "RTOS",
+   "S2": [
+    "프로세스·파티션 격리",
+    "단일 주소공간"
+   ],
+   "S3": [
+    "권한 있는 FS",
+    "단순 FS"
+   ],
+   "S4": "IP 스택",
+   "M3": [
+    "지원 중",
+    "단종·레거시"
+   ]
+  },
+  "PSOS": {
+   "S1": "RTOS",
+   "S2": "단일 주소공간",
+   "S3": [
+    "단순 FS",
+    "없음"
+   ],
+   "S4": [
+    "IP 스택",
+    "직렬·버스 링크만"
+   ],
+   "M3": "단종·레거시"
+  },
+  "FRT": {
+   "S1": "RTOS",
+   "S2": [
+    "태스크 보호",
+    "단일 주소공간"
+   ],
+   "S3": "없음",
+   "M3": "지원 중"
+  },
+  "BM": {
+   "S1": "베어메탈",
+   "S2": "단일 주소공간",
+   "S3": "없음",
+   "S4": [
+    "직렬·버스 링크만",
+    "없음"
+   ]
+  },
+  "WRW": {
+   "L2": "부분",
+   "L3": "가능",
+   "M3": [
+    "지원 중",
+    "단종·레거시"
+   ]
+  },
+  "CCS": {
+   "L2": [
+    "없음",
+    "부분"
+   ],
+   "L3": "가능",
+   "M3": "지원 중"
+  },
+  "MSVC": {
+   "L2": "완전",
+   "L3": "가능",
+   "M3": "지원 중"
+  },
+  "AVR": {
+   "L2": "없음",
+   "L3": "가능",
+   "H5": "비표준",
+   "M3": "단종·레거시"
+  },
+  "GCC": {
+   "L2": [
+    "완전",
+    "부분"
+   ],
+   "L3": "가능",
+   "M3": "지원 중"
+  },
+  "BSP": {},
+  "OSS": {},
+  "LC": {
+   "L1": "네이티브-비안전"
+  },
+  "LCPP": {
+   "L1": "네이티브-비안전"
+  },
+  "LCS": {
+   "L1": "관리형"
+  },
+  "LJ": {
+   "L1": "관리형"
+  },
+  "LPY": {
+   "L1": "인터프리터"
+  },
+  "NET-IN": {
+   "N1": "내부망"
+  },
+  "NET-CL": {
+   "N1": "폐쇄망"
+  }
+ },
+ "baseline": [
+  {
+   "id": "R-01",
+   "phase": "요구사항 분석",
+   "title": "보안 요구사항 정의",
+   "activity": "보안 요구사항 정의: 입력 범위·길이·자료형, 인증·인가 대상 기능, 암호 요구, 오류 시 안전 상태를 SRS에 넣는다(설계 단계에서 ICD로 구체화)",
+   "applies_if": "항상",
+   "cwe": ["119", "190", "285", "306", "319", "307", "521"],
+   "basis": "[CWE] CWE-119·190 완화책(Requirements) · [표준] 매뉴얼 제2024-6호 제4장 Ⅱ.3(SRS 품질특성의 신뢰성·보안성 요구사항, 인쇄 111쪽), 행정안전부·KISA 「소프트웨어 개발보안 가이드」(분석단계 보안항목 식별, 인쇄 32·35쪽), SSDF PW.1(PW.1.2)·PO.1.2",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "D-02",
+   "phase": "설계",
+   "title": "위협 모델링·신뢰 경계 정의",
+   "activity": "위협 모델링·신뢰 경계 정의: 데이터링크·정비 포트·버스·저장매체별 입력 검증 지점을 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "20",
+    "119",
+    "129",
+    "134",
+    "306",
+    "494"
+   ],
+   "basis": "[CWE] CWE-306 완화책(Architecture and Design), CWE-78 완화책(Architecture and Design: Attack Surface Reduction) · [표준] SSDF PW.1 · [사례] MAVLink 개요 문서(체크섬은 링크상 전송 오류로 인한 손상만 검출, 조회 2026. 10. 15.)",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "D-03",
+   "phase": "설계",
+   "title": "언어·라이브러리·외부 구성요소 선정",
+   "activity": "언어·라이브러리·외부 구성요소 선정: 검증된 라이브러리, 안전 문자열 API, 검증필 암호모듈, SBOM 초안을 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "119",
+    "327",
+    "676"
+   ],
+   "basis": "[CWE] CWE-119 완화책(Requirements: Language Selection; Architecture and Design: Libraries or Frameworks) · [표준] SSDF PW.4(PW.4.1·PW.4.4; 언어 선정은 SSDF 과제가 아니어서 [CWE] Language Selection만 근거로 씀), KISA 암호모듈검증(KCMVP) 개요(조회 2026. 10. 15.)",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "D-04",
+   "phase": "설계",
+   "title": "권한 분리·최소 권한·격리 설계",
+   "activity": "권한 분리·최소 권한·격리 설계: 운용자/정비자 권한 매트릭스, 프로세스·파티션·태스크 분리를 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "285",
+    "732",
+    "306"
+   ],
+   "basis": "[CWE] CWE-285 완화책(Architecture and Design: 익명·일반·특권·관리 영역 분리) · [표준] SSDF PW.1(PW.1.1·PW.1.3) · [보완] 최소 권한(SSDF 1.1의 최소 권한 문구는 코드 저장·개발 환경 대상이어서 근거로 쓰지 않음)",
+   "cond_source": "항상(수단은 S2에 따라 보정)",
+   "note": "수단은 S2에 따라 보정",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "D-05",
+   "phase": "설계",
+   "title": "암호·키·비밀 관리 설계",
+   "activity": "암호·키·비밀 관리 설계: 알고리즘, 키 생성·주입·저장·교체·폐기, 비밀번호 저장 방식(반복 횟수), 인증서 검증·폐기 확인 수단을 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "259",
+    "321",
+    "327",
+    "330",
+    "312",
+    "759",
+    "295",
+    "299",
+    "916"
+   ],
+   "basis": "[CWE] CWE-259·321·327·759 완화책(Architecture and Design), 보조 항목 CWE-295·299·916 완화책(Architecture and Design) · [표준] KISA KCMVP, 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 구현단계 '부적절한 인증서 유효성 검증'(인쇄 257쪽)",
+   "cond_source": "항상"
+  },
+  {
+   "id": "D-06",
+   "phase": "설계",
+   "title": "보안 부팅·서명된 업데이트 체계 설계",
+   "activity": "보안 부팅·서명된 업데이트 체계 설계",
+   "applies_if": "항상",
+   "cwe": [
+    "494"
+   ],
+   "basis": "[CWE] CWE-494 완화책(Architecture and Design) · [표준] SSDF PS.2.1(서명·무결성 검증 정보 제공) · 부트 체인 단계별 검증과 롤백 방지 설계는 [CWE]·[보완]",
+   "cond_source": "H3 ≠ 없음 또는 현장·원격 업데이트 사용(그 밖에는 [보완] 대체: 해시 검증)",
+   "note": "H3 ∈ {없음}이고 현장·원격 업데이트(사용 기술, G-4-1 ⑮)를 쓰지 않으면 [보완] 해시 검증으로 대체(특성과 사용 기술의 OR은 문법 밖)",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "D-07",
+   "phase": "설계",
+   "title": "자원 예산·정적 할당 설계",
+   "activity": "자원 예산·정적 할당 설계: 메모리·스택·WCET·큐 길이 상한을 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "400",
+    "401",
+    "404",
+    "415",
+    "416"
+   ],
+   "basis": "[CWE] CWE-400 완화책(Architecture and Design) · [표준] MISRA C:2012 Dir 4.12, Rule 21.3",
+   "cond_source": "항상"
+  },
+  {
+   "id": "D-08",
+   "phase": "설계",
+   "title": "오류 처리·안전 상태 설계",
+   "activity": "오류 처리·안전 상태 설계: 오류 반환 규약, 예외 정책, 고장 시 안전 상태, 워치독을 정한다",
+   "applies_if": "항상",
+   "cwe": [
+    "390",
+    "755",
+    "209",
+    "476"
+   ],
+   "basis": "[CWE] CWE-390 완화책(Implementation·Testing) · [표준] MISRA C:2012 Dir 4.7",
+   "cond_source": "항상"
+  },
+  {
+   "id": "D-09",
+   "phase": "설계",
+   "title": "설계 보안성 검토",
+   "activity": "설계 보안성 검토: 설계 산출물을 보안약점 체크리스트로 검토한다",
+   "applies_if": "항상",
+   "cwe": [
+    "22",
+    "59",
+    "78",
+    "89",
+    "119",
+    "134",
+    "190",
+    "285",
+    "306",
+    "307",
+    "327",
+    "330",
+    "676",
+    "732",
+    "759"
+   ],
+   "basis": "[CWE] 탐지 방법 Architecture or Design Review · [표준] SSDF PW.2 · [사례·부분] Zephyr v4.4.2, `doc/security/security-overview.rst:468-474` — 보안 관련 모듈이 바뀔 때마다 보안 아키텍트가 보안 검토를 하고 보안 대책의 효과와 아키텍처 준수를 확인하도록 개발 절차로 정했다. 실제 검토 기록·체크리스트는 공개 저장소에서 확인하지 못했다(확인 2026. 10. 15.)",
+   "cwe_note": "보안약점 점검 목록 44 중 설계 검토 탐지 대상",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "I-01",
+   "phase": "구현",
+   "title": "사업 코딩 표준 수립과 편차 관리",
+   "activity": "사업 코딩 표준 수립과 편차 관리",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[표준] 매뉴얼 제2024-6호 부록 6 코딩규칙(관련 표준 인쇄 6-2쪽, 선정·조정 6-3쪽), MISRA C:2012/2023, MISRA C++:2023, SEI CERT C/C++/Java(보충) · SSDF PW.5",
+   "cwe_note": "658/659/660 전반",
+   "cond_source": "항상(언어별 기준은 2.6)",
+   "note": "언어별 기준은 2.6",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "I-02",
+   "phase": "구현",
+   "title": "금지 함수·대체 API 지정과 컴파일 단계 차단",
+   "activity": "금지 함수·대체 API를 정하고 컴파일 단계에서 차단한다",
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "cwe": [
+    "676",
+    "120",
+    "134",
+    "170",
+    "242"
+   ],
+   "basis": "[CWE] CWE-676 완화책(Build and Compilation·Implementation) · [표준] SEI CERT STR31-C·STR32-C, MISRA C:2012 Rule 21.6",
+   "cond_source": "L1 ∈ {네이티브-비안전}"
+  },
+  {
+   "id": "I-03",
+   "phase": "구현",
+   "title": "신뢰 경계 입력 검증",
+   "activity": "신뢰 경계 입력 검증: 허용목록, 길이·범위·형식 검사, XML 외부 개체 해석 차단",
+   "applies_if": "항상",
+   "cwe": [
+    "119",
+    "129",
+    "125",
+    "787",
+    "134",
+    "611"
+   ],
+   "basis": "[CWE] CWE-129 완화책(Architecture and Design·Implementation: Input Validation), CWE-120 완화책(Implementation: Input Validation), CWE-611 완화책(Implementation·System Configuration) · [표준] SEI CERT ARR30-C, 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 구현단계 '부적절한 XML 외부 개체 참조'(인쇄 170쪽)",
+   "cond_source": "항상"
+  },
+  {
+   "id": "I-04",
+   "phase": "구현",
+   "title": "명령·질의·경로·자원 식별자 무력화(매개변수화)",
+   "activity": "명령·질의·경로·자원 식별자 무력화(매개변수화)",
+   "applies_if": "항상",
+   "cwe": [
+    "78",
+    "89",
+    "22",
+    "59",
+    "99"
+   ],
+   "basis": "[CWE] CWE-78·89 완화책(Architecture and Design: Parameterization) · [표준] SEI CERT ENV33-C, IDS00-J",
+   "cond_source": "사용 기술 체크리스트에 해당 기술이 있거나 외부 입력을 해석할 때",
+   "note": "사용 기술 체크리스트(OS 명령·DB·파일 경로·자원 식별자·외부 입력)로 적용성 판정(G-4)"
+  },
+  {
+   "id": "I-05",
+   "phase": "구현",
+   "title": "정수·포인터·메모리 안전 코딩",
+   "activity": "정수·포인터·메모리 안전 코딩: 범위 검사, 초기화, 해제 후 재사용 방지",
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "cwe": [
+    "190",
+    "191",
+    "369",
+    "415",
+    "416",
+    "457",
+    "476",
+    "467",
+    "469"
+   ],
+   "basis": "[CWE] CWE-190 완화책(Implementation: Input Validation, Compilation or Build Hardening) · [표준] SEI CERT INT30-C·INT32-C·MEM30-C",
+   "cond_source": "L1 ∈ {네이티브-비안전}(관리형은 2.6 언어별)",
+   "note": "관리형은 2.6 언어별"
+  },
+  {
+   "id": "I-06",
+   "phase": "구현",
+   "title": "오류·반환값·예외 처리",
+   "activity": "오류·반환값·예외 처리: 반환값 검사, 구체적 예외, 무시 금지",
+   "applies_if": "항상",
+   "cwe": [
+    "390",
+    "755",
+    "209",
+    "476"
+   ],
+   "basis": "[CWE] CWE-390 완화책(Implementation) · [표준] MISRA C:2012 Dir 4.7, SEI CERT ERR33-C",
+   "cond_source": "항상"
+  },
+  {
+   "id": "I-07",
+   "phase": "구현",
+   "title": "동시성·공유자원 보호",
+   "activity": "동시성·공유자원 보호: 상호배제, 원자성, ISR 공유변수",
+   "applies_if": "항상",
+   "cwe": [
+    "362",
+    "366",
+    "367",
+    "364",
+    "479"
+   ],
+   "basis": "[CWE] CWE-362 완화책(Architecture and Design·Implementation) · [표준] SEI CERT CON 계열",
+   "cond_source": "항상"
+  },
+  {
+   "id": "I-08",
+   "phase": "구현",
+   "title": "컴파일러 경고·빌드 하드닝",
+   "activity": "컴파일러 경고·빌드 하드닝: 경고 0건, 스택 보호, FORTIFY, PIE/RELRO",
+   "applies_if": "항상",
+   "cwe": [
+    "119",
+    "120",
+    "121",
+    "134",
+    "14",
+    "733",
+    "628"
+   ],
+   "basis": "[CWE] CWE-119·120 완화책(Build and Compilation·Operation: Environment Hardening) · [표준] SSDF PW.6",
+   "cond_source": "항상(수단은 L2에 따라 대체)",
+   "note": "수단은 L2에 따라 대체",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "I-09",
+   "phase": "구현",
+   "title": "코드 리뷰·상시 정적 분석",
+   "activity": "코드 리뷰·상시 정적 분석",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[CWE] 탐지 방법 Automated Static Analysis, Manual Static Analysis · [표준] SSDF PW.7",
+   "cwe_note": "보안약점 점검 목록 44 중 정적 분석 탐지 대상",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "I-10",
+   "phase": "구현",
+   "title": "호스트(타깃 외) 동적 분석",
+   "activity": "호스트(타깃 외) 동적 분석: ASan/UBSan/TSan, Valgrind 단위시험",
+   "applies_if": "L3 ∈ {가능}",
+   "cwe": [
+    "119",
+    "125",
+    "787",
+    "416",
+    "415",
+    "457",
+    "190"
+   ],
+   "basis": "[CWE] CWE-415·416 탐지 방법(Automated Dynamic Analysis) · [표준] 매뉴얼 제2024-6호 제2장 Ⅸ(단위시험, 인쇄 57·59쪽), SSDF PW.8, GCC 14.2.0 매뉴얼 Instrumentation Options(조회 2026. 10. 15.)",
+   "cond_source": "L3 ∈ {가능}",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "T-01",
+   "phase": "통합 및 시험",
+   "title": "정적시험(소스·바이너리)과 오탐·편차 판정",
+   "activity": "정적시험(소스·바이너리)과 오탐·편차 판정",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[CWE] 탐지 방법 Automated Static Analysis 등 정적 분석 계열(보안약점 점검 목록 44개 중 43개 항목, 6.1) · [표준] 매뉴얼 제2024-6호 정적시험(코딩규칙·취약점 점검·메트릭, 부록 7, 인쇄 7-10~7-12쪽)",
+   "cwe_note": "197 전체",
+   "cond_source": "항상"
+  },
+  {
+   "id": "T-02",
+   "phase": "통합 및 시험",
+   "title": "타깃 동적시험",
+   "activity": "타깃 동적시험: 실제 타깃, 요구사항 기반, 코드 실행률(Coverage) 계측",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[CWE] 탐지 방법 Automated Dynamic Analysis · [표준] 매뉴얼 제2024-6호 동적시험(본문 인쇄 11쪽, 부록 7 인쇄 7-5·7-15쪽)",
+   "cwe_note": "보안약점 점검 목록 44 동적 탐지 대상",
+   "cond_source": "항상"
+  },
+  {
+   "id": "T-04",
+   "phase": "통합 및 시험",
+   "title": "퍼징",
+   "activity": "퍼징: ICD 메시지·파일·명령 해석기 대상",
+   "applies_if": "항상",
+   "cwe": [
+    "119",
+    "190",
+    "369",
+    "400",
+    "415",
+    "416"
+   ],
+   "basis": "[CWE] 탐지 방법 Fuzzing(보안약점 점검 목록 44개 중 8개 항목) · [표준] SSDF PW.8, LLVM libFuzzer 문서(조회 2026. 10. 15.)",
+   "cond_source": "S4 ≠ 없음 또는 외부 파일·명령 입력 있음",
+   "note": "S4 ∈ {없음}이고 외부 파일·명령 입력도 없으면 비해당 판정(원문: S4 ≠ 없음 또는 외부 파일·명령 입력 있음; 특성 밖 조건 포함)",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "T-05",
+   "phase": "통합 및 시험",
+   "title": "경계값·오류 주입 시험",
+   "activity": "경계값·오류 주입 시험: 정수 경계, 0, NULL, 할당 실패, 주변장치 오류",
+   "applies_if": "항상",
+   "cwe": [
+    "390",
+    "190",
+    "369",
+    "476",
+    "755"
+   ],
+   "basis": "[CWE] CWE-390 완화책(Testing) · [표준] SSDF PW.8 · [사례] NASA cFE v7.0.1, `modules/sb/ut-coverage/sb_UT.c:3915-3926` — 소프트웨어 버스 단위시험이 최대 메시지 크기보다 1 큰 버퍼 할당(경계값)과 스텁으로 메모리 풀 할당 실패를 주입한 경우에 NULL 반환을 확인한다. PX4-Autopilot v1.17.0, `docs/en/debug/failure_injection.md:3-6` — `failure` 명령으로 센서·링크에 off·stuck·garbage 등 고장을 주입해 failsafe 동작을 시험한다(확인 2026. 10. 15.)",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "T-06",
+   "phase": "통합 및 시험",
+   "title": "보안 기능 부정 시험",
+   "activity": "보안 기능 부정 시험: 인증·인가·암호·인증서 검증·업데이트 무결성",
+   "applies_if": "항상",
+   "cwe": [
+    "306",
+    "307",
+    "285",
+    "319",
+    "494",
+    "327",
+    "295",
+    "299"
+   ],
+   "basis": "[CWE] CWE-319 완화책(Testing), 탐지 방법 Black Box(보안약점 점검 목록 44개 중 7개 항목), CWE-295 탐지 방법(Dynamic Analysis with Manual Results Interpretation: 중간자 공격 도구) · [표준] SSDF PW.8",
+   "cond_source": "인증·암호 사용 또는 S4 ≠ 없음 또는 현장·원격 업데이트 사용",
+   "note": "사용 기술 체크리스트(인증·암호·업데이트)로 적용성 판정(G-4)",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "T-07",
+   "phase": "통합 및 시험",
+   "title": "타깃 자원·장시간 시험",
+   "activity": "타깃 자원·장시간 시험: 스택 사용량, 타이밍, 워치독, 장시간 운용",
+   "applies_if": "항상",
+   "cwe": [
+    "400",
+    "404",
+    "121"
+   ],
+   "basis": "[CWE] CWE-400 탐지 방법(Automated Dynamic Analysis) · [표준] 매뉴얼 제2024-6호 동적시험 수행 조건(타깃·호스트, 부록 7, 인쇄 7-5쪽) · 장시간 운용 시험은 [보완]",
+   "cond_source": "항상"
+  },
+  {
+   "id": "T-08",
+   "phase": "통합 및 시험",
+   "title": "운용 빌드 산출물 검사",
+   "activity": "운용 빌드 산출물 검사: 하드닝 적용 여부, 디버그 코드·심볼·비밀 문자열 잔존, 퓨즈 설정",
+   "applies_if": "항상",
+   "cwe": [
+    "489",
+    "615",
+    "259",
+    "321"
+   ],
+   "basis": "[CWE] CWE-489 완화책(Build and Compilation·Distribution), 탐지 방법(Automated Static Analysis, 바이너리) · [표준] SSDF PW.6.2(예시 6)·PW.8.2",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "M-01",
+   "phase": "유지보수",
+   "title": "변경 영향분석·회귀 보안시험",
+   "activity": "변경 영향분석·회귀 보안시험: 변경 범위의 정적 분석·퍼징 재수행, 컴파일러·BSP 변경 시 경고 재점검",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[표준] SSDF RV.1.2·PW.8.2·PW.6.1, 매뉴얼 제2024-6호 부록 7, 인쇄 7-9쪽(변경이 없을 때 정적시험 생략) · [보완] 변경 영향분석(CWE 5.0에 Patching and Maintenance 단계 완화책 없음)",
+   "cwe_note": "변경 영향 범위",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "M-02",
+   "phase": "유지보수",
+   "title": "운용 빌드 구성 형상관리",
+   "activity": "운용 빌드 구성 형상관리: 디버그 제거, 하드닝 플래그, 퓨즈·보안 설정 기준선",
+   "applies_if": "항상",
+   "cwe": [
+    "489",
+    "615"
+   ],
+   "basis": "[CWE] CWE-489 완화책(Build and Compilation·Distribution), CWE-615 완화책(Distribution) · [표준] SSDF PS.3.1·PW.6.2",
+   "cond_source": "항상",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "M-03",
+   "phase": "유지보수",
+   "title": "배포·설치 구성 기준선",
+   "activity": "배포·설치 구성 기준선: 파일 권한, 계정, 서비스",
+   "applies_if": "S3 ∈ {권한 있는 FS, 단순 FS}",
+   "cwe": ["732", "259", "306", "285"],
+   "basis": "[CWE] CWE-732 완화책(Installation, System Configuration), CWE-285 완화책(System Configuration·Installation) · [표준] SSDF PW.9",
+   "cond_source": "S3 ≠ 없음",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "M-04",
+   "phase": "유지보수",
+   "title": "서명된 업데이트·배포 무결성 검증",
+   "activity": "서명된 업데이트·배포 무결성 검증: 업데이트 경로가 없는(공장 재프로그래밍만) 과제는 적용성 판정에 비해당으로 기록",
+   "applies_if": "항상",
+   "cwe": [
+    "494"
+   ],
+   "basis": "[CWE] CWE-494 완화책(Architecture and Design·Operation) · [표준] SSDF PS.2",
+   "cond_source": "항상(업데이트 경로가 없으면 비해당 기록, G-4-1 ⑮)",
+   "basis_checked": "SSDF 1.1 원문 대조 적합 2026-10-15"
+  },
+  {
+   "id": "M-05",
+   "phase": "유지보수",
+   "title": "SBOM 기반 취약점 추적과 패치",
+   "activity": "SBOM 기반 취약점 추적과 패치",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[표준] SSDF RV.1.1·RV.2.2·PS.3.2 · [보완] 구성요소 취약점 추적",
+   "cwe_note": "사용 구성요소 CVE",
+   "cond_source": "항상(수단은 N1에 따라 대체)",
+   "note": "수단은 N1에 따라 대체",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  },
+  {
+   "id": "M-06",
+   "phase": "유지보수",
+   "title": "운용 보호",
+   "activity": "운용 보호: 디버그 포트 차단, 최소 권한 실행, 키 교체, 로그 감시",
+   "applies_if": "항상",
+   "cwe": [
+    "306",
+    "321",
+    "732",
+    "497"
+   ],
+   "basis": "[CWE] CWE-732 완화책(System Configuration: 구성·실행 파일 접근 제한) · [보완] 디버그 포트 차단, 최소 권한 실행, 키 교체, 로그 검토",
+   "cond_source": "항상"
+  },
+  {
+   "id": "M-07",
+   "phase": "유지보수",
+   "title": "구성요소·툴체인 수명 관리",
+   "activity": "구성요소·툴체인 수명 관리: 버전·해시 고정, 재현 가능 빌드, 단종 대비",
+   "applies_if": "항상",
+   "cwe": [],
+   "basis": "[표준] SSDF PW.4.4·PO.3.2 · [보완]",
+   "cwe_note": "사용 구성요소",
+   "cond_source": "항상(M3 = 단종이면 강화: PSOS-08·AVR-10)",
+   "note": "M3 ∈ {단종·레거시}이면 강화(PSOS-08·AVR-10)",
+   "basis_checked": "SSDF 1.1(NIST SP 800-218, 2022.2) 원문 대조 2026-10-15"
+  }
+ ],
+ "guides": {
+  "PC-01": {
+   "applies_if": "S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "PC",
+   "phase": "설계",
+   "reason": "범용 OS 계정·권한 연동"
+  },
+  "PC-02": {
+   "applies_if": "S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-02",
+   "env": "PC",
+   "phase": "설계",
+   "reason": "범용 OS의 넓은 공격 표면"
+  },
+  "PC-03": {
+   "applies_if": "S3 ∈ {권한 있는 FS, 단순 FS}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "PC",
+   "phase": "설계",
+   "reason": "저장·이동식 매체 데이터 존재",
+   "flag": "조건 확인",
+   "replaces": "D-05"
+  },
+  "PC-04": {
+   "applies_if": "L1 ∈ {네이티브-비안전} ∧ L2 ∈ {완전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "PC",
+   "phase": "구현",
+   "reason": "MSVC·GCC 옵션 이름 명시"
+  },
+  "PC-05": {
+   "applies_if": "S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "PC",
+   "phase": "구현",
+   "reason": "외부 프로세스·DB 호출 환경"
+  },
+  "PC-06": {
+   "applies_if": "S1 ∈ {범용 OS} ∧ L1 ∈ {네이티브-비안전} ∧ L3 ∈ {가능}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "PC",
+   "phase": "구현",
+   "reason": "타깃에서 sanitizer 사용 가능"
+  },
+  "PC-07": {
+   "applies_if": "S1 ∈ {범용 OS} ∧ S3 ∈ {권한 있는 FS}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "PC",
+   "phase": "통합 및 시험",
+   "reason": "파일 권한·서비스 구성 점검",
+   "replaces": "M-03"
+  },
+  "PC-08": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망} ∧ S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "대체",
+   "replaces": "M-05",
+   "env": "PC",
+   "phase": "유지보수",
+   "reason": "망분리로 패치 반입 지연"
+  },
+  "SBC-01": {
+   "applies_if": "H3 ∈ {보안 부팅·보안 키 저장}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-06",
+   "env": "SBC",
+   "phase": "설계",
+   "reason": "보안 부팅 HW 기점 활용"
+  },
+  "SBC-02": {
+   "applies_if": "H1 ∈ {있음} ∧ S4 ∈ {IP 스택, 직렬·버스 링크만}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "SBC",
+   "phase": "설계",
+   "reason": "MMU로 프로세스 분리 가능"
+  },
+  "SBC-03": {
+   "applies_if": "S1 ∈ {범용 OS, RTOS} ∧ S4 ∈ {IP 스택, 직렬·버스 링크만}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "SBC",
+   "phase": "설계",
+   "reason": "다중 태스크 우선순위 존재"
+  },
+  "SBC-04": {
+   "applies_if": "S1 ∈ {범용 OS} ∧ S3 ∈ {권한 있는 FS}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SBC",
+   "phase": "구현",
+   "reason": "범용 OS 루트 FS 존재",
+   "replaces": "M-03"
+  },
+  "SBC-05": {
+   "applies_if": "S4 ∈ {IP 스택, 직렬·버스 링크만}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-03",
+   "env": "SBC",
+   "phase": "구현",
+   "reason": "직렬·버스 외부 입력 존재",
+   "flag": "조건 확인"
+  },
+  "SBC-06": {
+   "applies_if": "항상",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "SBC",
+   "phase": "구현",
+   "reason": "ISR·태스크 공유 데이터"
+  },
+  "SBC-07": {
+   "applies_if": "S1 ∈ {범용 OS, RTOS} ∧ L1 ∈ {네이티브-비안전} ∧ L3 ∈ {가능}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "SBC",
+   "phase": "구현",
+   "reason": "RTOS는 호스트 빌드로 대체"
+  },
+  "SBC-08": {
+   "applies_if": "S5 ∈ {허용, 초기화 단계 한정}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-07",
+   "env": "SBC",
+   "phase": "통합 및 시험",
+   "reason": "동적 자원 누적 가능",
+   "flag": "조건 확인"
+  },
+  "SBC-09": {
+   "applies_if": "M2 ∈ {있음}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SBC",
+   "phase": "유지보수",
+   "reason": "디버그 포트 노출 가능",
+   "replaces": "M-06"
+  },
+  "SBC-10": {
+   "applies_if": "S1 ∈ {범용 OS, RTOS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "SBC",
+   "phase": "유지보수",
+   "reason": "커널·네트워크 스택 구성요소"
+  },
+  "MCU-01": {
+   "applies_if": "S5 ∈ {금지, 초기화 단계 한정}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "MCU",
+   "phase": "설계",
+   "reason": "동적 할당 제한 정책"
+  },
+  "MCU-02": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-08",
+   "env": "MCU",
+   "phase": "설계",
+   "reason": "오동작이 물리 제어 오류"
+  },
+  "MCU-03": {
+   "applies_if": "H1 ∈ {없음}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-06",
+   "env": "MCU",
+   "phase": "설계",
+   "reason": "MMU 없는 펌웨어 보호·업데이트"
+  },
+  "MCU-04": {
+   "applies_if": "H5 ∈ {비표준} ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "MCU",
+   "phase": "구현",
+   "reason": "int 16비트 등 자료형 차이"
+  },
+  "MCU-05": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "MCU",
+   "phase": "구현",
+   "reason": "ISR 공유변수 존재",
+   "replaces": "I-07"
+  },
+  "MCU-06": {
+   "applies_if": "H1 ∈ {없음} ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "MCU",
+   "phase": "구현",
+   "reason": "MMU 없어 주소 0 접근 무감지",
+   "replaces": "I-05"
+  },
+  "MCU-07": {
+   "applies_if": "H1 ∈ {없음}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-07",
+   "env": "MCU",
+   "phase": "통합 및 시험",
+   "reason": "가드 페이지 없는 스택"
+  },
+  "MCU-08": {
+   "applies_if": "H1 ∈ {없음} ∧ L3 ∈ {가능}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "MCU",
+   "phase": "구현",
+   "reason": "타깃 sanitizer 불가"
+  },
+  "MCU-09": {
+   "applies_if": "H3 ∈ {읽기보호·퓨즈, 보안 부팅·보안 키 저장}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-02",
+   "env": "MCU",
+   "phase": "유지보수",
+   "reason": "퓨즈·RDP 설정값 존재"
+  },
+  "DSP-01": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "DSP",
+   "phase": "설계",
+   "reason": "고정소수점 연산은 특성 목록 밖",
+   "unexpressible": true
+  },
+  "DSP-02": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "DSP",
+   "phase": "설계",
+   "reason": "DMA 사용 여부는 특성 목록 밖",
+   "unexpressible": true
+  },
+  "DSP-03": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "DSP",
+   "phase": "설계",
+   "reason": "실시간 마감시간 존재"
+  },
+  "DSP-04": {
+   "applies_if": "ENV ∋ DSP ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "DSP",
+   "phase": "구현",
+   "reason": "포화 연산은 특성 목록 밖",
+   "unexpressible": true
+  },
+  "DSP-05": {
+   "applies_if": "H5 ∈ {비표준} ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "DSP",
+   "phase": "구현",
+   "reason": "CHAR_BIT=16 등 비표준 자료형"
+  },
+  "DSP-06": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "DSP",
+   "phase": "구현",
+   "reason": "캐시·DMA 구성은 특성 목록 밖",
+   "unexpressible": true
+  },
+  "DSP-07": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "DSP",
+   "phase": "통합 및 시험",
+   "reason": "신호처리 참조모델은 특성 목록 밖",
+   "unexpressible": true
+  },
+  "DSP-08": {
+   "applies_if": "H5 ∈ {비표준}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "DSP",
+   "phase": "통합 및 시험",
+   "reason": "벤더 컴파일러 확장·자료형"
+  },
+  "DSP-09": {
+   "applies_if": "ENV ∋ DSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "DSP",
+   "phase": "유지보수",
+   "reason": "벤더 컴파일러 최적화 차이"
+  },
+  "SOC-01": {
+   "applies_if": "H4 ∈ {다중}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SOC",
+   "phase": "설계",
+   "reason": "코어·PL 공유 메모리 접근",
+   "replaces": "D-04"
+  },
+  "SOC-02": {
+   "applies_if": "H3 ∈ {보안 부팅·보안 키 저장}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-06",
+   "env": "SOC",
+   "phase": "설계",
+   "reason": "eFuse 등 HW 신뢰 기점"
+  },
+  "SOC-03": {
+   "applies_if": "H4 ∈ {다중}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SOC",
+   "phase": "구현",
+   "reason": "코어 간 메시지 신뢰 경계",
+   "replaces": "I-03"
+  },
+  "SOC-04": {
+   "applies_if": "H3 ∈ {보안 부팅·보안 키 저장}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "SOC",
+   "phase": "구현",
+   "reason": "보안 키 저장소 존재"
+  },
+  "SOC-05": {
+   "applies_if": "H4 ∈ {다중}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SOC",
+   "phase": "통합 및 시험",
+   "reason": "HW 격리 설정 검증 필요",
+   "replaces": "T-06"
+  },
+  "SOC-06": {
+   "applies_if": "H4 ∈ {다중}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "SOC",
+   "phase": "통합 및 시험",
+   "reason": "PL 연동 기능 시험"
+  },
+  "SOC-07": {
+   "applies_if": "M2 ∈ {있음}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "SOC",
+   "phase": "유지보수",
+   "reason": "JTAG·DAP eFuse 제품 기능",
+   "replaces": "M-06·M-02"
+  },
+  "SOC-08": {
+   "applies_if": "ENV ∋ SOC",
+   "scope": "고유",
+   "op": "강화",
+   "env": "SOC",
+   "phase": "유지보수",
+   "reason": "PL 비트스트림 동시 관리",
+   "replaces": "M-02"
+  },
+  "WIN-01": {
+   "applies_if": "S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "WIN",
+   "phase": "설계",
+   "reason": "범용 OS 관리자 권한 분리"
+  },
+  "WIN-02": {
+   "applies_if": "S1 ∈ {범용 OS}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "WIN",
+   "phase": "설계",
+   "reason": "USB 자동실행 등 반입 경로",
+   "replaces": "D-02"
+  },
+  "WIN-03": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "추가",
+   "env": "WIN",
+   "phase": "구현",
+   "reason": "LoadLibrary 등 Windows API"
+  },
+  "WIN-04": {
+   "applies_if": "ENV ∋ WIN ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "WIN",
+   "phase": "구현",
+   "reason": "MSVC 옵션 명시"
+  },
+  "WIN-05": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "WIN",
+   "phase": "구현",
+   "reason": "Windows 경로 API·ADS"
+  },
+  "WIN-06": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "WIN",
+   "phase": "구현",
+   "reason": "DPAPI 등 Windows API"
+  },
+  "WIN-07": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "WIN",
+   "phase": "통합 및 시험",
+   "reason": "Application Verifier 도구"
+  },
+  "WIN-08": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "강화",
+   "env": "WIN",
+   "phase": "통합 및 시험",
+   "reason": "레지스트리·ACL 도구",
+   "replaces": "M-03"
+  },
+  "WIN-09": {
+   "applies_if": "ENV ∋ WIN",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "WIN",
+   "phase": "유지보수",
+   "reason": "폐쇄망 자동 패치 불가"
+  },
+  "LNX-01": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "env": "LNX",
+   "phase": "설계",
+   "reason": "Yocto·Buildroot 설정",
+   "replaces": "D-03"
+  },
+  "LNX-02": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "LNX",
+   "phase": "설계",
+   "reason": "systemd·seccomp 옵션"
+  },
+  "LNX-03": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-06",
+   "env": "LNX",
+   "phase": "설계",
+   "reason": "U-Boot·dm-verity 기능"
+  },
+  "LNX-04": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "LNX",
+   "phase": "구현",
+   "reason": "security_flags.inc 등"
+  },
+  "LNX-05": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "LNX",
+   "phase": "구현",
+   "reason": "POSIX API·플래그 명시"
+  },
+  "LNX-06": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "LNX",
+   "phase": "구현",
+   "reason": "getrandom 등 Linux API"
+  },
+  "LNX-07": {
+   "applies_if": "ENV ∋ LNX ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "LNX",
+   "phase": "통합 및 시험",
+   "reason": "ASan·valgrind Linux 도구"
+  },
+  "LNX-08": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "env": "LNX",
+   "phase": "통합 및 시험",
+   "reason": "SUID·커널 .config 점검",
+   "replaces": "T-08"
+  },
+  "LNX-09": {
+   "applies_if": "ENV ∋ LNX",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "LNX",
+   "phase": "유지보수",
+   "reason": "Yocto cve-check 도구"
+  },
+  "VXW-01": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "VXW",
+   "phase": "설계",
+   "reason": "RTP·커널 모드 제품 기능"
+  },
+  "VXW-02": {
+   "applies_if": "ENV ∋ VXW ∧ S2 ∈ {프로세스·파티션 격리}",
+   "scope": "고유",
+   "op": "강화",
+   "env": "VXW",
+   "phase": "설계",
+   "reason": "VxWorks 653 파티션",
+   "replaces": "D-04·D-07"
+  },
+  "VXW-03": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "env": "VXW",
+   "phase": "설계",
+   "reason": "WDB·대상 셸 구성요소",
+   "replaces": "M-02·M-03"
+  },
+  "VXW-04": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "VXW",
+   "phase": "구현",
+   "reason": "taskSpawn·checkStack API"
+  },
+  "VXW-05": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "VXW",
+   "phase": "구현",
+   "reason": "semMCreate 옵션 명시"
+  },
+  "VXW-06": {
+   "applies_if": "ENV ∋ VXW ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07·I-05",
+   "env": "VXW",
+   "phase": "구현",
+   "reason": "memPartCreate API"
+  },
+  "VXW-07": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "VXW",
+   "phase": "통합 및 시험",
+   "reason": "계측이 타이밍에 영향"
+  },
+  "VXW-08": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-07",
+   "env": "VXW",
+   "phase": "통합 및 시험",
+   "reason": "Workbench 분석 도구"
+  },
+  "VXW-09": {
+   "applies_if": "ENV ∋ VXW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05·M-07",
+   "env": "VXW",
+   "phase": "유지보수",
+   "reason": "Wind River 서비스팩"
+  },
+  "PSOS-01": {
+   "applies_if": "S1 ∈ {RTOS} ∧ M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "PSOS",
+   "phase": "설계",
+   "reason": "pSOS 지원 종료 이식 계획",
+   "replaces": "M-07"
+  },
+  "PSOS-02": {
+   "applies_if": "S4 ∈ {IP 스택} ∧ M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "PSOS",
+   "phase": "설계",
+   "reason": "pNA+ 구형 IP 스택",
+   "replaces": "D-02·I-03"
+  },
+  "PSOS-03": {
+   "applies_if": "ENV ∋ PSOS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "PSOS",
+   "phase": "구현",
+   "reason": "pSOS 서비스콜 이름 명시"
+  },
+  "PSOS-04": {
+   "applies_if": "ENV ∋ PSOS ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07·I-05",
+   "env": "PSOS",
+   "phase": "구현",
+   "reason": "region·partition API"
+  },
+  "PSOS-05": {
+   "applies_if": "S1 ∈ {RTOS}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "PSOS",
+   "phase": "구현",
+   "reason": "선점형 RTOS 공유 데이터"
+  },
+  "PSOS-06": {
+   "applies_if": "L1 ∈ {네이티브-비안전} ∧ M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "PSOS",
+   "phase": "통합 및 시험",
+   "reason": "구형 컴파일러 확장 문법"
+  },
+  "PSOS-07": {
+   "applies_if": "M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-01·T-07",
+   "env": "PSOS",
+   "phase": "통합 및 시험",
+   "reason": "레거시 변경 회귀 보존",
+   "flag": "조건 확인"
+  },
+  "PSOS-08": {
+   "applies_if": "M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "PSOS",
+   "phase": "유지보수",
+   "reason": "단종 툴체인 보존"
+  },
+  "PSOS-09": {
+   "applies_if": "M3 ∈ {단종·레거시}",
+   "scope": "일반",
+   "op": "대체",
+   "replaces": "M-05",
+   "env": "PSOS",
+   "phase": "유지보수",
+   "reason": "단종 OS 패치 불가"
+  },
+  "FRT-01": {
+   "applies_if": "ENV ∋ FRT ∧ S2 ∈ {태스크 보호}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "FRT",
+   "phase": "설계",
+   "reason": "FreeRTOS-MPU API"
+  },
+  "FRT-02": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "FRT",
+   "phase": "설계",
+   "reason": "heap_n·정적 생성 API"
+  },
+  "FRT-03": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "추가",
+   "env": "FRT",
+   "phase": "구현",
+   "reason": "config 훅 매크로 명시"
+  },
+  "FRT-04": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "강화",
+   "env": "FRT",
+   "phase": "구현",
+   "reason": "FromISR API",
+   "replaces": "I-07"
+  },
+  "FRT-05": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "FRT",
+   "phase": "구현",
+   "reason": "xSemaphoreCreateMutex"
+  },
+  "FRT-06": {
+   "applies_if": "ENV ∋ FRT ∧ S4 ∈ {IP 스택}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-03",
+   "env": "FRT",
+   "phase": "구현",
+   "reason": "FreeRTOS+TCP 사용 시"
+  },
+  "FRT-07": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-07",
+   "env": "FRT",
+   "phase": "통합 및 시험",
+   "reason": "HighWaterMark API"
+  },
+  "FRT-08": {
+   "applies_if": "ENV ∋ FRT ∧ S2 ∈ {태스크 보호}",
+   "scope": "고유",
+   "op": "추가",
+   "env": "FRT",
+   "phase": "통합 및 시험",
+   "reason": "MPU 포트 위반 시험"
+  },
+  "FRT-09": {
+   "applies_if": "ENV ∋ FRT",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05·M-07",
+   "env": "FRT",
+   "phase": "유지보수",
+   "reason": "FreeRTOS LTS 정책"
+  },
+  "BM-01": {
+   "applies_if": "S1 ∈ {베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "BM",
+   "phase": "설계",
+   "reason": "메모리 보호 없음·정적 배치"
+  },
+  "BM-02": {
+   "applies_if": "S1 ∈ {베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "BM",
+   "phase": "설계",
+   "reason": "슈퍼루프·ISR 구조",
+   "replaces": "I-07·D-07"
+  },
+  "BM-03": {
+   "applies_if": "S1 ∈ {베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-06·M-06",
+   "env": "BM",
+   "phase": "설계",
+   "reason": "RDP·JTAG 잠금으로 대체"
+  },
+  "BM-04": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "BM",
+   "phase": "구현",
+   "reason": "ISR 공유·레지스터 폭 초과",
+   "replaces": "I-07"
+  },
+  "BM-05": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈} ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05·I-03",
+   "env": "BM",
+   "phase": "구현",
+   "reason": "ADC·통신값 직접 처리"
+  },
+  "BM-06": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "env": "BM",
+   "phase": "구현",
+   "reason": "스타트업·벡터를 응용이 관리",
+   "replaces": "D-08"
+  },
+  "BM-07": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-07",
+   "env": "BM",
+   "phase": "통합 및 시험",
+   "reason": "스택 보호 장치 없음"
+  },
+  "BM-08": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "BM",
+   "phase": "통합 및 시험",
+   "reason": "계측의 메모리·타이밍 제약"
+  },
+  "BM-09": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-05·T-07",
+   "env": "BM",
+   "phase": "통합 및 시험",
+   "reason": "인터럽트·전원 오류 경로"
+  },
+  "BM-10": {
+   "applies_if": "S1 ∈ {RTOS, 베어메탈}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07·M-01",
+   "env": "BM",
+   "phase": "유지보수",
+   "reason": "벤더 BSP·컴파일러 의존"
+  },
+  "WRW-01": {
+   "applies_if": "ENV ∋ WRW ∧ H1 ∈ {있음}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "WRW",
+   "phase": "설계",
+   "reason": "RTP는 MMU 필요"
+  },
+  "WRW-02": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "env": "WRW",
+   "phase": "설계",
+   "reason": "INCLUDE_WDB 등 구성요소",
+   "replaces": "M-02"
+  },
+  "WRW-03": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "WRW",
+   "phase": "설계",
+   "reason": "INCLUDE_PROTECT_* 구성"
+  },
+  "WRW-04": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "WRW",
+   "phase": "구현",
+   "reason": "Diab 경고 옵션"
+  },
+  "WRW-05": {
+   "applies_if": "ENV ∋ WRW ∧ L2 ∈ {부분, 없음}",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-08",
+   "env": "WRW",
+   "phase": "구현",
+   "reason": "Diab 카나리 제한"
+  },
+  "WRW-06": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "WRW",
+   "phase": "구현",
+   "reason": "memPartLib·checkStack"
+  },
+  "WRW-07": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "WRW",
+   "phase": "구현",
+   "reason": "semGive·semMCreate API"
+  },
+  "WRW-08": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "WRW",
+   "phase": "통합 및 시험",
+   "reason": "vxsim·Simics 한계"
+  },
+  "WRW-09": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-10",
+   "env": "WRW",
+   "phase": "구현",
+   "reason": "Diab 새니타이저 지원 미확인"
+  },
+  "WRW-10": {
+   "applies_if": "ENV ∋ WRW",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "WRW",
+   "phase": "유지보수",
+   "reason": "Wind River 보안 권고"
+  },
+  "CCS-01": {
+   "applies_if": "ENV ∋ CCS ∧ H5 ∈ {비표준}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "CCS",
+   "phase": "설계",
+   "reason": "C28x 16비트 char"
+  },
+  "CCS-02": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "CCS",
+   "phase": "설계",
+   "reason": "DCSM 패스워드·JTAG 잠금"
+  },
+  "CCS-03": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "CCS",
+   "phase": "설계",
+   "reason": "링커 .cmd 옵션 명시"
+  },
+  "CCS-04": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "CCS",
+   "phase": "구현",
+   "reason": "TI 컴파일러 경고 옵션"
+  },
+  "CCS-05": {
+   "applies_if": "ENV ∋ CCS ∧ L2 ∈ {없음, 부분}",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-08",
+   "env": "CCS",
+   "phase": "구현",
+   "reason": "TI 컴파일러 카나리 미제공"
+  },
+  "CCS-06": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "CCS",
+   "phase": "구현",
+   "reason": "--check_misra 범위 제한"
+  },
+  "CCS-07": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "CCS",
+   "phase": "구현",
+   "reason": "EALLOW/EDIS 보호 레지스터"
+  },
+  "CCS-08": {
+   "applies_if": "ENV ∋ CCS ∧ S1 ∈ {RTOS}",
+   "scope": "고유",
+   "op": "추가",
+   "env": "CCS",
+   "phase": "구현",
+   "reason": "SYS/BIOS 스택 검사 설정"
+  },
+  "CCS-09": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "CCS",
+   "phase": "통합 및 시험",
+   "reason": "XDS·CCS 시뮬레이터"
+  },
+  "CCS-10": {
+   "applies_if": "ENV ∋ CCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07·M-01",
+   "env": "CCS",
+   "phase": "유지보수",
+   "reason": "CCS 프로젝트 속성 고정"
+  },
+  "MSVC-01": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {관리형}",
+   "scope": "고유",
+   "op": "강화",
+   "env": "MSVC",
+   "phase": "설계",
+   "reason": "P/Invoke·C++/CLI 경계",
+   "replaces": "D-02"
+  },
+  "MSVC-02": {
+   "applies_if": "ENV ∋ MSVC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-04",
+   "env": "MSVC",
+   "phase": "설계",
+   "reason": "DLL 검색 API 명시"
+  },
+  "MSVC-03": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": "MSVC 옵션 명시"
+  },
+  "MSVC-04": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-02",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": "CRT _s 함수·C4996"
+  },
+  "MSVC-05": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {관리형}",
+   "scope": "고유",
+   "op": "강화",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": "csproj 보안 설정",
+   "replaces": "I-08"
+  },
+  "MSVC-06": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {관리형}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": ".NET 입출력 API"
+  },
+  "MSVC-07": {
+   "applies_if": "ENV ∋ MSVC ∧ L1 ∈ {네이티브-비안전}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": "/analyze에 MISRA 없음"
+  },
+  "MSVC-08": {
+   "applies_if": "ENV ∋ MSVC",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-10",
+   "env": "MSVC",
+   "phase": "구현",
+   "reason": "MSVC UBSan 미제공"
+  },
+  "MSVC-09": {
+   "applies_if": "ENV ∋ MSVC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "MSVC",
+   "phase": "통합 및 시험",
+   "reason": "도구 에디션별 코드 실행률 측정"
+  },
+  "MSVC-10": {
+   "applies_if": "ENV ∋ MSVC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "MSVC",
+   "phase": "유지보수",
+   "reason": "오프라인 레이아웃·NuGet"
+  },
+  "AVR-01": {
+   "applies_if": "H1 ∈ {없음} ∧ S2 ∈ {단일 주소공간}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "AVR",
+   "phase": "설계",
+   "reason": "MMU·MPU 없어 힙·스택 충돌"
+  },
+  "AVR-02": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "추가",
+   "env": "AVR",
+   "phase": "설계",
+   "reason": "AVR 퓨즈·락비트 이름"
+  },
+  "AVR-03": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "AVR",
+   "phase": "구현",
+   "reason": "AVR int 16비트"
+  },
+  "AVR-04": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "AVR",
+   "phase": "구현",
+   "reason": "avr-gcc 경고 옵션"
+  },
+  "AVR-05": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-08",
+   "env": "AVR",
+   "phase": "구현",
+   "reason": "avr-gcc 카나리 사실상 불가"
+  },
+  "AVR-06": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "추가",
+   "env": "AVR",
+   "phase": "구현",
+   "reason": "PROGMEM·Harvard 구조"
+  },
+  "AVR-07": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "AVR",
+   "phase": "구현",
+   "reason": "util/atomic.h API"
+  },
+  "AVR-08": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "AVR",
+   "phase": "통합 및 시험",
+   "reason": "Studio 시뮬레이터 한계"
+  },
+  "AVR-09": {
+   "applies_if": "H3 ∈ {읽기보호·퓨즈, 보안 부팅·보안 키 저장}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-08",
+   "env": "AVR",
+   "phase": "통합 및 시험",
+   "reason": "양산 퓨즈 이미지 시험"
+  },
+  "AVR-10": {
+   "applies_if": "ENV ∋ AVR",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "AVR",
+   "phase": "유지보수",
+   "reason": "Microchip Studio 신규 설계 비권장"
+  },
+  "GCC-01": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "설계",
+   "reason": "GCC 타깃별 옵션 차이"
+  },
+  "GCC-02": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "GCC 경고 옵션 명시"
+  },
+  "GCC-03": {
+   "applies_if": "ENV ∋ GCC ∧ S1 ∈ {범용 OS}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "hosted glibc 하드닝"
+  },
+  "GCC-04": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "CPU별 옵션(아키텍처)"
+  },
+  "GCC-05": {
+   "applies_if": "ENV ∋ GCC ∧ S1 ∈ {RTOS, 베어메탈}",
+   "scope": "고유",
+   "op": "대체",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "libasan 없음·guard 구현 확인"
+  },
+  "GCC-06": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "-fanalyzer 한계"
+  },
+  "GCC-07": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "GCC UB 옵션 명시"
+  },
+  "GCC-08": {
+   "applies_if": "ENV ∋ GCC ∧ L3 ∈ {가능}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "GCC",
+   "phase": "구현",
+   "reason": "GCC sanitizer 옵션"
+  },
+  "GCC-09": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "GCC",
+   "phase": "통합 및 시험",
+   "reason": "gcov·-fcondition-coverage"
+  },
+  "GCC-10": {
+   "applies_if": "ENV ∋ GCC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "GCC",
+   "phase": "유지보수",
+   "reason": "툴체인 해시 고정"
+  },
+  "BSP-01": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "BSP",
+   "phase": "설계",
+   "reason": "벤더 BSP 교체 영향 국한"
+  },
+  "BSP-02": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-06",
+   "env": "BSP",
+   "phase": "설계",
+   "reason": "부팅·디버그 설정이 BSP에"
+  },
+  "BSP-03": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "BSP",
+   "phase": "설계",
+   "reason": "BSP 시작 코드 MPU/MMU"
+  },
+  "BSP-04": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "BSP",
+   "phase": "구현",
+   "reason": "HAL 매개변수 검증 약함"
+  },
+  "BSP-05": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "BSP",
+   "phase": "구현",
+   "reason": "드라이버 DMA·캐시 처리"
+  },
+  "BSP-06": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "env": "BSP",
+   "phase": "구현",
+   "reason": "벤더 예제 기본 비밀",
+   "replaces": "D-05·M-02"
+  },
+  "BSP-07": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "BSP",
+   "phase": "구현",
+   "reason": "칩 TRNG·암호 가속기"
+  },
+  "BSP-08": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-01·T-01",
+   "env": "BSP",
+   "phase": "구현",
+   "reason": "벤더 소스 MISRA 적용 곤란"
+  },
+  "BSP-09": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02·T-05",
+   "env": "BSP",
+   "phase": "통합 및 시험",
+   "reason": "BSP 오류 경로 검증"
+  },
+  "BSP-10": {
+   "applies_if": "ENV ∋ BSP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05·M-07",
+   "env": "BSP",
+   "phase": "유지보수",
+   "reason": "벤더 정오표·보안 공지"
+  },
+  "OSS-01": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-03",
+   "env": "OSS",
+   "phase": "설계",
+   "reason": "외부 코드 CVE 상속"
+  },
+  "OSS-02": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "OSS",
+   "phase": "설계",
+   "reason": "GPL 등 라이선스 의무"
+  },
+  "OSS-03": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "env": "OSS",
+   "phase": "설계",
+   "reason": "라이브러리 빌드 설정 제거",
+   "replaces": "D-04"
+  },
+  "OSS-04": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-03·D-05",
+   "env": "OSS",
+   "phase": "설계",
+   "reason": "Mbed TLS·OpenSSL 설정"
+  },
+  "OSS-05": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "OSS",
+   "phase": "구현",
+   "reason": "반입 소스 서명 검증"
+  },
+  "OSS-06": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "OSS",
+   "phase": "구현",
+   "reason": "pip·Maven·NuGet 고정"
+  },
+  "OSS-07": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "OSS",
+   "phase": "구현",
+   "reason": "로컬 패치 관리"
+  },
+  "OSS-08": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "OSS",
+   "phase": "구현",
+   "reason": "OSS MISRA 적용 곤란"
+  },
+  "OSS-09": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05·T-04",
+   "env": "OSS",
+   "phase": "통합 및 시험",
+   "reason": "Dependency-Check 등 도구"
+  },
+  "OSS-10": {
+   "applies_if": "ENV ∋ OSS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05·M-07",
+   "env": "OSS",
+   "phase": "유지보수",
+   "reason": "오프라인 취약점 DB"
+  },
+  "LC-01": {
+   "applies_if": "L1 ∈ {네이티브-비안전} ∧ S5 ∈ {금지, 초기화 단계 한정}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-07",
+   "env": "LC",
+   "phase": "설계",
+   "reason": "MISRA 21.3·정적 할당"
+  },
+  "LC-02": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-02·I-03",
+   "env": "LC",
+   "phase": "설계",
+   "reason": "포인터 오류로 직결"
+  },
+  "LC-03": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LC",
+   "phase": "설계",
+   "reason": "구현정의 동작 타깃별 상이"
+  },
+  "LC-04": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-02",
+   "env": "LC",
+   "phase": "구현",
+   "reason": "경계 없는 문자열 함수"
+  },
+  "LC-05": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LC",
+   "phase": "구현",
+   "reason": "정수 랩어라운드·축소 변환"
+  },
+  "LC-06": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "LC",
+   "phase": "구현",
+   "reason": "포맷·반환값 무검사"
+  },
+  "LC-07": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LC",
+   "phase": "구현",
+   "reason": "수동 메모리 수명 관리"
+  },
+  "LC-08": {
+   "applies_if": "ENV ∋ LC",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-08·T-01",
+   "env": "LC",
+   "phase": "통합 및 시험",
+   "reason": "MISRA C·CWE-658 전용"
+  },
+  "LC-09": {
+   "applies_if": "L1 ∈ {네이티브-비안전} ∧ L3 ∈ {가능}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "LC",
+   "phase": "구현",
+   "reason": "타깃 ASan 불가·호스트 대체"
+  },
+  "LC-10": {
+   "applies_if": "L1 ∈ {네이티브-비안전}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-01",
+   "env": "LC",
+   "phase": "유지보수",
+   "reason": "컴파일러 변경 시 UB 노출"
+  },
+  "LCPP-01": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LCPP",
+   "phase": "설계",
+   "reason": "RAII·unique_ptr"
+  },
+  "LCPP-02": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-08",
+   "env": "LCPP",
+   "phase": "설계",
+   "reason": "C++ 예외 정책"
+  },
+  "LCPP-03": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCPP",
+   "phase": "설계",
+   "reason": "가상 소멸자·슬라이싱"
+  },
+  "LCPP-04": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LCPP",
+   "phase": "구현",
+   "reason": "std::array·span"
+  },
+  "LCPP-05": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LCPP",
+   "phase": "구현",
+   "reason": "C++ 캐스트 연산자"
+  },
+  "LCPP-06": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-05",
+   "env": "LCPP",
+   "phase": "구현",
+   "reason": "반복자·참조 무효화"
+  },
+  "LCPP-07": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "LCPP",
+   "phase": "구현",
+   "reason": "lock_guard·초기화 순서"
+  },
+  "LCPP-08": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "LCPP",
+   "phase": "통합 및 시험",
+   "reason": "MISRA C++·AUTOSAR 매핑"
+  },
+  "LCPP-09": {
+   "applies_if": "ENV ∋ LCPP ∧ L3 ∈ {가능}",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-10",
+   "env": "LCPP",
+   "phase": "구현",
+   "reason": "호스트 TSan 등"
+  },
+  "LCPP-10": {
+   "applies_if": "ENV ∋ LCPP",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "LCPP",
+   "phase": "유지보수",
+   "reason": "-std·표준 라이브러리 고정"
+  },
+  "LCS-01": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "비해당",
+   "replaces": "T-01",
+   "env": "LCS",
+   "phase": "요구사항 분석",
+   "reason": "C# CWE 뷰 없음"
+  },
+  "LCS-02": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCS",
+   "phase": "설계",
+   "reason": "unsafe·P/Invoke"
+  },
+  "LCS-03": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCS",
+   "phase": "설계",
+   "reason": "BinaryFormatter 금지"
+  },
+  "LCS-04": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCS",
+   "phase": "구현",
+   "reason": "DllImport 마샬링"
+  },
+  "LCS-05": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCS",
+   "phase": "구현",
+   "reason": "checked 컨텍스트"
+  },
+  "LCS-06": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LCS",
+   "phase": "구현",
+   "reason": "IDisposable·SafeHandle"
+  },
+  "LCS-07": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "LCS",
+   "phase": "구현",
+   "reason": ".NET 난수·암호 API"
+  },
+  "LCS-08": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "LCS",
+   "phase": "구현",
+   "reason": "Nullable·catch 규칙"
+  },
+  "LCS-09": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "LCS",
+   "phase": "통합 및 시험",
+   "reason": "Roslyn 분석기"
+  },
+  "LCS-10": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "LCS",
+   "phase": "유지보수",
+   "reason": ".NET 런타임·NuGet"
+  },
+  "LJ-01": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "비해당",
+   "replaces": "T-01",
+   "env": "LJ",
+   "phase": "요구사항 분석",
+   "reason": "J2EE 전용 CWE-660 비해당"
+  },
+  "LJ-02": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LJ",
+   "phase": "설계",
+   "reason": "ObjectInputFilter"
+  },
+  "LJ-03": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LJ",
+   "phase": "설계",
+   "reason": "Java 가변 객체 노출"
+  },
+  "LJ-04": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "LJ",
+   "phase": "구현",
+   "reason": "PreparedStatement 등"
+  },
+  "LJ-05": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "LJ",
+   "phase": "구현",
+   "reason": "Java 예외 규약"
+  },
+  "LJ-06": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-07",
+   "env": "LJ",
+   "phase": "구현",
+   "reason": "try-with-resources"
+  },
+  "LJ-07": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LJ",
+   "phase": "구현",
+   "reason": "Math.addExact 등"
+  },
+  "LJ-08": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LJ",
+   "phase": "구현",
+   "reason": "JNI 경계"
+  },
+  "LJ-09": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01·T-02",
+   "env": "LJ",
+   "phase": "통합 및 시험",
+   "reason": "SpotBugs·FindSecBugs"
+  },
+  "LJ-10": {
+   "applies_if": "ENV ∋ LJ",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "LJ",
+   "phase": "유지보수",
+   "reason": "JDK CPU 패치"
+  },
+  "LPY-01": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LPY",
+   "phase": "요구사항 분석",
+   "reason": "시험 범위 선택·다른 제도 검토·보안 점검 범위 기록"
+  },
+  "LPY-02": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-03·M-07",
+   "env": "LPY",
+   "phase": "설계",
+   "reason": "pip 해시 고정"
+  },
+  "LPY-03": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LPY",
+   "phase": "설계",
+   "reason": "pickle·yaml.load 금지"
+  },
+  "LPY-04": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "추가",
+   "env": "LPY",
+   "phase": "구현",
+   "reason": "eval·exec 금지"
+  },
+  "LPY-05": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "LPY",
+   "phase": "구현",
+   "reason": "subprocess shell=True"
+  },
+  "LPY-06": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-04",
+   "env": "LPY",
+   "phase": "구현",
+   "reason": "tarfile filter 등"
+  },
+  "LPY-07": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "D-05·I-03",
+   "env": "LPY",
+   "phase": "구현",
+   "reason": "secrets 모듈·assert"
+  },
+  "LPY-08": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "I-06",
+   "env": "LPY",
+   "phase": "구현",
+   "reason": "bare except 금지"
+  },
+  "LPY-09": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "LPY",
+   "phase": "통합 및 시험",
+   "reason": "Bandit·ruff·pip-audit"
+  },
+  "LPY-10": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "LPY",
+   "phase": "유지보수",
+   "reason": "Python EOL·wheel 반입"
+  },
+  "NET-IN-01": {
+   "applies_if": "N1 ∈ {내부망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-IN",
+   "phase": "설계",
+   "reason": "내부망 CI의 폐쇄망 겸용"
+  },
+  "NET-IN-02": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-IN",
+   "phase": "설계",
+   "reason": "망분리 VM 기준 이미지"
+  },
+  "NET-IN-03": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-IN",
+   "phase": "설계",
+   "reason": "CI 계정 통제는 망 무관"
+  },
+  "NET-IN-04": {
+   "applies_if": "항상",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "D-05",
+   "env": "NET-IN",
+   "phase": "구현",
+   "reason": "CI 비밀 관리는 망 무관"
+  },
+  "NET-IN-05": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-IN",
+   "phase": "구현",
+   "reason": "공개 저장소 직접 접근 불가"
+  },
+  "NET-IN-06": {
+   "applies_if": "항상",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-IN",
+   "phase": "구현",
+   "reason": "재현 빌드는 망 무관"
+  },
+  "NET-IN-07": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-IN",
+   "phase": "통합 및 시험",
+   "reason": "온라인 라이선스 활성화 불가"
+  },
+  "NET-IN-08": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "NET-IN",
+   "phase": "통합 및 시험",
+   "reason": "온라인 규칙 집합 갱신 불가"
+  },
+  "NET-IN-09": {
+   "applies_if": "항상",
+   "scope": "일반",
+   "op": "강화",
+   "env": "NET-IN",
+   "phase": "통합 및 시험",
+   "reason": "시험 추적성은 망 무관",
+   "replaces": "M-07"
+  },
+  "NET-IN-10": {
+   "applies_if": "N1 ∈ {내부망, 폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-IN",
+   "phase": "유지보수",
+   "reason": "도구 패치 반입 절차"
+  },
+  "NET-CL-01": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "설계",
+   "reason": "매체 반입으로만 유입"
+  },
+  "NET-CL-02": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "설계",
+   "reason": "폐쇄망·내부망 CI 공용"
+  },
+  "NET-CL-03": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "대체",
+   "replaces": "M-05",
+   "env": "NET-CL",
+   "phase": "설계",
+   "reason": "온라인 업데이트 불가"
+  },
+  "NET-CL-04": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-CL",
+   "phase": "구현",
+   "reason": "외부 패키지 설치 불가"
+  },
+  "NET-CL-05": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "통합 및 시험",
+   "reason": "원격 라이선스 활성화 불가"
+  },
+  "NET-CL-06": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "구현",
+   "reason": "이동 매체 반입·반출"
+  },
+  "NET-CL-07": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "구현",
+   "reason": "내부 NTP·로그 반출 검토"
+  },
+  "NET-CL-08": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "T-01",
+   "env": "NET-CL",
+   "phase": "통합 및 시험",
+   "reason": "규칙 집합·CVE 데이터 지연"
+  },
+  "NET-CL-09": {
+   "applies_if": "항상",
+   "scope": "일반",
+   "op": "강화",
+   "replaces": "M-07",
+   "env": "NET-CL",
+   "phase": "통합 및 시험",
+   "reason": "재현성 검증은 망 무관"
+  },
+  "NET-CL-10": {
+   "applies_if": "N1 ∈ {폐쇄망}",
+   "scope": "일반",
+   "op": "추가",
+   "env": "NET-CL",
+   "phase": "유지보수",
+   "reason": "폐쇄망 자산 백업·소거"
+  },
+  "LCS-11": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-02",
+   "env": "LCS",
+   "phase": "통합 및 시험",
+   "reason": ".NET 코드 실행률 도구의 시험종류"
+  },
+  "LCS-12": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-04",
+   "env": "LCS",
+   "phase": "통합 및 시험",
+   "reason": "SharpFuzz 퍼징"
+  },
+  "LCS-13": {
+   "applies_if": "ENV ∋ LCS",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-01",
+   "env": "LCS",
+   "phase": "유지보수",
+   "reason": "SDK·AnalysisLevel 변경 재분석"
+  },
+  "LPY-11": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-04",
+   "env": "LPY",
+   "phase": "통합 및 시험",
+   "reason": "Atheris 퍼징·지원 플랫폼"
+  },
+  "LPY-12": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "T-08",
+   "env": "LPY",
+   "phase": "통합 및 시험",
+   "reason": "디버그 코드·비밀 잔존"
+  },
+  "LPY-13": {
+   "applies_if": "ENV ∋ LPY",
+   "scope": "고유",
+   "op": "강화",
+   "replaces": "M-05",
+   "env": "LPY",
+   "phase": "유지보수",
+   "reason": "SBOM 기반 취약점 대응"
+  }
+ },
+ "supplementary": {
+  "note": "197개(보안약점 점검 목록 44 + 언어 뷰 153) 밖이지만 무기체계 소프트웨어에 해당해 '보조 항목'으로 따로 센다(2026-10-18 결정). 언어 무관. 근거: 매뉴얼 제2024-6호 부록 7 '보안약점을 추가로 식별하면 규칙을 추가'(인쇄 7-10쪽).",
+  "items": [
+   {
+    "cwe": "611",
+    "name_ko": "부적절한 XML 외부 개체 참조",
+    "name_basis": "행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 구현단계 항목명",
+    "kisa": [
+     "행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 제4장 제1절 8 '부적절한 XML 외부 개체 참조'(인쇄 170쪽)",
+     "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제1절 8 '부적절한 XML 외부 개체 참조'(인쇄 39쪽)"
+    ],
+    "ms": [
+     "CA3061",
+     "CA3075",
+     "CA3076",
+     "CA3077",
+     "CA5366",
+     "CA5369",
+     "CA5370",
+     "CA5371",
+     "CA5372",
+     "CA5374"
+    ],
+    "bandit": "B313~B319·B405~B409(XML 해석, Bandit 표기는 CWE-20)",
+    "why": "ICD 정의·임무 계획·설정 파일을 XML로 주고받는 소프트웨어"
+   },
+   {
+    "cwe": "295",
+    "name_ko": "부적절한 인증서 유효성 검증",
+    "name_basis": "행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 구현단계 항목명",
+    "kisa": [
+     "행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 제4장 제2절 11 '부적절한 인증서 유효성 검증'(인쇄 257쪽)",
+     "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제2절 11 '부적절한 인증서 유효성 검증'(인쇄 103쪽)"
+    ],
+    "ms": [
+     "CA5359",
+     "CA5380",
+     "CA5381"
+    ],
+    "bandit": "B501·B323·B507",
+    "why": "지상국·정비 서버와 TLS로 통신하는 소프트웨어"
+   },
+   {
+    "cwe": "299",
+    "name_ko": "부적절한 인증서 폐기 확인",
+    "name_basis": "KISA 항목 없음. MITRE 이름 'Improper Check for Certificate Revocation'을 이 가이드가 옮긴 이름",
+    "kisa": [],
+    "ms": [
+     "CA5399",
+     "CA5400"
+    ],
+    "bandit": "",
+    "why": "TLS 통신. 폐쇄망은 인증서 폐기 정보(CRL·OCSP)를 들여오는 수단을 설계에서 정한다"
+   },
+   {
+    "cwe": "916",
+    "name_ko": "계산 노력이 부족한 비밀번호 해시 사용",
+    "name_basis": "KISA 항목 없음. MITRE 이름 'Use of Password Hash With Insufficient Computational Effort'를 이 가이드가 옮긴 이름",
+    "kisa": [],
+    "ms": [
+     "CA5373",
+     "CA5379",
+     "CA5387",
+     "CA5388"
+    ],
+    "bandit": "",
+    "why": "운용자 비밀번호 저장, 비밀번호 기반 키 유도"
+   }
+  ]
+ }
+}

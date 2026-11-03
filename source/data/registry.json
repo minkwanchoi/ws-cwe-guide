@@ -1,0 +1,2365 @@
+{
+ "CWE-5": {
+  "title": "CWE-5: J2EE Misconfiguration: Data Transmission Without Encryption",
+  "url": "https://cwe.mitre.org/data/definitions/5.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-6": {
+  "title": "CWE-6: J2EE Misconfiguration: Insufficient Session-ID Length",
+  "url": "https://cwe.mitre.org/data/definitions/6.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-7": {
+  "title": "CWE-7: J2EE Misconfiguration: Missing Custom Error Page",
+  "url": "https://cwe.mitre.org/data/definitions/7.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-8": {
+  "title": "CWE-8: J2EE Misconfiguration: Entity Bean Declared Remote",
+  "url": "https://cwe.mitre.org/data/definitions/8.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-9": {
+  "title": "CWE-9: J2EE Misconfiguration: Weak Access Permissions for EJB Methods",
+  "url": "https://cwe.mitre.org/data/definitions/9.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-14": {
+  "title": "CWE-14: Compiler Removal of Code to Clear Buffers",
+  "url": "https://cwe.mitre.org/data/definitions/14.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-20": {
+  "title": "CWE-20: Improper Input Validation",
+  "url": "https://cwe.mitre.org/data/definitions/20.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-22": {
+  "title": "CWE-22: Improper Limitation of a Pathname to a Restricted Directory",
+  "url": "https://cwe.mitre.org/data/definitions/22.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-23": {
+  "title": "CWE-23: Relative Path Traversal",
+  "url": "https://cwe.mitre.org/data/definitions/23.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-36": {
+  "title": "CWE-36: Absolute Path Traversal",
+  "url": "https://cwe.mitre.org/data/definitions/36.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-59": {
+  "title": "CWE-59: Improper Link Resolution Before File Access",
+  "url": "https://cwe.mitre.org/data/definitions/59.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-78": {
+  "title": "CWE-78: Improper Neutralization of Special Elements used in an OS Command",
+  "url": "https://cwe.mitre.org/data/definitions/78.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-88": {
+  "title": "CWE-88: Improper Neutralization of Argument Delimiters in a Command",
+  "url": "https://cwe.mitre.org/data/definitions/88.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-89": {
+  "title": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command",
+  "url": "https://cwe.mitre.org/data/definitions/89.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-94": {
+  "title": "CWE-94: Improper Control of Generation of Code",
+  "url": "https://cwe.mitre.org/data/definitions/94.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-95": {
+  "title": "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code",
+  "url": "https://cwe.mitre.org/data/definitions/95.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-99": {
+  "title": "CWE-99: Improper Control of Resource Identifiers",
+  "url": "https://cwe.mitre.org/data/definitions/99.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-102": {
+  "title": "CWE-102: Struts: Duplicate Validation Forms",
+  "url": "https://cwe.mitre.org/data/definitions/102.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-103": {
+  "title": "CWE-103: Struts: Incomplete validate() Method Definition",
+  "url": "https://cwe.mitre.org/data/definitions/103.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-104": {
+  "title": "CWE-104: Struts: Form Bean Does Not Extend Validation Class",
+  "url": "https://cwe.mitre.org/data/definitions/104.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-105": {
+  "title": "CWE-105: Struts: Form Field Without Validator",
+  "url": "https://cwe.mitre.org/data/definitions/105.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-106": {
+  "title": "CWE-106: Struts: Plug-in Framework not in Use",
+  "url": "https://cwe.mitre.org/data/definitions/106.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-107": {
+  "title": "CWE-107: Struts: Unused Validation Form",
+  "url": "https://cwe.mitre.org/data/definitions/107.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-108": {
+  "title": "CWE-108: Struts: Unvalidated Action Form",
+  "url": "https://cwe.mitre.org/data/definitions/108.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-109": {
+  "title": "CWE-109: Struts: Validator Turned Off",
+  "url": "https://cwe.mitre.org/data/definitions/109.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-110": {
+  "title": "CWE-110: Struts: Validator Without Form Field",
+  "url": "https://cwe.mitre.org/data/definitions/110.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-111": {
+  "title": "CWE-111: Direct Use of Unsafe JNI",
+  "url": "https://cwe.mitre.org/data/definitions/111.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-119": {
+  "title": "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/119.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-120": {
+  "title": "CWE-120: Buffer Copy without Checking Size of Input",
+  "url": "https://cwe.mitre.org/data/definitions/120.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-121": {
+  "title": "CWE-121: Stack-based Buffer Overflow",
+  "url": "https://cwe.mitre.org/data/definitions/121.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-122": {
+  "title": "CWE-122: Heap-based Buffer Overflow",
+  "url": "https://cwe.mitre.org/data/definitions/122.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-123": {
+  "title": "CWE-123: Write-what-where Condition",
+  "url": "https://cwe.mitre.org/data/definitions/123.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-124": {
+  "title": "CWE-124: Buffer Underwrite",
+  "url": "https://cwe.mitre.org/data/definitions/124.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-125": {
+  "title": "CWE-125: Out-of-bounds Read",
+  "url": "https://cwe.mitre.org/data/definitions/125.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-126": {
+  "title": "CWE-126: Buffer Over-read",
+  "url": "https://cwe.mitre.org/data/definitions/126.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-127": {
+  "title": "CWE-127: Buffer Under-read",
+  "url": "https://cwe.mitre.org/data/definitions/127.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-128": {
+  "title": "CWE-128: Wrap-around Error",
+  "url": "https://cwe.mitre.org/data/definitions/128.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-129": {
+  "title": "CWE-129: Improper Validation of Array Index",
+  "url": "https://cwe.mitre.org/data/definitions/129.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-130": {
+  "title": "CWE-130: Improper Handling of Length Parameter Inconsistency",
+  "url": "https://cwe.mitre.org/data/definitions/130.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-131": {
+  "title": "CWE-131: Incorrect Calculation of Buffer Size",
+  "url": "https://cwe.mitre.org/data/definitions/131.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-134": {
+  "title": "CWE-134: Use of Externally-Controlled Format String",
+  "url": "https://cwe.mitre.org/data/definitions/134.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-135": {
+  "title": "CWE-135: Incorrect Calculation of Multi-Byte String Length",
+  "url": "https://cwe.mitre.org/data/definitions/135.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-158": {
+  "title": "CWE-158: Improper Neutralization of Null Byte or NUL Character",
+  "url": "https://cwe.mitre.org/data/definitions/158.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-170": {
+  "title": "CWE-170: Improper Null Termination",
+  "url": "https://cwe.mitre.org/data/definitions/170.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-174": {
+  "title": "CWE-174: Double Decoding of the Same Data",
+  "url": "https://cwe.mitre.org/data/definitions/174.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-180": {
+  "title": "CWE-180: Incorrect Behavior Order: Validate Before Canonicalize",
+  "url": "https://cwe.mitre.org/data/definitions/180.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-181": {
+  "title": "CWE-181: Incorrect Behavior Order: Validate Before Filter",
+  "url": "https://cwe.mitre.org/data/definitions/181.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-182": {
+  "title": "CWE-182: Collapse of Data into Unsafe Value",
+  "url": "https://cwe.mitre.org/data/definitions/182.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-183": {
+  "title": "CWE-183: Permissive List of Allowed Inputs",
+  "url": "https://cwe.mitre.org/data/definitions/183.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-184": {
+  "title": "CWE-184: Incomplete List of Disallowed Inputs",
+  "url": "https://cwe.mitre.org/data/definitions/184.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-188": {
+  "title": "CWE-188: Reliance on Data/Memory Layout",
+  "url": "https://cwe.mitre.org/data/definitions/188.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-190": {
+  "title": "CWE-190: Integer Overflow or Wraparound",
+  "url": "https://cwe.mitre.org/data/definitions/190.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-191": {
+  "title": "CWE-191: Integer Underflow (Wrap or Wraparound)",
+  "url": "https://cwe.mitre.org/data/definitions/191.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-192": {
+  "title": "CWE-192: Integer Coercion Error",
+  "url": "https://cwe.mitre.org/data/definitions/192.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-193": {
+  "title": "CWE-193: Off-by-one Error",
+  "url": "https://cwe.mitre.org/data/definitions/193.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-194": {
+  "title": "CWE-194: Unexpected Sign Extension",
+  "url": "https://cwe.mitre.org/data/definitions/194.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-195": {
+  "title": "CWE-195: Signed to Unsigned Conversion Error",
+  "url": "https://cwe.mitre.org/data/definitions/195.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-196": {
+  "title": "CWE-196: Unsigned to Signed Conversion Error",
+  "url": "https://cwe.mitre.org/data/definitions/196.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-197": {
+  "title": "CWE-197: Numeric Truncation Error",
+  "url": "https://cwe.mitre.org/data/definitions/197.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-209": {
+  "title": "CWE-209: Generation of Error Message Containing Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/209.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-242": {
+  "title": "CWE-242: Use of Inherently Dangerous Function",
+  "url": "https://cwe.mitre.org/data/definitions/242.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-243": {
+  "title": "CWE-243: Creation of chroot Jail Without Changing Working Directory",
+  "url": "https://cwe.mitre.org/data/definitions/243.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-244": {
+  "title": "CWE-244: Improper Clearing of Heap Memory Before Release",
+  "url": "https://cwe.mitre.org/data/definitions/244.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-245": {
+  "title": "CWE-245: J2EE Bad Practices: Direct Management of Connections",
+  "url": "https://cwe.mitre.org/data/definitions/245.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-246": {
+  "title": "CWE-246: J2EE Bad Practices: Direct Use of Sockets",
+  "url": "https://cwe.mitre.org/data/definitions/246.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-248": {
+  "title": "CWE-248: Uncaught Exception",
+  "url": "https://cwe.mitre.org/data/definitions/248.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-250": {
+  "title": "CWE-250: Execution with Unnecessary Privileges",
+  "url": "https://cwe.mitre.org/data/definitions/250.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-252": {
+  "title": "CWE-252: Unchecked Return Value",
+  "url": "https://cwe.mitre.org/data/definitions/252.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-259": {
+  "title": "CWE-259: Use of Hard-coded Password",
+  "url": "https://cwe.mitre.org/data/definitions/259.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-285": {
+  "title": "CWE-285: Improper Authorization",
+  "url": "https://cwe.mitre.org/data/definitions/285.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-295": {
+  "title": "CWE-295: Improper Certificate Validation",
+  "url": "https://cwe.mitre.org/data/definitions/295.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-306": {
+  "title": "CWE-306: Missing Authentication for Critical Functionality",
+  "url": "https://cwe.mitre.org/data/definitions/306.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-307": {
+  "title": "CWE-307: Improper Restriction of Excessive Authentication Attempts",
+  "url": "https://cwe.mitre.org/data/definitions/307.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-308": {
+  "title": "CWE-308: Use of Single-factor Authentication",
+  "url": "https://cwe.mitre.org/data/definitions/308.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-312": {
+  "title": "CWE-312: Cleartext Storage of Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/312.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-319": {
+  "title": "CWE-319: Cleartext Transmission of Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/319.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-320": {
+  "title": "CWE-320: Key Management Errors",
+  "url": "https://cwe.mitre.org/data/definitions/320.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-321": {
+  "title": "CWE-321: Use of Hard-coded Cryptographic Key",
+  "url": "https://cwe.mitre.org/data/definitions/321.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-325": {
+  "title": "CWE-325: Missing Cryptographic Step",
+  "url": "https://cwe.mitre.org/data/definitions/325.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-327": {
+  "title": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+  "url": "https://cwe.mitre.org/data/definitions/327.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-330": {
+  "title": "CWE-330: Use of Insufficiently Random Values",
+  "url": "https://cwe.mitre.org/data/definitions/330.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-347": {
+  "title": "CWE-347: Improper Verification of Cryptographic Signature",
+  "url": "https://cwe.mitre.org/data/definitions/347.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-362": {
+  "title": "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization",
+  "url": "https://cwe.mitre.org/data/definitions/362.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-364": {
+  "title": "CWE-364: Signal Handler Race Condition",
+  "url": "https://cwe.mitre.org/data/definitions/364.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-366": {
+  "title": "CWE-366: Race Condition within a Thread",
+  "url": "https://cwe.mitre.org/data/definitions/366.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-367": {
+  "title": "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition",
+  "url": "https://cwe.mitre.org/data/definitions/367.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-369": {
+  "title": "CWE-369: Divide By Zero",
+  "url": "https://cwe.mitre.org/data/definitions/369.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-374": {
+  "title": "CWE-374: Passing Mutable Objects to an Untrusted Method",
+  "url": "https://cwe.mitre.org/data/definitions/374.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-375": {
+  "title": "CWE-375: Returning a Mutable Object to an Untrusted Caller",
+  "url": "https://cwe.mitre.org/data/definitions/375.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-382": {
+  "title": "CWE-382: J2EE Bad Practices: Use of System.exit()",
+  "url": "https://cwe.mitre.org/data/definitions/382.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-383": {
+  "title": "CWE-383: J2EE Bad Practices: Direct Use of Threads",
+  "url": "https://cwe.mitre.org/data/definitions/383.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-390": {
+  "title": "CWE-390: Detection of Error Condition Without Action",
+  "url": "https://cwe.mitre.org/data/definitions/390.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-395": {
+  "title": "CWE-395: Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+  "url": "https://cwe.mitre.org/data/definitions/395.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-396": {
+  "title": "CWE-396: Declaration of Catch for Generic Exception",
+  "url": "https://cwe.mitre.org/data/definitions/396.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-397": {
+  "title": "CWE-397: Declaration of Throws for Generic Exception",
+  "url": "https://cwe.mitre.org/data/definitions/397.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-400": {
+  "title": "CWE-400: Uncontrolled Resource Consumption",
+  "url": "https://cwe.mitre.org/data/definitions/400.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-401": {
+  "title": "CWE-401: Missing Release of Memory after Effective Lifetime",
+  "url": "https://cwe.mitre.org/data/definitions/401.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-403": {
+  "title": "CWE-403: Exposure of File Descriptor to Unintended Control Sphere",
+  "url": "https://cwe.mitre.org/data/definitions/403.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-404": {
+  "title": "CWE-404: Improper Resource Shutdown or Release",
+  "url": "https://cwe.mitre.org/data/definitions/404.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-412": {
+  "title": "CWE-412: Unrestricted Externally Accessible Lock",
+  "url": "https://cwe.mitre.org/data/definitions/412.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-415": {
+  "title": "CWE-415: Double Free",
+  "url": "https://cwe.mitre.org/data/definitions/415.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-416": {
+  "title": "CWE-416: Use After Free",
+  "url": "https://cwe.mitre.org/data/definitions/416.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-427": {
+  "title": "CWE-427: Uncontrolled Search Path Element",
+  "url": "https://cwe.mitre.org/data/definitions/427.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-434": {
+  "title": "CWE-434: Unrestricted Upload of File with Dangerous Type",
+  "url": "https://cwe.mitre.org/data/definitions/434.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-457": {
+  "title": "CWE-457: Use of Uninitialized Variable",
+  "url": "https://cwe.mitre.org/data/definitions/457.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-460": {
+  "title": "CWE-460: Improper Cleanup on Thrown Exception",
+  "url": "https://cwe.mitre.org/data/definitions/460.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-462": {
+  "title": "CWE-462: Duplicate Key in Associative List (Alist)",
+  "url": "https://cwe.mitre.org/data/definitions/462.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-463": {
+  "title": "CWE-463: Deletion of Data Structure Sentinel",
+  "url": "https://cwe.mitre.org/data/definitions/463.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-464": {
+  "title": "CWE-464: Addition of Data Structure Sentinel",
+  "url": "https://cwe.mitre.org/data/definitions/464.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-466": {
+  "title": "CWE-466: Return of Pointer Value Outside of Expected Range",
+  "url": "https://cwe.mitre.org/data/definitions/466.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-467": {
+  "title": "CWE-467: Use of sizeof() on a Pointer Type",
+  "url": "https://cwe.mitre.org/data/definitions/467.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-468": {
+  "title": "CWE-468: Incorrect Pointer Scaling",
+  "url": "https://cwe.mitre.org/data/definitions/468.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-469": {
+  "title": "CWE-469: Use of Pointer Subtraction to Determine Size",
+  "url": "https://cwe.mitre.org/data/definitions/469.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-470": {
+  "title": "CWE-470: Use of Externally-Controlled Input to Select Classes or Code",
+  "url": "https://cwe.mitre.org/data/definitions/470.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-474": {
+  "title": "CWE-474: Use of Function with Inconsistent Implementations",
+  "url": "https://cwe.mitre.org/data/definitions/474.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-476": {
+  "title": "CWE-476: NULL Pointer Dereference",
+  "url": "https://cwe.mitre.org/data/definitions/476.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-478": {
+  "title": "CWE-478: Missing Default Case in Multiple Condition Expression",
+  "url": "https://cwe.mitre.org/data/definitions/478.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-479": {
+  "title": "CWE-479: Signal Handler Use of a Non-reentrant Function",
+  "url": "https://cwe.mitre.org/data/definitions/479.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-480": {
+  "title": "CWE-480: Use of Incorrect Operator",
+  "url": "https://cwe.mitre.org/data/definitions/480.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-481": {
+  "title": "CWE-481: Assigning instead of Comparing",
+  "url": "https://cwe.mitre.org/data/definitions/481.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-482": {
+  "title": "CWE-482: Comparing instead of Assigning",
+  "url": "https://cwe.mitre.org/data/definitions/482.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-483": {
+  "title": "CWE-483: Incorrect Block Delimitation",
+  "url": "https://cwe.mitre.org/data/definitions/483.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-484": {
+  "title": "CWE-484: Omitted Break Statement in Switch",
+  "url": "https://cwe.mitre.org/data/definitions/484.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-486": {
+  "title": "CWE-486: Comparison of Classes by Name",
+  "url": "https://cwe.mitre.org/data/definitions/486.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-487": {
+  "title": "CWE-487: Reliance on Package-level Scope",
+  "url": "https://cwe.mitre.org/data/definitions/487.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-489": {
+  "title": "CWE-489: Active Debug Code",
+  "url": "https://cwe.mitre.org/data/definitions/489.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-491": {
+  "title": "CWE-491: Public cloneable() Method Without Final",
+  "url": "https://cwe.mitre.org/data/definitions/491.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-492": {
+  "title": "CWE-492: Use of Inner Class Containing Sensitive Data",
+  "url": "https://cwe.mitre.org/data/definitions/492.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-493": {
+  "title": "CWE-493: Critical Public Variable Without Final Modifier",
+  "url": "https://cwe.mitre.org/data/definitions/493.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-494": {
+  "title": "CWE-494: Download of Code Without Integrity Check",
+  "url": "https://cwe.mitre.org/data/definitions/494.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-495": {
+  "title": "CWE-495: Private Data Structure Returned From A Public Method",
+  "url": "https://cwe.mitre.org/data/definitions/495.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-496": {
+  "title": "CWE-496: Public Data Assigned to Private Array-Typed Field",
+  "url": "https://cwe.mitre.org/data/definitions/496.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-497": {
+  "title": "CWE-497: Exposure of Sensitive System Information to an Unauthorized Control Sphere",
+  "url": "https://cwe.mitre.org/data/definitions/497.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-498": {
+  "title": "CWE-498: Cloneable Class Containing Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/498.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-499": {
+  "title": "CWE-499: Serializable Class Containing Sensitive Data",
+  "url": "https://cwe.mitre.org/data/definitions/499.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-500": {
+  "title": "CWE-500: Public Static Field Not Marked Final",
+  "url": "https://cwe.mitre.org/data/definitions/500.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-502": {
+  "title": "CWE-502: Deserialization of Untrusted Data",
+  "url": "https://cwe.mitre.org/data/definitions/502.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-521": {
+  "title": "CWE-521: Weak Password Requirements",
+  "url": "https://cwe.mitre.org/data/definitions/521.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-536": {
+  "title": "CWE-536: Servlet Runtime Error Message Containing Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/536.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-537": {
+  "title": "CWE-537: Java Runtime Error Message Containing Sensitive Information",
+  "url": "https://cwe.mitre.org/data/definitions/537.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-543": {
+  "title": "CWE-543: Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+  "url": "https://cwe.mitre.org/data/definitions/543.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-555": {
+  "title": "CWE-555: J2EE Misconfiguration: Plaintext Password in Configuration File",
+  "url": "https://cwe.mitre.org/data/definitions/555.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-558": {
+  "title": "CWE-558: Use of getlogin() in Multithreaded Application",
+  "url": "https://cwe.mitre.org/data/definitions/558.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-560": {
+  "title": "CWE-560: Use of umask() with chmod-style Argument",
+  "url": "https://cwe.mitre.org/data/definitions/560.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-562": {
+  "title": "CWE-562: Return of Stack Variable Address",
+  "url": "https://cwe.mitre.org/data/definitions/562.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-567": {
+  "title": "CWE-567: Unsynchronized Access to Shared Data in a Multithreaded Context",
+  "url": "https://cwe.mitre.org/data/definitions/567.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-568": {
+  "title": "CWE-568: finalize() Method Without super.finalize()",
+  "url": "https://cwe.mitre.org/data/definitions/568.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-572": {
+  "title": "CWE-572: Call to Thread run() instead of start()",
+  "url": "https://cwe.mitre.org/data/definitions/572.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-574": {
+  "title": "CWE-574: EJB Bad Practices: Use of Synchronization Primitives",
+  "url": "https://cwe.mitre.org/data/definitions/574.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-575": {
+  "title": "CWE-575: EJB Bad Practices: Use of AWT Swing",
+  "url": "https://cwe.mitre.org/data/definitions/575.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-576": {
+  "title": "CWE-576: EJB Bad Practices: Use of Java I/O",
+  "url": "https://cwe.mitre.org/data/definitions/576.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-577": {
+  "title": "CWE-577: EJB Bad Practices: Use of Sockets",
+  "url": "https://cwe.mitre.org/data/definitions/577.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-578": {
+  "title": "CWE-578: EJB Bad Practices: Use of Class Loader",
+  "url": "https://cwe.mitre.org/data/definitions/578.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-579": {
+  "title": "CWE-579: J2EE Bad Practices: Non-serializable Object Stored in Session",
+  "url": "https://cwe.mitre.org/data/definitions/579.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-580": {
+  "title": "CWE-580: clone() Method Without super.clone()",
+  "url": "https://cwe.mitre.org/data/definitions/580.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-581": {
+  "title": "CWE-581: Object Model Violation: Just One of Equals and Hashcode Defined",
+  "url": "https://cwe.mitre.org/data/definitions/581.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-582": {
+  "title": "CWE-582: Array Declared Public, Final, and Static",
+  "url": "https://cwe.mitre.org/data/definitions/582.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-583": {
+  "title": "CWE-583: finalize() Method Declared Public",
+  "url": "https://cwe.mitre.org/data/definitions/583.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-585": {
+  "title": "CWE-585: Empty Synchronized Block",
+  "url": "https://cwe.mitre.org/data/definitions/585.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-586": {
+  "title": "CWE-586: Explicit Call to Finalize()",
+  "url": "https://cwe.mitre.org/data/definitions/586.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-587": {
+  "title": "CWE-587: Assignment of a Fixed Address to a Pointer",
+  "url": "https://cwe.mitre.org/data/definitions/587.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-588": {
+  "title": "CWE-588: Attempt to Access Child of a Non-structure Pointer",
+  "url": "https://cwe.mitre.org/data/definitions/588.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-590": {
+  "title": "CWE-590: Free of Memory not on the Heap",
+  "url": "https://cwe.mitre.org/data/definitions/590.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-594": {
+  "title": "CWE-594: J2EE Framework: Saving Unserializable Objects to Disk",
+  "url": "https://cwe.mitre.org/data/definitions/594.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-595": {
+  "title": "CWE-595: Comparison of Object References Instead of Object Contents",
+  "url": "https://cwe.mitre.org/data/definitions/595.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-597": {
+  "title": "CWE-597: Use of Wrong Operator in String Comparison",
+  "url": "https://cwe.mitre.org/data/definitions/597.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-600": {
+  "title": "CWE-600: Uncaught Exception in Servlet",
+  "url": "https://cwe.mitre.org/data/definitions/600.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-602": {
+  "title": "CWE-602: Client-Side Enforcement of Server-Side Security",
+  "url": "https://cwe.mitre.org/data/definitions/602.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-607": {
+  "title": "CWE-607: Public Static Final Field References Mutable Object",
+  "url": "https://cwe.mitre.org/data/definitions/607.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-608": {
+  "title": "CWE-608: Struts: Non-private Field in ActionForm Class",
+  "url": "https://cwe.mitre.org/data/definitions/608.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-609": {
+  "title": "CWE-609: Double-Checked Locking",
+  "url": "https://cwe.mitre.org/data/definitions/609.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-615": {
+  "title": "CWE-615: Inclusion of Sensitive Information in Source Code Comments",
+  "url": "https://cwe.mitre.org/data/definitions/615.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-617": {
+  "title": "CWE-617: Reachable Assertion",
+  "url": "https://cwe.mitre.org/data/definitions/617.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-621": {
+  "title": "CWE-621: Variable Extraction Error",
+  "url": "https://cwe.mitre.org/data/definitions/621.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-626": {
+  "title": "CWE-626: Null Byte Interaction Error (Poison Null Byte)",
+  "url": "https://cwe.mitre.org/data/definitions/626.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-628": {
+  "title": "CWE-628: Function Call with Incorrectly Specified Arguments",
+  "url": "https://cwe.mitre.org/data/definitions/628.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-658": {
+  "title": "CWE-658: Weaknesses in Software Written in C",
+  "url": "https://cwe.mitre.org/data/definitions/658.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-659": {
+  "title": "CWE-659: Weaknesses in Software Written in C++",
+  "url": "https://cwe.mitre.org/data/definitions/659.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-660": {
+  "title": "CWE-660: Weaknesses in Software Written in Java",
+  "url": "https://cwe.mitre.org/data/definitions/660.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-663": {
+  "title": "CWE-663: Use of a Non-reentrant Function in a Concurrent Context",
+  "url": "https://cwe.mitre.org/data/definitions/663.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-676": {
+  "title": "CWE-676: Use of Potentially Dangerous Function",
+  "url": "https://cwe.mitre.org/data/definitions/676.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-680": {
+  "title": "CWE-680: Integer Overflow to Buffer Overflow",
+  "url": "https://cwe.mitre.org/data/definitions/680.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-681": {
+  "title": "CWE-681: Incorrect Conversion between Numeric Types",
+  "url": "https://cwe.mitre.org/data/definitions/681.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-685": {
+  "title": "CWE-685: Function Call With Incorrect Number of Arguments",
+  "url": "https://cwe.mitre.org/data/definitions/685.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-688": {
+  "title": "CWE-688: Function Call With Incorrect Variable or Reference as Argument",
+  "url": "https://cwe.mitre.org/data/definitions/688.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-689": {
+  "title": "CWE-689: Permission Race Condition During Resource Copy",
+  "url": "https://cwe.mitre.org/data/definitions/689.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-690": {
+  "title": "CWE-690: Unchecked Return Value to NULL Pointer Dereference",
+  "url": "https://cwe.mitre.org/data/definitions/690.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-704": {
+  "title": "CWE-704: Incorrect Type Conversion or Cast",
+  "url": "https://cwe.mitre.org/data/definitions/704.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-732": {
+  "title": "CWE-732: Incorrect Permission Assignment for Critical Resource",
+  "url": "https://cwe.mitre.org/data/definitions/732.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-733": {
+  "title": "CWE-733: Compiler Optimization Removal or Modification of Security-critical Code",
+  "url": "https://cwe.mitre.org/data/definitions/733.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-755": {
+  "title": "CWE-755: Improper Handling of Exceptional Conditions",
+  "url": "https://cwe.mitre.org/data/definitions/755.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-759": {
+  "title": "CWE-759: Use of a One-Way Hash without a Salt",
+  "url": "https://cwe.mitre.org/data/definitions/759.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-761": {
+  "title": "CWE-761: Free of Pointer not at Start of Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/761.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-762": {
+  "title": "CWE-762: Mismatched Memory Management Routines",
+  "url": "https://cwe.mitre.org/data/definitions/762.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-763": {
+  "title": "CWE-763: Release of Invalid Pointer or Reference",
+  "url": "https://cwe.mitre.org/data/definitions/763.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-766": {
+  "title": "CWE-766: Critical Data Element Declared Public",
+  "url": "https://cwe.mitre.org/data/definitions/766.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-767": {
+  "title": "CWE-767: Access to Critical Private Variable via Public Method",
+  "url": "https://cwe.mitre.org/data/definitions/767.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-768": {
+  "title": "CWE-768: Incorrect Short Circuit Evaluation",
+  "url": "https://cwe.mitre.org/data/definitions/768.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-781": {
+  "title": "CWE-781: Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code",
+  "url": "https://cwe.mitre.org/data/definitions/781.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-782": {
+  "title": "CWE-782: Exposed IOCTL with Insufficient Access Control",
+  "url": "https://cwe.mitre.org/data/definitions/782.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-783": {
+  "title": "CWE-783: Operator Precedence Logic Error",
+  "url": "https://cwe.mitre.org/data/definitions/783.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-785": {
+  "title": "CWE-785: Use of Path Manipulation Function without Maximum-sized Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/785.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-786": {
+  "title": "CWE-786: Access of Memory Location Before Start of Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/786.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-787": {
+  "title": "CWE-787: Out-of-bounds Write",
+  "url": "https://cwe.mitre.org/data/definitions/787.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-788": {
+  "title": "CWE-788: Access of Memory Location After End of Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/788.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-789": {
+  "title": "CWE-789: Memory Allocation with Excessive Size Value",
+  "url": "https://cwe.mitre.org/data/definitions/789.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-798": {
+  "title": "CWE-798: Use of Hard-coded Credentials",
+  "url": "https://cwe.mitre.org/data/definitions/798.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-805": {
+  "title": "CWE-805: Buffer Access with Incorrect Length Value",
+  "url": "https://cwe.mitre.org/data/definitions/805.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-806": {
+  "title": "CWE-806: Buffer Access Using Size of Source Buffer",
+  "url": "https://cwe.mitre.org/data/definitions/806.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-822": {
+  "title": "CWE-822: Untrusted Pointer Dereference",
+  "url": "https://cwe.mitre.org/data/definitions/822.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-823": {
+  "title": "CWE-823: Use of Out-of-range Pointer Offset",
+  "url": "https://cwe.mitre.org/data/definitions/823.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-824": {
+  "title": "CWE-824: Access of Uninitialized Pointer",
+  "url": "https://cwe.mitre.org/data/definitions/824.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-825": {
+  "title": "CWE-825: Expired Pointer Dereference",
+  "url": "https://cwe.mitre.org/data/definitions/825.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-828": {
+  "title": "CWE-828: Signal Handler with Functionality that is not Asynchronous-Safe",
+  "url": "https://cwe.mitre.org/data/definitions/828.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-839": {
+  "title": "CWE-839: Numeric Range Comparison Without Minimum Check",
+  "url": "https://cwe.mitre.org/data/definitions/839.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-843": {
+  "title": "CWE-843: Access of Resource Using Incompatible Type",
+  "url": "https://cwe.mitre.org/data/definitions/843.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-910": {
+  "title": "CWE-910: Use of Expired File Descriptor",
+  "url": "https://cwe.mitre.org/data/definitions/910.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-911": {
+  "title": "CWE-911: Improper Update of Reference Count",
+  "url": "https://cwe.mitre.org/data/definitions/911.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-917": {
+  "title": "CWE-917: Improper Neutralization of Special Elements used in an Expression Language Statement",
+  "url": "https://cwe.mitre.org/data/definitions/917.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1000": {
+  "title": "CWE-1000: Complete Weakness Hierarchy",
+  "url": "https://cwe.mitre.org/data/definitions/1000.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1104": {
+  "title": "CWE-1104: Use of Unmaintained Third Party Components",
+  "url": "https://cwe.mitre.org/data/definitions/1104.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1173": {
+  "title": "CWE-1173: Improper Use of Validation Framework",
+  "url": "https://cwe.mitre.org/data/definitions/1173.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1191": {
+  "title": "CWE-1191: On-Chip Debug and Test Interface With Improper Access Control",
+  "url": "https://cwe.mitre.org/data/definitions/1191.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1194": {
+  "title": "CWE-1194: Hardware Design",
+  "url": "https://cwe.mitre.org/data/definitions/1194.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1235": {
+  "title": "CWE-1235: Incorrect Use of Autoboxing and Unboxing for Performance Critical Operations",
+  "url": "https://cwe.mitre.org/data/definitions/1235.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1325": {
+  "title": "CWE-1325: Improperly Controlled Sequential Memory Allocation",
+  "url": "https://cwe.mitre.org/data/definitions/1325.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1335": {
+  "title": "CWE-1335: Incorrect Bitwise Shift of Integer",
+  "url": "https://cwe.mitre.org/data/definitions/1335.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1336": {
+  "title": "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine",
+  "url": "https://cwe.mitre.org/data/definitions/1336.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1341": {
+  "title": "CWE-1341: Multiple Releases of Same Resource or Handle",
+  "url": "https://cwe.mitre.org/data/definitions/1341.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1395": {
+  "title": "CWE-1395: Dependency on Vulnerable Third-Party Component",
+  "url": "https://cwe.mitre.org/data/definitions/1395.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "CWE-1429": {
+  "title": "CWE-1429: Missing Security-Relevant Feedback for Unexecuted Operations in Hardware Interface",
+  "url": "https://cwe.mitre.org/data/definitions/1429.html",
+  "kind": "CWE",
+  "note": ""
+ },
+ "MSC06-C": {
+  "title": "SEI CERT MSC06-C. Beware of compiler optimizations",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/miscellaneous-msc/msc06-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO02-C": {
+  "title": "SEI CERT FIO02-C. Canonicalize path names originating from tainted sources",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio02-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "POS01-C": {
+  "title": "SEI CERT POS01-C. Check for the existence of links when dealing with files",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/posix-pos/pos01-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ENV03-C": {
+  "title": "SEI CERT ENV03-C. Sanitize the environment when invoking external programs",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/environment-env/env03-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ENV33-C": {
+  "title": "SEI CERT ENV33-C. Do not call system()",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/environment-env/env33-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR02-C": {
+  "title": "SEI CERT STR02-C. Sanitize data passed to complex subsystems",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/characters-and-strings-str/str02-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "IDS07-J": {
+  "title": "SEI CERT IDS07-J. Sanitize untrusted data passed to the Runtime.exec() method",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids07-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "IDS00-J": {
+  "title": "SEI CERT IDS00-J. Prevent SQL injection",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SEC08-J": {
+  "title": "SEI CERT SEC08-J Trusted code must discard or clean any arguments provided by untrusted code",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec08-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "JNI01-J": {
+  "title": "SEI CERT JNI01-J. Safely invoke standard APIs that perform tasks using the immediate caller's class loader instance (loadLibrary)",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/java-native-interface-jni/jni01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "JNI00-J": {
+  "title": "SEI CERT JNI00-J. Define wrappers around native methods",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/java-native-interface-jni/jni00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR00-C": {
+  "title": "SEI CERT ARR00-C. Understand how arrays work",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/arrays-arr/arr00-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR30-C": {
+  "title": "SEI CERT ARR30-C. Do not form or use out-of-bounds pointers or array subscripts",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/arrays-arr/arr30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR38-C": {
+  "title": "SEI CERT ARR38-C. Guarantee that library functions do not form invalid pointers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/arrays-arr/arr38-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ENV01-C": {
+  "title": "SEI CERT ENV01-C. Do not make assumptions about the size of an environment variable",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/environment-env/env01-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP39-C": {
+  "title": "SEI CERT EXP39-C. Do not access a variable through a pointer of an incompatible type",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp39-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO37-C": {
+  "title": "SEI CERT FIO37-C. Do not assume that fgets() or fgetws() returns a nonempty string when successful",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio37-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR31-C": {
+  "title": "SEI CERT STR31-C. Guarantee that storage for strings has sufficient space for character data and the null terminator",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/characters-and-strings-str/str31-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR32-C": {
+  "title": "SEI CERT STR32-C. Do not pass a non-null-terminated character sequence to a library function that expects a string",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/characters-and-strings-str/str32-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM07-C": {
+  "title": "SEI CERT MEM07-C. Ensure that the arguments to calloc(), when multiplied, do not wrap",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem07-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT32-C": {
+  "title": "SEI CERT INT32-C. Ensure that operations on signed integers do not result in overflow",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int32-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT30-C": {
+  "title": "SEI CERT INT30-C. Ensure that unsigned integer operations do not wrap",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM35-C": {
+  "title": "SEI CERT MEM35-C. Allocate sufficient memory for an object",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/memory-management-mem/mem35-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO30-C": {
+  "title": "SEI CERT FIO30-C. Exclude user input from format strings",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO47-C": {
+  "title": "SEI CERT FIO47-C. Use valid format strings",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio47-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "IDS06-J": {
+  "title": "SEI CERT IDS06-J. Exclude unsanitized user input from format strings",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids06-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO10-J": {
+  "title": "SEI CERT FIO10-J. Ensure the array is filled when using read() to fill an array",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio10-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "POS30-C": {
+  "title": "SEI CERT POS30-C. Use the readlink() function properly",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/posix-pos/pos30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR03-C": {
+  "title": "SEI CERT STR03-C. Do not inadvertently truncate a string",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/characters-and-strings-str/str03-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT18-C": {
+  "title": "SEI CERT INT18-C. Evaluate integer expressions in a larger size before comparing or assigning to that size",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/integers-int/int18-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT35-C": {
+  "title": "SEI CERT INT35-C. Use correct integer precisions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int35-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT02-C": {
+  "title": "SEI CERT INT02-C. Understand integer conversion rules",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/integers-int/int02-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT05-C": {
+  "title": "SEI CERT INT05-C. Do not use input functions to convert character data if they cannot handle all possible inputs",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/integers-int/int05-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT31-C": {
+  "title": "SEI CERT INT31-C. Ensure that integer conversions do not result in lost or misinterpreted data",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int31-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO34-C": {
+  "title": "SEI CERT FIO34-C. Distinguish between characters read from a file and EOF or WEOF",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FLP34-C": {
+  "title": "SEI CERT FLP34-C. Ensure that floating-point conversions are within range of the new type",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/floating-point-flp/flp34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "NUM12-J": {
+  "title": "SEI CERT NUM12-J. Ensure conversions of numeric types to narrower types do not result in lost or misinterpreted data",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/numeric-types-and-operations-num/num12-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR01-J": {
+  "title": "SEI CERT ERR01-J. Do not allow exceptions to expose sensitive information",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "POS33-C": {
+  "title": "SEI CERT POS33-C. Do not use vfork()",
+  "url": "https://wiki.sei.cmu.edu/confluence/display/c/POS33-C.+Do+not+use+vfork%28%29",
+  "kind": "CERT-retired",
+  "note": "현행 SEI CERT 표준(공식 사이트 cmu-sei.github.io/secure-coding-standards, 원천 저장소 커밋 1c615bb, 2026-10-15 확인)에 이 규칙 ID가 없다. 옛 위키 주소는 연결이 끊겨 링크하지 않는다. MITRE CWE 5.0의 분류 대응에는 남아 있다."
+ },
+ "MEM03-C": {
+  "title": "SEI CERT MEM03-C. Clear sensitive information stored in reusable resources",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem03-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR05-J": {
+  "title": "SEI CERT ERR05-J. Do not let checked exceptions escape from a finally block",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err05-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR06-J": {
+  "title": "SEI CERT ERR06-J. Do not throw undeclared checked exceptions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err06-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC03-J": {
+  "title": "SEI CERT MSC03-J. Never hard code sensitive information",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/miscellaneous-msc/msc03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SEC05-J": {
+  "title": "SEI CERT SEC05-J. Do not use reflection to increase accessibility of classes, methods, or fields",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec05-j",
+  "kind": "CERT",
+  "note": "CWE-470 원문은 번호를 SEC06-J로, 이름을 리플렉션 규칙으로 적었다. 같은 번호가 CWE-319·494에서는 서명 검증 규칙 이름으로 쓰인다. 이름이 맞는 현행 규칙은 이 번호다(2026. 11. 3. 확인)"
+ },
+ "SEC06-J": {
+  "title": "SEI CERT SEC06-J. Do not rely on the default automatic signature verification provided by URLClassLoader and java.util.jar",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec06-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER02-J": {
+  "title": "SEI CERT SER02-J. Sign then seal objects before sending them outside a trust boundary",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser02-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC30-C": {
+  "title": "SEI CERT MSC30-C. Do not use the rand() function for generating pseudorandom numbers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/miscellaneous-msc/msc30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC32-C": {
+  "title": "SEI CERT MSC32-C. Properly seed pseudorandom number generators",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/miscellaneous-msc/msc32-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC02-J": {
+  "title": "SEI CERT MSC02-J. Generate strong random numbers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/miscellaneous-msc/msc02-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CON33-C": {
+  "title": "SEI CERT CON33-C. Avoid race conditions when using library functions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/concurrency-con/con33-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "VNA03-J": {
+  "title": "SEI CERT VNA03-J. Do not assume that a group of calls to independently atomic methods is atomic",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/visibility-and-atomicity-vna/vna03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CON32-C": {
+  "title": "SEI CERT CON32-C. Prevent data races when accessing bit-fields from multiple threads",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/concurrency-con/con32-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CON40-C": {
+  "title": "SEI CERT CON40-C. Do not refer to an atomic variable twice in an expression",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/concurrency-con/con40-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CON43-C": {
+  "title": "SEI CERT CON43-C. Do not allow data races in multithreaded code",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/concurrency-con/con43-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "VNA02-J": {
+  "title": "SEI CERT VNA02-J. Ensure that compound operations on shared variables are atomic",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/visibility-and-atomicity-vna/vna02-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO01-C": {
+  "title": "SEI CERT FIO01-C. Be careful using functions that use file names for identification",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio01-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FLP03-C": {
+  "title": "SEI CERT FLP03-C. Detect and handle floating-point errors",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/floating-point-flp/flp03-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT33-C": {
+  "title": "SEI CERT INT33-C. Ensure that division and remainder operations do not result in divide-by-zero errors",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int33-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "NUM02-J": {
+  "title": "SEI CERT NUM02-J. Ensure that division and remainder operations do not result in divide-by-zero errors",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/numeric-types-and-operations-num/num02-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ04-J": {
+  "title": "SEI CERT OBJ04-J. Provide mutable classes with copy functionality to safely allow passing instances to untrusted code",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ05-J": {
+  "title": "SEI CERT OBJ05-J. Do not return references to private mutable class members",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj05-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR09-J": {
+  "title": "SEI CERT ERR09-J. Do not allow untrusted code to terminate the JVM",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err09-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR00-J": {
+  "title": "SEI CERT ERR00-J. Do not suppress or ignore checked exceptions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR08-J": {
+  "title": "SEI CERT ERR08-J. Do not catch NullPointerException or any of its ancestors",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err08-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR07-J": {
+  "title": "SEI CERT ERR07-J. Do not throw RuntimeException, Exception, or Throwable",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err07-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER12-J": {
+  "title": "SEI CERT SER12-J. Prevent deserialization of untrusted data",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser12-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC05-J": {
+  "title": "SEI CERT MSC05-J. Do not exhaust heap space",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/miscellaneous-msc/msc05-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM31-C": {
+  "title": "SEI CERT MEM31-C. Free dynamically allocated memory when no longer needed",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/memory-management-mem/mem31-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC04-J": {
+  "title": "SEI CERT MSC04-J. Do not leak memory",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/miscellaneous-msc/msc04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO42-C": {
+  "title": "SEI CERT FIO42-C. Close files when they are no longer needed",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio42-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO04-J": {
+  "title": "SEI CERT FIO04-J. Release resources when they are no longer needed",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM00-C": {
+  "title": "SEI CERT MEM00-C. Allocate and free memory in the same module, at the same level of abstraction",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem00-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM01-C": {
+  "title": "SEI CERT MEM01-C. Store a new value in pointers immediately after free()",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem01-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM30-C": {
+  "title": "SEI CERT MEM30-C. Do not access freed memory",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/memory-management-mem/mem30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR03-J": {
+  "title": "SEI CERT ERR03-J. Restore prior object state on method failure",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ENV02-C": {
+  "title": "SEI CERT ENV02-C. Beware of multiple environment variables with the same effective name",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/environment-env/env02-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR06-C": {
+  "title": "SEI CERT STR06-C. Do not assume that strtok() leaves the parse string unchanged",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/characters-and-strings-str/str06-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR01-C": {
+  "title": "SEI CERT ARR01-C. Do not apply the sizeof operator to a pointer when taking the size of an array",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/arrays-arr/arr01-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR39-C": {
+  "title": "SEI CERT ARR39-C. Do not add or subtract a scaled integer to a pointer",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/arrays-arr/arr39-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP08-C": {
+  "title": "SEI CERT EXP08-C. Ensure pointer arithmetic is used correctly",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/expressions-exp/exp08-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ARR36-C": {
+  "title": "SEI CERT ARR36-C. Do not subtract or compare two pointers that do not refer to the same array",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/arrays-arr/arr36-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP34-C": {
+  "title": "SEI CERT EXP34-C. Do not dereference null pointers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SIG30-C": {
+  "title": "SEI CERT SIG30-C. Call only asynchronous-safe functions within signal handlers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/signals-sig/sig30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SIG34-C": {
+  "title": "SEI CERT SIG34-C. Do not call signal() from within interruptible signal handlers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/signals-sig/sig34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP01-J": {
+  "title": "SEI CERT EXP01-J. Do not use a null in a case where an object is required",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/expressions-exp/exp01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP45-C": {
+  "title": "SEI CERT EXP45-C. Do not perform assignments in selection statements",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp45-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP46-C": {
+  "title": "SEI CERT EXP46-C. Do not use a bitwise operator with a Boolean-like operand",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp46-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ09-J": {
+  "title": "SEI CERT OBJ09-J. Compare classes and not class names",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj09-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MET04-J": {
+  "title": "SEI CERT MET04-J. Do not increase the accessibility of overridden or hidden methods",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/methods-met/met04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ07-J": {
+  "title": "SEI CERT OBJ07-J. Sensitive classes must not let themselves be copied",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj07-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ08-J": {
+  "title": "SEI CERT OBJ08-J. Do not expose private members of an outer class from within a nested class",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj08-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ10-J": {
+  "title": "SEI CERT OBJ10-J. Do not use public static nonfinal fields",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj10-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER03-J": {
+  "title": "SEI CERT SER03-J. Do not serialize unencrypted sensitive data",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER05-J": {
+  "title": "SEI CERT SER05-J. Do not serialize instances of inner classes",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser05-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER01-J": {
+  "title": "SEI CERT SER01-J. Do not deviate from the proper signatures of serialization methods",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER06-J": {
+  "title": "SEI CERT SER06-J. Make defensive copies of private mutable components during deserialization",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser06-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SER08-J": {
+  "title": "SEI CERT SER08-J. Minimize privileges before deserializing from a privileged context",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/serialization-ser/ser08-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MSC07-J": {
+  "title": "SEI CERT MSC07-J. Prevent multiple instantiations of singleton objects",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/miscellaneous-msc/msc07-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "DCL30-C": {
+  "title": "SEI CERT DCL30-C. Declare objects with appropriate storage durations",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/declarations-and-initialization-dcl/dcl30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "POS34-C": {
+  "title": "SEI CERT POS34-C. Do not call putenv() with a pointer to an automatic variable as the argument",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/posix-pos/pos34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "VNA00-J": {
+  "title": "SEI CERT VNA00-J. Ensure visibility when accessing shared primitive variables",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/visibility-and-atomicity-vna/vna00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MET12-J": {
+  "title": "SEI CERT MET12-J. Do not use finalizers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/methods-met/met12-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "THI00-J": {
+  "title": "SEI CERT THI00-J. Do not invoke Thread.run()",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/thread-apis-thi/thi00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MET09-J": {
+  "title": "SEI CERT MET09-J. Classes that define an equals() method must also define a hashCode() method",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/methods-met/met09-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT36-C": {
+  "title": "SEI CERT INT36-C. Converting a pointer to integer or integer to pointer",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int36-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MEM34-C": {
+  "title": "SEI CERT MEM34-C. Only free memory allocated dynamically",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/memory-management-mem/mem34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "WIN30-C": {
+  "title": "SEI CERT WIN30-C. Properly pair allocation and deallocation functions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/microsoft-windows-win/win30-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP02-J": {
+  "title": "SEI CERT EXP02-J. Do not use the Object.equals() method to compare two arrays",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/expressions-exp/exp02-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP03-J": {
+  "title": "SEI CERT EXP03-J. Do not use the equality operators when comparing values of boxed primitives",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/expressions-exp/exp03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "LCK10-J": {
+  "title": "SEI CERT LCK10-J. Use a correct form of the double-checked locking idiom",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/locking-lck/lck10-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "MET01-J": {
+  "title": "SEI CERT MET01-J. Never use assertions to validate method arguments",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/methods-met/met01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "DCL10-C": {
+  "title": "SEI CERT DCL10-C. Maintain the contract between the writer and caller of variadic functions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/declarations-and-initialization-dcl/dcl10-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP37-C": {
+  "title": "SEI CERT EXP37-C. Call functions with the correct number and type of arguments",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp37-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR07-C": {
+  "title": "SEI CERT ERR07-C. Prefer functions that support error checking over equivalent functions that don't",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/error-handling-err/err07-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR34-C": {
+  "title": "SEI CERT ERR34-C. Detect errors when converting a string to a number",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/error-handling-err/err34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "INT15-C": {
+  "title": "SEI CERT INT15-C. Use intmax_t or uintmax_t for formatted IO on programmer-defined integer types",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/integers-int/int15-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP05-C": {
+  "title": "SEI CERT EXP05-C. Do not cast away a const qualification",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/expressions-exp/exp05-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR34-C": {
+  "title": "SEI CERT STR34-C. Cast characters to unsigned char before converting to larger integer sizes",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/characters-and-strings-str/str34-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "STR37-C": {
+  "title": "SEI CERT STR37-C. Arguments to character-handling functions must be representable as an unsigned char",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/characters-and-strings-str/str37-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO03-J": {
+  "title": "SEI CERT FIO03-J. Remove temporary files before termination",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SEC01-J": {
+  "title": "SEI CERT SEC01-J. Do not allow tainted variables in privileged blocks",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ENV03-J": {
+  "title": "SEI CERT ENV03-J. Do not grant dangerous combinations of permissions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/runtime-environment-env/env03-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO06-C": {
+  "title": "SEI CERT FIO06-C. Create files with appropriate access permissions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio06-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "OBJ01-J": {
+  "title": "SEI CERT OBJ01-J. Limit accessibility of fields",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP00-C": {
+  "title": "SEI CERT EXP00-C. Use parentheses for precedence of operation",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/expressions-exp/exp00-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "SIG31-C": {
+  "title": "SEI CERT SIG31-C. Do not access shared objects in signal handlers",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/signals-sig/sig31-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO46-C": {
+  "title": "SEI CERT FIO46-C. Do not access a closed file",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/input-output-fio/fio46-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP04-J": {
+  "title": "SEI CERT EXP04-J. Do not pass arguments to certain Java Collections Framework methods that are a different type than the collection parameter type",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/expressions-exp/exp04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CON50-CPP": {
+  "title": "SEI CERT CON50-CPP. Do not destroy a mutex while it is locked",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/concurrency-con/con50-cpp",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CTR50-CPP": {
+  "title": "SEI CERT CTR50-CPP. Guarantee that container indices and iterators are within the valid range",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/containers-ctr/ctr50-cpp",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "CTR51-CPP": {
+  "title": "SEI CERT CTR51-CPP. Use valid references, pointers, and iterators to reference elements of a container",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/containers-ctr/ctr51-cpp",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "DCL56-CPP": {
+  "title": "SEI CERT DCL56-CPP. Avoid cycles during initialization of static objects",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/declarations-and-initialization-dcl/dcl56-cpp",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR04-J": {
+  "title": "SEI CERT ERR04-J. Do not complete abruptly from a finally block",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err04-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR33-C": {
+  "title": "SEI CERT ERR33-C. Detect and handle standard library errors",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/error-handling-err/err33-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "ERR54-J": {
+  "title": "SEI CERT ERR54-J. Use a try-with-resources statement to safely handle closeable resources",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/recommendations/exceptional-behavior-err/err54-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "EXP54-CPP": {
+  "title": "SEI CERT EXP54-CPP. Do not access an object outside of its lifetime",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/expressions-exp/exp54-cpp",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "FIO21-C": {
+  "title": "SEI CERT FIO21-C. Do not create temporary files in shared directories",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio21-c",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "IDS01-J": {
+  "title": "SEI CERT IDS01-J. Normalize strings before validating them",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids01-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "IDS02-J": {
+  "title": "SEI CERT IDS02-J (규칙 검색)",
+  "url": "https://wiki.sei.cmu.edu/confluence/dosearchsite.action?queryString=IDS02-J",
+  "kind": "CERT-retired",
+  "note": "FIO16-J로 이관(옛 위키 IDS02-J 페이지의 이관 안내, 원 발행처 페이지의 웹 아카이브 보관본 2025-04-26, Tier 3). 현행 표준(cmu-sei.github.io/secure-coding-standards)에 이 ID가 없어 링크하지 않는다."
+ },
+ "LCK00-J": {
+  "title": "SEI CERT LCK00-J. Use private final lock objects to synchronize classes that may interact with untrusted code",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/locking-lck/lck00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "NUM00-J": {
+  "title": "SEI CERT NUM00-J. Detect or prevent integer overflow",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/numeric-types-and-operations-num/num00-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards)로 이전한 주소. 옛 위키 주소는 연결 끊김(2026-10-15 확인)"
+ },
+ "매뉴얼2024-6": {
+  "title": "방위사업청 매뉴얼 제2024-6호 「무기체계 소프트웨어 개발 및 관리 매뉴얼」(2024.12.26.) — 행정규칙 게시판 번호 22 첨부(본문·부록·신구조문대비표)",
+  "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+  "kind": "표준",
+  "note": "게시판에서 번호 22 '본문 등' 첨부 내려받기"
+ },
+ "훈령948": {
+  "title": "방위사업청 훈령 제948호 「무기체계 소프트웨어 개발 지원에 관한 규정」(2026.2.10.)",
+  "url": "https://www.law.go.kr/행정규칙/무기체계소프트웨어개발지원에관한규정",
+  "kind": "표준",
+  "note": ""
+ },
+ "SSDF1.1": {
+  "title": "NIST SP 800-218 Secure Software Development Framework (SSDF) Version 1.1 (2022.2)",
+  "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+  "kind": "표준",
+  "note": ""
+ },
+ "SSDF1.1-PDF": {
+  "title": "NIST SP 800-218 (PDF)",
+  "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf",
+  "kind": "표준",
+  "note": ""
+ },
+ "SSDF1.2-ipd": {
+  "title": "NIST SP 800-218r1 (Initial Public Draft, 2025.12)",
+  "url": "https://csrc.nist.gov/pubs/sp/800/218/r1/ipd",
+  "kind": "표준",
+  "note": ""
+ },
+ "KISA개발보안": {
+  "title": "행정안전부·한국인터넷진흥원 「전자정부 SW 개발·운영자를 위한 소프트웨어 개발보안 가이드」(2021. 11.)",
+  "url": "https://www.kisa.or.kr/2060204/form?postSeq=5&page=1",
+  "kind": "표준",
+  "note": ""
+ },
+ "KISA진단": {
+  "title": "행정안전부·한국인터넷진흥원 「소프트웨어 보안약점 진단가이드」(2021. 11.)",
+  "url": "https://www.kisa.or.kr/2060204/form?postSeq=9&page=1",
+  "kind": "표준",
+  "note": ""
+ },
+ "KCMVP": {
+  "title": "KISA 암호모듈검증(KCMVP) 개요",
+  "url": "https://seed.kisa.or.kr/kisa/kcmvp/EgovSummary.do",
+  "kind": "표준",
+  "note": ""
+ },
+ "MISRA": {
+  "title": "MISRA (misra.org.uk)",
+  "url": "https://misra.org.uk/",
+  "kind": "표준",
+  "note": ""
+ },
+ "MISRA-CPP2023": {
+  "title": "MISRA C++:2023 (TC1:2026) 제품 페이지",
+  "url": "https://misra.org.uk/product/misra-cpp2023/",
+  "kind": "표준",
+  "note": ""
+ },
+ "AUTOSAR-CPP14": {
+  "title": "AUTOSAR Guidelines for the use of the C++14 language (R22-11)",
+  "url": "https://www.autosar.org/fileadmin/standards/R22-11/AP/AUTOSAR_RS_CPP14Guidelines.pdf",
+  "kind": "표준",
+  "note": ""
+ },
+ "PX4-clang-tidy": {
+  "title": "PX4-Autopilot v1.17.0 .clang-tidy",
+  "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.17.0/.clang-tidy",
+  "kind": "사례",
+  "note": ""
+ },
+ "cppcheck-misra": {
+  "title": "cppcheck 2.22.0 addons/misra.py",
+  "url": "https://raw.githubusercontent.com/danmar/cppcheck/2.22.0/addons/misra.py",
+  "kind": "사례",
+  "note": ""
+ },
+ "SPRi-SBOM": {
+  "title": "SPRi 「SW명세서(SBOM) 도입 및 활성화 방안 연구」",
+  "url": "https://spri.kr/posts/view/23644?code=data_all&study_type=research",
+  "kind": "표준",
+  "note": ""
+ },
+ "SPRi-공급망": {
+  "title": "SPRi 「SW공급망 강화를 위한 글로벌 동향」",
+  "url": "https://spri.kr/posts/view/23414?code=data_all&study_type=industry_trend",
+  "kind": "표준",
+  "note": ""
+ },
+ "TTA용어": {
+  "title": "TTA 정보통신용어사전",
+  "url": "https://terms.tta.or.kr/dictionary/searchList.do?keyword=FUZZING",
+  "kind": "표준",
+  "note": ""
+ },
+ "국어원외래어": {
+  "title": "국립국어원 외래어 표기법",
+  "url": "https://www.korean.go.kr/front/page/pageView.do?page_id=P000124&mn_id=97",
+  "kind": "표준",
+  "note": ""
+ },
+ "FIO16-J": {
+  "title": "SEI CERT FIO16-J. Canonicalize path names before validating them",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio16-j/",
+  "kind": "CERT",
+  "note": "경로 정규화 규칙의 현행 번호(옛 IDS02-J에서 이관). 조회 2026-10-15"
+ },
+ "KISA파이썬": {
+  "title": "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12., 판권면)",
+  "url": "https://www.kisa.or.kr/2060204/form?postSeq=13",
+  "kind": "표준",
+  "note": "KISA 가이드라인 게시판 글 등록일은 2022-12-29이나 현재 첨부 'Python_시큐어코딩_가이드(2023년_개정본).pdf'의 판권면(PDF 176쪽)은 인쇄·발행 2023년 12월. 확인 2026-10-17"
+ },
+ "IDS17-J": {
+  "title": "SEI CERT IDS17-J. Prevent XML External Entity Attacks",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids17-j",
+  "kind": "CERT",
+  "note": "SEI CERT 코딩 표준 공식 사이트(GitHub Pages, 원천 cmu-sei/secure-coding-standards). 조회 2026-10-28"
+ },
+ "CON51-CPP": {
+  "title": "SEI CERT CON51-CPP. Ensure actively held locks are released on exceptional conditions",
+  "url": "https://cmu-sei.github.io/secure-coding-standards/sei-cert-cpp-coding-standard/rules/concurrency-con/con51-cpp",
+  "kind": "CERT"
+ },
+ "CWE5.0": {
+  "title": "MITRE CWE 5.0 (2026-10-28)",
+  "url": "https://cwe.mitre.org/data/index.html",
+  "kind": "CWE",
+  "note": ""
+ }
+}
