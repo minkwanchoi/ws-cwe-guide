@@ -1,0 +1,102 @@
+{
+ "cwe": "321",
+ "scenario_ko": "장비가 데이터링크 메시지·정비 명령·정비 기록을 보호하는 키를 소스코드 상수로 넣어 펌웨어·배포본과 함께 내보낸다. 같은 배포본을 쓰는 모든 장비가 같은 키를 갖게 되고, 이미지 하나만 빼내면 strings 같은 도구로 키를 찾을 수 있다. C·C++·Java 예시는 자기 실행 파일(클래스 파일)에서 키 바이트를 찾아 보고, C# 예시는 분석기 경고(CA5390)로, Python 예시는 컴파일한 .pyc에서 키의 16진 문자열을 찾아 확인한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* 모든 장비의 펌웨어에 같은 링크 키가 상수로 들어간다 */\nstatic const unsigned char LINK_KEY[] = \"EXAMPLE-ONLY-KEY\";\n\n/* 검증된 암호 모듈에 키를 넘기는 자리(시험용 대체: 복사만 한다) */\nstatic unsigned char active_key[16];\nstatic void crypto_set_link_key(const unsigned char *k) { memcpy(active_key, k, sizeof active_key); }\n\n/* 이미지를 빼낸 사람이 하는 일: 실행 파일에서 사용 중인 키 바이트를 찾는다 */\nstatic long find_in_image(const char *image, const unsigned char *pat, size_t n)\n{\n    FILE *fp = fopen(image, \"rb\");\n    if (fp == NULL) return -2;\n    fseek(fp, 0, SEEK_END);\n    long size = ftell(fp);\n    rewind(fp);\n    unsigned char *buf = size > 0 ? malloc((size_t)size) : NULL;\n    long at = -1;\n    if (buf != NULL && fread(buf, 1, (size_t)size, fp) == (size_t)size) {\n        for (long i = 0; at < 0 && i + (long)n <= size; ++i) {\n            if (memcmp(buf + i, pat, n) == 0) at = i;\n        }\n    }\n    free(buf);\n    fclose(fp);\n    return at;\n}\n\nint main(int argc, char **argv)\n{\n    (void)argc;\n    crypto_set_link_key(LINK_KEY);\n    long at = find_in_image(argv[0], active_key, sizeof active_key);\n    if (at >= 0) printf(\"KEY FOUND IN IMAGE at offset %ld\\n\", at);\n    else puts(at == -2 ? \"image not readable\" : \"key not present in image\");\n    return 0;\n}\n",
+    "explain_ko": "링크 키를 static const 배열로 넣어 실행 이미지의 읽기 전용 영역에 그대로 남는다. 장비 한 대의 펌웨어만 덤프해도 같은 이미지를 쓰는 전체 장비의 키가 드러나고, 키를 바꾸려면 재빌드·재배포해야 한다."
+   },
+   "good": {
+    "code": "#define _CRT_RAND_S\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n/* 키 저장소 인터페이스: 장비마다 생산 단계에서 주입한 고유 키를 보안요소·eFuse에서 읽는다.\n   시험용 대체 구현: 운영체제 난수로 채운다(실제 장비에서는 보안요소 드라이버로 바꾼다). */\nstatic int keystore_read_link_key(unsigned char *out, size_t n)\n{\n    for (size_t i = 0; i < n; ++i) {\n        unsigned int r;\n        if (rand_s(&r) != 0) return -1;\n        out[i] = (unsigned char)r;\n    }\n    return 0;\n}\n\nstatic unsigned char active_key[16];\n\nstatic long find_in_image(const char *image, const unsigned char *pat, size_t n)\n{\n    FILE *fp = fopen(image, \"rb\");\n    if (fp == NULL) return -2;\n    fseek(fp, 0, SEEK_END);\n    long size = ftell(fp);\n    rewind(fp);\n    unsigned char *buf = size > 0 ? malloc((size_t)size) : NULL;\n    long at = -1;\n    if (buf != NULL && fread(buf, 1, (size_t)size, fp) == (size_t)size) {\n        for (long i = 0; at < 0 && i + (long)n <= size; ++i) {\n            if (memcmp(buf + i, pat, n) == 0) at = i;\n        }\n    }\n    free(buf);\n    fclose(fp);\n    return at;\n}\n\nint main(int argc, char **argv)\n{\n    (void)argc;\n    if (keystore_read_link_key(active_key, sizeof active_key) != 0) {\n        puts(\"link key not provisioned: link disabled\");   /* 기본 키로 대신하지 않는다 */\n        return 1;\n    }\n    long at = find_in_image(argv[0], active_key, sizeof active_key);\n    if (at >= 0) printf(\"KEY FOUND IN IMAGE at offset %ld\\n\", at);\n    else puts(at == -2 ? \"image not readable\" : \"key not present in image\");\n    return 0;\n}\n",
+    "explain_ko": "키는 생산 단계에서 장비마다 주입하고 보안요소·eFuse에서 읽는 키 저장소 인터페이스로 받는다(예시의 rand_s 구현은 시험용 대체). 키가 없으면 기본 키로 대신하지 않고 링크를 열지 않는다(SOC-04·D-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "KEY FOUND IN IMAGE",
+    "expect_good": "key not present in image"
+   },
+   "refs": [
+    "MITRE CWE-321 Demonstrative Example 1(하드코드된 암호 키로 비밀번호 확인) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-9 '하드코드된 암호화키'(인쇄 107쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <algorithm>\n#include <array>\n#include <cstdio>\n#include <fstream>\n#include <iterator>\n#include <vector>\n\n// 정비 명령 인증에 쓰는 키를 소스코드에 상수로 넣었다(모든 장비가 같은 키)\nconstexpr std::array<unsigned char, 16> kMaintKey{'E', 'X', 'A', 'M', 'P', 'L', 'E', '-',\n                                                  'O', 'N', 'L', 'Y', '-', 'K', 'E', 'Y'};\n\nclass CommandAuthenticator {   // 검증된 암호 모듈을 감싸는 자리(시험용: 키만 보관)\npublic:\n    explicit CommandAuthenticator(const std::array<unsigned char, 16> &key) : key_(key) {}\n    const std::array<unsigned char, 16> &key() const { return key_; }\nprivate:\n    std::array<unsigned char, 16> key_;\n};\n\n// 이미지를 빼낸 사람이 하는 일: 실행 파일에서 키 바이트를 찾는다\nstatic bool image_contains(const char *image, const std::array<unsigned char, 16> &key) {\n    std::ifstream in(image, std::ios::binary);\n    const std::vector<unsigned char> raw((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());\n    return std::search(raw.begin(), raw.end(), key.begin(), key.end()) != raw.end();\n}\n\nint main(int, char **argv) {\n    const CommandAuthenticator auth(kMaintKey);\n    std::puts(image_contains(argv[0], auth.key()) ? \"KEY FOUND IN IMAGE\" : \"key not present in image\");\n    return 0;\n}\n",
+    "explain_ko": "정비 명령 인증 키를 constexpr 배열로 소스코드에 넣는다. 키가 실행 파일에 그대로 실려 배포본을 가진 사람은 누구나 키를 얻는다."
+   },
+   "good": {
+    "code": "#include <windows.h>\n#include <bcrypt.h>\n#include <algorithm>\n#include <array>\n#include <cstdio>\n#include <fstream>\n#include <iterator>\n#include <optional>\n#include <vector>\n\nusing Key = std::array<unsigned char, 16>;\n\n// 키 저장소 인터페이스: 장비별 고유 키를 생산 단계에서 주입하고 보안요소에서 읽는다.\n// 시험용 대체 구현: 운영체제 난수 생성기로 채운다(실제 장비에서는 보안요소 드라이버로 바꾼다).\nstatic std::optional<Key> keystore_maint_key() {\n    Key k{};\n    if (!BCRYPT_SUCCESS(BCryptGenRandom(nullptr, k.data(), static_cast<ULONG>(k.size()),\n                                        BCRYPT_USE_SYSTEM_PREFERRED_RNG))) {\n        return std::nullopt;\n    }\n    return k;\n}\n\nclass CommandAuthenticator {\npublic:\n    explicit CommandAuthenticator(const Key &key) : key_(key) {}\n    ~CommandAuthenticator() { SecureZeroMemory(key_.data(), key_.size()); }   // 사용 후 소거\n    const Key &key() const { return key_; }\nprivate:\n    Key key_;\n};\n\nstatic bool image_contains(const char *image, const Key &key) {\n    std::ifstream in(image, std::ios::binary);\n    const std::vector<unsigned char> raw((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());\n    return std::search(raw.begin(), raw.end(), key.begin(), key.end()) != raw.end();\n}\n\nint main(int, char **argv) {\n    const auto key = keystore_maint_key();\n    if (!key) {\n        std::puts(\"maintenance key not provisioned: commands disabled\");\n        return 1;\n    }\n    const CommandAuthenticator auth(*key);\n    std::puts(image_contains(argv[0], auth.key()) ? \"KEY FOUND IN IMAGE\" : \"key not present in image\");\n    return 0;\n}\n",
+    "explain_ko": "키 저장소 함수에서 장비별 키를 받고(예시의 BCryptGenRandom 구현은 시험용 대체), 키를 못 받으면 정비 명령 기능을 끈다. 키를 보관한 객체는 소멸할 때 SecureZeroMemory로 지운다(D-05). 지우는 것은 이 객체의 값이므로, 키 저장소 함수가 돌려준 사본(main의 key)도 운용 코드에서는 따로 지운다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "KEY FOUND IN IMAGE",
+    "expect_good": "key not present in image",
+    "flags": [
+     "-lbcrypt"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-321 Demonstrative Example 1(하드코드된 암호 키로 비밀번호 확인) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.IOException;\nimport java.io.InputStream;\nimport java.nio.charset.StandardCharsets;\nimport javax.crypto.SecretKey;\nimport javax.crypto.spec.SecretKeySpec;\n\npublic class Example {\n    // 정비 기록 암호화 키를 소스코드 상수로 넣었다(배포본마다 같은 키)\n    private static final String RECORD_KEY = \"EXAMPLE-ONLY-KEY\";\n\n    static SecretKey recordKey() {\n        return new SecretKeySpec(RECORD_KEY.getBytes(StandardCharsets.US_ASCII), \"AES\");\n    }\n\n    // 배포본을 손에 넣은 사람이 하는 일: 클래스 파일에서 키 바이트를 찾는다\n    static boolean classFileContains(byte[] key) throws IOException {\n        try (InputStream in = Example.class.getResourceAsStream(\"Example.class\")) {\n            if (in == null) {\n                return false;\n            }\n            String raw = new String(in.readAllBytes(), StandardCharsets.ISO_8859_1);\n            return raw.contains(new String(key, StandardCharsets.ISO_8859_1));\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        SecretKey key = recordKey();\n        System.out.println(classFileContains(key.getEncoded()) ? \"KEY FOUND IN IMAGE\" : \"key not present in image\");\n    }\n}\n",
+    "explain_ko": "정비 기록 암호화 키를 문자열 상수로 둔다. 상수는 클래스 파일의 상수 풀에 그대로 남아 javap나 압축 해제만으로 읽힌다."
+   },
+   "good": {
+    "code": "import java.io.IOException;\nimport java.io.InputStream;\nimport java.nio.charset.StandardCharsets;\nimport java.security.GeneralSecurityException;\nimport javax.crypto.KeyGenerator;\nimport javax.crypto.SecretKey;\n\npublic class Example {\n    // 키 저장소 인터페이스: 운용 장비에서는 KeyStore(PKCS#11 HSM 등)에서 별칭으로 키를 꺼낸다.\n    interface KeyProvider {\n        SecretKey recordKey() throws GeneralSecurityException;\n    }\n\n    // 시험용 대체 구현: 실행 중에 키를 만든다(코드·배포본에는 키가 없다)\n    static final KeyProvider TEST_PROVIDER = () -> {\n        KeyGenerator kg = KeyGenerator.getInstance(\"AES\");\n        kg.init(256);\n        return kg.generateKey();\n    };\n\n    static boolean classFileContains(byte[] key) throws IOException {\n        try (InputStream in = Example.class.getResourceAsStream(\"Example.class\")) {\n            if (in == null) {\n                return false;\n            }\n            String raw = new String(in.readAllBytes(), StandardCharsets.ISO_8859_1);\n            return raw.contains(new String(key, StandardCharsets.ISO_8859_1));\n        }\n    }\n\n    public static void main(String[] args) throws IOException, GeneralSecurityException {\n        SecretKey key = TEST_PROVIDER.recordKey();\n        System.out.println(classFileContains(key.getEncoded()) ? \"KEY FOUND IN IMAGE\" : \"key not present in image\");\n    }\n}\n",
+    "explain_ko": "키를 KeyProvider 인터페이스로 받게 하고, 운용 장비에서는 KeyStore·PKCS#11 HSM 구현을 연결한다(예시의 KeyGenerator 구현은 시험용 대체). 코드와 배포본에는 키가 없다(D-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "KEY FOUND IN IMAGE",
+    "expect_good": "key not present in image"
+   },
+   "refs": [
+    "MITRE CWE-321 Demonstrative Example 1(하드코드된 암호 키로 비밀번호 확인) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-10 '하드코드된 암호화 키'(인쇄 151쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Security.Cryptography;\nusing System.Text;\n\n// 링크 메시지 보호 키를 소스코드에 상수로 넣었다(모든 배포본이 같은 키)\nbyte[] linkKey = Encoding.ASCII.GetBytes(\"EXAMPLE-ONLY-KEY-EXAMPLE-ONLY-32\");\nbyte[] order = Encoding.ASCII.GetBytes(\"WP7 HOLD ALT=1500\");\nbyte[] nonce = RandomNumberGenerator.GetBytes(12);\nbyte[] tag = new byte[16];\nbyte[] sealedOrder = new byte[order.Length];\n\nusing var gcm = new AesGcm(linkKey, tag.Length);   // CA5390: 하드코드된 키\ngcm.Encrypt(nonce, order, sealedOrder, tag);\nConsole.WriteLine($\"sealed {sealedOrder.Length} bytes\");\n",
+    "explain_ko": "링크 보호 키를 문자열 상수에서 만들어 AesGcm에 넘긴다. 키가 어셈블리에 그대로 남고, .NET 분석기가 CA5390(하드코드된 암호화 키)으로 경고한다."
+   },
+   "good": {
+    "code": "using System.Security.Cryptography;\nusing System.Text;\n\nbyte[] linkKey = LinkKeyStore.Read();              // 키 저장소에서 장비별 키를 받는다\nbyte[] order = Encoding.ASCII.GetBytes(\"WP7 HOLD ALT=1500\");\nbyte[] nonce = RandomNumberGenerator.GetBytes(12);\nbyte[] tag = new byte[16];\nbyte[] sealedOrder = new byte[order.Length];\n\nusing (var gcm = new AesGcm(linkKey, tag.Length))\n{\n    gcm.Encrypt(nonce, order, sealedOrder, tag);\n}\nCryptographicOperations.ZeroMemory(linkKey);       // 사용 후 소거\nConsole.WriteLine($\"sealed {sealedOrder.Length} bytes\");\n\nstatic class LinkKeyStore\n{\n    // 운용 장비에서는 HSM·보안요소·OS 키 저장소에서 읽는다.\n    // 시험용 대체 구현: 실행 중에 난수로 만든다(코드·배포본에는 키가 없다).\n    public static byte[] Read() => RandomNumberGenerator.GetBytes(32);\n}\n",
+    "explain_ko": "키를 키 저장소 클래스에서 받고(운용 장비에서는 HSM·보안요소·OS 키 저장소, 예시는 시험용 난수), 사용 뒤 ZeroMemory로 지운다. 비밀값을 소스·설정 파일에 두지 않는다(LCS-07)."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA5390"
+   },
+   "refs": [
+    "MITRE CWE-321 Demonstrative Example 1(하드코드된 암호 키로 비밀번호 확인) 참고, 이 가이드가 새로 작성",
+    "Microsoft Learn 코드 분석 규칙 CA5390 'Do not hard-code encryption key' 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import hashlib\nimport hmac\nimport py_compile\n\nMAINT_LOG_KEY = bytes.fromhex(\"7c4e1f9a20d35b86e4a1c09f5d2b7e33\")   # 정비 기록 인증 키를 소스에 넣음(가짜 값)\n\n\n# 정비 기록 한 줄에 인증값을 붙인다\ndef seal(line):\n    return line + \" mac=\" + hmac.new(MAINT_LOG_KEY, line.encode(), hashlib.sha256).hexdigest()\n\n\nprint(seal(\"2026-10-12 HYD-2 seal replaced\"))\n# 배포본(.pyc)을 만든 뒤 그 안에 키가 그대로 있는지 확인한다\nimage = open(py_compile.compile(__file__, cfile=\"tool.pyc\"), \"rb\").read()\nprint(\"KEY FOUND IN IMAGE\" if b\"7c4e1f9a20d35b86\" in image else \"no key in image\")\n",
+    "explain_ko": "정비 기록 인증 키를 소스코드 상수로 둔다. 같은 배포본을 쓰는 모든 장비가 같은 키를 갖고, .pyc·PyInstaller 묶음에도 키의 16진 문자열이 그대로 들어가 배포본을 받은 사람은 인증값을 위조할 수 있다. 예시는 컴파일한 .pyc에 키가 있는지 확인한다. Bandit B105는 이름이 password·secret·token 꼴인 곳에 문자열 리터럴을 넣는 경우만 보므로, 이름이 KEY이고 bytes.fromhex로 만든 키는 잡지 못한다."
+   },
+   "good": {
+    "code": "import hashlib\nimport hmac\nimport os\nimport py_compile\n\nKEY_PATH = \"maint_log.key\"           # 예시 값. 실제로는 설치 설정에 고정한 절대 경로를 쓴다\nKEY_LEN = 32\n\n\ndef load_key():\n    # 키는 설치 때 장비마다 넣는 키 파일에서 읽는다. 소스·배포본에는 없다\n    try:\n        with open(KEY_PATH, \"rb\") as f:\n            key = f.read()\n    except FileNotFoundError:\n        return None\n    return key if len(key) == KEY_LEN else None      # 길이가 틀린 키는 없는 것으로 본다\n\n\ndef seal(line, key):\n    return line + \" mac=\" + hmac.new(key, line.encode(), hashlib.sha256).hexdigest()\n\n\n# 시험 준비: 설치 단계가 장비별 키를 소유자만 읽을 수 있게(0o600, POSIX 기준) 넣은 상태\nwith os.fdopen(os.open(KEY_PATH, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), \"wb\") as f:\n    f.write(os.urandom(KEY_LEN))\nkey = load_key()\nprint(seal(\"2026-10-12 HYD-2 seal replaced\", key) if key else \"key not provisioned: logging disabled\")\nimage = open(py_compile.compile(__file__, cfile=\"tool.pyc\"), \"rb\").read()\nprint(\"KEY FOUND IN IMAGE\" if key and key in image else \"no key in image\")\n",
+    "explain_ko": "키는 설치 단계에서 장비마다 넣는 키 파일(또는 운영체제 키 저장소·보안요소)에서 읽고, 소스에는 키를 찾는 위치만 둔다(D-05). 키 파일은 소유자만 읽게 만들고, 경로는 절대 경로로 고정하며, 길이가 틀린 키는 쓰지 않는다. 키가 없으면 기본 키로 대신하지 않고 기능을 멈춘다. 배포 전 산출물에서 키·비밀값 문자열을 찾는 검사를 한다(T-08·LPY-12)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "KEY FOUND IN IMAGE",
+    "expect_good": "no key in image"
+   },
+   "refs": [
+    "MITRE CWE-321 Demonstrative Example 1(하드코드된 암호 키로 비밀번호 확인) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-6 '하드코드된 중요정보'(인쇄 86쪽) 참고"
+   ]
+  }
+ }
+}

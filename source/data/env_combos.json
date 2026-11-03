@@ -1,0 +1,425 @@
+{
+ "_meta": {
+  "source": "지침 선택 도구 조합 전수 점검(2026-10-24, 근거 원문 대조). level: mismatch=성립하지 않는 조합(붉은 안내), rare=성립하지만 확인이 필요한 조합(주황 안내). when.lang/lang_not는 그 언어일 때만 적용. 언어–컴파일러는 gen_tool.COMPILER_LANGS가 맡는다.",
+  "checked_at": "2026-10-24"
+ },
+ "rules": [
+  {
+   "pair": "hw-os",
+   "a": "MCU",
+   "b": "LNX",
+   "level": "rare",
+   "msg": "MMU 없는 Linux(nommu)입니다. Linux 지침 가운데 프로세스 격리·주소공간 보호(LNX-02 등)는 성립하지 않으니 MPU·정적 할당 지침을 따르세요.",
+   "basis": "커널 문서에 Cortex-M7 MCU(STM32F746, 외부 SDRAM 연결) 개요가 있음 → MMU 없는 Linux로 성립. 다만 env_os.json:LNX.traits \"Yocto/Buildroot로 구성한 임베디드 Linux SBC와 Linux 워크스테이션이 대상이며, MMU(메모리 관리 장치) 기반 프로세스 격리\"와 MCU의 MMU 부재가 충돌.",
+   "url": "https://github.com/torvalds/linux/blob/v6.12/Documentation/arch/arm/stm32/stm32f746-overview.rst"
+  },
+  {
+   "pair": "hw-os",
+   "a": "MCU",
+   "b": "WIN",
+   "level": "mismatch",
+   "msg": "Windows는 최소 1 GHz 2코어·메모리 2 GB 이상·UEFI/BIOS가 필요해 MCU에서 돌지 않습니다. 운용 하드웨어가 PC·SBC인지, Windows가 개발 호스트인지 확인하세요.",
+   "basis": "Windows IoT Enterprise 최소 요구: Processor '1 GHz, 2 Cores', System Memory 2 GB 이상, Storage 16 GB 이상, System Firmware 'UEFI'/'BIOS' ↔ env_hw.json:MCU.traits \"수 KB~수백 KB의 RAM, MMU(메모리 관리 장치) 부재, 베어메탈(bare-metal)이나 경량 RTOS(실시간 운영체제)가 특징\"",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/system_requirements"
+  },
+  {
+   "pair": "hw-os",
+   "a": "DSP",
+   "b": "LNX",
+   "level": "mismatch",
+   "msg": "TI C6000·C2000·ADI SHARC는 현행 Linux 메인라인이 지원하지 않습니다. Linux는 같은 칩의 응용 코어(Arm)에서 도는지 확인하고, 그렇다면 하드웨어를 SoC로 고르세요.",
+   "basis": "가이드가 정의한 DSP(TI C6000/C2000, ADI SHARC 등으로 레이다·영상·통신 신호처리를 담당한다)의 아키텍처가 Linux 메인라인 arch/에 없음. Linux v6.12 arch/ 목록: alpha arc arm arm64 csky hexagon loongarch m68k microblaze mips nios2 openrisc parisc powerpc riscv s390 sh sparc um x86 xtensa (c6x·avr 없음, v5.12에도 c6x 없음). 예외: Qualcomm Hexagon은 arch/hexagon이 있음",
+   "url": "https://github.com/torvalds/linux/tree/v6.12/arch"
+  },
+  {
+   "pair": "hw-os",
+   "a": "DSP",
+   "b": "WIN",
+   "level": "mismatch",
+   "msg": "Windows는 AMD·Intel·Qualcomm·NXP 응용 프로세서에서만 돕니다. DSP 코드는 베어메탈이나 RTOS로 고르세요.",
+   "basis": "지원 프로세서 목록은 'AMD', 'Intel', 'Qualcomm', 'NXP'; Windows IoT Enterprise 최소 요구: Processor '1 GHz, 2 Cores', System Memory 2 GB 이상, Storage 16 GB 이상, System Firmware 'UEFI'/'BIOS' ↔ env_hw.json:DSP.traits \"TI C6000/C2000, ADI SHARC 등으로 레이다·영상·통신 신호처리를 담당한다\"",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/system_requirements"
+  },
+  {
+   "pair": "hw-os",
+   "a": "SOC",
+   "b": "WIN",
+   "level": "rare",
+   "msg": "Windows IoT Enterprise는 지원 목록에 오른 SoC(NXP i.MX 93 등)에서만 돕니다. Zynq·MPSoC라면 목록에 없으니 확인하세요.",
+   "basis": "NXP 지원 목록 'i.MX 9', 'i.MX 93' — Arm SoC에서 성립하는 공식 사례. 저장소 정의의 Zynq·MPSoC는 목록에 없음(지원 프로세서 목록은 'AMD', 'Intel', 'Qualcomm', 'NXP')",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/supported/winiot_nxp_processors_2024 https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements"
+  },
+  {
+   "pair": "hw-os",
+   "a": "SBC",
+   "b": "FRT",
+   "level": "rare",
+   "msg": "FreeRTOS는 주로 MCU용입니다. Cortex-A SBC에서 쓰면 MMU를 쓰지 않는 단일 주소공간이 되므로 SBC 격리 지침(SBC-02)을 확인하세요.",
+   "basis": "FreeRTOS 공식 Cortex-A9 포트·Zynq ZC702 보드 데모. FreeRTOS 공식 데모 'CORTEX_A9_Zynq_ZC702'; env_os.json:FRT.traits \"MCU용 소형 커널\"",
+   "url": "https://github.com/FreeRTOS/FreeRTOS/blob/202411.00/FreeRTOS/Demo/CORTEX_A9_Zynq_ZC702/RTOSDemo/src/main.c#L29"
+  },
+  {
+   "pair": "hw-os",
+   "a": "SBC",
+   "b": "WIN",
+   "level": "rare",
+   "msg": "x86(AMD·Intel)·지원 목록의 Arm SBC에서만 Windows IoT Enterprise가 돕니다. 보드 프로세서를 확인하세요.",
+   "basis": "env_hw.json:SBC.traits \"ARM Cortex-A·PowerPC·x86 기반으로 … 임베디드 Linux 또는 VxWorks 등 RTOS(실시간 운영체제)를 탑재한다\"는 Windows를 들지 않음. x86 SBC는 지원 프로세서 목록은 'AMD', 'Intel', 'Qualcomm', 'NXP'에 해당",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements"
+  },
+  {
+   "pair": "hw-os",
+   "a": "PC",
+   "b": "BM",
+   "level": "mismatch",
+   "msg": "가이드의 PC·워크스테이션 환경은 범용 OS 위에서 도는 소프트웨어를 뜻합니다. 운영체제 없이 도는 코드라면 하드웨어를 SBC·MCU 등으로 고르세요.",
+   "basis": "env_hw.json:PC.traits \"범용 OS(Windows/Linux) 위에서 동작한다\"; env_os.json:BM.traits \"OS 없이 슈퍼루프와 인터럽트로 동작하는 MCU·DSP 펌웨어\"",
+   "url": ""
+  },
+  {
+   "pair": "hw-os",
+   "a": "PC",
+   "b": "FRT",
+   "level": "rare",
+   "msg": "FreeRTOS는 x86 포트가 있으나 주로 MCU용이고, 가이드의 PC·워크스테이션 환경은 범용 OS를 전제로 합니다. x86 보드에서 FreeRTOS를 쓰면 하드웨어를 SBC로 고르는 편이 맞는지 확인하세요. Windows에서 도는 FreeRTOS는 시험용 시뮬레이터(실시간 아님)입니다.",
+   "basis": "FreeRTOS-Kernel V11.1.0 portable/GCC/IA32_flat(x86 포트) 존재; env_hw.json:PC.traits \"범용 OS(Windows/Linux) 위에서 동작한다\"; env_os.json:FRT.traits \"MCU용 소형 커널\"; FreeRTOS Windows 데모 주석은 Windows가 데모 스레드를 계속 실행하지 않아 실시간 동작을 기대할 수 없다고 적는다 — PC의 FreeRTOS는 호스트 시뮬레이터",
+   "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel/tree/V11.1.0/portable/GCC/IA32_flat"
+  },
+  {
+   "pair": "hw-os",
+   "a": "PC",
+   "b": "VXW",
+   "level": "rare",
+   "msg": "x86 산업용 컴퓨터에 VxWorks를 올린 경우입니다. 가이드의 PC 지침은 범용 OS를 전제로 하므로 SBC로 고르는 편이 맞는지 확인하세요.",
+   "basis": "VxWorks 7 SDK for UP²: UP² 보드는 Intel Apollo Lake 기반이다 — x86에서 VxWorks 성립. env_hw.json:PC.traits \"범용 OS(Windows/Linux) 위에서 동작한다\"와 다름",
+   "url": "https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html"
+  },
+  {
+   "pair": "lang-hw",
+   "a": "LJ",
+   "b": "MCU",
+   "level": "rare",
+   "msg": "MCU에서는 Java ME Embedded(Cortex-M7, RTX) 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": "Java ME Embedded 지원 플랫폼 \"STMicroelectronics 32746GDISCOVERY (CortexM7/RTX)\"",
+   "url": "https://www.oracle.com/java/technologies/javame-embedded/javame-embedded-getstarted.html"
+  },
+  {
+   "pair": "lang-hw",
+   "a": "LCS",
+   "b": "MCU",
+   "level": "rare",
+   "msg": "MCU에서는 .NET nanoFramework 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": ".NET nanoFramework README는 마이크로컨트롤러용 C# 응용 개발과 Visual Studio 사용을 소개하고, 구조 설명의 네이티브 계층에 RTOS를 둔다",
+   "url": "https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25"
+  },
+  {
+   "pair": "lang-hw",
+   "a": "LPY",
+   "b": "MCU",
+   "level": "rare",
+   "msg": "MCU에서는 MicroPython 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": "MicroPython README는 여러 마이크로컨트롤러에서 동작하고 플래시 256kiB·RAM 16kiB 규모의 대상까지 지원한다고 적는다",
+   "url": "https://github.com/micropython/micropython/blob/v1.29.0/README.md#L124-L128"
+  },
+  {
+   "pair": "lang-os",
+   "a": "LCS",
+   "b": "BM",
+   "level": "rare",
+   "msg": "C#은 .NET nanoFramework 같은 런타임이 있어야 하며, 그 런타임은 내부에 RTOS를 씁니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": ".NET nanoFramework README는 마이크로컨트롤러용 C# 응용 개발과 Visual Studio 사용을 소개하고, 구조 설명의 네이티브 계층에 RTOS를 둔다 — 런타임 안에 RTOS 계층이 있어 응용 입장에서는 운영체제 없음으로 보일 수 있음",
+   "url": "https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25"
+  },
+  {
+   "pair": "lang-os",
+   "a": "LPY",
+   "b": "BM",
+   "level": "rare",
+   "msg": "운영체제 없는 환경에서는 MicroPython 같은 전용 인터프리터가 있어야 합니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": "MicroPython README는 여러 마이크로컨트롤러에서 동작하고 플래시 256kiB·RAM 16kiB 규모의 대상까지 지원한다고 적는다",
+   "url": "https://github.com/micropython/micropython/blob/v1.29.0/README.md#L124-L128"
+  },
+  {
+   "pair": "lang-os",
+   "a": "LPY",
+   "b": "FRT",
+   "level": "rare",
+   "msg": "FreeRTOS 위 MicroPython(예: ESP32 포트)입니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": "MicroPython ESP32 포트 README는 ESP-IDF 프레임워크를 쓰고 MicroPython이 FreeRTOS 태스크로 실행된다고 적는다",
+   "url": "https://github.com/micropython/micropython/blob/v1.29.0/ports/esp32/README.md#L4-L6"
+  },
+  {
+   "pair": "lang-os",
+   "a": "LPY",
+   "b": "VXW",
+   "level": "rare",
+   "msg": "VxWorks 7 SDK에 Python이 들어 있습니다. 런타임 판·지원 범위를 확인하세요.",
+   "basis": "SDK의 VxWorks 이미지에 Python 응용 실행에 필요한 구성이 들어 있다",
+   "url": "https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "MCU",
+   "b": "MSVC",
+   "level": "mismatch",
+   "when": {
+    "lang_not": [
+     "LCS"
+    ]
+   },
+   "msg": "Visual Studio 컴파일러(MSVC)는 Windows용 코드만 만듭니다. MCU 펌웨어는 GCC·벤더 컴파일러로 고르세요.",
+   "basis": "Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다 — MSVC 컴파일러의 대상은 Windows; env_hw.json:MCU.traits \"수 KB~수백 KB의 RAM, MMU(메모리 관리 장치) 부재, 베어메탈(bare-metal)이나 경량 RTOS(실시간 운영체제)가 특징\"",
+   "url": "https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "MCU",
+   "b": "MSVC",
+   "level": "rare",
+   "when": {
+    "lang": [
+     "LCS"
+    ]
+   },
+   "msg": "C# MCU 개발(.NET nanoFramework)은 Visual Studio를 IDE로 씁니다. 런타임을 새 환경으로 추가하세요.",
+   "basis": ".NET nanoFramework README는 마이크로컨트롤러용 C# 응용 개발과 Visual Studio 사용을 소개하고, 구조 설명의 네이티브 계층에 RTOS를 둔다 — C#은 Visual Studio로 MCU 응용을 개발(nanoFramework)",
+   "url": "https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "DSP",
+   "b": "GCC",
+   "level": "rare",
+   "msg": "GCC는 TI C6000 계열만 지원합니다. C2000·SHARC는 벤더 컴파일러(CCS·CrossCore 등)를 확인하세요.",
+   "basis": "C6X Options -march 허용값 'c62x', 'c64x', 'c64x+', 'c67x', 'c67x+', 'c674x' — TI C6000은 GCC 백엔드가 있음. C2000·SHARC용 GCC는 확인하지 않음",
+   "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/C6X-Options.html"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "DSP",
+   "b": "MSVC",
+   "level": "mismatch",
+   "msg": "Visual Studio 컴파일러는 DSP 코드를 만들지 않습니다.",
+   "basis": "Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다; env_hw.json:DSP.traits \"TI C6000/C2000, ADI SHARC 등으로 레이다·영상·통신 신호처리를 담당한다\"",
+   "url": "https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "DSP",
+   "b": "AVR",
+   "level": "mismatch",
+   "msg": "Atmel·Microchip Studio는 AVR·Arm 마이크로컨트롤러용입니다.",
+   "basis": "Microchip Studio: Windows에서 AVR·Arm 응용을 작성·디버깅하는 통합 개발 환경; env_tool.json:AVR.traits \"번들 avr-gcc(GCC 5~7 계열)를 사용해 8비트 AVR(ATmega)을 개발한다. MMU(메모리 관리 장치)/MPU(메모리 보호 장치)가 없고 SRAM이 수 KB\"; env_hw.json:DSP.traits \"TI C6000/C2000, ADI SHARC 등으로 레이다·영상·통신 신호처리를 담당한다\"",
+   "url": "https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "SOC",
+   "b": "MSVC",
+   "level": "rare",
+   "msg": "SoC에 Windows IoT Enterprise를 올린 경우에만 MSVC를 씁니다(NXP i.MX 93 등). Zynq·MPSoC는 GCC를 고르세요.",
+   "basis": "SoC에서 Windows가 도는 경우에만(NXP 지원 목록 'i.MX 9', 'i.MX 93'). Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/supported/winiot_nxp_processors_2024 https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "SOC",
+   "b": "CCS",
+   "level": "rare",
+   "msg": "CCS는 TI 칩 전용입니다. TI 다중 코어 SoC가 아니면(Zynq·MPSoC 등) GCC·벤더 도구를 고르세요.",
+   "basis": "TI 제품 페이지: TI 프로세서용 통합 개발 환경 — TI 다중 코어 프로세서 한정. env_hw.json:SOC.traits \"Zynq·MPSoC처럼 응용 코어, 실시간 코어, 프로그래머블 로직이 한 칩에 있다\"(Zynq·MPSoC)는 TI 제품 아님",
+   "url": "https://www.ti.com/tool/CCSTUDIO"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "SBC",
+   "b": "MSVC",
+   "level": "rare",
+   "msg": "SBC에 Windows를 올린 경우에만 MSVC를 씁니다. Linux SBC는 GCC를 고르세요.",
+   "basis": "x86 SBC에 Windows를 올린 경우에만. 지원 프로세서 목록은 'AMD', 'Intel', 'Qualcomm', 'NXP'",
+   "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "SBC",
+   "b": "CCS",
+   "level": "rare",
+   "msg": "CCS는 TI 프로세서 기반 보드에서만 씁니다.",
+   "basis": "TI 제품 페이지: TI 프로세서용 통합 개발 환경 — TI 프로세서 기반 SBC 한정",
+   "url": "https://www.ti.com/tool/CCSTUDIO"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "PC",
+   "b": "CCS",
+   "level": "mismatch",
+   "msg": "CCS는 TI 칩용 IDE로 PC 응용을 빌드하지 않습니다.",
+   "basis": "TI 제품 페이지: TI 프로세서용 통합 개발 환경 ↔ env_hw.json:PC.traits \"범용 OS(Windows/Linux) 위에서 동작한다\"",
+   "url": "https://www.ti.com/tool/CCSTUDIO"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "PC",
+   "b": "AVR",
+   "level": "mismatch",
+   "msg": "Atmel·Microchip Studio는 PC에서 돌지만 PC용 코드를 만들지 않습니다(대상은 AVR·Arm MCU).",
+   "basis": "Microchip Studio: Windows에서 AVR·Arm 응용을 작성·디버깅하는 통합 개발 환경 ↔ env_hw.json:PC.traits \"범용 OS(Windows/Linux) 위에서 동작한다\"",
+   "url": "https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html"
+  },
+  {
+   "pair": "hw-cc",
+   "a": "PC",
+   "b": "WRW",
+   "level": "rare",
+   "msg": "x86 하드웨어에 VxWorks를 올린 경우에만 씁니다.",
+   "basis": "VxWorks 7 SDK for UP²: UP² 보드는 Intel Apollo Lake 기반이다; env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\"",
+   "url": "https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html"
+  },
+  {
+   "pair": "os-cc",
+   "a": "BM",
+   "b": "MSVC",
+   "level": "mismatch",
+   "when": {
+    "lang_not": [
+     "LCS"
+    ]
+   },
+   "msg": "MSVC는 Windows용 코드만 만듭니다. 베어메탈 펌웨어는 GCC·벤더 컴파일러를 고르세요.",
+   "basis": "Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다; env_os.json:BM.traits \"OS 없이 슈퍼루프와 인터럽트로 동작하는 MCU·DSP 펌웨어\"",
+   "url": "https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "os-cc",
+   "a": "BM",
+   "b": "MSVC",
+   "level": "rare",
+   "when": {
+    "lang": [
+     "LCS"
+    ]
+   },
+   "msg": "C# MCU 개발(.NET nanoFramework)은 Visual Studio를 IDE로 씁니다.",
+   "basis": ".NET nanoFramework README는 마이크로컨트롤러용 C# 응용 개발과 Visual Studio 사용을 소개하고, 구조 설명의 네이티브 계층에 RTOS를 둔다",
+   "url": "https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25"
+  },
+  {
+   "pair": "os-cc",
+   "a": "FRT",
+   "b": "MSVC",
+   "level": "mismatch",
+   "when": {
+    "lang_not": [
+     "LCS"
+    ]
+   },
+   "msg": "MSVC로 빌드하는 FreeRTOS는 Windows 시뮬레이터(실시간 아님)입니다. 타깃 빌드 컴파일러를 고르세요.",
+   "basis": "FreeRTOS Windows 데모 주석은 Windows가 데모 스레드를 계속 실행하지 않아 실시간 동작을 기대할 수 없다고 적는다 — MSVC로 빌드하는 FreeRTOS는 Windows 시뮬레이터",
+   "url": "https://github.com/FreeRTOS/FreeRTOS/blob/202411.00/FreeRTOS/Demo/WIN32-MSVC/main.c#L39-L40"
+  },
+  {
+   "pair": "os-cc",
+   "a": "VXW",
+   "b": "GCC",
+   "level": "rare",
+   "msg": "VxWorks 빌드에 쓰는 GCC는 Wind River Workbench(또는 VxWorks SDK) 묶음입니다. 컴파일러를 Wind River Workbench로 고르면 VxWorks 빌드 지침(WRW-01~10)이 함께 나옵니다.",
+   "basis": "env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\" — VxWorks용 GCC는 Workbench 도구 묶음에 들어 있음",
+   "url": ""
+  },
+  {
+   "pair": "os-cc",
+   "a": "VXW",
+   "b": "MSVC",
+   "level": "mismatch",
+   "msg": "VxWorks 이미지는 Wind River 도구로 빌드합니다. MSVC는 Windows용입니다.",
+   "basis": "Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다; env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\"",
+   "url": "https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "os-cc",
+   "a": "VXW",
+   "b": "CCS",
+   "level": "mismatch",
+   "msg": "VxWorks 이미지는 Wind River Workbench로 빌드합니다.",
+   "basis": "TI 제품 페이지: TI 프로세서용 통합 개발 환경; env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\"",
+   "url": "https://www.ti.com/tool/CCSTUDIO"
+  },
+  {
+   "pair": "os-cc",
+   "a": "VXW",
+   "b": "AVR",
+   "level": "mismatch",
+   "msg": "VxWorks 이미지는 Wind River Workbench로 빌드합니다.",
+   "basis": "Microchip Studio: Windows에서 AVR·Arm 응용을 작성·디버깅하는 통합 개발 환경; env_tool.json:AVR.traits \"번들 avr-gcc(GCC 5~7 계열)를 사용해 8비트 AVR(ATmega)을 개발한다. MMU(메모리 관리 장치)/MPU(메모리 보호 장치)가 없고 SRAM이 수 KB\"; env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\"",
+   "url": "https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html"
+  },
+  {
+   "pair": "os-cc",
+   "a": "PSOS",
+   "b": "MSVC",
+   "level": "mismatch",
+   "msg": "MSVC는 Windows용 코드만 만듭니다.",
+   "basis": "Microsoft Learn의 ARM 대상 MSVC 문서가 다루는 ABI는 Windows on ARM과 Windows on ARM64다; env_os.json:PSOS.traits \"지원이 종료된 레거시 RTOS … 오래된 컴파일러·툴체인(toolchain)\"",
+   "url": "https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp"
+  },
+  {
+   "pair": "os-cc",
+   "a": "LNX",
+   "b": "MSVC",
+   "level": "rare",
+   "when": {
+    "lang_not": [
+     "LCS"
+    ]
+   },
+   "msg": "Visual Studio로 Linux 프로그램을 개발하면 실제 컴파일러는 원격 Linux의 GCC·Clang입니다. 컴파일러를 GCC로 고르세요.",
+   "basis": "Microsoft Learn은 Visual Studio 2019 이상이 GCC와 Clang을 완전히 지원한다고 적는다(원격 Linux·WSL에 설치) — Visual Studio IDE로 Linux를 개발할 때 컴파일러는 GCC·Clang",
+   "url": "https://learn.microsoft.com/en-us/cpp/linux/download-install-and-setup-the-linux-development-workload"
+  },
+  {
+   "pair": "os-cc",
+   "a": "LNX",
+   "b": "AVR",
+   "level": "mismatch",
+   "msg": "Linux는 8비트 AVR에서 돌지 않습니다(커널 arch/에 AVR 없음).",
+   "basis": "Linux v6.12 arch/ 목록: alpha arc arm arm64 csky hexagon loongarch m68k microblaze mips nios2 openrisc parisc powerpc riscv s390 sh sparc um x86 xtensa (c6x·avr 없음, v5.12에도 c6x 없음); env_tool.json:AVR.traits \"번들 avr-gcc(GCC 5~7 계열)를 사용해 8비트 AVR(ATmega)을 개발한다. MMU(메모리 관리 장치)/MPU(메모리 보호 장치)가 없고 SRAM이 수 KB\"",
+   "url": "https://github.com/torvalds/linux/tree/v6.12/arch"
+  },
+  {
+   "pair": "os-cc",
+   "a": "WIN",
+   "b": "GCC",
+   "level": "rare",
+   "msg": "Windows용 GCC(MinGW-w64)는 glibc가 아니므로 GCC-03의 _FORTIFY_SOURCE 등 hosted Linux 전제 하드닝은 해당하지 않습니다.",
+   "basis": "MinGW-w64 사이트는 이 프로젝트가 Windows에서 GCC를 쓰기 위해 만들어졌다고 소개한다; GCC 환경 제약(8.4): -D_FORTIFY_SOURCE는 C 라이브러리가 그 검사를 구현할 때만 효과가 있고 주요 하드닝(hardening)은 hosted(Linux) 타깃에서만 완전하다",
+   "url": "https://www.mingw-w64.org/"
+  },
+  {
+   "pair": "os-cc",
+   "a": "WIN",
+   "b": "CCS",
+   "level": "mismatch",
+   "msg": "CCS는 TI 칩용 IDE로 Windows 프로그램을 빌드하지 않습니다.",
+   "basis": "TI 제품 페이지: TI 프로세서용 통합 개발 환경 ↔ env_os.json:WIN.traits \"지휘통제·전시·정비용 PC/워크스테이션 소프트웨어가 주 대상\"",
+   "url": "https://www.ti.com/tool/CCSTUDIO"
+  },
+  {
+   "pair": "os-cc",
+   "a": "WIN",
+   "b": "AVR",
+   "level": "mismatch",
+   "msg": "Atmel·Microchip Studio는 Windows에서 돌지만 대상은 AVR·Arm MCU입니다.",
+   "basis": "Microchip Studio: Windows에서 AVR·Arm 응용을 작성·디버깅하는 통합 개발 환경 ↔ env_os.json:WIN.traits \"지휘통제·전시·정비용 PC/워크스테이션 소프트웨어가 주 대상\"",
+   "url": "https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html"
+  },
+  {
+   "pair": "os-cc",
+   "a": "WIN",
+   "b": "WRW",
+   "level": "mismatch",
+   "msg": "Wind River Workbench는 VxWorks 이미지를 빌드하는 도구입니다.",
+   "basis": "env_tool.json:WRW.traits \"VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다\"; env_os.json:WIN.traits \"지휘통제·전시·정비용 PC/워크스테이션 소프트웨어가 주 대상\"",
+   "url": ""
+  }
+ ]
+}

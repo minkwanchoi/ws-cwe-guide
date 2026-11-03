@@ -1,0 +1,94 @@
+{
+ "cwe": "369",
+ "scenario_ko": "수신 통계·센서 보정·정비 기록·연료 계산처럼 평균이나 비율을 구할 때, 나누는 수(받은 프레임 수, 보정 분모, 고장 횟수, 분당 소모량)가 링크 두절·보정 파일 누락·고장 기록 없음·엔진 정지 같은 정상 운용 상황에서 0이 될 수 있다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n\n/* 데이터링크 수신 통계: 주기마다 받은 프레임 수와 지연 합계 */\ntypedef struct { int frames; int latency_sum_ms; } LinkWindow;\n\nstatic int mean_latency_ms(const LinkWindow *w)\n{\n    return w->latency_sum_ms / w->frames;   /* 프레임 0개면 0으로 나눔 */\n}\n\nint main(void)\n{\n    const LinkWindow history[] = {{4, 120}, {0, 0}, {5, 95}};  /* 둘째 주기: 링크 두절 */\n    for (int k = 0; k < 3; ++k) {\n        printf(\"window %d: mean latency %d ms\\n\", k, mean_latency_ms(&history[k]));\n    }\n    return 0;\n}\n",
+    "explain_ko": "링크가 끊긴 주기에는 프레임 수가 0인데 검사 없이 나눈다. C에서 정수를 0으로 나누는 것은 정의되지 않은 동작이라 프로세서·설정에 따라 예외(UsageFault·HardFault)로 멈추거나 0 같은 엉뚱한 값을 낸다."
+   },
+   "good": {
+    "code": "#include <limits.h>\n#include <stdbool.h>\n#include <stdio.h>\n\n/* 데이터링크 수신 통계: 주기마다 받은 프레임 수와 지연 합계 */\ntypedef struct { int frames; int latency_sum_ms; } LinkWindow;\n\n/* 나눌 수 없으면 false를 돌려주고 호출자가 '링크 두절'로 처리한다 */\nstatic bool mean_latency_ms(const LinkWindow *w, int *out)\n{\n    if (w->frames == 0 || (w->latency_sum_ms == INT_MIN && w->frames == -1)) {\n        return false;\n    }\n    *out = w->latency_sum_ms / w->frames;\n    return true;\n}\n\nint main(void)\n{\n    const LinkWindow history[] = {{4, 120}, {0, 0}, {5, 95}};\n    for (int k = 0; k < 3; ++k) {\n        int mean = 0;\n        if (mean_latency_ms(&history[k], &mean)) {\n            printf(\"window %d: mean latency %d ms\\n\", k, mean);\n        } else {\n            printf(\"window %d: no frames, link lost\\n\", k);\n        }\n    }\n    return 0;\n}\n",
+    "explain_ko": "나누기 전에 분모가 0인지, INT_MIN을 -1로 나누는 오버플로 조합인지 검사하고, 나눌 수 없으면 실패를 돌려 호출자가 '링크 두절'로 처리하게 한다."
+   },
+   "check": {
+    "tool": "ubsan",
+    "expect": "division by zero"
+   },
+   "refs": [
+    "MITRE CWE-369 Demonstrative Example 2(분모 검사 없는 나눗셈) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <vector>\n\n// 압력 센서 채널별 보정 계수: 원시값 / 환산 분모\nstruct Calibration { int channel; int divisor; };\n\nint to_kpa(int raw, const Calibration &cal) {\n    return raw / cal.divisor;                  // 분모 검사 없음\n}\n\nint main() {\n    std::vector<Calibration> table{{0, 8}, {1, 0}};   // 채널 1: 보정 파일 누락으로 0\n    std::vector<int> raw{1600, 2400};\n    for (std::size_t ch = 0; ch < table.size(); ++ch) {\n        std::printf(\"ch%d pressure %d kPa\\n\", table[ch].channel, to_kpa(raw[ch], table[ch]));\n    }\n    return 0;\n}\n",
+    "explain_ko": "보정 파일이 빠져 분모가 0으로 남은 채널을 검사 없이 환산한다. 정의되지 않은 동작이라 정상 채널 처리까지 함께 멈출 수 있다."
+   },
+   "good": {
+    "code": "#include <climits>\n#include <cstdio>\n#include <optional>\n#include <vector>\n\n// 압력 센서 채널별 보정 계수: 원시값 / 환산 분모\nstruct Calibration { int channel; int divisor; };\n\nstd::optional<int> to_kpa(int raw, const Calibration &cal) {\n    if (cal.divisor == 0 || (raw == INT_MIN && cal.divisor == -1)) {\n        return std::nullopt;                   // 환산 불가를 형으로 알린다\n    }\n    return raw / cal.divisor;\n}\n\nint main() {\n    std::vector<Calibration> table{{0, 8}, {1, 0}};\n    std::vector<int> raw{1600, 2400};\n    for (std::size_t ch = 0; ch < table.size(); ++ch) {\n        if (auto kpa = to_kpa(raw[ch], table[ch])) {\n            std::printf(\"ch%d pressure %d kPa\\n\", table[ch].channel, *kpa);\n        } else {\n            std::printf(\"ch%d calibration invalid: sensor marked failed\\n\", table[ch].channel);\n        }\n    }\n    return 0;\n}\n",
+    "explain_ko": "분모 0과 INT_MIN/-1을 먼저 거르고, 환산할 수 없다는 사실을 std::optional로 돌려 호출자가 해당 센서를 고장 처리하게 한다."
+   },
+   "check": {
+    "tool": "ubsan",
+    "expect": "division by zero"
+   },
+   "refs": [
+    "MITRE CWE-369 Demonstrative Example 2(분모 검사 없는 나눗셈) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.List;\n\npublic class Example {\n    // 정비 기록: 장비별 누적 운용 시간과 고장 횟수\n    record UnitLog(String unit, int operatingHours, int failures) {}\n\n    static int mtbfHours(UnitLog log) {\n        return log.operatingHours() / log.failures();   // 고장 0회면 0으로 나눔\n    }\n\n    public static void main(String[] args) {\n        List<UnitLog> logs = List.of(\n                new UnitLog(\"IMU-A\", 1200, 3),\n                new UnitLog(\"RADIO-RX\", 800, 0));\n        for (UnitLog log : logs) {\n            System.out.println(log.unit() + \" MTBF \" + mtbfHours(log) + \" h\");\n        }\n    }\n}\n",
+    "explain_ko": "고장 기록이 없는 장비는 고장 횟수가 0이라 정수 나눗셈에서 ArithmeticException이 나고, 처리하지 않으면 정비 보고서 생성이 중간에 멈춘다."
+   },
+   "good": {
+    "code": "import java.util.List;\nimport java.util.OptionalInt;\n\npublic class Example {\n    // 정비 기록: 장비별 누적 운용 시간과 고장 횟수\n    record UnitLog(String unit, int operatingHours, int failures) {}\n\n    static OptionalInt mtbfHours(UnitLog log) {\n        if (log.failures() <= 0) {\n            return OptionalInt.empty();                  // 고장 기록 없음: 계산하지 않는다\n        }\n        return OptionalInt.of(log.operatingHours() / log.failures());\n    }\n\n    public static void main(String[] args) {\n        List<UnitLog> logs = List.of(\n                new UnitLog(\"IMU-A\", 1200, 3),\n                new UnitLog(\"RADIO-RX\", 800, 0));\n        for (UnitLog log : logs) {\n            OptionalInt m = mtbfHours(log);\n            System.out.println(log.unit() + (m.isPresent()\n                    ? \" MTBF \" + m.getAsInt() + \" h\"\n                    : \" MTBF n/a (no failures recorded)\"));\n        }\n    }\n}\n",
+    "explain_ko": "분모가 0 이하이면 계산하지 않고 OptionalInt.empty()를 돌려 '해당 없음'으로 보고하게 한다. 부동소수 나눗셈이라면 예외 대신 NaN·Infinity가 나오므로 결과를 따로 검사한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "ArithmeticException",
+    "expect_good": "MTBF n/a \\(no failures recorded\\)"
+   },
+   "refs": [
+    "MITRE CWE-369 Demonstrative Example 1(평균 계산의 분모 검사 누락) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 보유 기체별 연료 잔량(kg)과 분당 소모량(kg/min)으로 남은 비행 시간을 계산한다\nconst int ReserveKg = 60;                       // 착륙 예비 연료\n(string Tail, int FuelKg, int BurnKgPerMin)[] fleet =\n[\n    (\"UAV-1\", 540, 6),\n    (\"UAV-2\", 320, 0),                          // 지상 대기: 엔진 정지로 소모량 0\n    (\"UAV-3\", 410, 5),\n];\n\nint shortest = int.MaxValue;\nforeach (var (tail, fuel, burn) in fleet)\n{\n    int usable = Math.Max(0, fuel - ReserveKg);\n    int minutes = usable / burn;                // 분모 검사 없음\n    shortest = Math.Min(shortest, minutes);\n    Console.WriteLine($\"{tail}: endurance {minutes} min\");\n}\nConsole.WriteLine($\"shortest endurance {shortest} min\");\n",
+    "explain_ko": "엔진이 정지한 기체는 소모량이 0이라 정수 나눗셈에서 DivideByZeroException이 나고, 루프가 중단되어 뒤에 남은 기체와 전체 최소 체공 시간도 계산되지 않는다."
+   },
+   "good": {
+    "code": "// 보유 기체별 연료 잔량(kg)과 분당 소모량(kg/min)으로 남은 비행 시간을 계산한다\nconst int ReserveKg = 60;                       // 착륙 예비 연료\n(string Tail, int FuelKg, int BurnKgPerMin)[] fleet =\n[\n    (\"UAV-1\", 540, 6),\n    (\"UAV-2\", 320, 0),\n    (\"UAV-3\", 410, 5),\n];\n\nint shortest = int.MaxValue;\nforeach (var (tail, fuel, burn) in fleet)\n{\n    if (burn <= 0)\n    {\n        // 나누지 않고 상태를 따로 보고하며, 전체 최소값 계산에서도 뺀다\n        Console.WriteLine($\"{tail}: endurance not computed (engine idle)\");\n        continue;\n    }\n    int usable = Math.Max(0, fuel - ReserveKg);\n    int minutes = usable / burn;\n    shortest = Math.Min(shortest, minutes);\n    Console.WriteLine($\"{tail}: endurance {minutes} min\");\n}\nConsole.WriteLine(shortest == int.MaxValue ? \"shortest endurance n/a\" : $\"shortest endurance {shortest} min\");\n",
+    "explain_ko": "예외를 잡아 넘기는 대신 나누기 전에 분모를 검사해, 0 이하이면 계산을 건너뛰고 상태를 따로 보고하며 전체 최소 체공 시간 계산에서도 뺀다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "DivideByZeroException",
+    "expect_good": "endurance not computed \\(engine idle\\)"
+   },
+   "refs": [
+    "MITRE CWE-369 Demonstrative Example 3(C# 정수 나눗셈) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "# 데이터링크 수신 통계: 주기마다 평균 프레임 길이를 계산해 화면에 올린다\ndef mean_frame_length(total_bytes, frames_received):\n    return total_bytes / frames_received          # 수신 프레임이 0이면 ZeroDivisionError\n\n\ncycles = [(12800, 100), (6400, 50), (0, 0)]        # 세 번째 주기: 링크 두절로 수신 0\nfor total, frames in cycles:\n    print(f\"mean frame length: {mean_frame_length(total, frames):.1f} B\")\nprint(\"telemetry loop still running\")\n",
+    "explain_ko": "링크가 끊겨 수신 프레임이 0인 주기에 0으로 나눈다. Python은 정의되지 않은 동작 대신 ZeroDivisionError를 던지지만, 잡지 않으면 원격측정 처리 반복문 전체가 비정상 종료한다(서비스 거부). numpy 배열 나눗셈은 예외 없이 inf·nan을 내고 계산을 이어 가므로 결과가 잘못된 채 화면에 오를 수 있다."
+   },
+   "good": {
+    "code": "def mean_frame_length(total_bytes, frames_received):\n    if frames_received <= 0:                      # 분모를 먼저 확인하고 '값 없음'을 따로 돌려준다\n        return None\n    return total_bytes / frames_received\n\n\ncycles = [(12800, 100), (6400, 50), (0, 0)]\nfor total, frames in cycles:\n    mean = mean_frame_length(total, frames)\n    print(\"mean frame length: no frames (link lost)\" if mean is None else f\"mean frame length: {mean:.1f} B\")\nprint(\"telemetry loop still running\")\n",
+    "explain_ko": "나누기 전에 분모가 0 이하인지 확인하고, 그때는 0이나 직전 값이 아니라 '값 없음'(None)을 돌려 화면에 링크 두절로 표시한다(I-06). 분모가 0이 되는 상황(링크 두절·센서 고장)은 경계값 시험에 넣는다(T-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "ZeroDivisionError",
+    "expect_good": "(?s)no frames \\(link lost\\).*telemetry loop still running"
+   },
+   "refs": [
+    "MITRE CWE-369 Demonstrative Example 1(평균 계산의 분모 검사 누락) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ }
+}

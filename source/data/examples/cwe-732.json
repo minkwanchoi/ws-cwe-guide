@@ -1,0 +1,101 @@
+{
+ "cwe": "732",
+ "scenario_ko": "세션 키·감사 로그·임무 계획·정비 기록 파일을 만드는 프로그램이다. C·C++ 예시는 탑재 컴퓨터(임베디드 Linux)에서, Python 예시는 지상 통제 소프트웨어(Linux)에서 파일 모드(umask·0600 등)로, Java·C# 예시는 지상 통제 PC(Windows)에서 ACL로 작성했다. 어느 쪽이든 만든 파일의 실제 권한을 다시 읽어 모든 계정(기타 사용자·Everyone)에게 쓰기가 열렸는지 출력한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <fcntl.h>\n#include <stdio.h>\n#include <sys/stat.h>\n#include <unistd.h>\n\n#define KEY_PATH \"link_session.key\"\n\n/* 데이터링크 세션 키를 탑재 컴퓨터(임베디드 Linux)의 파일로 남긴다 */\nint main(void)\n{\n    unsigned char key[32] = {0};\n    umask(0);                                    /* 정비 도구도 쓰라고 umask를 풀어 둔다 */\n    unlink(KEY_PATH);                            /* 예시 재실행용 */\n    int fd = open(KEY_PATH, O_WRONLY | O_CREAT, 0666);   /* 모든 계정 읽기·쓰기 */\n    if (fd < 0) {\n        perror(\"open\");\n        return 1;\n    }\n    if (write(fd, key, sizeof key) != (ssize_t)sizeof key) {\n        perror(\"write\");\n    }\n    close(fd);\n\n    struct stat st;\n    if (stat(KEY_PATH, &st) == 0) {\n        printf(\"%s mode %04o\\n\", KEY_PATH, (unsigned)(st.st_mode & 0777));\n    }\n    return 0;\n}\n",
+    "explain_ko": "umask를 0으로 풀고 0666으로 파일을 만들어 세션 키를 모든 계정이 읽고 바꿀 수 있다. 실행 결과의 mode 0666이 그 상태다. '다른 도구도 써야 해서' 권한을 넓히는 것이 흔한 원인이다."
+   },
+   "good": {
+    "code": "#include <fcntl.h>\n#include <stdio.h>\n#include <sys/stat.h>\n#include <unistd.h>\n\n#define KEY_PATH \"link_session.key\"\n\nint main(void)\n{\n    unsigned char key[32] = {0};\n    umask(077);                                  /* 이 프로세스가 만드는 파일은 소유자만 */\n    unlink(KEY_PATH);                            /* 예시 재실행용 */\n    /* 처음부터 0600으로, 이미 있으면 실패(O_EXCL), 링크는 따라가지 않음 */\n    int fd = open(KEY_PATH, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);\n    if (fd < 0) {\n        perror(\"open\");\n        return 1;\n    }\n    if (write(fd, key, sizeof key) != (ssize_t)sizeof key) {\n        perror(\"write\");\n    }\n    close(fd);\n\n    struct stat st;\n    if (stat(KEY_PATH, &st) == 0) {\n        printf(\"%s mode %04o\\n\", KEY_PATH, (unsigned)(st.st_mode & 0777));\n    }\n    return 0;\n}\n",
+    "explain_ko": "umask(077)과 open(…, O_CREAT | O_EXCL | O_NOFOLLOW, 0600)으로 처음부터 소유자만 접근하게 만든다. 다른 도구가 키를 써야 하면 권한을 넓히지 말고 그 도구를 같은 계정·그룹으로 설계한다(M-03)."
+   },
+   "check": {
+    "tool": "run",
+    "platform": "linux",
+    "expect": "mode 0\\d\\d[2367]",
+    "expect_good": "mode 0600"
+   },
+   "refs": [
+    "MITRE CWE-732 Demonstrative Example 1(umask를 0으로 두고 모든 사용자가 읽고 쓰는 파일 생성) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-2 '중요한 자원에 대한 잘못된 권한허용'(인쇄 82쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <filesystem>\n#include <fstream>\n\nnamespace fs = std::filesystem;\n\n// 정비 기록 서비스: 감사 로그를 만든 뒤 '접근 오류'가 난다는 민원에 권한을 넓혔다\nint main() {\n    const fs::path log = \"audit.log\";\n    fs::remove(log);                                    // 예시 재실행용\n    {\n        std::ofstream out(log);\n        out << \"2026-10-18T09:00Z operator=kim cmd=HEATER_CHECK\\n\";\n    }\n    fs::permissions(log, fs::perms::all);               // 0777: 누구나 고치고 지울 수 있다\n\n    auto p = fs::status(log).permissions();\n    std::printf(\"audit.log mode %04o\\n\", static_cast<unsigned>(p & fs::perms::mask));\n    return 0;\n}\n",
+    "explain_ko": "파일을 만든 뒤 접근 오류를 피하려고 권한을 0777로 넓혀 아무 계정이나 감사 로그를 고치거나 지울 수 있다. 감사 기록을 믿을 수 없게 된다."
+   },
+   "good": {
+    "code": "#include <cstdio>\n#include <filesystem>\n#include <fstream>\n#include <sys/stat.h>\n\nnamespace fs = std::filesystem;\n\nint main() {\n    const fs::path log = \"audit.log\";\n    fs::remove(log);                                    // 예시 재실행용\n    ::umask(027);                                       // 만들 때부터 그룹 쓰기·기타 접근 없음\n    {\n        std::ofstream out(log);\n        out << \"2026-10-18T09:00Z operator=kim cmd=HEATER_CHECK\\n\";\n    }\n    // 기록 서비스(소유자)는 읽기·쓰기, 감사 그룹은 읽기만, 기타는 없음\n    fs::permissions(log, fs::perms::owner_read | fs::perms::owner_write | fs::perms::group_read,\n                    fs::perm_options::replace);\n\n    auto p = fs::status(log).permissions();\n    std::printf(\"audit.log mode %04o\\n\", static_cast<unsigned>(p & fs::perms::mask));\n    return 0;\n}\n",
+    "explain_ko": "umask(027)로 만들 때부터 기타 사용자 접근을 막고, 소유자 읽기·쓰기와 감사 그룹 읽기만 남기도록 권한을 바꿔 넣는다(std::filesystem::perm_options::replace). 설치 후 권한 점검 시험으로 확인한다."
+   },
+   "check": {
+    "tool": "run",
+    "platform": "linux",
+    "expect": "mode 0\\d\\d[2367]",
+    "expect_good": "mode 0640"
+   },
+   "refs": [
+    "MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.IOException;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.attribute.AclEntry;\nimport java.nio.file.attribute.AclEntryPermission;\nimport java.nio.file.attribute.AclEntryType;\nimport java.nio.file.attribute.AclFileAttributeView;\nimport java.nio.file.attribute.UserPrincipal;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Example {\n    // 파일 ACL에 Everyone 허용 항목이 있는지 실제 ACL에서 확인한다\n    // (표시 이름은 Windows 언어판마다 다르다. 실제로는 SID S-1-1-0으로 확인한다)\n    static boolean openToEveryone(Path p) throws IOException {\n        AclFileAttributeView view = Files.getFileAttributeView(p, AclFileAttributeView.class);\n        return view.getAcl().stream().anyMatch(e -> e.type() == AclEntryType.ALLOW\n                && e.principal().getName().endsWith(\"Everyone\"));\n    }\n\n    public static void main(String[] args) throws IOException {\n        Path plan = Path.of(\"mission_plan.dat\");\n        Files.deleteIfExists(plan);                      // 예시 재실행용\n        Files.write(plan, new byte[] {1, 2, 3});\n\n        // 계획 편집기 여러 대가 고칠 수 있도록 Everyone에게 쓰기 권한을 준다\n        UserPrincipal everyone = plan.getFileSystem().getUserPrincipalLookupService()\n                .lookupPrincipalByName(\"Everyone\");\n        AclFileAttributeView view = Files.getFileAttributeView(plan, AclFileAttributeView.class);\n        List<AclEntry> acl = new ArrayList<>(view.getAcl());\n        acl.add(0, AclEntry.newBuilder().setType(AclEntryType.ALLOW).setPrincipal(everyone)\n                .setPermissions(AclEntryPermission.READ_DATA, AclEntryPermission.WRITE_DATA,\n                        AclEntryPermission.APPEND_DATA).build());\n        view.setAcl(acl);\n\n        System.out.println(\"mission_plan.dat everyone access: \" + openToEveryone(plan));\n    }\n}\n",
+    "explain_ko": "여러 편집기가 고칠 수 있게 Everyone에게 쓰기 권한을 주어, 어느 계정이든 임무 계획 파일을 바꿀 수 있다."
+   },
+   "good": {
+    "code": "import java.io.IOException;\nimport java.nio.ByteBuffer;\nimport java.nio.channels.SeekableByteChannel;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.StandardOpenOption;\nimport java.nio.file.attribute.AclEntry;\nimport java.nio.file.attribute.AclEntryPermission;\nimport java.nio.file.attribute.AclEntryType;\nimport java.nio.file.attribute.AclFileAttributeView;\nimport java.nio.file.attribute.FileAttribute;\nimport java.nio.file.attribute.UserPrincipal;\nimport java.util.EnumSet;\nimport java.util.List;\n\npublic class Example {\n    // 파일 ACL에 Everyone 허용 항목이 있는지 실제 ACL에서 확인한다\n    // (표시 이름은 Windows 언어판마다 다르다. 실제로는 SID S-1-1-0으로 확인한다)\n    static boolean openToEveryone(Path p) throws IOException {\n        AclFileAttributeView view = Files.getFileAttributeView(p, AclFileAttributeView.class);\n        return view.getAcl().stream().anyMatch(e -> e.type() == AclEntryType.ALLOW\n                && e.principal().getName().endsWith(\"Everyone\"));\n    }\n\n    public static void main(String[] args) throws IOException {\n        Path plan = Path.of(\"mission_plan.dat\");\n        Files.deleteIfExists(plan);                      // 예시 재실행용\n\n        // 실행 계정 하나에만 접근을 주는 ACL을 '만들 때부터' 붙인다(편집 권한은 응용이 따로 판정)\n        UserPrincipal self = plan.getFileSystem().getUserPrincipalLookupService()\n                .lookupPrincipalByName(System.getProperty(\"user.name\"));\n        AclEntry ownerOnly = AclEntry.newBuilder().setType(AclEntryType.ALLOW).setPrincipal(self)\n                .setPermissions(EnumSet.complementOf(EnumSet.of(AclEntryPermission.WRITE_ACL,\n                        AclEntryPermission.WRITE_OWNER, AclEntryPermission.EXECUTE))).build();\n        FileAttribute<List<AclEntry>> acl = new FileAttribute<>() {\n            @Override public String name() { return \"acl:acl\"; }\n            @Override public List<AclEntry> value() { return List.of(ownerOnly); }\n        };\n        try (SeekableByteChannel ch = Files.newByteChannel(plan,\n                EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), acl)) {\n            ch.write(ByteBuffer.wrap(new byte[] {1, 2, 3}));   // 이미 있으면 실패(덮어쓰지 않음)\n        }\n\n        System.out.println(\"mission_plan.dat everyone access: \" + openToEveryone(plan));\n    }\n}\n",
+    "explain_ko": "실행 계정 하나에만 접근을 주는 ACL을 파일 생성과 동시에 붙이고(CREATE_NEW), 편집 권한은 응용의 인가로 판정한다. POSIX 파일 시스템에서는 PosixFilePermissions.asFileAttribute(rw-------)를 Files.createFile에 넘겨 같은 효과를 낸다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "everyone access: true",
+    "expect_good": "everyone access: false"
+   },
+   "refs": [
+    "MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-3 '중요한 자원에 대한 잘못된 권한허용'(인쇄 125쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Security.AccessControl;\nusing System.Security.Principal;\n\nif (!OperatingSystem.IsWindows())\n{\n    Console.WriteLine(\"this example uses Windows ACLs\");\n    return;\n}\n\nvar world = new SecurityIdentifier(WellKnownSidType.WorldSid, null);\nvar file = new FileInfo(\"maint_records.db\");\nfile.Delete();                                   // 예시 재실행용\nFile.WriteAllText(file.FullName, \"record v1\");\n\n// 정비 기록 도구가 어느 계정으로 돌든 쓰게 하려고 Everyone에게 수정 권한을 준다\nFileSecurity sec = file.GetAccessControl();\nsec.AddAccessRule(new FileSystemAccessRule(world, FileSystemRights.Modify, AccessControlType.Allow));\nfile.SetAccessControl(sec);\n\nbool open = false;                               // 실제 ACL을 다시 읽어 확인\nforeach (FileSystemAccessRule r in file.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier)))\n{\n    open |= r.AccessControlType == AccessControlType.Allow && world.Equals(r.IdentityReference);\n}\nConsole.WriteLine($\"maint_records.db everyone access: {open}\");\n",
+    "explain_ko": "Everyone(WorldSid)에게 수정 권한을 주어 지상 PC의 어느 계정이든 정비 기록을 바꿀 수 있다."
+   },
+   "good": {
+    "code": "using System.Security.AccessControl;\nusing System.Security.Principal;\n\nif (!OperatingSystem.IsWindows())\n{\n    Console.WriteLine(\"this example uses Windows ACLs\");\n    return;\n}\n\nvar world = new SecurityIdentifier(WellKnownSidType.WorldSid, null);\nvar file = new FileInfo(\"maint_records.db\");\nfile.Delete();                                   // 예시 재실행용\n\n// 상속을 끊고 서비스 실행 계정에만 수정 권한을 준 보안 설명자로 '처음부터' 만든다\nusing var me = WindowsIdentity.GetCurrent();\nvar sec = new FileSecurity();\nsec.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);\nsec.AddAccessRule(new FileSystemAccessRule(me.User!, FileSystemRights.Modify, AccessControlType.Allow));\nusing (FileStream fs = file.Create(FileMode.CreateNew, FileSystemRights.Write, FileShare.None,\n                                   4096, FileOptions.None, sec))\n{\n    fs.Write(\"record v1\"u8);\n}\n\nbool open = false;                               // 실제 ACL을 다시 읽어 확인\nforeach (FileSystemAccessRule r in file.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier)))\n{\n    open |= r.AccessControlType == AccessControlType.Allow && world.Equals(r.IdentityReference);\n}\nConsole.WriteLine($\"maint_records.db everyone access: {open}\");\n",
+    "explain_ko": "상속을 끊고 서비스 실행 계정에만 수정 권한을 준 FileSecurity로 파일을 처음부터 만든다. Linux에서 실행하는 도구라면 FileStreamOptions.UnixCreateMode나 File.SetUnixFileMode로 소유자 전용 모드를 준다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "everyone access: True",
+    "expect_good": "everyone access: False"
+   },
+   "refs": [
+    "MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import os\nimport stat\n\n\n# 지상 통제 소프트웨어가 세션 키 파일을 만든다\ndef write_session_key(path, key):\n    with open(path, \"wb\") as f:\n        f.write(key)\n    os.chmod(path, 0o666)                 # 정비 도구도 읽을 수 있게 하려고 모두에게 읽기·쓰기 허용\n\n\nwrite_session_key(\"session.key\", os.urandom(32))\nmode = stat.S_IMODE(os.stat(\"session.key\").st_mode)\nprint(f\"mode={oct(mode)} everyone write: {bool(mode & stat.S_IWOTH)}\")\n",
+    "explain_ko": "세션 키 파일을 만든 뒤 모든 계정이 읽고 쓸 수 있게(0o666) 권한을 연다. 같은 장비의 다른 계정·프로세스가 키를 읽거나 바꿀 수 있다. Bandit은 너그러운 권한을 주는 os.chmod를 B103으로 보고한다. 예시는 지상 통제 소프트웨어(Linux)를 가정해 Linux(WSL)에서 실행한다."
+   },
+   "good": {
+    "code": "import os\nimport stat\n\n\ndef write_session_key(path, key):\n    # 만들 때부터 소유자만 읽고 쓰게(0o600) 만든다. 이미 있으면 덮어쓰지 않는다(O_EXCL)\n    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)\n    with os.fdopen(fd, \"wb\") as f:\n        f.write(key)\n\n\nif os.path.exists(\"session.key\"):         # 예시 재실행용\n    os.unlink(\"session.key\")\nwrite_session_key(\"session.key\", os.urandom(32))\nmode = stat.S_IMODE(os.stat(\"session.key\").st_mode)\nprint(f\"mode={oct(mode)} everyone write: {bool(mode & stat.S_IWOTH)}\")\n",
+    "explain_ko": "os.open에 권한(0o600)을 넘겨 만들 때부터 소유자만 접근하게 하고, O_EXCL로 이미 있는 파일(다른 계정이 미리 만든 파일·링크)을 덮어쓰지 않는다(D-04). 만든 뒤 chmod로 좁히면 그 사이에 열릴 수 있다. 다른 도구가 읽어야 하면 전용 그룹을 만들어 그룹 읽기(0o640)까지만 연다. 서비스 계정의 umask와 배치 디렉터리 권한은 설치 구성 기준선에 적는다(M-03)."
+   },
+   "check": {
+    "tool": "bandit",
+    "expect": "B103",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-3 '중요한 자원에 대한 잘못된 권한 설정'(인쇄 76쪽) 참고"
+   ]
+  }
+ }
+}

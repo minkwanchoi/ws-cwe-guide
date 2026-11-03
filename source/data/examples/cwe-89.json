@@ -1,0 +1,97 @@
+{
+ "cwe": "89",
+ "scenario_ko": "정비 이력·장비 위치 기록·부품 교체 기록·임무 경로점을 담은 DB를 운용자가 입력한 일련번호·장비 번호·부품 번호·임무 코드로 조회한다. 공격자는 값에 따옴표와 OR·UNION·주석(--)을 넣어 질의 조건을 바꾼다. 예시는 DB 드라이버 없이 질의문과 바인딩 값을 출력해 질의 구조가 바뀌는지 확인한다. Python 예시는 표준 라이브러리 sqlite3의 메모리 DB로 실제 조회 결과를 본다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n\n/* 시험용: DB 드라이버로 보내는 대신 질의문을 출력한다 */\nstatic void db_exec(const char *sql)\n{\n    printf(\"SQL> %s\\n\", sql);\n}\n\n/* 운용자가 입력한 장비 일련번호로 정비 이력을 조회 */\nstatic void find_history(const char *serial)\n{\n    char sql[256];\n    snprintf(sql, sizeof sql,\n             \"SELECT day, task FROM maint WHERE serial = '%s' AND site = 7\",\n             serial);                       /* 입력이 질의문 구조의 일부가 된다 */\n    db_exec(sql);\n}\n\nint main(void)\n{\n    find_history(\"SN-1042\");\n    find_history(\"x' OR 1=1 --\");          /* 조건을 바꾸고 뒤 조건을 주석 처리 */\n    return 0;\n}\n",
+    "explain_ko": "snprintf로 입력을 따옴표 안에 이어 붙여 질의문을 만든다. \"x' OR 1=1 --\"이면 조건이 항상 참이 되고 뒤의 site 조건은 주석이 되어 모든 기록이 조회된다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n\n/* 시험용 바인딩 인터페이스: sqlite3_prepare_v2()/sqlite3_bind_text()와 같은 형태 */\ntypedef struct { const char *sql; const char *val[4]; int n; } Stmt;\n\nstatic void stmt_prepare(Stmt *st, const char *sql) { st->sql = sql; st->n = 0; }\n\nstatic int stmt_bind_text(Stmt *st, int idx, const char *v)\n{\n    if (idx != st->n + 1 || idx > 4) return -1;\n    st->val[st->n++] = v;                   /* 값은 질의문과 따로 전달된다 */\n    return 0;\n}\n\nstatic void stmt_step(const Stmt *st)\n{\n    printf(\"SQL> %s\\n\", st->sql);\n    for (int i = 0; i < st->n; ++i) printf(\"     ?%d <- [%s]\\n\", i + 1, st->val[i]);\n}\n\nstatic void find_history(const char *serial)\n{\n    Stmt st;\n    stmt_prepare(&st, \"SELECT day, task FROM maint WHERE serial = ? AND site = 7\");\n    if (stmt_bind_text(&st, 1, serial) != 0) { puts(\"bind failed\"); return; }\n    stmt_step(&st);\n}\n\nint main(void)\n{\n    find_history(\"SN-1042\");\n    find_history(\"x' OR 1=1 --\");\n    return 0;\n}\n",
+    "explain_ko": "질의문은 '?' 자리표시자를 둔 상수로 두고 값은 바인딩 함수로 따로 넘긴다(I-04). 실제 과제에서는 sqlite3_prepare_v2()와 sqlite3_bind_text()를 쓴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "serial = 'x' OR 1=1",
+    "expect_good": "\\?1 <- \\[x' OR 1=1 --\\]"
+   },
+   "refs": [
+    "MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-1 'SQL 삽입'(인쇄 3쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <string>\n\n// 시험용: DB로 보내는 대신 질의문을 출력\nvoid execute(const std::string &sql) { std::cout << \"SQL> \" << sql << '\\n'; }\n\n// 운용자가 입력한 장비 번호로 장비 위치 기록을 조회\nvoid findRecords(const std::string &device_tag) {\n    execute(\"SELECT id, lat, lon FROM positions WHERE device_tag = '\" + device_tag +\n            \"' AND classified = 0\");                // 문자열을 이어 붙여 질의 구성\n}\n\nint main() {\n    findRecords(\"GSE11\");\n    findRecords(\"Z' OR 'a'='a' --\");                 // 비공개 위치 기록까지 조회된다\n}\n",
+    "explain_ko": "std::string 덧셈으로 질의문을 만들어 \"Z' OR 'a'='a' --\"가 들어가면 classified = 0 조건이 주석 처리되어 비공개 위치 기록까지 조회된다."
+   },
+   "good": {
+    "code": "#include <iostream>\n#include <string>\n#include <utility>\n#include <vector>\n\n// 시험용 매개변수화 질의: 질의문(고정)과 값(바인딩)을 따로 보관해 드라이버에 넘긴다\nclass Query {\npublic:\n    explicit Query(std::string sql) : sql_(std::move(sql)) {}\n    Query &bind(std::string value) { params_.push_back(std::move(value)); return *this; }\n    void execute() const {\n        std::cout << \"SQL> \" << sql_ << '\\n';\n        for (std::size_t i = 0; i < params_.size(); ++i) {\n            std::cout << \"     ?\" << i + 1 << \" <- [\" << params_[i] << \"]\\n\";\n        }\n    }\nprivate:\n    std::string sql_;\n    std::vector<std::string> params_;\n};\n\nvoid findRecords(const std::string &device_tag) {\n    Query(\"SELECT id, lat, lon FROM positions WHERE device_tag = ? AND classified = 0\")\n        .bind(device_tag)\n        .execute();\n}\n\nint main() {\n    findRecords(\"GSE11\");\n    findRecords(\"Z' OR 'a'='a' --\");\n}\n",
+    "explain_ko": "질의문(자리표시자)과 값을 따로 보관해 드라이버에 넘기는 매개변수화 질의로 바꾼다(I-04). 값은 질의 구조가 될 수 없다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "device_tag = 'Z' OR 'a'='a'",
+    "expect_good": "\\?1 <- \\[Z' OR 'a'='a' --\\]"
+   },
+   "refs": [
+    "MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.lang.reflect.Proxy;\nimport java.sql.Connection;\nimport java.sql.SQLException;\nimport java.sql.Statement;\n\npublic class Example {\n    // 시험용 가짜 DB 연결: 드라이버 없이 호출된 질의만 출력한다\n    static <T> T fake(Class<T> type) {\n        return type.cast(Proxy.newProxyInstance(Example.class.getClassLoader(), new Class<?>[] {type},\n                (proxy, m, a) -> switch (m.getName()) {\n                    case \"createStatement\" -> fake(Statement.class);\n                    case \"executeQuery\" -> { System.out.println(\"SQL> \" + a[0]); yield null; }\n                    default -> null;\n                }));\n    }\n\n    // 정비 기록 DB에서 운용자가 입력한 부품 번호로 교체 이력을 조회\n    static void findReplacements(Connection db, String partNo) throws SQLException {\n        Statement st = db.createStatement();\n        st.executeQuery(\"SELECT day, tech FROM parts_log WHERE part_no = '\" + partNo + \"'\");  // 이어 붙임\n    }\n\n    public static void main(String[] args) throws SQLException {\n        Connection db = fake(Connection.class);\n        findReplacements(db, \"P-77812\");\n        findReplacements(db, \"x' UNION SELECT user, pw FROM accounts --\");\n    }\n}\n",
+    "explain_ko": "Statement.executeQuery에 입력을 이어 붙인 문자열을 넘긴다. UNION SELECT가 붙으면 다른 테이블(계정 정보)까지 조회된다. 예시의 DB 연결은 호출 내용만 출력하는 시험용 Proxy다."
+   },
+   "good": {
+    "code": "import java.lang.reflect.Proxy;\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.sql.SQLException;\n\npublic class Example {\n    // 시험용 가짜 DB 연결: 드라이버 없이 질의문과 바인딩 값을 출력한다\n    static <T> T fake(Class<T> type) {\n        return type.cast(Proxy.newProxyInstance(Example.class.getClassLoader(), new Class<?>[] {type},\n                (proxy, m, a) -> switch (m.getName()) {\n                    case \"prepareStatement\" -> { System.out.println(\"SQL> \" + a[0]); yield fake(PreparedStatement.class); }\n                    case \"setString\" -> { System.out.println(\"     ?\" + a[0] + \" <- [\" + a[1] + \"]\"); yield null; }\n                    default -> null;\n                }));\n    }\n\n    static void findReplacements(Connection db, String partNo) throws SQLException {\n        try (PreparedStatement ps = db.prepareStatement(\"SELECT day, tech FROM parts_log WHERE part_no = ?\")) {\n            ps.setString(1, partNo);             // 값은 질의문과 따로 바인딩\n            try (ResultSet rows = ps.executeQuery()) {\n                // 조회 결과를 읽는다(시험용 연결이라 생략). 문과 결과는 어떤 경로로 나가도 닫힌다\n            }\n        }\n    }\n\n    public static void main(String[] args) throws SQLException {\n        Connection db = fake(Connection.class);\n        findReplacements(db, \"P-77812\");\n        findReplacements(db, \"x' UNION SELECT user, pw FROM accounts --\");\n    }\n}\n",
+    "explain_ko": "PreparedStatement의 '?' 자리표시자와 setString 바인딩으로 바꾼다(I-04). 정렬 열·테이블 이름처럼 바인딩할 수 없는 부분은 허용목록으로 고른다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "part_no = 'x' UNION",
+    "expect_good": "\\?1 <- \\[x' UNION SELECT"
+   },
+   "refs": [
+    "MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-1 'SQL 삽입'(인쇄 3쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Data;\nusing System.Data.Common;\nusing System.Globalization;\n\nConsole.WriteLine($\"{typeof(MissionStore).Name} compiled\");\n\n// 임무 계획 DB에서 운용자가 입력한 임무 코드로 승인된 경로점 개수를 센다\nstatic class MissionStore\n{\n    public static int CountWaypoints(DbConnection db, string missionCode)\n    {\n        ArgumentNullException.ThrowIfNull(db);\n        if (db.State != ConnectionState.Open)\n        {\n            db.Open();\n        }\n        using DbCommand cmd = db.CreateCommand();\n        cmd.CommandTimeout = 5;\n        // 입력을 보간 문자열로 질의문에 넣는다\n        cmd.CommandText = $\"SELECT COUNT(*) FROM waypoints WHERE approved = 1 AND mission = '{missionCode}'\";\n        object? n = cmd.ExecuteScalar();\n        return n is null ? 0 : Convert.ToInt32(n, CultureInfo.InvariantCulture);\n    }\n}\n",
+    "explain_ko": "DbCommand.CommandText에 입력을 보간 문자열로 넣는다. .NET 분석기 CA2100(SQL 쿼리의 보안 취약성 검토)이 상수가 아닌 질의문을 경고한다."
+   },
+   "good": {
+    "code": "using System.Data;\nusing System.Data.Common;\nusing System.Globalization;\n\nConsole.WriteLine($\"{typeof(MissionStore).Name} compiled\");\n\nstatic class MissionStore\n{\n    public static int CountWaypoints(DbConnection db, string missionCode)\n    {\n        ArgumentNullException.ThrowIfNull(db);\n        if (db.State != ConnectionState.Open)\n        {\n            db.Open();\n        }\n        using DbCommand cmd = db.CreateCommand();\n        cmd.CommandTimeout = 5;\n        cmd.CommandText = \"SELECT COUNT(*) FROM waypoints WHERE approved = 1 AND mission = @mission\";\n        DbParameter p = cmd.CreateParameter();\n        p.ParameterName = \"@mission\";\n        p.DbType = DbType.String;\n        p.Value = missionCode;                   // 값은 매개변수로 따로 전달\n        cmd.Parameters.Add(p);\n        object? n = cmd.ExecuteScalar();\n        return n is null ? 0 : Convert.ToInt32(n, CultureInfo.InvariantCulture);\n    }\n}\n",
+    "explain_ko": "CommandText는 '@mission' 매개변수를 둔 상수로 두고, CreateParameter로 만든 매개변수에 값을 넣어 Parameters에 추가한다(I-04)."
+   },
+   "check": {
+    "tool": "dotnet-ca",
+    "expect": "CA2100"
+   },
+   "refs": [
+    "MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import sqlite3\n\ndb = sqlite3.connect(\":memory:\")\ndb.execute(\"CREATE TABLE repair (part_no TEXT, action TEXT, crew TEXT)\")\ndb.executemany(\"INSERT INTO repair VALUES (?, ?, ?)\",\n               [(\"HYD-221\", \"seal replaced\", \"crew-3\"),\n                (\"NAV-907\", \"IMU recalibrated\", \"crew-1\")])\n\n\n# 운용자가 입력한 부품 번호로 정비 이력을 찾는다\ndef history(part_no):\n    sql = \"SELECT action, crew FROM repair WHERE part_no = '%s'\" % part_no   # 입력을 SQL 문장에 끼워 넣음\n    return db.execute(sql).fetchall()\n\n\nprint(history(\"HYD-221\"))\nprint(history(\"x' OR '1'='1\"))          # 조건이 늘 참이 되어 모든 이력이 나온다\n",
+    "explain_ko": "부품 번호를 % 서식으로 SQL 문장에 끼워 넣는다. \"x' OR '1'='1\"이 들어오면 WHERE 조건이 늘 참이 되어 다른 부품의 정비 이력까지 모두 나온다. Bandit은 이 호출을 B608(문자열로 조립한 질의를 통한 SQL 삽입 가능성)로 보고한다."
+   },
+   "good": {
+    "code": "import sqlite3\n\ndb = sqlite3.connect(\":memory:\")\ndb.execute(\"CREATE TABLE repair (part_no TEXT, action TEXT, crew TEXT)\")\ndb.executemany(\"INSERT INTO repair VALUES (?, ?, ?)\",\n               [(\"HYD-221\", \"seal replaced\", \"crew-3\"),\n                (\"NAV-907\", \"IMU recalibrated\", \"crew-1\")])\n\n\ndef history(part_no):\n    # 자리표시자(?)로 값만 따로 넘긴다: 입력은 SQL 문법으로 해석되지 않는다\n    cur = db.execute(\"SELECT action, crew FROM repair WHERE part_no = ?\", (part_no,))\n    return cur.fetchall()\n\n\nprint(history(\"HYD-221\"))\nprint(history(\"x' OR '1'='1\"))\n",
+    "explain_ko": "자리표시자(?)를 쓰고 값은 execute의 두 번째 인자로 넘긴다(I-04). DB 드라이버가 값을 SQL 문법과 분리해 다루므로 따옴표가 들어와도 부품 번호 글자로만 비교된다. 표 이름·정렬 열처럼 자리표시자로 넘길 수 없는 부분은 허용목록에서 고른다."
+   },
+   "check": {
+    "tool": "bandit",
+    "expect": "B608"
+   },
+   "refs": [
+    "MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙여 검색 질의를 만듦) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 입력데이터 검증 및 표현 1-1 'SQL 삽입'(인쇄 8쪽) 참고"
+   ]
+  }
+ }
+}

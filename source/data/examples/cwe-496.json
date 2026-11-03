@@ -1,0 +1,98 @@
+{
+ "cwe": "496",
+ "scenario_ko": "임무 계획 파일·정비 권한 부여·센서 이득 계수표처럼 외부에서 받은 배열을 모듈이나 객체의 내부 상태로 저장한다. 받은 배열을 복사하지 않고 주소(참조)만 저장하면, 호출 측이 그 버퍼를 다음 메시지나 다른 계산에 재사용하면, 다시 적재하지 않았는데도 내부 상태가 바뀐다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stddef.h>\n#include <stdio.h>\n\n/* ---- 항법 모듈(nav.c): 경로점 고도표는 모듈 내부 상태 ---- */\nstatic const int *route_alt_m;            /* 호출자 배열의 주소만 저장 */\nstatic size_t route_len;\n\nvoid nav_load_route(const int *alt_m, size_t n)\n{\n    route_alt_m = alt_m;                  /* 복사하지 않고 외부 버퍼를 내부 상태로 삼는다 */\n    route_len = n;\n}\n\nint nav_min_altitude(void)\n{\n    int lo = route_alt_m[0];\n    for (size_t i = 1; i < route_len; ++i) {\n        if (route_alt_m[i] < lo) lo = route_alt_m[i];\n    }\n    return lo;\n}\n\n/* ---- 임무 계획 수신 모듈: 같은 수신 버퍼를 다음 메시지에 재사용한다 ---- */\nint main(void)\n{\n    int rx_buf[4] = {800, 650, 700, 900};\n    nav_load_route(rx_buf, 4);\n    printf(\"loaded min altitude %d m\\n\", nav_min_altitude());\n\n    rx_buf[1] = 30;                       /* 다음 메시지(다른 용도)가 버퍼를 덮어씀 */\n    int now = nav_min_altitude();\n    printf(\"min altitude now %d m%s\\n\", now, now != 650 ? \" (ROUTE CHANGED WITHOUT RELOAD)\" : \"\");\n    return 0;\n}\n",
+    "explain_ko": "수신 버퍼의 주소만 모듈 내부 포인터에 저장한다. 수신 모듈이 같은 버퍼를 다음 메시지에 재사용하자 항법 모듈의 최저 고도가 650 m에서 30 m로 바뀐다. C에는 private이 없지만 파일 범위 static 상태에 외부 버퍼를 연결하는 같은 약점이 생긴다."
+   },
+   "good": {
+    "code": "#include <stddef.h>\n#include <stdio.h>\n#include <string.h>\n\n/* ---- 항법 모듈(nav.c) ---- */\n#define MAX_WPT 16\nstatic int route_alt_m[MAX_WPT];          /* 모듈이 소유한 저장소 */\nstatic size_t route_len;\n\nint nav_load_route(const int *alt_m, size_t n)\n{\n    if (alt_m == NULL || n == 0 || n > MAX_WPT) {\n        return -1;\n    }\n    memcpy(route_alt_m, alt_m, n * sizeof route_alt_m[0]);   /* 복사해서 보관 */\n    route_len = n;\n    return 0;\n}\n\nint nav_min_altitude(void)\n{\n    int lo = route_alt_m[0];\n    for (size_t i = 1; i < route_len; ++i) {\n        if (route_alt_m[i] < lo) lo = route_alt_m[i];\n    }\n    return lo;\n}\n\n/* ---- 임무 계획 수신 모듈 ---- */\nint main(void)\n{\n    int rx_buf[4] = {800, 650, 700, 900};\n    if (nav_load_route(rx_buf, 4) != 0) return 1;\n    printf(\"loaded min altitude %d m\\n\", nav_min_altitude());\n\n    rx_buf[1] = 30;                       /* 수신 버퍼를 재사용해도 항법 상태는 그대로 */\n    int now = nav_min_altitude();\n    printf(\"min altitude now %d m%s\\n\", now, now != 650 ? \" (ROUTE CHANGED WITHOUT RELOAD)\" : \"\");\n    return 0;\n}\n",
+    "explain_ko": "모듈이 소유한 저장소에 크기 검사 뒤 memcpy로 복사해 보관한다. 복사 비용이 큰 대용량 버퍼라면 소유권 이전 규칙을 정하고 문서화한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "ROUTE CHANGED WITHOUT RELOAD",
+    "expect_good": "min altitude now 650 m"
+   },
+   "refs": [
+    "MITRE CWE-496 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstddef>\n#include <cstdio>\n\n// 정비 장비: 잠금 대상 채널 목록을 private 멤버로 둔다\nclass ChannelPolicy {\n    const int *lockedChannels_ = nullptr;   // 외부 배열을 가리키기만 한다\n    std::size_t count_ = 0;\npublic:\n    void SetLocked(const int *channel, std::size_t n) {\n        lockedChannels_ = channel;              // 복사 없이 그대로 대입\n        count_ = n;\n    }\n    bool MayOpen(int channel) const {\n        for (std::size_t i = 0; i < count_; ++i) {\n            if (lockedChannels_[i] == channel) return false;\n        }\n        return true;\n    }\n};\n\nint main() {\n    int fromMissionFile[3] = {7, 12, 15};    // 점검 중 잠그는 채널\n    ChannelPolicy policy;\n    policy.SetLocked(fromMissionFile, 3);\n\n    fromMissionFile[0] = 0;                       // 호출 측이 작업용 배열을 다른 용도로 재사용\n    std::printf(\"open channel 7: %s\\n\", policy.MayOpen(7) ? \"PERMITTED (policy changed from outside)\" : \"blocked\");\n    return 0;\n}\n",
+    "explain_ko": "외부 배열의 포인터를 private 멤버에 그대로 저장한다. const 포인터여도 '이 객체가 못 고친다'는 뜻일 뿐 호출자는 계속 고칠 수 있어, 잠금 대상 채널이 사라진다. 원래 배열이 먼저 사라지면 댕글링 포인터도 된다."
+   },
+   "good": {
+    "code": "#include <algorithm>\n#include <cstddef>\n#include <cstdio>\n#include <vector>\n\n// 정비 장비: 잠금 대상 채널 목록\nclass ChannelPolicy {\n    std::vector<int> lockedChannels_;       // 정책 객체가 소유한 복사본\npublic:\n    void SetLocked(const int *channel, std::size_t n) {\n        lockedChannels_.assign(channel, channel + n);   // 받은 값을 복사해서 보관\n    }\n    bool MayOpen(int channel) const {\n        return std::find(lockedChannels_.begin(), lockedChannels_.end(), channel) == lockedChannels_.end();\n    }\n};\n\nint main() {\n    int fromMissionFile[3] = {7, 12, 15};\n    ChannelPolicy policy;\n    policy.SetLocked(fromMissionFile, 3);\n\n    fromMissionFile[0] = 0;                       // 호출 측 배열이 바뀌어도 정책은 그대로\n    std::printf(\"open channel 7: %s\\n\", policy.MayOpen(7) ? \"PERMITTED (policy changed from outside)\" : \"blocked\");\n    return 0;\n}\n",
+    "explain_ko": "std::vector에 값을 복사해 정책 객체가 소유하게 한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PERMITTED \\(policy changed from outside\\)",
+    "expect_good": "open channel 7: blocked"
+   },
+   "refs": [
+    "MITRE CWE-496 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 센서 보정기: 센서 종류별 이득 계수표를 private 배열에 둔다\ndouble[] table = [1.00, 0.85, 0.70];\nvar solver = new SensorCalibrator();\nsolver.LoadGainFactors(table);\n\ntable[2] = 2.50;                                 // 호출 측이 같은 배열을 다른 계산에 재사용\ndouble f = solver.GainFactor(2);\nConsole.WriteLine($\"gain factor[2]={f:F2}{(f != 0.70 ? \" (PRIVATE TABLE CHANGED BY CALLER)\" : \"\")}\");\n\ninternal sealed class SensorCalibrator\n{\n    private double[] _gainFactors = [];\n\n    public void LoadGainFactors(double[] factors)\n    {\n        ArgumentNullException.ThrowIfNull(factors);\n        _gainFactors = factors;                // 참조만 저장: 호출자와 같은 배열을 공유\n    }\n\n    public double GainFactor(int sensorType) => _gainFactors[sensorType];\n}\n",
+    "explain_ko": "적재 메서드가 받은 배열의 참조만 private 필드에 저장한다. 호출 측이 같은 배열을 다른 계산에 재사용하자 이득 계수가 바뀐다."
+   },
+   "good": {
+    "code": "// 센서 보정기: 센서 종류별 이득 계수표를 private 배열에 둔다\ndouble[] table = [1.00, 0.85, 0.70];\nvar solver = new SensorCalibrator();\nsolver.LoadGainFactors(table);\n\ntable[2] = 2.50;                                 // 호출 측 배열만 바뀐다\ndouble f = solver.GainFactor(2);\nConsole.WriteLine($\"gain factor[2]={f:F2}{(f != 0.70 ? \" (PRIVATE TABLE CHANGED BY CALLER)\" : \"\")}\");\n\ninternal sealed class SensorCalibrator\n{\n    private double[] _gainFactors = [];\n\n    public void LoadGainFactors(ReadOnlySpan<double> factors)\n    {\n        _gainFactors = factors.ToArray();      // 받은 값을 새 배열로 복사해서 보관\n    }\n\n    public double GainFactor(int sensorType) => _gainFactors[sensorType];\n}\n",
+    "explain_ko": "ReadOnlySpan<double>으로 받아 ToArray()로 새 배열에 복사해 보관한다. 호출자 배열이 바뀌어도 내부 표는 그대로다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PRIVATE TABLE CHANGED BY CALLER",
+    "expect_good": "gain factor\\[2\\]=0\\.70"
+   },
+   "refs": [
+    "MITRE CWE-496 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "public class Example {\n    // 정비 콘솔: 이 단말에서 허용된 정비 명령 코드\n    static final class MaintenanceSession {\n        private String[] permittedCommands = new String[0];\n\n        public void setPermittedCommands(String[] commands) {\n            this.permittedCommands = commands;          // 호출자 배열을 그대로 private 필드에 저장\n        }\n\n        public boolean permits(String cmd) {\n            for (String c : permittedCommands) {\n                if (c.equals(cmd)) {\n                    return true;\n                }\n            }\n            return false;\n        }\n    }\n\n    public static void main(String[] args) {\n        String[] grant = {\"READ_BIT\", \"READ_LOG\"};\n        MaintenanceSession session = new MaintenanceSession();\n        session.setPermittedCommands(grant);\n\n        grant[1] = \"ERASE_FLASH\";                       // 권한 부여 뒤 호출자가 배열을 고친다\n        System.out.println(\"ERASE_FLASH: \" + (session.permits(\"ERASE_FLASH\")\n                ? \"PERMITTED (private array changed by caller)\" : \"denied\"));\n    }\n}\n",
+    "explain_ko": "setter가 받은 배열을 그대로 private 필드에 대입한다. 권한을 준 뒤 호출자가 배열 요소를 바꾸면 허용 명령에 ERASE_FLASH가 끼어든다."
+   },
+   "good": {
+    "code": "import java.util.Arrays;\nimport java.util.Objects;\n\npublic class Example {\n    // 정비 콘솔: 이 단말에서 허용된 정비 명령 코드\n    static final class MaintenanceSession {\n        private String[] permittedCommands = new String[0];\n\n        public void setPermittedCommands(String[] commands) {\n            // 방어적 복사: 호출자 배열과 연결을 끊는다\n            this.permittedCommands = Objects.requireNonNull(commands, \"commands\").clone();\n        }\n\n        public boolean permits(String cmd) {\n            return Arrays.asList(permittedCommands).contains(cmd);\n        }\n    }\n\n    public static void main(String[] args) {\n        String[] grant = {\"READ_BIT\", \"READ_LOG\"};\n        MaintenanceSession session = new MaintenanceSession();\n        session.setPermittedCommands(grant);\n\n        grant[1] = \"ERASE_FLASH\";                       // 호출자 배열만 바뀐다\n        System.out.println(\"ERASE_FLASH: \" + (session.permits(\"ERASE_FLASH\")\n                ? \"PERMITTED (private array changed by caller)\" : \"denied\"));\n    }\n}\n",
+    "explain_ko": "setter에서 clone()으로 복사해 호출자 배열과의 연결을 끊는다. SpotBugs를 쓰면 EI_EXPOSE_REP2로도 찾을 수 있다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PERMITTED \\(private array changed by caller\\)",
+    "expect_good": "ERASE_FLASH: denied"
+   },
+   "refs": [
+    "MITRE CWE-496 Demonstrative Example 1(setter가 받은 배열을 private 필드에 그대로 대입) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 캡슐화 6-5 'private 배열에 Public 데이터 할당'(인쇄 280쪽) 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "class GainTable:\n    \"\"\"센서 이득 계수표: 임무 계획 파일에서 받은 계수를 내부 상태로 둔다.\"\"\"\n\n    def __init__(self):\n        self._coeffs = []\n\n    def load(self, coeffs):\n        self._coeffs = coeffs                     # 호출자의 리스트를 그대로 내부 상태로 삼는다\n\n    def coeff(self, idx):\n        return self._coeffs[idx]\n\n\nplan_values = [0.82, 0.91, 1.00]\ntable = GainTable()\ntable.load(plan_values)\nplan_values[2] = 1.75                             # 불러온 뒤 호출자가 자기 리스트를 고친다\nprint(\"coeff[2] =\", table.coeff(2), \"(PRIVATE TABLE CHANGED BY CALLER)\" if table.coeff(2) != 1.00 else \"\")\n",
+    "explain_ko": "받은 리스트를 복사하지 않고 그대로 내부 상태로 삼는다. 불러온 뒤에 호출자가 자기 리스트를 고치면 객체 안의 계수표도 함께 바뀌어, 불러올 때 한 검증이 의미를 잃는다."
+   },
+   "good": {
+    "code": "import math\n\n\nclass GainTable:\n    \"\"\"센서 이득 계수표: 임무 계획 파일에서 받은 계수를 내부 상태로 둔다.\"\"\"\n\n    def __init__(self):\n        self._coeffs = ()\n\n    def load(self, coeffs):\n        values = tuple(float(c) for c in coeffs)  # 값을 복사해 바꿀 수 없는 튜플로 보관\n        if not all(math.isfinite(v) and 0.5 <= v <= 1.2 for v in values):   # 복사본을 검증\n            raise ValueError(\"coefficient out of range\")\n        self._coeffs = values\n\n    def coeff(self, idx):\n        return self._coeffs[idx]\n\n\nplan_values = [0.82, 0.91, 1.00]\ntable = GainTable()\ntable.load(plan_values)\nplan_values[2] = 1.75\nprint(\"coeff[2] =\", table.coeff(2), \"(PRIVATE TABLE CHANGED BY CALLER)\" if table.coeff(2) != 1.00 else \"\")\n",
+    "explain_ko": "받은 값을 tuple(…)로 복사해 바꿀 수 없는 형으로 보관하고, 검증은 복사한 값에 대해 한다. 그 뒤 호출자가 원래 리스트를 바꿔도 내부 표에는 영향이 없다. 원소가 dict·list처럼 바꿀 수 있는 객체이면 copy.deepcopy를 쓴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PRIVATE TABLE CHANGED BY CALLER",
+    "expect_good": "coeff\\[2\\] = 1\\.0"
+   },
+   "refs": [
+    "MITRE CWE-496 Demonstrative Example 1(public 메서드가 받은 배열을 private 필드에 대입) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 캡슐화 6-4 'Private 배열에 Public 데이터 할당'(인쇄 153쪽) 참고"
+   ]
+  }
+ }
+}

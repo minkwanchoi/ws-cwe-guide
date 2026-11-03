@@ -1,0 +1,1376 @@
+{
+ "checked_at": "2026-10-15",
+ "projects": {
+  "WRW": [
+   {
+    "name": "nasa/osal",
+    "url": "https://github.com/nasa/osal",
+    "ref": "v7.0.1",
+    "why": "NASA 비행 소프트웨어 추상화 계층으로 VxWorks 커널용 BSP(generic-vxworks)와 RTP 전용 BSP(generic-vxworks-rtp)를 모두 두어 무기체계 VxWorks 과제의 커널/RTP 구성과 닮았다."
+   },
+   {
+    "name": "Wind River VxWorks 데이터시트",
+    "url": "https://www.windriver.com/resource/vxworks-datasheet",
+    "ref": "조회일 2026-11-02",
+    "why": "현행 VxWorks 보호 기능 목록의 공식 공개 자료다."
+   },
+   {
+    "name": "Linux kernel",
+    "url": "https://github.com/torvalds/linux",
+    "ref": "v6.6",
+    "why": "아키텍처·컴파일러 지원을 확인한 뒤 카나리를 켜는 구성 사례다. VxWorks 자료는 아니다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "ISR에서 쓸 수 있는 API 제한과 스택 실측 사례다. VxWorks 자료는 아니다."
+   },
+   {
+    "name": "Rapita Systems",
+    "url": "https://www.rapitasystems.com/",
+    "ref": "조회일 2026-11-02",
+    "why": "계측 오버헤드 측정 사례를 공개한 벤더다."
+   }
+  ],
+  "CCS": [
+   {
+    "name": "TexasInstruments/c2000ware-core-sdk",
+    "url": "https://github.com/TexasInstruments/c2000ware-core-sdk",
+    "ref": "REL_C2000Ware_v26.02.00.00.LTS",
+    "why": "C28x 기반 모터·전력 제어 MCU용 TI 공식 SDK로 링커 명령 파일, DCSM 코드 보안, EALLOW/volatile 레지스터 접근이 실제로 구현되어 있다."
+   },
+   {
+    "name": "TI 컴파일러 사용자 가이드 (SPRU514AA C28x v25.11.0.LTS, SPNU151W ARM v20.2.0.LTS, tiarmclang 5.1.0.LTS)",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "ref": "SPRU514AA 2026-03",
+    "why": "CCS가 쓰는 cl2000·armcl·tiarmclang의 옵션과 16비트 char 처리를 벤더 문서로 직접 확인한다."
+   },
+   {
+    "name": "FreeRTOS-Kernel",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+    "ref": "V11.1.0",
+    "why": "TI MCU에서도 쓰는 RTOS로 configCHECK_FOR_STACK_OVERFLOW 정의가 지침의 RTOS 스택 오버플로 감지 항목과 직접 대응한다."
+   },
+   {
+    "name": "TI Code Composer Studio",
+    "url": "https://software-dl.ti.com/ccs/esd/documents/users_guide/ccs_project-management.html",
+    "ref": "조회일 2026-11-02",
+    "why": "빌드 도구 버전 지정의 공식 문서다."
+   }
+  ],
+  "MSVC": [
+   {
+    "name": "Microsoft Learn (MSVC·.NET·Visual Studio 공식 문서)",
+    "url": "https://learn.microsoft.com/",
+    "ref": "조회일 2026-10-15",
+    "why": "ArduPilot/MissionPlanner(Windows C#/.NET 지상국)를 후보로 봤으나 csproj가 XML이라 fv 원문 대조(태그 제거)로 근거 줄을 확정할 수 없어 쓰지 못했고, 옵션별 공식 문서를 근거로 삼았다."
+   }
+  ],
+  "AVR": [
+   {
+    "name": "avr-libc",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/",
+    "ref": "2.1.0 (조회일 2026-10-15)",
+    "why": "Atmel/Microchip Studio가 번들하는 avr-gcc의 표준 C 라이브러리로 malloc·PROGMEM·atomic 문서가 지침과 일대일 대응한다."
+   },
+   {
+    "name": "arduino/ArduinoCore-avr",
+    "url": "https://github.com/arduino/ArduinoCore-avr",
+    "ref": "1.8.6",
+    "why": "avr-gcc로 ATmega를 빌드하는 대표 오픈소스 코어로 실제 컴파일 플래그(경고 기본 -w)를 보여준다. MCU 행은 같은 코어를 1.8.7(avr-libc 사용자 매뉴얼)로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다."
+   },
+   {
+    "name": "Microchip ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트",
+    "url": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf",
+    "ref": "DS40002061A",
+    "why": "락 비트·퓨즈·debugWIRE 정책의 벤더 원문이다."
+   },
+   {
+    "name": "Microchip MPLAB X IDE 문서",
+    "url": "https://onlinedocs.microchip.com/",
+    "ref": "조회일 2026-11-02",
+    "why": "코드 실행률 기능의 공식 문서다."
+   },
+   {
+    "name": "Microchip Studio 공식 페이지·릴리스 노트",
+    "url": "https://www.microchip.com/en-us/tools-resources/develop/microchip-studio",
+    "ref": "조회일 2026-11-02, DS50002917C",
+    "why": "IDE 이름 변경과 신규 설계 비권장 안내의 공식 자료다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "작은 타깃의 코드 실행률 측정 제약을 문서로 밝힌다. AVR 자료는 아니다."
+   }
+  ],
+  "GCC": [
+   {
+    "name": "GCC 매뉴얼",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/",
+    "ref": "14.2.0 (일부 9.1.0·12.1.0·14.1.0)",
+    "why": "옵션별 정의와 도입 버전을 벤더(프로젝트) 원문으로 확인한다."
+   },
+   {
+    "name": "PX4/PX4-Autopilot",
+    "url": "https://github.com/PX4/PX4-Autopilot",
+    "ref": "v1.16.1",
+    "why": "무인기 비행 소프트웨어로 GCC 경고 -Wall -Wextra -Werror 정책을 CMake에 고정해 두었다."
+   },
+   {
+    "name": "zephyrproject-rtos/zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "베어메탈급 임베디드 RTOS가 스택 카나리 심볼(__stack_chk_guard)을 직접 구현하고 libc별 FORTIFY 지원을 구분하는 실제 사례다."
+   }
+  ],
+  "BSP": [
+   {
+    "name": "STMicroelectronics/stm32f4xx_hal_driver",
+    "url": "https://github.com/STMicroelectronics/stm32f4xx_hal_driver",
+    "ref": "v1.8.5",
+    "why": "칩 제조사 HAL의 대표 사례로 HAL_StatusTypeDef, assert_param/USE_FULL_ASSERT, RDP 등 지침이 지목한 요소가 모두 들어 있다."
+   },
+   {
+    "name": "ArduPilot/ardupilot",
+    "url": "https://github.com/ArduPilot/ardupilot",
+    "ref": "Copter-4.5.7",
+    "why": "무인기 비행 소프트웨어가 AP_HAL 추상화 계층으로 하드웨어 접근을 분리한 사례다."
+   },
+   {
+    "name": "TexasInstruments/c2000ware-core-sdk",
+    "url": "https://github.com/TexasInstruments/c2000ware-core-sdk",
+    "ref": "REL_C2000Ware_v26.02.00.00.LTS",
+    "why": "지침이 예로 든 C2000Ware 자체이며 DCSM 보안 설정을 포함한다."
+   },
+   {
+    "name": "MCUboot",
+    "url": "https://github.com/mcu-tools/mcuboot",
+    "ref": "v2.1.0",
+    "why": "개발용 키를 양산에 쓰지 말라고 안내한다."
+   },
+   {
+    "name": "Zephyr",
+    "url": "https://github.com/zephyrproject-rtos/zephyr",
+    "ref": "v4.2.0",
+    "why": "드라이버 오류 주입 API를 공개한다."
+   },
+   {
+    "name": "Linux kernel",
+    "url": "https://github.com/torvalds/linux",
+    "ref": "v6.6",
+    "why": "드라이버 계층 오류 주입 기능을 문서화한다."
+   }
+  ],
+  "OSS": [
+   {
+    "name": "zephyrproject-rtos/zephyr 문서 · Yocto Project 문서",
+    "url": "https://docs.zephyrproject.org/4.2.0/develop/west/zephyr-cmds.html",
+    "ref": "Zephyr 4.2.0 · Yocto 5.0.4",
+    "why": "임베디드 OSS 배포판이 SPDX SBOM(west spdx, create-spdx)과 CVE 점검(cve-check)을 공식 기능으로 제공한다."
+   },
+   {
+    "name": "Mbed-TLS/mbedtls · openssl/openssl",
+    "url": "https://github.com/Mbed-TLS/mbedtls",
+    "ref": "v3.6.7 · openssl-3.6.5",
+    "why": "지침이 예로 든 OpenSSL과 임베디드 TLS 라이브러리의 기능 제거 옵션(config.h, no-*)을 확인한다."
+   },
+   {
+    "name": "FreeRTOS-Kernel",
+    "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel",
+    "ref": "V11.1.0",
+    "why": "지침이 예로 든 FreeRTOS가 MISRA 편차를 문서화한 사례다(MISRA.md)."
+   }
+  ]
+ },
+ "evidence": {
+  "AVR-01": [
+   {
+    "project": "avr-libc 2.1.0",
+    "claim": "avr-libc 문서는 AVR에 하드웨어 메모리 관리가 없고 큰 동적 메모리나 스택 요구가 있으면 힙과 스택이 충돌할 수 있다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/malloc.html",
+    "locator": "avr-libc 2.1.0 User Manual, Memory Areas and Using malloc(), Introduction",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-02": [
+   {
+    "project": "ATmega328P 데이터시트",
+    "claim": "ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트는 락 비트 모드 3(LB1·LB2 모두 프로그래밍)에서 병렬·직렬 프로그래밍으로의 추가 프로그래밍이 금지되고 부트 락 비트와 퓨즈 비트가 잠기며, 퓨즈와 부트 락 비트를 먼저 프로그래밍한 뒤 LB1·LB2를 프로그래밍하라고 설명한다.",
+    "url": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf",
+    "locator": "DS40002061A, 28.1 Program And Data Memory Lock Bits, Table 28-2",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "AVR-03": [
+   {
+    "project": "avr-libc 2.1.0",
+    "claim": "avr-libc FAQ는 표준 C의 비트 연산이 피연산자를 int로 승격하며 avr-gcc에서 int는 기본 16비트이므로 8비트 연산이 16비트 연산으로 컴파일될 수 있다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/FAQ.html",
+    "locator": "avr-libc 2.1.0 FAQ, Why does the compiler compile an 8-bit operation that uses bitwise operators into a 16-bit operation in assembly?",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-04": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -Wstack-usage=byte-size가 함수의 스택 사용량이 지정 바이트를 넘을 수 있으면 경고하며 alloca·가변 길이 배열 공간도 포함해 보수적으로 계산한다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Warning-Options.html",
+    "locator": "GCC 14.2.0 Manual, Warning Options, -Wstack-usage=",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "arduino/ArduinoCore-avr",
+    "claim": "ArduinoCore-avr 1.8.6의 platform.txt는 기본 경고 설정(compiler.warning_flags)을 -w로 두어 경고를 끄고, -Wall(more)과 -Wall -Wextra(all)는 선택 항목으로 정의한다.",
+    "url": "https://raw.githubusercontent.com/arduino/ArduinoCore-avr/1.8.6/platform.txt",
+    "locator": "platform.txt, compiler.warning_flags 정의",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-05": [
+   {
+    "project": "GCC 14.2.0 소스",
+    "claim": "GCC 14.2.0의 최상위 configure.ac는 avr 타깃에서 target-libssp(스택 보호 런타임 라이브러리) 빌드를 제외하며 그 사유로 호스티드 I/O 지원이 없다고 주석에 적는다.",
+    "url": "https://gcc.gnu.org/git/?p=gcc.git;a=blob_plain;f=configure.ac;hb=refs/tags/releases/gcc-14.2.0",
+    "locator": "configure.ac (tag releases/gcc-14.2.0), 'Disable libssp for some systems.' 블록",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-06": [
+   {
+    "project": "avr-libc 2.1.0",
+    "claim": "avr-libc 문서는 AVR이 플래시와 RAM의 주소공간이 분리된 하버드 구조라고 설명하고, PROGMEM 매크로로 데이터를 프로그램 메모리에 두고 avr/pgmspace.h의 매크로로 읽도록 한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/pgmspace.html",
+    "locator": "avr-libc 2.1.0 User Manual, Data in Program Space",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-07": [
+   {
+    "project": "avr-libc 2.1.0",
+    "claim": "avr-libc의 util/atomic.h 문서는 메인과 ISR이 공유하는 16비트 이상 변수에 volatile을 선언해도 컴파일러 최적화 제거만 막을 뿐 원자적 접근은 보장하지 않는다고 설명한다.",
+    "url": "https://www.nongnu.org/avr-libc/user-manual/group__util__atomic.html",
+    "locator": "avr-libc 2.1.0, util/atomic.h Detailed Description",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "AVR-09": [
+   {
+    "project": "ATmega328P 데이터시트",
+    "claim": "ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트는 debugWIRE 시스템이 DWEN 퓨즈가 프로그래밍되고 락 비트가 프로그래밍되지 않은 상태에서 활성화된다고 설명한다.",
+    "url": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf",
+    "locator": "DS40002061A, 25.3 Physical Interface (debugWIRE)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "BSP-01": [
+   {
+    "project": "ArduPilot",
+    "claim": "ArduPilot Copter-4.5.7의 AP_HAL.h는 UARTDriver, GPIO, Scheduler 등 하드웨어 접근 클래스를 모두 순수 가상인 HAL 모듈 클래스로 포함한다.",
+    "url": "https://raw.githubusercontent.com/ArduPilot/ardupilot/Copter-4.5.7/libraries/AP_HAL/AP_HAL.h",
+    "locator": "libraries/AP_HAL/AP_HAL.h",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-02": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 flash_ex 소스는 읽기 보호 레벨(OB_RDP_LEVEL_0·1·2)을 옵션 바이트로 설정하며 레벨 2를 켜면 레벨 1이나 0으로 되돌릴 수 없다고 경고한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Src/stm32f4xx_hal_flash_ex.c",
+    "locator": "Src/stm32f4xx_hal_flash_ex.c, FLASH_OB_RDP_LevelConfig() 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-03": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 HAL_MPU_ConfigRegion은 MPU 영역 구조체의 DisableExec(명령어 실행 금지) 값을 설정에 사용하고 매개변수 검사에 IS_MPU_INSTRUCTION_ACCESS(MPU_Init->DisableExec)를 쓴다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Src/stm32f4xx_hal_cortex.c",
+    "locator": "Src/stm32f4xx_hal_cortex.c, HAL_MPU_ConfigRegion()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-04": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 hal_conf 템플릿은 USE_FULL_ASSERT 정의를 주석 처리한 채 제공하고, 정의되지 않으면 assert_param(expr)을 ((void)0U)로 치환해 매개변수 검사를 없앤다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Inc/stm32f4xx_hal_conf_template.h",
+    "locator": "Inc/stm32f4xx_hal_conf_template.h, USE_FULL_ASSERT / assert_param",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 HAL_UART_Transmit은 pData가 NULL이거나 Size가 0이면 HAL_ERROR를 반환한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Src/stm32f4xx_hal_uart.c",
+    "locator": "Src/stm32f4xx_hal_uart.c, HAL_UART_Transmit()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-07": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 HAL_RNG_GenerateRandomNumber는 데이터 유효 플래그를 기다리다 시간이 초과되면 오류 코드 HAL_RNG_ERROR_TIMEOUT을 기록하고 HAL_ERROR를 반환한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Src/stm32f4xx_hal_rng.c",
+    "locator": "Src/stm32f4xx_hal_rng.c, HAL_RNG_GenerateRandomNumber()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-08": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5 소스는 MISRA C:2012 규칙 11.5 편차를 코드 주석 'Derogation MISRAC2012-Rule-11.5'로 표시한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Src/stm32f4xx_hal_sram.c",
+    "locator": "Src/stm32f4xx_hal_sram.c",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL v1.8.5의 릴리스 노트는 v1.8.4에서 MISRA-C 2012 Rule-8.13(const 한정자) 코드 품질을 개선했다고 기록한다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Release_Notes.html",
+    "locator": "Release_Notes.html, V1.8.4 Main Changes",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "BSP-10": [
+   {
+    "project": "STM32F4 HAL Driver",
+    "claim": "STM32F4 HAL 저장소의 릴리스 노트는 버전별 수정 내역을 기록하며, v1.8.4에는 RTC 레지스터 쓰기 시 상위 비트 덮어쓰기를 막는 수정이 포함되어 있다.",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx_hal_driver/v1.8.5/Release_Notes.html",
+    "locator": "Release_Notes.html, V1.8.4 HAL RTC",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "CCS-01": [
+   {
+    "project": "TI C28x 컴파일러 SPRU514AA",
+    "claim": "TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)에 따르면 C28x의 바이트는 char와 같은 16비트이고, 그래서 sizeof(int)의 값은 2가 아니라 1이다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA (v25.11.0.LTS, 2026-03) C/C++ Language 장, sizeof 설명",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "CCS-02": [
+   {
+    "project": "c2000ware-core-sdk",
+    "claim": "C2000Ware driverlib dcsm.h는 DCSM_unlockZone1CSM이 사용자 OTP의 네 패스워드 값 중 0xFFFFFFFF와 다른 값이 있을 때 입력한 패스워드를 CSM 키 레지스터에 써서 잠금을 푼다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v26.02.00.00.LTS/driverlib/f28002x/driverlib/dcsm.h",
+    "locator": "driverlib/f28002x/driverlib/dcsm.h, DCSM_unlockZone1CSM() 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "c2000ware-core-sdk",
+    "claim": "C2000Ware의 DCSM Zone 1 OTP 예제 파일은 OTP 초기화 코드가 모두 주석 처리된 상태로 제공된다. 파일 주석은 실제 값을 코드 개발을 마친 뒤에 정하도록 권고한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v26.02.00.00.LTS/device_support/f28002x/common/source/f28002x_dcsm_z1otp.asm",
+    "locator": "device_support/f28002x/common/source/f28002x_dcsm_z1otp.asm, 파일 머리 설명",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "CCS-03": [
+   {
+    "project": "TI C28x 컴파일러 SPRU514AA",
+    "claim": "TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)는 스택 크기를 링크 시 --stack_size 옵션으로, 힙 크기를 링커의 --heap_size 옵션으로 지정한다고 설명한다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA, Run-Time Environment 장 (Stack / Dynamic Memory Allocation 절)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "c2000ware-core-sdk",
+    "claim": "C2000Ware의 F28002x 플래시 링커 명령 파일은 MEMORY 블록에서 RAM 영역을 나누고 SECTIONS에서 .stack을 RAMM1에, .bss·.data·.sysmem을 RAMLS4567에 명시적으로 배치한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v26.02.00.00.LTS/device_support/f28002x/common/cmd/28002x_generic_flash_lnk.cmd",
+    "locator": "device_support/f28002x/common/cmd/28002x_generic_flash_lnk.cmd, SECTIONS",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "CCS-04": [
+   {
+    "project": "TI C28x 컴파일러 SPRU514AA",
+    "claim": "TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)는 --emit_warnings_as_errors를 모든 경고를 오류로 처리하는 옵션으로, --issue_remarks를 기본으로 억제된 리마크를 출력하는 옵션으로 설명한다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA, 2.7.1 Controlling Diagnostic Messages (Table 2-10 Diagnostic Message Options)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "CCS-05": [
+   {
+    "project": "TI Arm Clang 컴파일러",
+    "claim": "TI Arm Clang(tiarmclang) 컴파일러 사용자 가이드는 -fstack-protector, -fstack-protector-strong, -fstack-protector-all 옵션을 제공하며 사용자가 __stack_chk_fail()과 __stack_chk_guard를 직접 정의해야 한다고 설명한다.",
+    "url": "https://software-dl.ti.com/codegen/docs/tiarmclang/compiler_tools_user_guide/compiler_manual/compiler_security/stack_smashing_detection.html",
+    "locator": "TI Arm Clang Compiler Tools User's Guide 5.1.0.LTS, 15.2 Stack Smashing Detection",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "TI C28x 컴파일러",
+    "claim": "TI TMS320C28x 컴파일러 사용자 가이드 SPRU514AA(v25.11.0.LTS)의 전체 옵션 요약표에는 스택 카나리·새니타이저 옵션이 없고, 컴파일러는 스택 오버플로를 검사하는 수단을 제공하지 않으며 --entry_hook으로 점검 코드를 넣을 수 있다고 안내한다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA 2.3절 표 2-1~2-28, 7.1.2 Note",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   },
+   {
+    "project": "TI MSP430 컴파일러",
+    "claim": "TI MSP430 컴파일러 사용자 가이드 SLAU132Y(v21.6.0.LTS)의 전체 옵션 요약표에는 스택 카나리·새니타이저 옵션이 없고, 컴파일러는 스택 오버플로를 검사하는 수단을 제공하지 않으며 --entry_hook으로 점검 코드를 넣을 수 있다고 안내한다.",
+    "url": "https://www.ti.com/lit/ug/slau132y/slau132y.pdf",
+    "locator": "SLAU132Y 2.3절, 6.1.5 Note",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   },
+   {
+    "project": "TI C6000 컴파일러",
+    "claim": "TI TMS320C6000 컴파일러 사용자 가이드 SPRUI04G(v8.5.x)의 전체 옵션 요약표에는 스택 카나리·새니타이저 옵션이 없고, 컴파일러는 스택 오버플로를 검사하는 수단을 제공하지 않으며 --entry_hook으로 점검 코드를 넣을 수 있다고 안내한다.",
+    "url": "https://www.ti.com/lit/ug/sprui04g/sprui04g.pdf",
+    "locator": "SPRUI04G 3.3절 표 3-1~3-28, 8.1.2 Note",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "CCS-06": [
+   {
+    "project": "TI ARM 컴파일러 SPNU151W",
+    "claim": "TI ARM 컴파일러 사용자 가이드(v20.2.0.LTS)의 --check_misra 옵션은 표 2-21 'MISRA-C 2004 Options'에 속하며 MISRA-C:2004 규칙 검사를 켠다.",
+    "url": "https://www.ti.com/lit/ug/spnu151w/spnu151w.pdf",
+    "locator": "SPNU151W (v20.2.0.LTS, 2023-03), 2.3 옵션 요약 표 2-21",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "TI C28x 컴파일러 SPRU514AA",
+    "claim": "TI의 TMS320C28x 컴파일러 사용자 가이드 개정 이력은 Revision V(2020-12)에 MISRA-C 검사 지원을 중단했다고 기록한다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA, Revision History, Changes from September 1, 2020 to December 15, 2020 (Revision U to V)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "CCS-07": [
+   {
+    "project": "c2000ware-core-sdk",
+    "claim": "C2000Ware F28002x 헤더(f28002x_cputimer.h)는 CPU 타이머 레지스터를 extern volatile struct CPUTIMER_REGS 형태의 volatile 구조체 변수로 선언한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v26.02.00.00.LTS/device_support/f28002x/headers/include/f28002x_cputimer.h",
+    "locator": "device_support/f28002x/headers/include/f28002x_cputimer.h",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "c2000ware-core-sdk",
+    "claim": "C2000Ware F28002x 헤더(f28002x_device.h)는 EALLOW와 EDIS를 각각 __eallow()와 __edis() 계열 인트린식으로 정의한다.",
+    "url": "https://raw.githubusercontent.com/TexasInstruments/c2000ware-core-sdk/REL_C2000Ware_v26.02.00.00.LTS/device_support/f28002x/headers/include/f28002x_device.h",
+    "locator": "device_support/f28002x/headers/include/f28002x_device.h",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "CCS-08": [
+   {
+    "project": "TI SYS/BIOS",
+    "claim": "TI SYS/BIOS Task 모듈 문서는 Task.checkStackFlag의 기본값이 true이고, 전체 스택 검사를 켜려면 이 플래그와 ti.sysbios.hal.Hwi.checkStackFlag를 모두 설정해야 한다고 설명한다.",
+    "url": "https://software-dl.ti.com/dsps/dsps_public_sw/sdo_sb/targetcontent/sysbios/6_53_02_00/exports/bios_6_53_02_00/docs/cdoc/ti/sysbios/knl/Task.html",
+    "locator": "SYS/BIOS 6.53.02.00 cdoc, ti.sysbios.knl.Task, config Task.checkStackFlag",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   },
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel V11.1.0 stack_macros.h의 주석은 configCHECK_FOR_STACK_OVERFLOW를 1보다 크게 하면 태스크 생성 시 채운 스택 끝 몇 바이트가 덮어써졌는지도 검사하지만 오버플로를 항상 식별하지는 못한다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/include/stack_macros.h",
+    "locator": "include/stack_macros.h, 파일 머리 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-01": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 보안 강화 플래그 묶음인 -fhardened가 현재 GNU/Linux 타깃에서만 지원되고 일부 하위 옵션(-fcf-protection=full)은 x86 GNU/Linux에만 적용된다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fhardened",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "zephyrproject-rtos/zephyr",
+    "claim": "Zephyr v4.2.0 Kconfig.zephyr는 libc 호출의 버퍼 오버플로 검사(FORTIFY)를 Picolibc 또는 Newlib 사용 시 지원한다고 설명하고 MINIMAL_LIBC 등에서는 기본값을 '검사 없음'으로 둔다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/Kconfig.zephyr",
+    "locator": "Kconfig.zephyr, choice COMPILER_SECURITY_FORTIFY",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-02": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -Wformat=2가 현재 -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k와 같다고, -w가 모든 경고 메시지를 억제한다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Warning-Options.html",
+    "locator": "GCC 14.2.0 Manual, Warning Options, -Wformat=2 / -w",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 v1.16.1의 공통 컴파일러 플래그는 -Wall -Wextra -Werror에 -Wcast-align, -Wformat-security, -Wshadow를 추가한다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.16.1/cmake/px4_add_common_flags.cmake",
+    "locator": "cmake/px4_add_common_flags.cmake, add_compile_options 블록",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-03": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fhardened가 -D_FORTIFY_SOURCE=3, -ftrivial-auto-var-init=zero, -fPIE -pie -Wl,-z,relro,-z,now, -fstack-protector-strong, -fstack-clash-protection 등을 켜고 glibc가 2.35보다 오래되면 -D_FORTIFY_SOURCE=2를 쓴다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fhardened",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "glibc",
+    "claim": "glibc 2.35 NEWS는 _FORTIFY_SOURCE 레벨 3을 glibc와 gcc 12 이상으로 컴파일하는 애플리케이션에서 쓸 수 있게 되었다고 기록한다.",
+    "url": "https://sourceware.org/git/?p=glibc.git;a=blob_plain;f=NEWS;hb=refs/tags/glibc-2.35",
+    "locator": "glibc NEWS (tag glibc-2.35), 2.35 새 기능",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-04": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fcf-protection=의 full 값이 branch와 return을 함께 지정하는 것과 같다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fcf-protection=",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 9.1.0 문서",
+    "claim": "GCC 9.1.0 문서의 AArch64 옵션에는 -mbranch-protection=(none|standard|pac-ret|bti)가 수록되어 있고 standard는 모든 분기 보호 기능을 켠다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/AArch64-Options.html",
+    "locator": "GCC 9.1.0 Manual, AArch64 Options, -mbranch-protection=",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-05": [
+   {
+    "project": "zephyrproject-rtos/zephyr",
+    "claim": "Zephyr v4.2.0 커널은 kernel/compiler_stack_protect.c에서 컴파일러가 참조하는 전역 __stack_chk_guard를 직접 정의한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/kernel/compiler_stack_protect.c",
+    "locator": "kernel/compiler_stack_protect.c",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "Zephyr 사례다. arm-none-eabi 툴체인 일반의 근거가 아니며, 심볼 제공 여부는 사용 툴체인의 링크 맵으로 확인한다."
+   },
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fsanitize-trap으로 UBSan이 libubsan 대신 __builtin_trap을 쓰게 하면 libubsan이 필요 없어 freestanding 환경에서도 쓸 수 있다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fsanitize-trap",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "같은 절은 trap 모드에서 -fsanitize=vptr를 쓸 수 없다고 적는다(2026. 11. 3. 확인)."
+   }
+  ],
+  "GCC-06": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서의 정적 분석 옵션 절은 -fanalyzer가 이 릴리스에서 C 코드에만 적합하다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Static-Analyzer-Options.html",
+    "locator": "GCC 14.2.0 Manual, Static Analyzer Options, -fanalyzer",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fanalyzer를 프로그램의 정확성을 증명하는 도구와 구분해 결함 탐지 도구로 설명하고, 오탐과 미탐이 모두 생길 수 있다고 적는다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Static-Analyzer-Options.html",
+    "locator": "GCC 14.2.0 Manual, Static Analyzer Options, -fanalyzer",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-07": [
+   {
+    "project": "GCC 12.1.0 문서",
+    "claim": "GCC 12.1.0 문서의 Optimize Options에는 -ftrivial-auto-var-init=가 수록되어 있으며 자동 변수를 패턴 또는 0으로 초기화해 미초기화 메모리 노출을 막는다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-12.1.0/gcc/Optimize-Options.html",
+    "locator": "GCC 12.1.0 Manual, Optimize Options, -ftrivial-auto-var-init=",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fwrapv가 부호 있는 덧셈·뺄셈·곱셈 오버플로가 2의 보수로 감싼다고 가정하게 하며 일부 최적화를 켜고 일부는 끈다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Code-Gen-Options.html",
+    "locator": "GCC 14.2.0 Manual, Code Gen Options, -fwrapv",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-08": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fsanitize=address가 메모리 접근 명령을 계측해 범위 밖 접근과 해제 후 사용을 탐지한다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fsanitize=address",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fsanitize=undefined가 다양한 연산을 계측해 실행 중 미정의 동작을 탐지한다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fsanitize=undefined",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-09": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -fprofile-info-section이 생성자·파괴자나 C 라이브러리 파일 I/O를 지원하지 않는 자원이 제한된 freestanding 환경(예: 임베디드)을 대상으로 하며 호스티드 환경용이 아니라고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.2.0 Manual, Instrumentation Options, -fprofile-info-section",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 14.1.0 문서",
+    "claim": "GCC 14.1.0 문서의 Instrumentation Options에는 -fcondition-coverage가 수록되어 있으며 조건식의 각 항이 결정에 독립적으로 영향을 주는지 검증하는 데 쓸 수 있는 기록을 남긴다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gcc/Instrumentation-Options.html",
+    "locator": "GCC 14.1.0 Manual, Instrumentation Options, -fcondition-coverage",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "GCC-10": [
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -ffile-prefix-map=old=new가 컴파일 결과에 기록되는 경로를 바꿔 위치와 무관한 재현 가능한 빌드를 만드는 데 쓸 수 있다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Overall-Options.html",
+    "locator": "GCC 14.2.0 Manual, Overall Options, -ffile-prefix-map",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "GCC 14.2.0 문서",
+    "claim": "GCC 14.2.0 문서는 -frandom-seed 옵션으로 재현 가능하게 동일한 오브젝트 파일을 만들 수 있다고 설명한다.",
+    "url": "https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Developer-Options.html",
+    "locator": "GCC 14.2.0 Manual, Developer Options, -frandom-seed=",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-01": [
+   {
+    "project": "Microsoft Learn (.NET)",
+    "claim": "Microsoft Learn에 따르면 unsafe 컨텍스트가 있는 C# 코드는 AllowUnsafeBlocks 컴파일러 옵션을 추가해야 컴파일되며, 이런 코드에는 보안·안정성 위험이 따른다.",
+    "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code",
+    "locator": "Unsafe code, pointer types, and function pointers 문서 서두",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-02": [
+   {
+    "project": "Microsoft Learn (Win32)",
+    "claim": "Microsoft Learn의 SetDefaultDllDirectories 문서는 이 함수가 LOAD_LIBRARY_SEARCH 플래그 없이 LoadLibraryEx를 호출할 때 쓰는 DLL 검색 디렉터리 집합을 지정한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-setdefaultdlldirectories",
+    "locator": "SetDefaultDllDirectories function (libloaderapi.h) 서두",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-03": [
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn은 /sdl이 /GS가 제공하는 기준 보안 검사의 상위 집합을 켜고 /GS-를 덮어쓴다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/reference/sdl-enable-additional-security-checks",
+    "locator": "/sdl (Enable Additional Security Checks), Remarks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "autolink": false
+   },
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn은 CFG를 쓰려면 컴파일러에 /guard:cf를 링커에 /GUARD:CF를 전달해야 하고 /DYNAMICBASE 링커 옵션도 필요하다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/reference/guard-enable-control-flow-guard",
+    "locator": "/guard (Enable Control Flow Guard), Remarks",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-04": [
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn의 C4996 문서에 따르면 CRT 폐기 경고를 끄는 매크로는 _CRT_SECURE_NO_WARNINGS이다. 폐기 대상 함수는 대부분 버퍼 경계를 검사하지 않아 잘못 쓰면 보안 문제로 이어진다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-3-c4996",
+    "locator": "Compiler Warning (level 3) C4996, Unsafe CRT Library functions",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn의 CRT 보안 기능 문서는 _CRT_SECURE_NO_WARNINGS 정의나 경고 pragma로 폐기 경고를 끄더라도 경고의 원인이 된 보안 문제는 그대로 남는다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/c-runtime-library/security-features-in-the-crt",
+    "locator": "Security Features in the CRT, Eliminating deprecation warnings",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-05": [
+   {
+    "project": "Microsoft Learn (C#)",
+    "claim": "Microsoft Learn은 CheckForOverflowUnderflow가 true이면 기본 컨텍스트가 checked 컨텍스트가 되어 정수 연산 오버플로 검사가 켜지고 기본값은 false라고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language",
+    "locator": "Compiler Options - language feature rules, CheckForOverflowUnderflow",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn (.NET)",
+    "claim": "Microsoft Learn의 BinaryFormatter 보안 가이드는 BinaryFormatter가 위험하여 데이터 처리에 권장되지 않으며 안전하게 만들 수 없다고 경고한다.",
+    "url": "https://learn.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide",
+    "locator": "Deserialization risks in use of BinaryFormatter and related types, Caution",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-06": [
+   {
+    "project": "Microsoft Learn (.NET)",
+    "claim": "Microsoft Learn의 XmlReaderSettings.DtdProcessing 문서는 DTD 처리 설정의 기본값이 Prohibit라고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmlreadersettings.dtdprocessing",
+    "locator": "XmlReaderSettings.DtdProcessing Property, Property Value",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-07": [
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn의 C/C++ 코드 분석 개요는 SAL 주석이 함수 매개변수와 반환형의 사전·사후 조건 정보를 제공해 코드 분석의 정확도를 높인다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/code-quality/code-analysis-for-c-cpp-overview",
+    "locator": "Code analysis for C/C++ overview, Annotation support",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-08": [
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn은 MSVC의 AddressSanitizer 지원이 Visual Studio 2019 16.9부터이고 Windows 10 이상의 x86·x64로 한정되며, 향후 요청 대상으로 /fsanitize=undefined를 언급한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/sanitizers/asan",
+    "locator": "AddressSanitizer 개요 / Note",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn (MSVC)",
+    "claim": "Microsoft Learn의 AddressSanitizer 알려진 문제 문서는 /RTC 옵션이 /fsanitize=address와 호환되지 않으므로 꺼야 한다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/cpp/sanitizers/asan-known-issues",
+    "locator": "AddressSanitizer known issues and limitations, Incompatible options and functionality",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "MSVC-10": [
+   {
+    "project": "Microsoft Learn (Visual Studio)",
+    "claim": "Microsoft Learn은 부트스트래퍼의 --layout 옵션으로 Visual Studio 로컬(오프라인) 레이아웃을 만들 수 있다고 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/visualstudio/install/create-an-offline-installation-of-visual-studio",
+    "locator": "Create an offline installation of Visual Studio, Step 2",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Microsoft Learn (NuGet)",
+    "claim": "Microsoft Learn의 NuGet 패키지 소스 매핑 문서는 nuget.config의 packageSourceMapping 요소로 패키지 ID 패턴별로 복원할 소스를 지정하는 방법을 설명한다.",
+    "url": "https://learn.microsoft.com/en-us/nuget/consume-packages/package-source-mapping",
+    "locator": "Package Source Mapping, Enable by manually editing nuget.config",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-01": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr 4.2.0 문서의 west spdx 명령은 소스 파일과 생성된 빌드 파일 사이의 관계를 담은 SPDX 2.2 또는 2.3 문서를 생성한다.",
+    "url": "https://docs.zephyrproject.org/4.2.0/develop/west/zephyr-cmds.html",
+    "locator": "Zephyr 4.2.0 docs, Additional Zephyr extension commands, Software bill of materials: west spdx",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 5.0.4 문서는 create-spdx 클래스를 상속(INHERIT)해야 SPDX 형식의 SBOM이 생성된다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/dev-manual/sbom.html",
+    "locator": "Yocto 5.0.4 Development Tasks Manual, Creating a Software Bill of Materials",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-02": [
+   {
+    "project": "GNU GPL v3",
+    "claim": "GPL-3.0 본문은 사용자 제품(User Product)에서 수정본을 설치·실행하는 데 필요한 방법·절차·인증 키 등을 '설치 정보(Installation Information)'로 정의한다.",
+    "url": "https://www.gnu.org/licenses/gpl-3.0.html",
+    "locator": "GNU GPL v3, Section 6",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Apache License 2.0",
+    "claim": "Apache-2.0 본문 4조(d)는 배포물에 NOTICE 텍스트 파일이 있으면 파생 저작물에 그 속성 고지의 읽을 수 있는 사본을 포함하도록 요구한다.",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "locator": "Apache License 2.0, Section 4(d)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-03": [
+   {
+    "project": "Mbed TLS",
+    "claim": "Mbed TLS v3.6.7의 mbedtls_config.h는 이 컴파일 타임 옵션 집합으로 기능을 선택적으로 켜고 끄고 전체 메모리 사용량을 줄일 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/Mbed-TLS/mbedtls/v3.6.7/include/mbedtls/mbedtls_config.h",
+    "locator": "include/mbedtls/mbedtls_config.h, 파일 머리 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "OpenSSL",
+    "claim": "OpenSSL openssl-3.6.5의 INSTALL.md는 no-{algorithm} 옵션으로 des, rc4, md4 등 지정한 알고리즘을 뺀 채 빌드할 수 있다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/openssl/openssl/openssl-3.6.5/INSTALL.md",
+    "locator": "INSTALL.md, no-{algorithm}",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Mbed TLS",
+    "claim": "Mbed TLS v3.6.7의 3.0 이전 안내서는 config.h가 build_info.h와 mbedtls_config.h로 나뉘었다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/Mbed-TLS/mbedtls/v3.6.7/docs/3.0-migration-guide.md",
+    "locator": "docs/3.0-migration-guide.md, Introduce a level of indirection and versioning in the config files",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "OSS-04": [
+   {
+    "project": "KISA",
+    "claim": "KISA 암호모듈검증(KCMVP) 개요 페이지는 이 제도를 국가·공공망에 도입되는 암호모듈이 안전하고 올바르게 구현되었는지 확인하는 검증 제도로 소개한다.",
+    "url": "https://seed.kisa.or.kr/kisa/kcmvp/EgovSummary.do",
+    "locator": "KISA 암호이용활성화 > 암호모듈검증 > 개요, 목적",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Mbed TLS",
+    "claim": "Mbed TLS v3.6.7의 mbedtls_config.h는 DES/3DES와 MD5, SHA-1을 약한 암호·해시로 간주하며 사용이 보안 위험이라고 경고한다.",
+    "url": "https://raw.githubusercontent.com/Mbed-TLS/mbedtls/v3.6.7/include/mbedtls/mbedtls_config.h",
+    "locator": "include/mbedtls/mbedtls_config.h, MBEDTLS_DES_C / MBEDTLS_MD5_C / MBEDTLS_SHA1_C 주석",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-05": [
+   {
+    "project": "zlib",
+    "claim": "zlib 공식 사이트는 배포 소스 압축 파일마다 SHA-256 해시와 GPG 서명을 함께 제공한다.",
+    "url": "https://zlib.net/",
+    "locator": "zlib.net 홈, The current release is publicly available here (조회일 2026-10-15)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-06": [
+   {
+    "project": "pip",
+    "claim": "pip 문서는 원격 변조 방지 수단으로 --require-hashes 해시 검사 모드를 들며, 이 모드에서는 요구사항을 ==로 고정하고 해시를 requirements 파일에 적어 두어야 한다고 설명한다.",
+    "url": "https://pip.pypa.io/en/stable/topics/secure-installs/",
+    "locator": "pip documentation, Secure installs, Hash-checking Mode",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-07": [
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 5.0.4 레시피 스타일 가이드는 각 패치에 Upstream-Status 태그를 달아 상위 반영 상태(Pending, Submitted 등)를 기록하라고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/contributor-guide/recipe-style-guide.html",
+    "locator": "Yocto 5.0.4 Contributor Guide, Recipe Style Guide, Patch upstream status",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-08": [
+   {
+    "project": "FreeRTOS-Kernel",
+    "claim": "FreeRTOS-Kernel V11.1.0의 MISRA.md는 MISRA C:2012 준수를 표방하되 일부 규칙에서 벗어나며 구체적 편차를 인라인으로 억제하고 목록으로 문서화한다고 밝힌다.",
+    "url": "https://raw.githubusercontent.com/FreeRTOS/FreeRTOS-Kernel/V11.1.0/MISRA.md",
+    "locator": "MISRA.md, MISRA Compliance 서두",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "OSS-09": [
+   {
+    "project": "OWASP Dependency-Check",
+    "claim": "Dependency-Check CLI 문서는 -n/--noupdate 옵션이 NVD-CVE, hosted-suppressions, RetireJS 데이터의 자동 갱신을 끈다고 설명한다.",
+    "url": "https://jeremylong.github.io/DependencyCheck/dependency-check-cli/arguments.html",
+    "locator": "dependency-check-cli, Command Line Arguments, --noupdate",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "이 문서의 인자 표에는 SBOM 입력 항목이 없다(--scan은 경로, 2026. 11. 3. 확인)."
+   },
+   {
+    "project": "LLVM libFuzzer",
+    "claim": "LLVM 문서는 libFuzzer를 코드 실행률(coverage) 기반 퍼징 엔진으로 설명한다.",
+    "url": "https://llvm.org/docs/LibFuzzer.html",
+    "locator": "LLVM libFuzzer 문서 서두",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Trivy",
+    "claim": "Trivy v0.65.0 문서는 SBOM 문서를 입력으로 받아 스캔할 수 있다고 설명한다(trivy sbom).",
+    "url": "https://raw.githubusercontent.com/aquasecurity/trivy/v0.65.0/docs/docs/supply-chain/sbom.md",
+    "locator": "docs/docs/supply-chain/sbom.md, Scanning > SBOM as Target",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   },
+   {
+    "project": "Grype",
+    "claim": "Grype v0.92.0 README는 SBOM을 입력으로 받아 취약점을 스캔하는 사용법을 설명한다(grype sbom:).",
+    "url": "https://raw.githubusercontent.com/anchore/grype/v0.92.0/README.md",
+    "locator": "README.md, SBOM 입력 절",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "2026. 11. 3. 확인",
+    "autolink": false
+   }
+  ],
+  "OSS-10": [
+   {
+    "project": "Yocto Project",
+    "claim": "Yocto Project 5.0.4 문서는 INHERIT += \"cve-check\"로 빌드 시 컴파일되는 각 소프트웨어 구성요소의 레시피 이름·버전을 CVE 데이터베이스와 대조해 보고서를 만든다고 설명한다.",
+    "url": "https://docs.yoctoproject.org/5.0.4/dev-manual/vulnerabilities.html",
+    "locator": "Yocto 5.0.4 Development Tasks Manual, Checking for Vulnerabilities, 36.2",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "zlib (공개 CVE)",
+    "claim": "CVE-2022-37434는 zlib 1.2.12 이하의 inflate 힙 버퍼 오버리드·오버플로를 기록하며 영향을 받는 zlib 소스를 번들한 일반 응용이 있다고 덧붙인다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2022-37434",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WRW-01": [
+   {
+    "project": "nasa/osal",
+    "claim": "NASA OSAL v7.0.1 저장소는 RTP 전용 BSP(generic-vxworks-rtp)를 별도로 두고, 이 BSP가 vxworks-rtp OS 계층하고만 동작한다고 CMake 파일에 명시한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/bsp/generic-vxworks-rtp/CMakeLists.txt",
+    "locator": "src/bsp/generic-vxworks-rtp/CMakeLists.txt",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WRW-02": [
+   {
+    "project": "Wind River VxWorks (공개 CVE)",
+    "claim": "CVE-2010-2965는 VxWorks 6.x·5.x 이하의 WDB 타깃 에이전트 디버그 서비스가 UDP 포트 17185 요청으로 원격 공격자에게 임의 메모리 읽기·수정과 함수 호출을 허용했다고 기록한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2010-2965",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "CERT/CC 취약점 노트 VU#362332",
+    "claim": "CERT/CC 취약점 노트 VU#362332(CVE-2010-2965)는 VxWorks 이미지에서 WDB 타깃 에이전트와 디버깅 구성요소(INCLUDE_WDB, INCLUDE_DEBUG)처럼 호스트 개발 지원용 구성요소를 제거하라고 권고한다.",
+    "url": "https://www.kb.cert.org/vuls/id/362332",
+    "locator": "VU#362332 Description",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": "2026-10-15 재조사, 원문 재대조. 독립 보강: CISA ICSA-10-214-01"
+   }
+  ],
+  "WRW-03": [
+   {
+    "project": "VxWorks (AdaCore GNAT 문서)",
+    "claim": "AdaCore의 VxWorks용 GNAT 문서에 따르면 커널 모듈과 커널 응용의 스택 검사는 INCLUDE_PROTECT_TASK_STACK을 켠 커널을 전제로 하고, VxWorks 7부터 -fstack-check는 스택 프로빙 방식으로 동작한다.",
+    "url": "https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx/vxworks_topics.html",
+    "locator": "GNAT UG Supplement for Cross Platforms 28.0w, VxWorks Topics",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 공식 원문의 위치로 확인한다"
+   }
+  ],
+  "WRW-04": [
+   {
+    "project": "PX4-Autopilot",
+    "claim": "PX4 v1.16.1의 공통 컴파일러 플래그는 -Wall -Wextra -Werror를 기본으로 두고 -Wformat-security, -Wshadow, -Wcast-align 등을 추가하며 일부 경고만 -Wno-로 명시적으로 끈다.",
+    "url": "https://raw.githubusercontent.com/PX4/PX4-Autopilot/v1.16.1/cmake/px4_add_common_flags.cmake",
+    "locator": "cmake/px4_add_common_flags.cmake, add_compile_options 블록 (Warnings / disabled warnings)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WRW-07": [
+   {
+    "project": "nasa/osal",
+    "claim": "NASA OSAL의 generic-vxworks BSP는 접근용 뮤텍스를 semMInitialize로 만들 때 SEM_Q_PRIORITY, SEM_INVERSION_SAFE, SEM_DELETE_SAFE 옵션을 함께 지정한다.",
+    "url": "https://raw.githubusercontent.com/nasa/osal/v7.0.1/src/bsp/generic-vxworks/src/bsp_start.c",
+    "locator": "src/bsp/generic-vxworks/src/bsp_start.c, OS_BSPMain()",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WRW-10": [
+   {
+    "project": "Wind River VxWorks (공개 CVE)",
+    "claim": "CVE-2019-12256은 VxWorks 6.9와 vx7의 IPv4 컴포넌트(IPNET)에서 IP 옵션 파싱 중 스택 오버플로가 발생한다고 기록한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2019-12256",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   },
+   {
+    "project": "Wind River VxWorks (공개 CVE)",
+    "claim": "CVE-2019-12255는 VxWorks TCP 컴포넌트의 버퍼 오버플로(4건 중 첫 번째)로, TCP Urgent Pointer가 0일 때 정수 언더플로가 발생하는 IPNET 보안 취약점이라고 기록한다.",
+    "url": "https://cveawg.mitre.org/api/cve/CVE-2019-12255",
+    "locator": "CVE 기록 설명(description)",
+    "tier": 1,
+    "verdict": "VERIFIED",
+    "note": ""
+   }
+  ],
+  "WRW-05": [
+   {
+    "project": "Wind River VxWorks 데이터시트",
+    "claim": "Wind River 공개 데이터시트는 VxWorks 기능으로 스택 가드 페이지와 스택 스매싱 보호를 든다.",
+    "url": "https://www.windriver.com/resource/vxworks-datasheet",
+    "locator": "VxWorks Datasheet, 기능 목록(조회일 2026-11-02)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 판별·CPU별 지원과 Diab 옵션은 공개 원문으로 확인하지 못했으므로 설치본 문서로 확정한다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Linux kernel",
+    "claim": "Linux v6.6 arch/Kconfig의 STACKPROTECTOR는 아키텍처 지원과 컴파일러 옵션 지원을 모두 확인한 뒤 켜진다.",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.6/arch/Kconfig",
+    "locator": "arch/Kconfig L621-630",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 버전·CPU별 지원을 먼저 확인하는 방식의 사례다.",
+    "scope": "부분"
+   }
+  ],
+  "WRW-06": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 인터럽트 문서는 많은 커널 API를 스레드에서만 쓸 수 있고 ISR에서는 쓸 수 없다고 설명한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/doc/kernel/services/interrupts.rst",
+    "locator": "doc/kernel/services/interrupts.rst L54",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. memPartLib·checkStack 이름은 공개 공식 원문에서 확인하지 못했다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 thread analyzer 문서는 스레드별 스택 사용량과 여유를 실행 중에 보고하는 예를 보인다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/doc/services/debugging/thread-analyzer.rst",
+    "locator": "doc/services/debugging/thread-analyzer.rst L7, L31-34",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 태스크 스택을 실측해 여유를 두는 방식의 사례다.",
+    "scope": "부분"
+   }
+  ],
+  "WRW-08": [
+   {
+    "project": "Rapita Systems",
+    "claim": "Rapita Systems는 임베디드 소프트웨어의 코드 실행률 측정이 계측 코드를 쓰며, 계측판과 비계측판의 실행 시간을 비교한 사례에서 일반 계측이 49% 느렸다고 보고한다.",
+    "url": "https://www.rapitasystems.com/blog/what-are-overheads-code-coverage-using-doom-example",
+    "locator": "What are the overheads of code coverage? 본문",
+    "tier": 3,
+    "verdict": "VERIFIED",
+    "note": "일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 벤더 블로그의 라즈베리 파이 측정값이다. 계측이 타이밍을 바꾼다는 부분의 근거이며, 시뮬레이터 결과로 갈음하지 않는다는 부분은 매뉴얼 기준이다.",
+    "scope": "부분"
+   }
+  ],
+  "WRW-09": [
+   {
+    "project": "Wind River VxWorks 데이터시트",
+    "claim": "Wind River 공개 데이터시트는 VxWorks 기능으로 ASAN과 KASAN을 든다.",
+    "url": "https://www.windriver.com/resource/vxworks-datasheet",
+    "locator": "VxWorks Datasheet, 기능 목록(조회일 2026-11-02)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. INCLUDE_MEM_EDR과 Workbench 메모리 분석 도구는 공개 공식 원문으로 확인하지 못했다.",
+    "scope": "부분"
+   }
+  ],
+  "CCS-09": [
+   {
+    "project": "TI C28x 컴파일러 SPRU514AA",
+    "claim": "TI C28x 컴파일러 사용자 가이드(v25.11.0.LTS)에 따르면 코드 실행률 측정은 --gen_profile_info로 계측 코드와 카운터 메모리를 더한 프로그램을 타깃에서 실행해 자료를 모은다.",
+    "url": "https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf",
+    "locator": "SPRU514AA 3.8.1절(PDF 68쪽)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 시뮬레이터 결과를 참고용으로 둔다는 문장은 이 절에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "CCS-10": [
+   {
+    "project": "TI Code Composer Studio",
+    "claim": "TI CCS 사용자 가이드는 빌드 구성마다 빌드 도구 버전을 지정할 수 있고, 프로젝트가 빌드에 쓴 빌드 도구 버전을 담는다고 설명한다.",
+    "url": "https://software-dl.ti.com/ccs/esd/documents/users_guide/ccs_project-management.html",
+    "locator": "CCS User's Guide, Project Management(조회일 2026-11-02)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. 회귀시험과 설치 파일 해시 검증은 이 문서에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "MSVC-09": [
+   {
+    "project": "Microsoft Learn (MSVC·.NET·Visual Studio 공식 문서)",
+    "claim": "Microsoft Learn에 따르면 Visual Studio 코드 실행률 기능은 판에 따라 쓸 수 있는 에디션이 다르고 결과는 블록과 줄 단위로 보여 준다.",
+    "url": "https://learn.microsoft.com/en-us/visualstudio/test/using-code-coverage-to-determine-how-much-code-is-being-tested",
+    "locator": "Use code coverage to determine how much code is being tested, Report in blocks or lines",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "",
+    "scope": "부분"
+   },
+   {
+    "project": "Microsoft Learn (MSVC·.NET·Visual Studio 공식 문서)",
+    "claim": "Microsoft Learn의 .NET 단위시험 코드 실행률 문서는 측정 단위로 줄, 분기, 메서드를 들고 결과 예에 분기 비율을 보여 준다.",
+    "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage",
+    "locator": "Use code coverage for unit testing, 서두와 결과 예",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": ".NET 도구 기준이다. 시험 장비 사양에 관한 문장은 없다.",
+    "scope": "부분"
+   }
+  ],
+  "AVR-08": [
+   {
+    "project": "Microchip MPLAB X IDE 문서",
+    "claim": "Microchip MPLAB X 문서에 따르면 코드 실행률은 프로젝트 속성에서 켜고 시험 코드를 디버그 실행한 뒤 확인하며, 지원 XC 컴파일러가 있어야 한다.",
+    "url": "https://onlinedocs.microchip.com/oxy/GUID-D79ACEBE-41BD-43EF-8E1B-9462847AE13E-en-US-12/GUID-FCF7FCE3-9E08-4DB6-95C3-BEDFB80F1A93.html",
+    "locator": "MPLAB X IDE User's Guide 10.3.1 Code Coverage Overview",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다. Microchip Studio가 아니라 후속 도구 기준이다. 시뮬레이터를 보조로 둔다는 문장은 없다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 문서는 코드 실행률 측정이 RAM 크기의 제약을 받아 작은 장치에서는 복잡한 시험이 비정상 종료할 수 있다고 적는다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/doc/develop/test/coverage.rst",
+    "locator": "doc/develop/test/coverage.rst L34-37",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "AVR 고유 자료가 아니다. 자원이 작은 타깃에서 계측 용량을 미리 검토하는 이유의 사례다.",
+    "scope": "부분"
+   }
+  ],
+  "AVR-10": [
+   {
+    "project": "Microchip Studio 공식 페이지",
+    "claim": "Microchip 공식 페이지는 Microchip Studio를 새 설계에 권장하지 않고 새 제품도 지원하지 않는다고 안내하며, 최신 기능과 지원은 MPLAB for VS Code를 쓰라고 안내한다.",
+    "url": "https://www.microchip.com/en-us/tools-resources/develop/microchip-studio",
+    "locator": "Microchip Studio for AVR and SAM Devices, 페이지 머리 안내(조회일 2026-11-02)",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "자동 접속이 403이라 내장 브라우저로 대조했다. 벤더 문서라 한글 요약과 위치만 싣는다."
+   },
+   {
+    "project": "Microchip Studio 릴리스 노트",
+    "claim": "Microchip Studio 릴리스 노트(DS50002917C)는 Atmel Studio의 이름을 Microchip Studio로 바꾼 내역을 기록한다.",
+    "url": "https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocuments/ReleaseNotes/Microchip_Studio_release_note-DS50002917C.pdf",
+    "locator": "DS50002917C, 판 변경 내역",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "벤더 문서라 한글 요약과 위치만 싣는다."
+   }
+  ],
+  "BSP-05": [
+   {
+    "project": "ArduPilot",
+    "claim": "ArduPilot Copter-4.5.7의 bouncebuffer.c는 DMA 버퍼 정렬을 확인하고 읽기 전 캐시 무효화와 쓰기 전 캐시 플러시를 명시한다.",
+    "url": "https://raw.githubusercontent.com/ArduPilot/ardupilot/Copter-4.5.7/libraries/AP_HAL_ChibiOS/hwdef/common/bouncebuffer.c",
+    "locator": "libraries/AP_HAL_ChibiOS/hwdef/common/bouncebuffer.c L56, L78-79, L110, L131-132",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "수신 길이 상한과 ISR 공유 자원은 이 파일로 뒷받침하지 않는다.",
+    "scope": "부분"
+   }
+  ],
+  "BSP-06": [
+   {
+    "project": "MCUboot",
+    "claim": "MCUboot v2.1.0 imgtool 문서는 저장소에 함께 배포되는 개발용 키는 널리 퍼져 있으므로 양산에 쓰지 말고 생성한 양산 키로 공개키를 바꾸라고 안내한다.",
+    "url": "https://raw.githubusercontent.com/mcu-tools/mcuboot/v2.1.0/docs/imgtool.md",
+    "locator": "docs/imgtool.md L32-35",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "시험용 키 사례다. 디버그 출력과 semihosting 제거는 이 문서에 없다.",
+    "scope": "부분"
+   }
+  ],
+  "BSP-09": [
+   {
+    "project": "Zephyr",
+    "claim": "Zephyr v4.2.0 UART 에뮬레이터 API는 드라이버 오류를 설정해 오류 경로를 시험할 수 있게 한다.",
+    "url": "https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/v4.2.0/include/zephyr/drivers/serial/uart_emul.h",
+    "locator": "include/zephyr/drivers/serial/uart_emul.h L87-92",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "에뮬레이터 사례다. 실보드 측정 기준은 매뉴얼을 따른다.",
+    "scope": "부분"
+   },
+   {
+    "project": "Linux kernel",
+    "claim": "Linux v6.6 fault-injection 문서는 MMC 요청 실패 등 드라이버 계층 오류를 주입하는 기능을 설명한다.",
+    "url": "https://raw.githubusercontent.com/torvalds/linux/v6.6/Documentation/fault-injection/fault-injection.rst",
+    "locator": "Documentation/fault-injection/fault-injection.rst L8, L37-40",
+    "tier": 2,
+    "verdict": "VERIFIED",
+    "note": "분기 실행률 확인은 이 문서에 없다.",
+    "scope": "부분"
+   }
+  ]
+ },
+ "stats": {
+  "guides": 70,
+  "with_verified": 70,
+  "verified": 113,
+  "needs_review": 0,
+  "reject": 0
+ }
+}

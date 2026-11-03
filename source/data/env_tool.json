@@ -1,0 +1,911 @@
+{
+ "envs": [
+  {
+   "axis": "IDE/컴파일러",
+   "env": "Wind River Workbench",
+   "code": "WRW",
+   "traits": "Eclipse 기반 Workbench(VxWorks 6.x는 3.x, VxWorks 7은 4.x 계열)로 VxWorks 이미지(VIP/VSB)를 구성·빌드하며 Diab(dcc) 또는 GCC를 사용한다. 커널 모드의 주소공간 분리 여부는 사용 버전 설명서로 확인한다. 분리되지 않으면 한 태스크의 메모리 오염이 시스템 전체로 번진다. 구성요소(INCLUDE_*) 선택이 곧 공격 표면(attack surface)이 된다.",
+   "constraints": "Diab 5.x 구판의 새니타이저(sanitizer) 지원은 공개된 공식 원문으로 확인하지 못했고, 스택 카나리(stack canary)·ASLR 등은 컴파일러·VxWorks 버전·CPU별로 지원이 다르며(현행 VxWorks 데이터시트는 SSP·ASAN·KASAN과 LLVM 툴체인을 적는다), MMU(메모리 관리 장치) 없는 타깃은 RTP 격리를 쓸 수 없다. RTP 분리, 메모리/스택 보호 구성, 불필요 구성요소 제거, 정적 분석(static analysis)으로 대체한다.",
+   "key_cwe": [
+    "119",
+    "121",
+    "787",
+    "489",
+    "306",
+    "362",
+    "401",
+    "416"
+   ],
+   "guides": [
+    {
+     "id": "WRW-01",
+     "phase": "설계",
+     "title": "커널 모드 최소화와 RTP 분리",
+     "guide": "보안·안전 핵심 로직은 RTP(실시간 프로세스, 사용자 모드)로 분리하고 커널 모드에는 BSP(보드 지원 패키지)·드라이버만 둔다.",
+     "cwe": [
+      "119",
+      "732"
+     ],
+     "basis": "VxWorks 커널/RTP 프로그래머 가이드, CWE-119 완화책"
+    },
+    {
+     "id": "WRW-02",
+     "phase": "설계",
+     "title": "양산 이미지 구성요소 제거",
+     "guide": "양산 이미지에서 WDB 디버그 에이전트(INCLUDE_WDB), 타깃 셸·심볼 테이블·로더(INCLUDE_SHELL 등), telnet/ftp/rlogin 서비스를 제외한다. 원격 접속이 필요하면 SSH 등 암호화 채널만 허용한다.",
+     "cwe": [
+      "489",
+      "306",
+      "319"
+     ],
+     "basis": "Wind River 보안 하드닝 가이드, CWE-489·CWE-306"
+    },
+    {
+     "id": "WRW-03",
+     "phase": "설계",
+     "title": "메모리·스택 보호 구성",
+     "guide": "커널 구성에서 INCLUDE_PROTECT_TEXT, INCLUDE_PROTECT_VEC_TABLE, INCLUDE_PROTECT_TASK_STACK, INCLUDE_PROTECT_INTERRUPT_STACK, INCLUDE_TASK_STACK_NO_EXEC와 스택 가드 크기를 설정한다(6.6판은 INCLUDE_KERNEL_HARDENING으로 일괄 추가, 사용 버전 문서로 확정). MMU(메모리 관리 장치) 없는 타깃은 MPU(메모리 보호 장치) 또는 스택 사용량 감시로 대체한다.",
+     "cwe": [
+      "121",
+      "119",
+      "787"
+     ],
+     "basis": "VxWorks Kernel Programmer's Guide 6.6 표 6-7(사용 버전 벤더 문서로 확인 필요), CWE-121"
+    },
+    {
+     "id": "WRW-04",
+     "phase": "구현",
+     "title": "컴파일러 경고 고정",
+     "guide": "GCC 계열은 -Wall -Wextra -Wformat=2 -Wconversion -Werror를 쓴다. Diab(dcc)은 경고를 오류로 처리하는 옵션(5.4판 가이드의 -Xstop-on-warning)을 사용 버전 문서로 확정해 VIP/VSB 빌드 설정에 고정한다.",
+     "cwe": [
+      "134",
+      "190"
+     ],
+     "basis": "Diab 5.4 사용자 가이드(사용 버전 벤더 문서로 확인 필요), PX4 공통 컴파일 플래그, MISRA C:2012 Dir 2.1"
+    },
+    {
+     "id": "WRW-05",
+     "phase": "구현",
+     "title": "하드닝 옵션 지원 확인",
+     "guide": "스택 카나리(stack canary, -fstack-protector-strong)는 GCC 사용 시 VxWorks 버전·CPU별 지원을 확인한다. Diab은 스택 카나리 대신 스택 프로빙(5.4판의 -Xstack-probe, 인터럽트 함수 제외)을 제공하는지 사용 버전 문서로 확인하고, 미지원이면 스택 가드 영역과 정적 분석(static analysis)으로 대체한다.",
+     "cwe": [
+      "121",
+      "120"
+     ],
+     "basis": "Diab 5.4 사용자 가이드(사용 버전 벤더 문서로 확인 필요)"
+    },
+    {
+     "id": "WRW-06",
+     "phase": "구현",
+     "title": "동적 할당·태스크 스택 관리",
+     "guide": "malloc/free는 초기화 단계로 제한하거나 memPartLib 전용 파티션으로 격리하고, 태스크 스택은 checkStack 등 스택 사용량 확인 도구로 실측해 여유를 둔다(API 이름은 6.6판 기준, 사용 버전 문서로 확정). ISR(인터럽트 서비스 루틴)에서는 블로킹 호출과 동적 할당을 금지한다.",
+     "cwe": [
+      "401",
+      "400",
+      "416"
+     ],
+     "basis": "VxWorks 프로그래머 가이드, MISRA C:2012 Rule 21.3"
+    },
+    {
+     "id": "WRW-07",
+     "phase": "구현",
+     "title": "ISR 호출과 상호배제",
+     "guide": "ISR(인터럽트 서비스 루틴)에서는 semGive(이진 세마포어(semaphore))·msgQSend(NO_WAIT) 등 ISR 허용 호출만 사용하고, 뮤텍스(mutex, semMCreate)에는 SEM_Q_PRIORITY|SEM_INVERSION_SAFE|SEM_DELETE_SAFE를 지정하되 ISR에서는 쓰지 않는다(ISR 허용 호출 목록과 API 이름·옵션 조합은 6.6판 기준, 사용 버전 API 레퍼런스로 확정). ISR과 공유하는 데이터는 인터럽트를 막는 임계구역(critical section)으로 보호하고, 공유 자원은 소유 태스크를 명확히 한다.",
+     "cwe": [
+      "362",
+      "366"
+     ],
+     "basis": "VxWorks 커널 API 레퍼런스, CWE-362 완화책"
+    },
+    {
+     "id": "WRW-08",
+     "phase": "통합 및 시험",
+     "title": "타깃 보드 코드 실행률 측정",
+     "guide": "코드 실행률(Coverage)은 vxsim·Simics 등 시뮬레이터 결과로 갈음하지 않고 실제 타깃 보드에서 측정한다. 계측(instrumentation) 오버헤드가 실시간 타이밍을 바꾸므로 계측 전후 마감시간 준수를 별도 시험한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽)"
+    },
+    {
+     "id": "WRW-09",
+     "phase": "구현",
+     "title": "런타임 메모리 오류 탐지",
+     "guide": "시험 빌드에 메모리 오류 감지·보고 구성요소(6.6판 INCLUDE_MEM_EDR)와 스택 가드를 켜고, 사용 버전이 ASAN을 지원하면 시험 빌드에 함께 쓰며, Workbench 메모리 분석 도구로 메모리 누수(memory leak)·경계 위반을 확인한다. 양산 구성으로 최종 시험을 다시 수행한다.",
+     "cwe": [
+      "401",
+      "119",
+      "416"
+     ],
+     "basis": "VxWorks 메모리 분석 문서, CWE-401"
+    },
+    {
+     "id": "WRW-10",
+     "phase": "유지보수",
+     "title": "VxWorks 패치 추적",
+     "guide": "VxWorks 버전과 패치를 Wind River 보안 권고로 추적하고(2019년 IPnet/URGENT/11 네트워크 스택 취약점 사례), 폐쇄망 반입 전 해시 검증 후 동일 구성으로 재빌드해 회귀시험(regression test)한다.",
+     "cwe": [
+      "119",
+      "1395"
+     ],
+     "basis": "Wind River Security Advisory, CWE-1395"
+    }
+   ]
+  },
+  {
+   "axis": "IDE/컴파일러",
+   "env": "Code Composer Studio",
+   "code": "CCS",
+   "traits": "TI의 Eclipse 기반 IDE로 C2000(C28x)·C6000·MSP430·Arm Cortex 타깃에 cl2000/cl6x/cl430/armcl 또는 tiarmclang을 사용한다. 대부분 MMU(메모리 관리 장치) 없는 MCU/DSP이며 C28x는 char·int가 16비트이고, 코드 보안 모듈(DCSM)·JTAG 잠금으로 펌웨어를 보호한다.",
+   "constraints": "TI 전통 컴파일러(cl2000/cl430/cl6x)는 세 사용자 가이드의 전체 옵션 요약표에 스택 카나리(stack canary)·새니타이저(sanitizer) 옵션이 없다(8.1). 스택 크기 검사, RTOS(실시간 운영체제) 스택 오버플로 감지, MPU(메모리 보호 장치, Arm), 정적 분석(static analysis), 보안 영역·디버그 잠금으로 대체한다.",
+   "key_cwe": [
+    "190",
+    "197",
+    "119",
+    "121",
+    "787",
+    "259",
+    "362",
+    "732"
+   ],
+   "guides": [
+    {
+     "id": "CCS-01",
+     "phase": "설계",
+     "title": "16비트 char·int 영향 반영",
+     "guide": "C2000(C28x)은 char·int가 16비트(sizeof(char)=1)여서 바이트 단위 프로토콜과 정수 연산에서 절단·오버플로가 생길 수 있다. 통신 데이터는 명시적 패킹 함수로 처리하고 고정폭 타입을 쓰되 8비트 형이 없으므로 uint_least8_t와 마스크로 처리한다.",
+     "cwe": [
+      "190",
+      "197",
+      "704"
+     ],
+     "basis": "TI C2000 컴파일러 사용자 가이드, MISRA C:2012 Dir 4.6"
+    },
+    {
+     "id": "CCS-02",
+     "phase": "설계",
+     "title": "보안 영역·디버그 잠금 설계",
+     "guide": "C2000 DCSM 영역 비밀번호(password)와 JTAG 잠금, MSP430 JTAG 잠금, Arm MCU 디버그 잠금을 양산 설계에 포함한다. 패스워드 미설정(0xFFFFFFFF) 상태로 출하하지 않는다.",
+     "cwe": [
+      "259",
+      "321",
+      "732",
+      "1191"
+     ],
+     "basis": "TI 기술 참조 매뉴얼(코드 보안), CWE-1191"
+    },
+    {
+     "id": "CCS-03",
+     "phase": "설계",
+     "title": "링커 명령 파일 메모리 맵",
+     "guide": "링커 명령 파일(.cmd)에서 스택·힙 크기(--stack_size, --heap_size)와 섹션 배치를 명시하고, 링크 후 맵 파일로 스택과 .bss/.data 중첩·초과를 검토한다.",
+     "cwe": [
+      "119",
+      "787"
+     ],
+     "basis": "TI 링커 사용자 가이드"
+    },
+    {
+     "id": "CCS-04",
+     "phase": "구현",
+     "title": "컴파일러 경고 기준",
+     "guide": "--issue_remarks(-pdr), --display_error_number(-pden)와 경고의 오류 처리 옵션(--emit_warnings_as_errors, 버전별 확인)을 켜 빌드 통과 기준으로 삼는다. tiarmclang은 -Wall -Wextra -Werror -Wformat=2를 쓴다.",
+     "cwe": [
+      "134",
+      "190"
+     ],
+     "basis": "TI 컴파일러 사용자 가이드, Clang 경고 옵션"
+    },
+    {
+     "id": "CCS-05",
+     "phase": "구현",
+     "title": "미지원 하드닝 대체 통제",
+     "guide": "cl2000·cl430·cl6x는 스택 카나리(stack canary)와 새니타이저(sanitizer) 옵션을 제공하지 않는다(각 컴파일러 사용자 가이드의 전체 옵션 요약표). 가이드가 안내하는 --entry_hook 진입 훅 검사, 스택 페인팅(stack painting) 점검, MPU(메모리 보호 장치, 장치에 있을 때), 정적 분석(static analysis)으로 대체하고 tiarmclang은 플래그를 개별 확인한다.",
+     "cwe": [
+      "121",
+      "119"
+     ],
+     "basis": "TI SPRU514AA(v25.11.0.LTS)·SLAU132Y(v21.6.0.LTS)·SPRUI04G(v8.5.x) 옵션 요약표와 Stack Overflow 주석, TI Arm Clang 5.1.0.LTS 15.2"
+    },
+    {
+     "id": "CCS-06",
+     "phase": "구현",
+     "title": "컴파일러 MISRA 점검 범위 확인",
+     "guide": "TI 컴파일러의 --check_misra는 MISRA-C:2004 규칙 검사이고, C28x 컴파일러(cl2000)는 2020. 12. 개정판부터 MISRA-C 검사를 지원하지 않는다. 사용 버전의 사용자 가이드로 지원 여부를 기록하고, MISRA C:2012 점검과 매뉴얼 정적시험은 전용 정적 분석(static analysis) 도구로 수행한다.",
+     "cwe": [],
+     "basis": "TI SPRU514(C28x)·SPNU151(ARM) 컴파일러 사용자 가이드"
+    },
+    {
+     "id": "CCS-07",
+     "phase": "구현",
+     "title": "보호 레지스터·ISR 공유 변수",
+     "guide": "주변장치는 벤더 헤더의 volatile 구조체로만 접근하고 EALLOW/EDIS 구간은 최소화한다. ISR(인터럽트 서비스 루틴)과 메인 간 공유 변수는 원자성을 확보하고 ISR 안의 장시간 연산을 금지한다.",
+     "cwe": [
+      "362",
+      "366"
+     ],
+     "basis": "TI C2000Ware 문서, CWE-362 완화책"
+    },
+    {
+     "id": "CCS-08",
+     "phase": "구현",
+     "title": "RTOS 스택 오버플로 감지",
+     "guide": "SYS/BIOS는 Task.checkStackFlag(기본값 true)와 Hwi.checkStackFlag를 함께 켜야 전체 스택 검사가 된다(검사로 인터럽트 지연이 늘 수 있음). FreeRTOS는 configCHECK_FOR_STACK_OVERFLOW=2와 vApplicationStackOverflowHook 구현으로 스택 오버플로 감지를 활성화한다.",
+     "cwe": [
+      "121",
+      "787"
+     ],
+     "basis": "TI SYS/BIOS Task 문서, FreeRTOS 문서"
+    },
+    {
+     "id": "CCS-09",
+     "phase": "통합 및 시험",
+     "title": "실보드 코드 실행률과 계측 영향",
+     "guide": "코드 실행률(Coverage)은 XDS 에뮬레이터로 연결한 실보드에서 측정하고 CCS 시뮬레이터 결과는 참고용으로만 쓴다. 계측(instrumentation)으로 늘어난 플래시·사이클이 실시간 제한을 해치지 않는지 확인한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽)"
+    },
+    {
+     "id": "CCS-10",
+     "phase": "유지보수",
+     "title": "컴파일러 버전 고정·회귀",
+     "guide": "컴파일러 버전을 프로젝트 속성에 고정하고 변경 시 최적화·부동소수점 옵션 차이로 인한 동작 변화를 전체 회귀시험(regression test)한다. 설치 파일은 폐쇄망 반입 시 해시를 검증한다.",
+     "cwe": [
+      "1104",
+      "494"
+     ],
+     "basis": "TI 컴파일러 릴리스 노트, CWE-494"
+    }
+   ]
+  },
+  {
+   "axis": "IDE/컴파일러",
+   "env": "Visual Studio",
+   "code": "MSVC",
+   "traits": "Windows 호스트에서 C/C++(MSVC)와 C#(.NET)을 개발하는 IDE다. 대상이 PC/워크스테이션이면 개발기와 같은 OS에서 시험하므로 DEP/ASLR/CFG 등 OS 완화책(mitigation)을 활용할 수 있으나, 네이티브/관리 코드 경계와 Windows API 사용이 주요 위험이다.",
+   "constraints": "MSVC에는 UBSan이 없고 ASan은 x86/x64 전용이며 /RTC1과 동시에 쓸 수 없다. MISRA 점검도 내장되어 있지 않아 /analyze, .NET 분석기, 별도 MISRA 도구로 대체한다. 폐쇄망에서는 오프라인 레이아웃과 사내 NuGet 피드가 필요하다.",
+   "key_cwe": [
+    "119",
+    "120",
+    "190",
+    "134",
+    "89",
+    "78",
+    "22",
+    "502"
+   ],
+   "guides": [
+    {
+     "id": "MSVC-01",
+     "phase": "설계",
+     "title": "네이티브·관리 코드 경계 통제",
+     "guide": "C#과 C/C++의 경계(P/Invoke, C++/CLI)를 설계에 표시하고 경계에서 길이·널·형을 검증한다. unsafe 블록은 격리 어셈블리에 한정하고 사용 사유를 편차로 기록한다.",
+     "cwe": [
+      "119",
+      "787"
+     ],
+     "basis": "Microsoft 보안 가이드, CWE-119 완화책"
+    },
+    {
+     "id": "MSVC-02",
+     "phase": "설계",
+     "title": "서비스 최소 권한과 DLL 경로",
+     "guide": "서비스·프로세스는 최소 권한 계정으로 실행하고 SetDefaultDllDirectories/LOAD_LIBRARY_SEARCH_*로 DLL 검색 경로를 제한한다. 설치 디렉터리는 관리자만 쓰도록 ACL을 설정한다.",
+     "cwe": [
+      "732",
+      "427"
+     ],
+     "basis": "Microsoft Windows 보안 문서"
+    },
+    {
+     "id": "MSVC-03",
+     "phase": "구현",
+     "title": "MSVC 컴파일·링크 옵션",
+     "guide": "/W4 /WX /sdl /GS /guard:cf /analyze를 기본으로 하고 링크는 /GUARD:CF /DYNAMICBASE /HIGHENTROPYVA(64비트 이미지) /NXCOMPAT를 유지한다(제어 흐름 보호는 컴파일러와 링커 양쪽에 지정해야 하고 /DYNAMICBASE가 필요하다). /CETCOMPAT는 x64 대상(VS 2019 이상)에만 적용한다. /GS-, /sdl-, 승인 없는 경고 억제 pragma를 금지한다.",
+     "cwe": [
+      "121",
+      "119",
+      "787"
+     ],
+     "basis": "Microsoft Learn(/sdl, /GS, /guard:cf, /CETCOMPAT)"
+    },
+    {
+     "id": "MSVC-04",
+     "phase": "구현",
+     "title": "안전하지 않은 CRT 함수 금지",
+     "guide": "_CRT_SECURE_NO_WARNINGS 정의와 C4996 경고 억제를 금지하고 strcpy·sprintf 대신 경계 검사 함수(strcpy_s, snprintf)나 std::string/span을 사용한다. 이식 코드는 래퍼로 감싼다.",
+     "cwe": [
+      "120",
+      "676",
+      "134"
+     ],
+     "basis": "MSVC 보안 CRT 문서, MISRA C:2012 Rule 21.x"
+    },
+    {
+     "id": "MSVC-05",
+     "phase": "구현",
+     "title": "C# 프로젝트 보안 설정",
+     "guide": "csproj에 Nullable enable, TreatWarningsAsErrors, Security 범주 규칙 All 모드(AnalysisModeSecurity를 All로 둔다. latest-recommended에는 CA2100·CA5390·CA5394 등이 빠진다(5.6)), CheckForOverflowUnderflow를 설정한다. BinaryFormatter, MD5·SHA-1·DES, 문자열 연결 SQL을 금지하고 SqlCommand는 매개변수화한다.",
+     "cwe": [
+      "190",
+      "502",
+      "327",
+      "89",
+      "476"
+     ],
+     "basis": "Roslyn/.NET 분석기 문서, CWE-502·CWE-89"
+    },
+    {
+     "id": "MSVC-06",
+     "phase": "구현",
+     "title": "C# 입출력 안전 처리",
+     "guide": "XmlReaderSettings.DtdProcessing은 Prohibit으로 두고, 파일 경로는 정규화 후 허용 루트 하위인지 검증하며, Process.Start는 UseShellExecute=false와 인자 목록을 쓴다. 난수는 RandomNumberGenerator를 사용한다.",
+     "cwe": [
+      "22",
+      "78",
+      "611",
+      "330"
+     ],
+     "basis": "Microsoft .NET 보안 가이드"
+    },
+    {
+     "id": "MSVC-07",
+     "phase": "구현",
+     "title": "MISRA·코드 분석 병행",
+     "guide": "Visual Studio 코드 분석(/analyze, Native Recommended 규칙 집합)은 MISRA 점검을 내장하지 않는다. 매뉴얼 정적시험의 MISRA 점검은 별도 도구로 수행하고 SAL 주석(_In_reads_ 등)으로 분석 효과를 높인다.",
+     "cwe": [
+      "119",
+      "476"
+     ],
+     "basis": "MSVC 코드 분석 문서"
+    },
+    {
+     "id": "MSVC-08",
+     "phase": "구현",
+     "title": "시험 빌드 새니타이저 범위",
+     "guide": "/fsanitize=address(VS 2019 16.9+, x86/x64)는 시험 빌드에 쓰되 /RTC1과 동시 사용이 불가하고 UBSan은 제공되지 않는다. 정수·미정의 동작은 /analyze, /W4, C# checked 연산으로 보완한다.",
+     "cwe": [
+      "416",
+      "415",
+      "190"
+     ],
+     "basis": "MSVC AddressSanitizer 문서"
+    },
+    {
+     "id": "MSVC-09",
+     "phase": "통합 및 시험",
+     "title": "PC 타깃 코드 실행률 측정",
+     "guide": "PC·워크스테이션 타깃은 배포 대상과 같은 사양·OS 빌드·권한 설정의 시험 장비에서 코드 실행률(Coverage)을 측정한다. 제공 도구의 에디션별 지원 차이를 확인하고, 과제가 정한 시험종류(문장·분기·MC/DC)를 잴 수 있는지 착수 때 확인해 잴 수 없으면 대안을 소프트웨어 검토회의에서 정한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽), Visual Studio 코드 실행률(code coverage) 문서"
+    },
+    {
+     "id": "MSVC-10",
+     "phase": "유지보수",
+     "title": "오프라인 설치·패키지 통제",
+     "guide": "Visual Studio 오프라인 레이아웃(부트스트래퍼의 --layout)과 사내 NuGet 피드(nuget.config 소스 고정, packageSourceMapping)로 재현 가능한 빌드(reproducible build)를 유지하고 월간 업데이트 반입 절차를 정한다.",
+     "cwe": [
+      "494",
+      "1104"
+     ],
+     "basis": "Microsoft Visual Studio 오프라인 설치 문서"
+    }
+   ]
+  },
+  {
+   "axis": "IDE/컴파일러",
+   "env": "Atmel/Microchip Studio",
+   "code": "AVR",
+   "traits": "Visual Studio 셸 기반 IDE로 번들 avr-gcc(GCC 5~7 계열)를 사용해 8비트 AVR(ATmega)을 개발한다. MMU(메모리 관리 장치)/MPU(메모리 보호 장치)가 없고 SRAM이 수 KB이며 Harvard 구조라 flash와 RAM 주소공간이 분리되고, 힙과 스택이 충돌하기 쉽다.",
+   "constraints": "avr-gcc에서 -fstack-protector(스택 카나리(stack canary))는 사실상 쓸 수 없고, ASLR, ASan, 런타임 UBSan은 런타임·MMU(메모리 관리 장치) 부재로 쓸 수 없다(trap 모드 UBSan은 플래시 여유를 보고 판단한다). 동적 할당 금지, 스택 페인팅(stack painting), 호스트 빌드 새니타이저(sanitizer) 시험, 퓨즈·락비트, 정적 분석(static analysis)으로 대체한다.",
+   "key_cwe": [
+    "190",
+    "197",
+    "121",
+    "787",
+    "401",
+    "362",
+    "134",
+    "1191"
+   ],
+   "guides": [
+    {
+     "id": "AVR-01",
+     "phase": "설계",
+     "title": "동적 할당 금지와 메모리 예산",
+     "guide": "MMU(메모리 관리 장치)가 없고 MPU(메모리 보호 장치)로 영역을 나누지 않으면 SRAM이 작을 때 힙이 스택과 충돌할 수 있다. malloc을 금지하고 정적 할당을 쓰며 전역·스택 사용량 예산을 설계 단계에 산정한다. S5 = 허용으로 정한 과제는 사유와 최대 사용량을 기록한다.",
+     "cwe": [
+      "401",
+      "121",
+      "787"
+     ],
+     "basis": "avr-libc 메모리 영역 문서, MISRA C:2012 Rule 21.3"
+    },
+    {
+     "id": "AVR-02",
+     "phase": "설계",
+     "title": "퓨즈·락비트 정책",
+     "guide": "양산 시 락비트(LB_MODE, BLB 부트락)로 읽기/쓰기를 제한하고 JTAGEN·DWEN 퓨즈로 디버그 인터페이스를 끈다. BOD·WDT 설정값을 설계 문서에 기록하고 이미지 검증 완료 후 퓨즈·부트 락비트, LB 락비트 순으로 적용한다.",
+     "cwe": [
+      "1191",
+      "489",
+      "732"
+     ],
+     "basis": "Microchip ATmega 데이터시트, CWE-1191"
+    },
+    {
+     "id": "AVR-03",
+     "phase": "구현",
+     "title": "16비트 int와 정수 승격",
+     "guide": "AVR의 int는 16비트다. stdint 고정폭 타입과 명시적 캐스트를 쓰고 -Wconversion 경고를 해소하며 8비트 값의 곱셈·시프트에서 정수 승격 오버플로를 점검한다.",
+     "cwe": [
+      "190",
+      "197",
+      "681"
+     ],
+     "basis": "MISRA C:2012 Rule 10.x, CWE-190"
+    },
+    {
+     "id": "AVR-04",
+     "phase": "구현",
+     "title": "avr-gcc 경고 옵션",
+     "guide": "Studio의 AVR/GNU C Compiler 경고 설정에서 -Wall -Wextra -Wconversion -Wshadow -Wstrict-prototypes -Werror를 켜고 -Wstack-usage=N, -fstack-usage 출력으로 함수별 스택 사용량을 점검한다.",
+     "cwe": [
+      "134",
+      "190"
+     ],
+     "basis": "GCC 문서, Microchip Studio 툴체인 설정"
+    },
+    {
+     "id": "AVR-05",
+     "phase": "구현",
+     "title": "미지원 하드닝의 대체",
+     "guide": "제약에 적은 미지원 기능은 스택 하단 센티널 값의 주기 점검, 정적 분석(static analysis), 이식 가능한 로직의 호스트 빌드 새니타이저(sanitizer) 시험으로 보완한다. 16비트 int에서만 넘치는 산술은 호스트 시험에 나타나지 않으므로 타깃 경계값 시험으로 확인한다(AVR-03).",
+     "cwe": [
+      "121",
+      "119"
+     ],
+     "basis": "GCC 14.2.0 configure.ac, avr-libc 문서"
+    },
+    {
+     "id": "AVR-06",
+     "phase": "구현",
+     "title": "PROGMEM과 포맷 스트링",
+     "guide": "상수 테이블·문자열은 PROGMEM/__flash와 pgm_read_*·printf_P로 두고 RAM 포인터로 flash를 읽는 혼용을 금지한다. 포맷 스트링(format string)은 상수 리터럴만 허용한다.",
+     "cwe": [
+      "134",
+      "125"
+     ],
+     "basis": "avr-libc 문서, CWE-134"
+    },
+    {
+     "id": "AVR-07",
+     "phase": "구현",
+     "title": "ISR 공유 변수 원자성",
+     "guide": "ISR(인터럽트 서비스 루틴)과 메인이 공유하는 변수는 volatile로 선언하고 8비트 초과 접근은 util/atomic.h의 ATOMIC_BLOCK으로 보호한다. ISR 안에서 긴 연산·printf·동적 할당을 금지한다.",
+     "cwe": [
+      "362",
+      "366"
+     ],
+     "basis": "avr-libc util/atomic.h 문서, CWE-362"
+    },
+    {
+     "id": "AVR-08",
+     "phase": "통합 및 시험",
+     "title": "실보드 코드 실행률 측정",
+     "guide": "Studio 시뮬레이터는 보조로만 쓰고 코드 실행률(Coverage)은 실보드에서 측정한다. 플래시가 작아 계측(instrumentation)이 어려우면 사전에 용량을 검토해 모듈을 나누어 부분 측정하고 디버그 포트와 UART 트레이스를 이용한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽)"
+    },
+    {
+     "id": "AVR-09",
+     "phase": "통합 및 시험",
+     "title": "양산 퓨즈 적용 이미지 시험",
+     "guide": "양산용 퓨즈·락비트를 적용한 최종 이미지로 부팅, 업데이트, 디버거 접속 차단을 시험한다. 시험 보드와 양산 보드의 설정 차이를 기록한다.",
+     "cwe": [
+      "1191",
+      "489"
+     ],
+     "basis": "Microchip 데이터시트"
+    },
+    {
+     "id": "AVR-10",
+     "phase": "유지보수",
+     "title": "툴체인 단종과 버전 고정",
+     "guide": "Atmel Studio는 Microchip Studio로 이관되었고, Microchip은 Microchip Studio를 새 설계에 권장하지 않으며 MPLAB for VS Code를 안내한다. 번들 avr-gcc 버전을 고정·기록하고 -Os 등 최적화 변경 시 회귀시험(regression test)하며, ASF 업데이트는 diff를 검토한 뒤 반영한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "Microchip 제품 공지, CWE-1104"
+    }
+   ]
+  },
+  {
+   "axis": "IDE/컴파일러",
+   "env": "GCC",
+   "code": "GCC",
+   "traits": "호스트 GCC와 크로스 GCC(arm-none-eabi, aarch64-linux-gnu 등)는 대상의 libc(glibc/newlib/musl)와 MMU(메모리 관리 장치) 유무에 따라 쓸 수 있는 하드닝(hardening)이 달라진다. 가장 많은 경고·하드닝·계측(instrumentation) 옵션을 제공하지만 MISRA 점검 기능은 내장하지 않는다.",
+   "constraints": "베어메탈(bare-metal, arm-none-eabi)은 libasan/libubsan이 없고 -D_FORTIFY_SOURCE는 C 라이브러리가 그 검사를 구현할 때만 효과가 있으며(8.1) 스택 카나리(stack canary)는 guard 심볼 구현을 확인해야 한다(GCC-05). 주요 하드닝(hardening)은 hosted(Linux) 타깃에서만 완전하며, 베어메탈은 trap 모드 UBSan·MPU(메모리 보호 장치)·정적 분석(static analysis)으로 대체한다.",
+   "key_cwe": [
+    "119",
+    "121",
+    "787",
+    "190",
+    "134",
+    "476",
+    "416",
+    "457"
+   ],
+   "guides": [
+    {
+     "id": "GCC-01",
+     "phase": "설계",
+     "title": "타깃별 하드닝 매트릭스",
+     "guide": "호스트 Linux, aarch64-linux-gnu, 베어메탈(bare-metal) arm-none-eabi 등 타깃별로 가능한 하드닝(hardening) 옵션을 표로 정한다(libc·MMU(메모리 관리 장치) 의존). 불가 항목은 대체 통제를 지정해 편차로 기록한다.",
+     "cwe": [
+      "119",
+      "121"
+     ],
+     "basis": "GCC 문서, CWE-119 완화책"
+    },
+    {
+     "id": "GCC-02",
+     "phase": "구현",
+     "title": "기본 경고 집합",
+     "guide": "-Wall -Wextra -Wpedantic -Wformat=2 -Wformat-security -Wconversion -Wsign-conversion -Wshadow -Wcast-align -Wnull-dereference -Wvla -Walloca -Wstack-usage=N -Werror를 기본으로 한다. -w와 pragma diagnostic ignored는 승인 없이 금지한다.",
+     "cwe": [
+      "134",
+      "190",
+      "476"
+     ],
+     "basis": "GCC 문서, MISRA C:2012 Dir 2.1"
+    },
+    {
+     "id": "GCC-03",
+     "phase": "구현",
+     "title": "hosted 타깃 하드닝",
+     "guide": "Linux 타깃은 -O2 -D_FORTIFY_SOURCE=2(GCC 12 이상이면서 glibc 2.35 이상이면 3) -fstack-protector-strong -fstack-clash-protection -fPIE -pie와 링크 -Wl,-z,relro,-z,now,-z,noexecstack를 사용한다. 컴파일과 링크를 나누면 -fPIE는 컴파일 명령에, -pie와 -Wl 옵션은 링크 명령에 준다. GCC 14 이상은 이와 비슷한 묶음을 켜는 -fhardened(GNU/Linux 한정, 최적화 수준은 따로 지정)를 대안으로 검토한다.",
+     "cwe": [
+      "121",
+      "120",
+      "787"
+     ],
+     "basis": "glibc 2.35 NEWS, GCC 14.2 Instrumentation Options(-fhardened), CWE-121"
+    },
+    {
+     "id": "GCC-04",
+     "phase": "구현",
+     "title": "CPU별 제어흐름 보호",
+     "guide": "x86은 -fcf-protection=full, AArch64는 -mbranch-protection=standard(GCC 9+)를 사용한다. 그 외 32비트 Arm은 대부분 미지원이므로 MPU(메모리 보호 장치)와 코드 리뷰로 보완한다.",
+     "cwe": [
+      "119"
+     ],
+     "basis": "GCC 문서"
+    },
+    {
+     "id": "GCC-05",
+     "phase": "구현",
+     "title": "베어메탈 스택 카나리와 trap UBSan",
+     "guide": "arm-none-eabi에서 -fstack-protector를 쓰면 __stack_chk_guard·__stack_chk_fail이 어디서 오는지 링크 맵으로 확인한다. 툴체인이 제공하지 않으면 직접 구현하고, 제공하더라도 가드 값을 부팅 때 난수로 초기화하는지와 실패 시 안전 상태로 전이하는지를 확인해 필요하면 재정의한다. libasan은 없다. 시험 빌드에 -fsanitize=bounds,undefined와 trap 모드(GCC 13 이상은 -fsanitize-trap=all, 이전은 -fsanitize-undefined-trap-on-error)를 적용한다. trap 모드에서는 C++ vptr 검사가 빠진다.",
+     "cwe": [
+      "121",
+      "190",
+      "125"
+     ],
+     "basis": "GCC 14.2 Instrumentation Options, Zephyr compiler_stack_protect.c"
+    },
+    {
+     "id": "GCC-06",
+     "phase": "구현",
+     "title": "정적 분석 한계 인지",
+     "guide": "-fanalyzer(GCC 10+)는 C 중심이며 C++ 지원이 제한적이므로 보조로만 쓴다. 매뉴얼 정적시험의 MISRA·CWE-658/659 점검은 전용 도구가 담당하며 GCC 자체에는 MISRA 점검 기능이 없다.",
+     "cwe": [
+      "401",
+      "415",
+      "416",
+      "476"
+     ],
+     "basis": "GCC 문서"
+    },
+    {
+     "id": "GCC-07",
+     "phase": "구현",
+     "title": "미정의 동작 완화 옵션 관리",
+     "guide": "-fno-delete-null-pointer-checks, -fno-strict-aliasing, -fwrapv는 레거시 구간에만 사유를 문서화해 적용하고(AVR·MSP430은 해당 최적화가 이미 꺼져 있어 첫 옵션이 불필요), -ftrivial-auto-var-init=zero(GCC 12+)로 미초기화 노출을 줄인다. -fwrapv는 결함을 가릴 수 있다.",
+     "cwe": [
+      "190",
+      "457",
+      "476"
+     ],
+     "basis": "GCC 14.2 Optimize Options, SEI CERT INT32-C"
+    },
+    {
+     "id": "GCC-08",
+     "phase": "구현",
+     "title": "시험 빌드 새니타이저",
+     "guide": "호스트·aarch64-linux 타깃의 시험 빌드에서 -fsanitize=address,undefined를 적용한다. 베어메탈(bare-metal)은 런타임이 없으므로 trap 모드 UBSan과 실보드 시험을 병행한다.",
+     "cwe": [
+      "416",
+      "415",
+      "190",
+      "125"
+     ],
+     "basis": "GCC Sanitizer 문서"
+    },
+    {
+     "id": "GCC-09",
+     "phase": "통합 및 시험",
+     "title": "타깃 코드 실행률 수집",
+     "guide": "--coverage(gcov)를 쓰되 베어메탈(bare-metal)은 libgcov 포팅이나 -fprofile-info-section 계열, 계측(instrumentation) 트레이스로 실보드 데이터를 수집한다. MC/DC는 GCC 14+의 -fcondition-coverage를 검토한다.",
+     "cwe": [],
+     "basis": "GCC gcov 문서, 매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽)"
+    },
+    {
+     "id": "GCC-10",
+     "phase": "유지보수",
+     "title": "툴체인 버전·해시 고정",
+     "guide": "GCC 메이저 버전, binutils, libc를 해시로 고정해 사내 저장소에서만 설치하고 -ffile-prefix-map·고정 -frandom-seed로 재현 가능한 빌드(reproducible build)를 유지한다. 업그레이드 시 새 경고와 최적화 변화를 전체 회귀시험(regression test)한다.",
+     "cwe": [
+      "494",
+      "1104"
+     ],
+     "basis": "GCC 문서, CWE-494"
+    }
+   ]
+  },
+  {
+   "axis": "기반 소프트웨어",
+   "env": "칩 제조사 BSP·HAL·드라이버",
+   "code": "BSP",
+   "traits": "STM32Cube, MCUXpresso, C2000Ware, Harmony 등 칩 벤더가 제공하는 BSP(보드 지원 패키지)/HAL(하드웨어 추상화 계층)/드라이버는 하드웨어를 직접 제어하며 매개변수 검증이 약하고 MISRA를 따르지 않는 경우가 많다. 부트 보안, 디버그 포트, DMA(직접 메모리 접근), 보호 설정이 BSP에서 결정된다.",
+   "constraints": "벤더 소스는 직접 수정이나 전면 MISRA 적용이 곤란하다. 테일러링(tailoring) 문서에 편차(deviation)를 기록하고, HAL(하드웨어 추상화 계층) 래퍼에서 입력 검증·반환값 확인을 하며 벤더 보호 기능(RDP, 보안 부팅(secure boot))을 설정으로 활성화해 대체한다.",
+   "key_cwe": [
+    "119",
+    "787",
+    "125",
+    "362",
+    "259",
+    "321",
+    "489",
+    "1191"
+   ],
+   "guides": [
+    {
+     "id": "BSP-01",
+     "phase": "설계",
+     "title": "HAL 래퍼 계층 분리",
+     "guide": "벤더 BSP(보드 지원 패키지)/HAL(하드웨어 추상화 계층)/드라이버는 자체 코드와 분리된 래퍼 계층 뒤에 두고 버전·출처·라이선스를 기록한다. 상위 코드는 래퍼 API만 호출해 BSP 교체·패치의 영향을 국한한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "설계 원칙, CWE-1104"
+    },
+    {
+     "id": "BSP-02",
+     "phase": "설계",
+     "title": "부팅·디버그 보안 활성화",
+     "guide": "보안 부팅(secure boot: 전자서명(digital signature) 검증, 롤백 방지), 읽기 보호(예: STM32 RDP, C2000 DCSM)와 JTAG/SWD 잠금을 BSP(보드 지원 패키지) 설계 단계에서 활성화한다. 벤더 기본 구성의 디버그 개방 상태를 출하 전 점검한다.",
+     "cwe": [
+      "1191",
+      "489",
+      "732",
+      "306"
+     ],
+     "basis": "벤더 보안 참조 매뉴얼, CWE-1191"
+    },
+    {
+     "id": "BSP-03",
+     "phase": "설계",
+     "title": "MPU/MMU와 링커 스크립트",
+     "guide": "BSP(보드 지원 패키지) 시작 코드에서 MPU(메모리 보호 장치)/MMU(메모리 관리 장치)로 코드는 실행 전용·읽기 전용, 데이터·스택은 실행 금지로 설정하고 스택 하단에 가드 영역을 둔다. 링커 스크립트의 스택·힙 크기와 벡터 테이블 위치를 검토한다.",
+     "cwe": [
+      "119",
+      "121",
+      "732"
+     ],
+     "basis": "CWE-119 완화책, Arm MPU 문서"
+    },
+    {
+     "id": "BSP-04",
+     "phase": "구현",
+     "title": "래퍼에서 검증·반환값 확인",
+     "guide": "HAL(하드웨어 추상화 계층)/드라이버 API는 NULL·길이·범위 검증이 약해 래퍼에서 사전 검증하고 반환 상태(HAL_StatusTypeDef 등)를 확인한다. assert_param류는 양산 빌드에서도 대응 처리를 두고 단순 제거를 금지한다.",
+     "cwe": [
+      "390",
+      "755",
+      "476",
+      "129"
+     ],
+     "basis": "MISRA C:2012 Rule 17.7, CWE-390"
+    },
+    {
+     "id": "BSP-05",
+     "phase": "구현",
+     "title": "DMA·캐시·인터럽트 안전",
+     "guide": "DMA(직접 메모리 접근) 버퍼의 크기·정렬, 캐시 일관성(Clean/Invalidate)을 드라이버에서 명시하고 수신 길이에 버퍼 크기 상한을 적용한다. ISR(인터럽트 서비스 루틴)-메인 공유 자원은 원자적으로 접근한다.",
+     "cwe": [
+      "787",
+      "125",
+      "362"
+     ],
+     "basis": "벤더 드라이버 문서, CWE-787"
+    },
+    {
+     "id": "BSP-06",
+     "phase": "구현",
+     "title": "예제·기본 비밀·디버그 제거",
+     "guide": "벤더 예제·데모의 기본 비밀번호, 시험용 키, 디버그 출력(printf, semihosting), 미사용 주변장치 초기화를 제거한다. 키·시드는 소스에 하드코드된 값으로 두지 않고 보안 저장소/OTP에서 읽는다.",
+     "cwe": [
+      "259",
+      "321",
+      "489"
+     ],
+     "basis": "CWE-259·CWE-489"
+    },
+    {
+     "id": "BSP-07",
+     "phase": "구현",
+     "title": "TRNG와 암호 가속기",
+     "guide": "난수는 칩 TRNG 드라이버를 쓰되 건전성 시험과 실패 처리를 구현하고 rand() 기반 키 생성을 금지한다. 암호 가속기 드라이버는 출력 길이와 오류 상태를 검증한다.",
+     "cwe": [
+      "330",
+      "327"
+     ],
+     "basis": "CWE-330 완화책"
+    },
+    {
+     "id": "BSP-08",
+     "phase": "구현",
+     "title": "MISRA 편차·소스코드 메트릭 제외 관리",
+     "guide": "벤더 BSP(보드 지원 패키지)는 MISRA 위반이 많으므로 편차(deviation)와 제외 범위를 테일러링(tailoring) 문서에 명시하고 자체 래퍼·응용에는 규칙을 전량 적용한다. 사업에서 정한 소스코드 메트릭(source code metric) 제한값을 넘는 예외도 사유를 기록한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 사업 유형별 테일러링(부록 7-3쪽)·코딩규칙 조정(부록 6-3쪽), MISRA 편차 절차"
+    },
+    {
+     "id": "BSP-09",
+     "phase": "통합 및 시험",
+     "title": "오류 주입과 코드 실행률",
+     "guide": "코드 실행률(Coverage)은 실보드에서 측정하고 BSP(보드 지원 패키지) 계층은 타임아웃·버스 오류·FIFO 오버런 등 오류 주입(fault injection)으로 비정상 경로를 검증한다. 오류 경로의 분기 실행률(branch coverage)을 확인한다.",
+     "cwe": [
+      "390",
+      "755",
+      "400"
+     ],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽), CWE-755"
+    },
+    {
+     "id": "BSP-10",
+     "phase": "유지보수",
+     "title": "BSP 업데이트 통제",
+     "guide": "벤더 BSP(보드 지원 패키지)/HAL(하드웨어 추상화 계층) 업데이트와 정오표·보안 공지를 정기 점검하고, 반입 시 해시·전자서명(digital signature) 검증, 이전 버전과의 diff 검토, 영향 시험 재수행, 기준선 갱신을 수행한다. IDE 자동 업데이트는 폐쇄망에서 끈다.",
+     "cwe": [
+      "1104",
+      "494"
+     ],
+     "basis": "공급망 보안 관행, CWE-494"
+    }
+   ]
+  },
+  {
+   "axis": "기반 소프트웨어",
+   "env": "서드파티·오픈소스 라이브러리",
+   "code": "OSS",
+   "traits": "OpenSSL, zlib, FreeRTOS, BusyBox 등 외부 코드는 SBOM(소프트웨어 구성명세서) 기반의 출처·버전·라이선스를 추적해야 하고 알려진 취약점(CVE)이 상속된다. 폐쇄망에서는 반입 경로, 오프라인 취약점 DB 갱신, 라이선스(GPL/LGPL) 의무가 핵심 쟁점이다.",
+   "constraints": "오픈소스에는 MISRA 전면 적용이 곤란하고 폐쇄망에서는 실시간 CVE 조회와 자동 업데이트가 불가능하다. 테일러링(tailoring)으로 제외 범위를 정하되 CWE 점검은 유지하고, 오프라인 취약점 DB와 사내 미러, 래퍼 입력 검증으로 대체한다.",
+   "key_cwe": [
+    "494",
+    "1104",
+    "1395",
+    "119",
+    "125",
+    "327",
+    "321",
+    "829"
+   ],
+   "guides": [
+    {
+     "id": "OSS-01",
+     "phase": "설계",
+     "title": "도입 승인과 SBOM 등록",
+     "guide": "오픈소스를 도입할 때 이름·버전·출처 URL·해시·라이선스·사용 목적을 전이 의존성까지 SBOM(소프트웨어 구성명세서, SPDX 또는 CycloneDX)에 등록하고 보안·법무 승인을 받는다.",
+     "cwe": [
+      "1104",
+      "1395"
+     ],
+     "basis": "SBOM(SPDX/CycloneDX), CWE-1104"
+    },
+    {
+     "id": "OSS-02",
+     "phase": "설계",
+     "title": "라이선스 적합성 검토",
+     "guide": "GPL/AGPL/LGPL은 링크 방식, 소스 공개 의무, GPLv3/LGPLv3의 설치 정보 조항을 검토해 비공개 배포 요건과 충돌하면 도입을 금지한다. Apache-2.0 등은 NOTICE 의무를 이행한다.",
+     "cwe": [],
+     "basis": "각 라이선스 조항, 법무 검토"
+    },
+    {
+     "id": "OSS-03",
+     "phase": "설계",
+     "title": "불필요 기능 제거와 격리",
+     "guide": "미사용 기능은 빌드 설정으로 제거(Mbed TLS mbedtls_config.h(2.x는 config.h), OpenSSL no-* 옵션, BusyBox 구성)하고, 신뢰되지 않은 입력을 파싱하는 라이브러리는 별도 프로세스나 낮은 권한으로 격리한다.",
+     "cwe": [
+      "119",
+      "125"
+     ],
+     "basis": "공격 표면 축소 원칙, CWE-119"
+    },
+    {
+     "id": "OSS-04",
+     "phase": "설계",
+     "title": "암호 라이브러리 선정",
+     "guide": "암호는 자체 구현을 금지하고 검증된 라이브러리를 선정하되 국내 검증필 암호모듈(KCMVP) 요구 여부를 확인한다. MD5·SHA-1·DES·RC4는 라이브러리별 설정(Mbed TLS의 해당 MBEDTLS_*_C 해제, OpenSSL의 no-des·no-rc4 등)으로 끄고, 빌드 옵션으로 끌 수 없는 알고리즘은 응용 정책으로 금지한다.",
+     "cwe": [
+      "327",
+      "321"
+     ],
+     "basis": "CWE-327 완화책, KISA KCMVP, OpenSSL INSTALL.md, Mbed TLS 설정"
+    },
+    {
+     "id": "OSS-05",
+     "phase": "구현",
+     "title": "전자서명·해시 검증 후 사내 미러 등록",
+     "guide": "소스·바이너리는 공식 전자서명(digital signature, GPG 등)이나 공식 SHA-256으로 검증하고 악성코드 검사 후 사내 미러(Nexus/Artifactory/내부 Git)에만 등록한다. 빌드는 외부 접속 없이 사내 미러만 쓴다.",
+     "cwe": [
+      "494",
+      "829"
+     ],
+     "basis": "CWE-494 완화책(무결성 검사)"
+    },
+    {
+     "id": "OSS-06",
+     "phase": "구현",
+     "title": "의존성 버전 고정",
+     "guide": "pip는 --require-hashes와 --no-index --find-links, Maven은 사내 저장소와 체크섬 검증, NuGet은 lock 파일과 packageSourceMapping, C/C++는 conan/vcpkg 오프라인 캐시를 쓴다. latest·범위 버전 지정을 금지한다.",
+     "cwe": [
+      "494",
+      "829"
+     ],
+     "basis": "각 패키지 관리자 문서"
+    },
+    {
+     "id": "OSS-07",
+     "phase": "구현",
+     "title": "로컬 수정은 패치로 관리",
+     "guide": "수정이 필요하면 원본 소스를 보존하고 패치 파일로 별도 관리하며 업스트림 근거 번호를 기록한다. 포크 후 방치하지 않도록 업스트림 보안 수정을 정기적으로 병합한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "CWE-1104"
+    },
+    {
+     "id": "OSS-08",
+     "phase": "구현",
+     "title": "오픈소스 점검 범위 명시",
+     "guide": "MISRA 전면 적용이 곤란한 오픈소스는 테일러링(tailoring) 문서에 제외 범위를 명시하되 CWE-658/659/660 점검과 컴파일러 경고 점검은 오픈소스에도 수행한다. 코드 실행률(Coverage) 측정 범위(포함·제외)도 시험계획에 명시한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 사업 유형별 테일러링(부록 7-3쪽)·코딩규칙 조정(부록 6-3쪽)"
+    },
+    {
+     "id": "OSS-09",
+     "phase": "통합 및 시험",
+     "title": "취약점 스캔과 퍼징",
+     "guide": "오프라인 DB로 CVE를 스캔한다. SBOM(소프트웨어 구성명세서)을 입력으로 받는 도구(Trivy, Grype 등)는 SBOM 기준으로, OWASP Dependency-Check는 소스·라이브러리 파일 기준으로 돌리고 스캔한 범위를 기록한다. 또한 외부 입력을 처리하는 파서·코덱은 AFL++ 또는 libFuzzer로 퍼징(fuzzing)한다.",
+     "cwe": [
+      "1395",
+      "119",
+      "125"
+     ],
+     "basis": "CWE-1395, OWASP Dependency-Check, Trivy·Grype 문서"
+    },
+    {
+     "id": "OSS-10",
+     "phase": "유지보수",
+     "title": "취약점 DB 갱신과 EOL 추적",
+     "guide": "오프라인 취약점 DB를 승인된 전송 절차로 주기(예: 월 1회) 갱신하고, CVE 발생 시 영향 분석, 패치·완화, SBOM(소프트웨어 구성명세서) 갱신을 수행한다. EOL·미관리 라이브러리는 교체 계획을 세우고 변경 시 회귀시험(regression test)과 라이선스 재검토를 한다.",
+     "cwe": [
+      "1395",
+      "1104"
+     ],
+     "basis": "CWE-1395, CWE-1104"
+    }
+   ]
+  }
+ ]
+}

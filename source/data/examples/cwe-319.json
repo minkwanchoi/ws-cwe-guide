@@ -1,0 +1,108 @@
+{
+ "cwe": "319",
+ "scenario_ko": "지상 통제 소프트웨어가 무인기에 경로점 변경 명령을 데이터링크 프레임으로 보낸다. 무선 구간은 제3자도 수신할 수 있으므로 송신 버퍼에 실린 바이트가 곧 도청자가 보는 내용이다. 예시는 실제 네트워크 대신 송신 버퍼에서 좌표 문자열이 보이는지 찾아 본다. 좋은 예의 논스 순번은 어느 언어든 비휘발성으로 유지해 재시작 뒤에도 되돌아가지 않게 하고, 양방향에 같은 키를 쓰면 순번이 겹치므로 방향별로 키를 나누거나 논스에 방향·장비 번호를 넣으며, 한계에 이르기 전에 키를 갱신한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#define _GNU_SOURCE\n#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n\n#define MSG_WAYPOINT_UPDATE 0x21u\n\n/* 데이터링크 프레임: [동기 2|메시지 ID 1|길이 1|페이로드] */\nstatic size_t build_frame(uint8_t *frame, size_t cap, const char *payload)\n{\n    size_t len = strlen(payload);\n    if (len > 255 || 4 + len > cap) {\n        return 0;\n    }\n    frame[0] = 0xEB; frame[1] = 0x90;\n    frame[2] = MSG_WAYPOINT_UPDATE;\n    frame[3] = (uint8_t)len;\n    memcpy(frame + 4, payload, len);          /* 임무 명령을 그대로 싣는다 */\n    return 4 + len;\n}\n\nint main(void)\n{\n    const char *order = \"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\";\n    uint8_t tx[300];\n    size_t n = build_frame(tx, sizeof tx, order);\n\n    /* 무선 구간을 수신한 제3자가 보는 것은 tx 바이트 그대로다 */\n    const char *probe = \"LAT=EXAMPLE-ONLY-35.10\";\n    int seen = n > 0 && memmem(tx, n, probe, strlen(probe)) != NULL;\n    puts(seen ? \"PLAINTEXT ON LINK\" : \"link carries ciphertext only\");\n    return 0;\n}\n",
+    "explain_ko": "명령 본문(좌표)을 프레임에 그대로 복사해 보낸다. 무선 구간을 수신하는 누구나 좌표를 읽고, 같은 형식으로 가짜 명령을 만들 수도 있다."
+   },
+   "good": {
+    "code": "#define _GNU_SOURCE\n#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n#include <openssl/evp.h>\n#include <openssl/rand.h>\n\n#define MSG_WAYPOINT_UPDATE 0x21u\n\n/* 프레임: [동기 2|ID 1|길이 1|논스 12|암호문|태그 16], 머리부는 AAD로 무결성만 보호 */\nstatic size_t seal_frame(uint8_t *frame, size_t cap, const uint8_t key[32],\n                         uint64_t counter, const char *payload)\n{\n    int len = (int)strlen(payload), out = 0, tail = 0, ok = 0;\n    if (len > 255 || (size_t)(32 + len) > cap) {\n        return 0;\n    }\n    uint8_t *nonce = frame + 4, *body = frame + 16;\n    frame[0] = 0xEB; frame[1] = 0x90; frame[2] = MSG_WAYPOINT_UPDATE; frame[3] = (uint8_t)len;\n    memset(nonce, 0, 4);                          /* 송신 장비 번호 자리 */\n    memcpy(nonce + 4, &counter, 8);               /* 같은 키로 논스를 다시 쓰지 않는다 */\n    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();\n    if (ctx != NULL && EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, key, nonce) == 1\n        && EVP_EncryptUpdate(ctx, NULL, &out, frame, 4) == 1\n        && EVP_EncryptUpdate(ctx, body, &out, (const uint8_t *)payload, len) == 1\n        && EVP_EncryptFinal_ex(ctx, body + out, &tail) == 1\n        && EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, body + len) == 1) {\n        ok = 1;\n    }\n    EVP_CIPHER_CTX_free(ctx);\n    return ok ? (size_t)(32 + len) : 0;          /* 실패하면 평문으로 보내지 않는다 */\n}\n\nint main(void)\n{\n    uint8_t key[32];                              /* 시험용: 실제로는 키 관리 체계가 주입한 링크 키 */\n    if (RAND_bytes(key, sizeof key) != 1) {\n        return 1;\n    }\n    const char *order = \"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\";\n    uint8_t tx[300];\n    size_t n = seal_frame(tx, sizeof tx, key, 1u, order);\n\n    const char *probe = \"LAT=EXAMPLE-ONLY-35.10\";\n    int seen = n > 0 && memmem(tx, n, probe, strlen(probe)) != NULL;\n    puts(n == 0 ? \"send refused\" : seen ? \"PLAINTEXT ON LINK\" : \"link carries ciphertext only\");\n    return 0;\n}\n",
+    "explain_ko": "검증된 암호 라이브러리의 AES-256-GCM으로 본문을 암호화하고 프레임 머리부는 AAD로 넣어 변조를 탐지한다. 논스는 장비 번호와 순번으로 만들어 같은 키에서 다시 쓰지 않고, 암호화에 실패하면 평문으로 보내지 않는다. 링크 단위로는 승인된 보안 프로토콜(TLS·DTLS 등)이나 링크 암호 장비를 쓰는 것이 원칙이다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT ON LINK",
+    "expect_good": "link carries ciphertext only",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-319 Demonstrative Example 1(암호화하지 않은 연결로 중요정보 전송) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <algorithm>\n#include <cstdint>\n#include <cstdio>\n#include <string>\n#include <vector>\n\n// 지상 통제 소프트웨어가 무인기로 보낼 임무 명령 프레임을 만든다\nstruct CommandFrame {\n    std::uint8_t msg_id;\n    std::string body;\n\n    std::vector<std::uint8_t> encode() const {\n        std::vector<std::uint8_t> wire{0xEB, 0x90, msg_id, static_cast<std::uint8_t>(body.size())};\n        wire.insert(wire.end(), body.begin(), body.end());   // 명령 본문이 그대로 무선 구간에 실린다\n        return wire;\n    }\n};\n\nstatic bool eavesdropper_reads(const std::vector<std::uint8_t> &wire, const std::string &probe) {\n    return std::search(wire.begin(), wire.end(), probe.begin(), probe.end()) != wire.end();\n}\n\nint main() {\n    const CommandFrame cmd{0x21, \"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\"};\n    const std::vector<std::uint8_t> wire = cmd.encode();\n    std::puts(eavesdropper_reads(wire, \"LAT=EXAMPLE-ONLY-35.10\") ? \"PLAINTEXT ON LINK\"\n                                                                  : \"link carries ciphertext only\");\n    return 0;\n}\n",
+    "explain_ko": "명령 객체를 직렬화하면서 본문을 그대로 무선 프레임에 넣는다. 도청자는 송신 바이트에서 좌표를 바로 읽는다."
+   },
+   "good": {
+    "code": "#include <openssl/evp.h>\n#include <openssl/rand.h>\n#include <algorithm>\n#include <array>\n#include <cstdint>\n#include <cstdio>\n#include <memory>\n#include <optional>\n#include <string>\n#include <vector>\n\nusing Bytes = std::vector<std::uint8_t>;\nusing CtxPtr = std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)>;\n\n// 검증된 암호 라이브러리의 AES-256-GCM: 머리부는 AAD(무결성), 본문은 암호화\nstatic std::optional<Bytes> seal_command(const std::array<std::uint8_t, 32> &key, std::uint64_t seq,\n                                         std::uint8_t msg_id, const std::string &body) {\n    if (body.size() > 255) return std::nullopt;\n    Bytes wire{0xEB, 0x90, msg_id, static_cast<std::uint8_t>(body.size())};\n    std::array<std::uint8_t, 12> nonce{};\n    for (int i = 0; i < 8; ++i) nonce[4 + i] = static_cast<std::uint8_t>(seq >> (8 * i));   // 순번 논스\n    wire.insert(wire.end(), nonce.begin(), nonce.end());\n    const std::size_t at = wire.size();\n    wire.resize(at + body.size() + 16);\n    CtxPtr ctx(EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free);\n    int n = 0;\n    const int len = static_cast<int>(body.size());\n    if (!ctx || EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, key.data(), nonce.data()) != 1 ||\n        EVP_EncryptUpdate(ctx.get(), nullptr, &n, wire.data(), 4) != 1 ||\n        EVP_EncryptUpdate(ctx.get(), &wire[at], &n, reinterpret_cast<const std::uint8_t *>(body.data()), len) != 1 ||\n        EVP_EncryptFinal_ex(ctx.get(), &wire[at] + n, &n) != 1 ||\n        EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_GET_TAG, 16, &wire[at + body.size()]) != 1) {\n        return std::nullopt;                                      // 실패하면 보내지 않는다\n    }\n    return wire;\n}\n\nint main() {\n    std::array<std::uint8_t, 32> key{};   // 시험용: 실제로는 키 관리 체계가 주입한 링크 키\n    if (RAND_bytes(key.data(), static_cast<int>(key.size())) != 1) return 1;\n    const auto wire = seal_command(key, 1, 0x21, \"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\");\n    if (!wire) { std::puts(\"send refused\"); return 1; }\n    const std::string probe = \"LAT=EXAMPLE-ONLY-35.10\";\n    const bool seen = std::search(wire->begin(), wire->end(), probe.begin(), probe.end()) != wire->end();\n    std::puts(seen ? \"PLAINTEXT ON LINK\" : \"link carries ciphertext only\");\n    return 0;\n}\n",
+    "explain_ko": "AES-256-GCM으로 본문을 암호화하고 머리부를 AAD로 묶는다. 실패하면 std::nullopt를 돌려 보내지 않게 하고, 순번 논스로 재사용을 막는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT ON LINK",
+    "expect_good": "link carries ciphertext only",
+    "platform": "linux",
+    "flags": [
+     "-Wl,--no-as-needed",
+     "-lcrypto"
+    ]
+   },
+   "refs": [
+    "MITRE CWE-319 Demonstrative Example 1(암호화하지 않은 연결로 중요정보 전송) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\n\npublic class Example {\n    static final byte MSG_WAYPOINT_UPDATE = 0x21;\n\n    // 데이터링크 프레임: [동기 2|메시지 ID 1|길이 1|본문]\n    static byte[] buildFrame(String order) {\n        byte[] body = order.getBytes(StandardCharsets.US_ASCII);\n        if (body.length > 255) {\n            throw new IllegalArgumentException(\"order too long\");\n        }\n        return ByteBuffer.allocate(4 + body.length)\n                .put((byte) 0xEB).put((byte) 0x90).put(MSG_WAYPOINT_UPDATE).put((byte) body.length)\n                .put(body)                                   // 명령 본문을 그대로 싣는다\n                .array();\n    }\n\n    public static void main(String[] args) {\n        byte[] wire = buildFrame(\"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\");\n        // 무선 구간을 수신한 제3자가 보는 것은 wire 바이트 그대로다\n        String heard = new String(wire, StandardCharsets.ISO_8859_1);\n        System.out.println(heard.contains(\"LAT=EXAMPLE-ONLY-35.10\") ? \"PLAINTEXT ON LINK\" : \"link carries ciphertext only\");\n    }\n}\n",
+    "explain_ko": "ByteBuffer로 프레임을 만들며 명령 본문을 평문으로 싣는다. 무선 구간의 수신자는 좌표를 그대로 읽는다."
+   },
+   "good": {
+    "code": "import java.nio.ByteBuffer;\nimport java.nio.charset.StandardCharsets;\nimport java.security.GeneralSecurityException;\nimport javax.crypto.Cipher;\nimport javax.crypto.KeyGenerator;\nimport javax.crypto.SecretKey;\nimport javax.crypto.spec.GCMParameterSpec;\n\npublic class Example {\n    static final byte MSG_WAYPOINT_UPDATE = 0x21;\n\n    // 프레임: [동기 2|ID 1|길이 1|논스 12|암호문+태그 16], 머리부는 AAD로 무결성 보호\n    static byte[] sealFrame(SecretKey linkKey, long seq, String order) throws GeneralSecurityException {\n        byte[] body = order.getBytes(StandardCharsets.US_ASCII);\n        if (body.length > 255) {\n            throw new IllegalArgumentException(\"order too long\");\n        }\n        byte[] head = {(byte) 0xEB, (byte) 0x90, MSG_WAYPOINT_UPDATE, (byte) body.length};\n        byte[] nonce = ByteBuffer.allocate(12).putInt(0).putLong(seq).array();   // 장비 번호 + 순번\n        Cipher gcm = Cipher.getInstance(\"AES/GCM/NoPadding\");\n        gcm.init(Cipher.ENCRYPT_MODE, linkKey, new GCMParameterSpec(128, nonce));\n        gcm.updateAAD(head);\n        byte[] sealed = gcm.doFinal(body);\n        return ByteBuffer.allocate(head.length + nonce.length + sealed.length).put(head).put(nonce).put(sealed).array();\n    }\n\n    public static void main(String[] args) throws GeneralSecurityException {\n        KeyGenerator kg = KeyGenerator.getInstance(\"AES\");   // 시험용: 실제로는 키 관리 체계가 주입한 키\n        kg.init(256);\n        byte[] wire = sealFrame(kg.generateKey(), 1L, \"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\");\n        String heard = new String(wire, StandardCharsets.ISO_8859_1);\n        System.out.println(heard.contains(\"LAT=EXAMPLE-ONLY-35.10\") ? \"PLAINTEXT ON LINK\" : \"link carries ciphertext only\");\n    }\n}\n",
+    "explain_ko": "AES/GCM/NoPadding으로 본문을 암호화하고 updateAAD로 머리부를 인증한다. 논스는 장비 번호와 순번으로 만들어 같은 키에서 반복되지 않게 한다. 소켓 통신이라면 SSLSocket·HTTPS를 쓰고 인증서 검증을 끄지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT ON LINK",
+    "expect_good": "link carries ciphertext only"
+   },
+   "refs": [
+    "MITRE CWE-319 Demonstrative Example 1(암호화하지 않은 연결로 중요정보 전송) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-5 '사용자 중요정보 평문 저장(또는 전송)'(인쇄 133쪽) 참고 — 이 항목의 표 1 대응 CWE는 CWE-311이고, 참고문헌에 CWE-319가 함께 실려 있다"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Text;\n\nconst byte MsgWaypointUpdate = 0x21;\nbyte[] order = Encoding.ASCII.GetBytes(\"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\");\n\n// 데이터링크 프레임: [동기 2|메시지 ID 1|길이 1|본문] — 본문을 그대로 싣는다\nbyte[] wire = [0xEB, 0x90, MsgWaypointUpdate, checked((byte)order.Length), .. order];\n\n// 무선 구간을 수신한 제3자가 보는 것은 wire 바이트 그대로다\nstring heard = Encoding.Latin1.GetString(wire);\nConsole.WriteLine(heard.Contains(\"LAT=EXAMPLE-ONLY-35.10\", StringComparison.Ordinal)\n    ? \"PLAINTEXT ON LINK\"\n    : \"link carries ciphertext only\");\n",
+    "explain_ko": "프레임 바이트 배열에 명령 본문을 그대로 이어 붙여 보낸다. 도청자는 송신 바이트에서 좌표를 읽는다."
+   },
+   "good": {
+    "code": "using System.Buffers.Binary;\nusing System.Security.Cryptography;\nusing System.Text;\n\nconst byte MsgWaypointUpdate = 0x21;\nbyte[] order = Encoding.ASCII.GetBytes(\"WP7 LAT=EXAMPLE-ONLY-35.10 LON=EXAMPLE-ONLY-129.04\");\nbyte[] linkKey = RandomNumberGenerator.GetBytes(32);   // 시험용: 실제로는 키 관리 체계가 주입한 링크 키\nulong sequence = 1;\n\n// 프레임: [동기 2|ID 1|길이 1|논스 12|태그 16|암호문], 머리부는 AAD로 무결성 보호\nbyte[] head = [0xEB, 0x90, MsgWaypointUpdate, checked((byte)order.Length)];\nbyte[] nonce = new byte[12];\nBinaryPrimitives.WriteUInt64BigEndian(nonce.AsSpan(4), sequence);   // 같은 키로 논스를 다시 쓰지 않는다\nbyte[] tag = new byte[16];\nbyte[] body = new byte[order.Length];\nusing (var gcm = new AesGcm(linkKey, tag.Length))\n{\n    gcm.Encrypt(nonce, order, body, tag, head);\n}\nbyte[] wire = [.. head, .. nonce, .. tag, .. body];\n\nstring heard = Encoding.Latin1.GetString(wire);\nConsole.WriteLine(heard.Contains(\"LAT=EXAMPLE-ONLY-35.10\", StringComparison.Ordinal)\n    ? \"PLAINTEXT ON LINK\"\n    : \"link carries ciphertext only\");\n",
+    "explain_ko": "AesGcm.Encrypt에 머리부를 AAD(연관 데이터)로 넘겨 본문은 암호화하고 머리부는 변조를 탐지한다. 논스는 순번으로 채워 같은 키에서 다시 쓰지 않는다. 소켓 통신이라면 SslStream으로 TLS 1.2 이상을 쓴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT ON LINK",
+    "expect_good": "link carries ciphertext only"
+   },
+   "refs": [
+    "MITRE CWE-319 Demonstrative Example 1(암호화하지 않은 연결로 중요정보 전송) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import json\nimport socket\n\n# 지상 통제 소프트웨어 ↔ 무인기 데이터링크(예시는 같은 프로세스의 소켓 쌍으로 흉내 낸다)\ngcs_side, link_side = socket.socketpair()\n\n\n# 경로점 변경 명령을 보낸다\ndef send_waypoint(sock, wp):\n    frame = json.dumps({\"cmd\": \"SET_WP\", \"wp\": wp}).encode()\n    sock.sendall(len(frame).to_bytes(2, \"big\") + frame)     # 평문 그대로 송신\n\n\nsend_waypoint(gcs_side, {\"id\": 7, \"lat\": \"EXAMPLE-ONLY-35.10\", \"lon\": \"EXAMPLE-ONLY-129.04\", \"alt_ft\": 9000})\non_air = link_side.recv(4096)                                # 무선 구간을 수신한 제3자가 보는 바이트\nprint(\"PLAINTEXT ON LINK\" if b\"SET_WP\" in on_air and b\"EXAMPLE-ONLY-35.10\" in on_air else \"ciphertext only\")\n",
+    "explain_ko": "경로점 변경 명령을 평문 프레임으로 보낸다. 무선 구간을 수신한 제3자는 명령과 좌표를 그대로 읽고, 같은 형식으로 위조 명령을 만들 수도 있다. 예시는 송신된 바이트에 명령 이름과 좌표가 보이는지 확인한다."
+   },
+   "good": {
+    "code": "import json\nimport os\nimport socket\n\nfrom cryptography.hazmat.primitives.ciphers.aead import AESGCM\n\nSESSION_KEY = AESGCM.generate_key(bit_length=256)   # 실제로는 키 합의·키 적재로 양쪽이 나눠 가진 세션 키\ngcs_side, link_side = socket.socketpair()\ntx_counter = 0\n\n\ndef send_waypoint(sock, wp):\n    global tx_counter\n    tx_counter += 1\n    nonce = tx_counter.to_bytes(12, \"big\")           # 세션 안에서 다시 쓰지 않는 논스(카운터)\n    plain = json.dumps({\"cmd\": \"SET_WP\", \"wp\": wp}).encode()\n    sealed = AESGCM(SESSION_KEY).encrypt(nonce, plain, b\"GCS->UAV\")   # 기밀성 + 무결성\n    frame = nonce + sealed\n    sock.sendall(len(frame).to_bytes(2, \"big\") + frame)\n\n\nsend_waypoint(gcs_side, {\"id\": 7, \"lat\": \"EXAMPLE-ONLY-35.10\", \"lon\": \"EXAMPLE-ONLY-129.04\", \"alt_ft\": 9000})\non_air = link_side.recv(4096)\nprint(\"PLAINTEXT ON LINK\" if b\"SET_WP\" in on_air and b\"EXAMPLE-ONLY-35.10\" in on_air else \"ciphertext only\")\nsize = int.from_bytes(on_air[:2], \"big\")\nprint(\"receiver:\", AESGCM(SESSION_KEY).decrypt(on_air[2:14], on_air[14:2 + size], b\"GCS->UAV\").decode())\n",
+    "explain_ko": "프레임을 세션 키로 인증 암호화(AES-256-GCM)해 보낸다. 논스는 세션 안에서 다시 쓰지 않는 송신 카운터로 만들고, 수신 측은 카운터가 늘어나는지도 확인해야 재전송을 거를 수 있다(예시에서는 생략). 링크 종류에 따라 TLS·DTLS나 링크 암호 장비를 쓰고, 어떤 구간을 어떻게 보호할지는 보안 요구사항에서 정한다(R-01). 평문 프로토콜인 FTP 모듈(ftplib)은 Bandit이 B402(가져오기)·B321(호출)로 따로 보고한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PLAINTEXT ON LINK",
+    "expect_good": "ciphertext only"
+   },
+   "refs": [
+    "MITRE CWE-319 Demonstrative Example 1(암호화하지 않은 연결로 중요정보 전송) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-5 '암호화되지 않은 중요정보'(인쇄 82쪽) 참고"
+   ]
+  }
+ }
+}

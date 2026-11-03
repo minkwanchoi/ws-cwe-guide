@@ -1,0 +1,46 @@
+{
+ "cwe": "119",
+ "scenario_ko": "데이터링크로 받은 센서 상태 메시지에서 센서 이름 필드를 꺼내 고정 크기 구조체에 옮긴다. 이름 길이는 메시지 헤더의 길이 바이트가 알려 준다. C++ 예시는 정비 명령으로 받은 채널 번호를 센서 표본 버퍼의 슬롯 번호로 쓴다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdint.h>\n\n#define SENSOR_NAME_MAX 12\n\ntypedef struct {\n    uint16_t sensor_id;\n    char name[SENSOR_NAME_MAX];\n} SensorRecord;\n\n/* msg[0..1]: 센서 번호, msg[2]: 이름 길이, msg[3..]: 이름 */\nstatic void decode_sensor(const uint8_t *msg, SensorRecord *out)\n{\n    uint8_t name_len = msg[2];\n    out->sensor_id = (uint16_t)(msg[0] << 8 | msg[1]);\n    memcpy(out->name, &msg[3], name_len);   /* 길이 바이트를 그대로 믿는다 */\n}\n\nint main(void)\n{\n    uint8_t link_msg[64] = {0x00, 0x2A, 40};\n    memset(&link_msg[3], 'K', 40);\n    SensorRecord rec;\n    decode_sensor(link_msg, &rec);\n    printf(\"sensor %u\\n\", rec.sensor_id);\n    return 0;\n}\n",
+    "explain_ko": "메시지 안의 길이 바이트(40)를 그대로 복사 길이로 써서 12바이트짜리 name 필드 뒤의 스택 메모리를 덮어쓴다. 길이 필드는 송신 측이 정하는 값이므로 신뢰 경계 밖의 입력이다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdint.h>\n\n#define SENSOR_NAME_MAX 12\n\ntypedef struct {\n    uint16_t sensor_id;\n    char name[SENSOR_NAME_MAX];\n} SensorRecord;\n\n/* 성공 0, 형식 오류 -1. msg_len은 실제로 받은 바이트 수 */\nstatic int decode_sensor(const uint8_t *msg, size_t msg_len, SensorRecord *out)\n{\n    if (msg_len < 3) {\n        return -1;\n    }\n    size_t name_len = msg[2];\n    if (name_len >= sizeof out->name || 3 + name_len > msg_len) {\n        return -1;                           /* 필드 상한과 받은 길이를 모두 검사 */\n    }\n    out->sensor_id = (uint16_t)(msg[0] << 8 | msg[1]);\n    memcpy(out->name, &msg[3], name_len);\n    out->name[name_len] = '\\0';\n    return 0;\n}\n\nint main(void)\n{\n    uint8_t link_msg[64] = {0x00, 0x2A, 40};\n    memset(&link_msg[3], 'K', 40);\n    SensorRecord rec;\n    if (decode_sensor(link_msg, sizeof link_msg, &rec) != 0) {\n        puts(\"rejected: bad name length\");\n        return 0;\n    }\n    printf(\"sensor %u %s\\n\", rec.sensor_id, rec.name);\n    return 0;\n}\n",
+    "explain_ko": "복사하기 전에 길이를 대상 필드 크기(종단 문자 자리 포함)와 실제로 받은 메시지 길이 두 가지로 검사하고, 어긋나면 메시지를 버린다. 검증 지점은 메시지 해석 함수 한 곳에 둔다(D-02·I-03)."
+   },
+   "check": {
+    "tool": "asan",
+    "expect": "AddressSanitizer: stack-buffer-overflow"
+   },
+   "refs": [
+    "MITRE CWE-119 Demonstrative Example 1(호스트 이름을 고정 버퍼에 복사) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-9 '스택에 할당된 버퍼 오버플로우'(인쇄 40쪽) 참고 — 이 항목의 표 1 대응 CWE는 CWE-121(CWE-119의 하위)"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <array>\n#include <cstdint>\n#include <cstdio>\n#include <memory>\n#include <vector>\n\nclass SensorRing {\npublic:\n    void store(std::size_t slot, std::uint16_t sample) {\n        samples_[slot] = sample;            // slot 범위를 검사하지 않는다\n    }\n    std::uint16_t at(std::size_t slot) const { return samples_[slot]; }\nprivate:\n    std::array<std::uint16_t, 8> samples_{};\n};\n\nint main() {\n    // 정비 명령으로 받은 채널 번호를 그대로 슬롯 번호로 쓴다\n    std::vector<std::size_t> cmd_slots{2, 5, 11};\n    auto ring = std::make_unique<SensorRing>();\n    for (auto s : cmd_slots) {\n        ring->store(s, 0x1234);\n    }\n    std::printf(\"%u\\n\", static_cast<unsigned>(ring->at(2)));\n    return 0;\n}\n",
+    "explain_ko": "std::array의 operator[]는 범위를 검사하지 않으므로, 외부 명령에서 온 슬롯 번호 11이 8칸짜리 배열 밖의 힙 메모리를 덮어쓴다."
+   },
+   "good": {
+    "code": "#include <array>\n#include <cstdint>\n#include <cstdio>\n#include <memory>\n#include <optional>\n#include <vector>\n\nclass SensorRing {\npublic:\n    bool store(std::size_t slot, std::uint16_t sample) {\n        if (slot >= samples_.size()) {\n            return false;                    // 범위 밖이면 거부하고 호출자가 처리\n        }\n        samples_[slot] = sample;\n        return true;\n    }\n    std::optional<std::uint16_t> at(std::size_t slot) const {\n        if (slot >= samples_.size()) {\n            return std::nullopt;             // 읽기도 같은 방식으로 검사\n        }\n        return samples_[slot];\n    }\nprivate:\n    std::array<std::uint16_t, 8> samples_{};\n};\n\nint main() {\n    std::vector<std::size_t> cmd_slots{2, 5, 11};\n    auto ring = std::make_unique<SensorRing>();\n    for (auto s : cmd_slots) {\n        if (!ring->store(s, 0x1234)) {\n            std::printf(\"rejected slot %zu\\n\", s);\n        }\n    }\n    if (auto v = ring->at(2)) {\n        std::printf(\"%u\\n\", static_cast<unsigned>(*v));\n    }\n    return 0;\n}\n",
+    "explain_ko": "쓰기와 읽기 모두 크기와 먼저 비교하고, 실패를 반환값(bool·std::optional)으로 호출자에게 알린다. 예외를 쓰지 않기로 정한 임베디드 C++ 과제에서는 at()의 예외 대신 이처럼 명시적 검사를 쓴다. 객체는 std::make_unique로 만들어 해제를 스마트 포인터에 맡긴다."
+   },
+   "check": {
+    "tool": "asan",
+    "expect": "AddressSanitizer: heap-buffer-overflow"
+   },
+   "refs": [
+    "MITRE CWE-119 Demonstrative Example 3·4(입력으로 받은 배열 첨자의 범위 검사 누락) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ },
+ "not_applicable": {
+  "Java": "Java는 배열 접근마다 경계를 검사해 ArrayIndexOutOfBoundsException을 던지므로 메모리 덮어쓰기로 이어지지 않는다. JNI로 부르는 네이티브 코드에는 C 예시를 적용한다.",
+  "C#": "C#의 관리 코드는 경계를 검사한다. unsafe 블록·stackalloc·P/Invoke 경계에서는 C 예시와 같은 문제가 생기므로 그 범위에 C 지침을 적용한다(LCS-02).",
+  "Python": "Python은 리스트·bytes·bytearray 색인마다 경계를 검사해 IndexError를 던지고 슬라이스는 범위 밖을 잘라 내므로 메모리 덮어쓰기로 이어지지 않는다. ctypes(create_string_buffer·memmove·from_buffer)와 C 확장 모듈, numpy의 메모리 보기(as_strided 등)에서는 C와 같은 문제가 생기므로 그 범위에는 C 예시와 C 지침을 적용한다."
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "cwe": "367",
+ "scenario_ko": "두 태스크(또는 프로세스)가 같은 자원을 다룬다. 정비 기록 파일을 쓰기 전에 '일반 파일인지' 확인하거나, 빈 정비 베이·전원 팩·링크 슬롯이 있는지 확인한 뒤 차감한다. 검사와 사용 사이의 틈에 다른 쪽이 끼어들면 검사 결과가 낡은 채로 사용된다. 예시는 그 틈을 시험용 장치(바꿔치기 함수·동기화 장치)로 일부러 열어 결과가 매번 같게 재현한다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <sys/stat.h>\n#include <unistd.h>\n\n/* 시험 재현: 검사와 사용 사이에 다른 프로세스가 기록 파일을 키 파일 링크로 바꾼다 */\nstatic void race_window(const char *path)\n{\n    unlink(path);\n    if (symlink(\"crypto_keys.dat\", path) != 0) perror(\"symlink\");\n}\n\nstatic int save_maint_record(const char *path, const char *record)\n{\n    struct stat info;\n    if (lstat(path, &info) != 0 || !S_ISREG(info.st_mode)) {  /* 검사: 이름으로 확인 */\n        return -1;\n    }\n    race_window(path);\n    FILE *log = fopen(path, \"w\");              /* 사용: 같은 이름을 다시 연다 */\n    if (log == NULL) return -1;\n    fputs(record, log);\n    return fclose(log);\n}\n\nstatic void put_text(const char *name, const char *text)\n{\n    FILE *f = fopen(name, \"w\");\n    if (f) { fputs(text, f); fclose(f); }\n}\n\nint main(void)\n{\n    put_text(\"crypto_keys.dat\", \"KEYSET-A\");\n    unlink(\"maint.log\");                        /* 이전 실행이 남긴 링크를 따라가지 않게 지운다 */\n    put_text(\"maint.log\", \"\");\n    printf(\"save result %d\\n\", save_maint_record(\"maint.log\", \"PBIT OK\"));\n\n    char now[32] = \"\";\n    FILE *k = fopen(\"crypto_keys.dat\", \"r\");\n    if (k) { if (!fgets(now, sizeof now, k)) now[0] = '\\0'; fclose(k); }\n    printf(\"key file '%s': %s\\n\", now, strcmp(now, \"KEYSET-A\") ? \"PROTECTED FILE OVERWRITTEN\" : \"intact\");\n    return 0;\n}\n",
+    "explain_ko": "lstat()으로 경로 이름을 검사한 뒤 fopen()으로 같은 이름을 다시 연다. 그 사이에 다른 프로세스가 기록 파일을 키 파일로 가는 심볼릭 링크로 바꾸면, 높은 권한의 정비 프로그램이 보호된 키 파일을 덮어쓴다."
+   },
+   "good": {
+    "code": "#include <errno.h>\n#include <fcntl.h>\n#include <stdio.h>\n#include <string.h>\n#include <sys/stat.h>\n#include <unistd.h>\n\n/* 시험 재현: 여는 순간 직전에 다른 프로세스가 기록 파일을 키 파일 링크로 바꾼다 */\nstatic void race_window(const char *path)\n{\n    unlink(path);\n    if (symlink(\"crypto_keys.dat\", path) != 0) perror(\"symlink\");\n}\n\nstatic int save_maint_record(const char *path, const char *record)\n{\n    race_window(path);\n    int fd = open(path, O_WRONLY | O_NOFOLLOW | O_CLOEXEC | O_NONBLOCK);  /* 먼저 열고 링크는 거부, FIFO에 막히지 않는다 */\n    if (fd < 0) {\n        printf(\"open refused: %s\\n\", strerror(errno));\n        return -1;\n    }\n    struct stat info;                           /* 검사: 연 핸들 기준, 하드 링크(st_nlink != 1)도 거부 */\n    if (fstat(fd, &info) != 0 || !S_ISREG(info.st_mode) || info.st_nlink != 1 || ftruncate(fd, 0) != 0) {\n        close(fd);\n        return -1;\n    }\n    ssize_t n = write(fd, record, strlen(record));\n    close(fd);\n    return n == (ssize_t)strlen(record) ? 0 : -1;   /* 부분 쓰기도 실패로 돌려준다 */\n}\n\nstatic void put_text(const char *name, const char *text)\n{\n    FILE *f = fopen(name, \"w\");\n    if (f) { fputs(text, f); fclose(f); }\n}\n\nint main(void)\n{\n    put_text(\"crypto_keys.dat\", \"KEYSET-A\");\n    unlink(\"maint.log\");                        /* 이전 실행이 남긴 링크를 따라가지 않게 지운다 */\n    put_text(\"maint.log\", \"\");\n    printf(\"save result %d\\n\", save_maint_record(\"maint.log\", \"PBIT OK\"));\n\n    char now[32] = \"\";\n    FILE *k = fopen(\"crypto_keys.dat\", \"r\");\n    if (k) { if (!fgets(now, sizeof now, k)) now[0] = '\\0'; fclose(k); }\n    printf(\"key file '%s': %s\\n\", now, strcmp(now, \"KEYSET-A\") ? \"PROTECTED FILE OVERWRITTEN\" : \"intact\");\n    return 0;\n}\n",
+    "explain_ko": "먼저 O_NOFOLLOW로 열어 심볼릭 링크를 거부하고, O_NONBLOCK으로 경로가 FIFO로 바뀌어도 open이 멈추지 않게 하며, 검사는 연 핸들에 fstat()으로 해 일반 파일이 아니거나 다른 이름(하드 링크)이 함께 있으면(st_nlink != 1) 거부한다. 검사와 사용이 같은 파일 객체를 가리키므로 이름 바꿔치기가 통하지 않는다. 일부만 쓴 경우도 실패로 돌려준다. 기록 폴더 자체를 다른 계정이 쓸 수 없게 두는 것도 함께 한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "PROTECTED FILE OVERWRITTEN",
+    "expect_good": "(?s)open refused:.*key file 'KEYSET-A': intact",
+    "platform": "linux"
+   },
+   "refs": [
+    "MITRE CWE-367 Demonstrative Example 2(access() 검사 뒤 fopen()) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 시간 및 상태 3-1 '경쟁 조건: 검사시점과 사용시점(TOCTOU)'(인쇄 140쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <condition_variable>\n#include <cstdio>\n#include <mutex>\n#include <thread>\n\n// 시험 재현: 두 태스크가 모두 '검사'를 마친 뒤에야 '사용'으로 넘어가게 순서를 고정\nclass Rendezvous {\n    std::mutex m_;\n    std::condition_variable cv_;\n    int arrived_ = 0;\npublic:\n    void meet() {\n        std::unique_lock<std::mutex> lk(m_);\n        if (++arrived_ == 2) cv_.notify_all();\n        else cv_.wait(lk, [this] { return arrived_ >= 2; });\n    }\n};\n\nint bays_left = 1;   // 비어 있는 정비 베이 수\nRendezvous window;\n\nvoid assign_request(const char *console) {\n    if (bays_left > 0) {          // 검사\n        window.meet();                    // 검사와 사용 사이에 다른 태스크가 끼어든다\n        --bays_left;              // 사용: 검사 결과가 이미 낡았다\n        std::printf(\"%s: assignment command issued\\n\", console);\n    }\n}\n\nint main() {\n    std::thread a(assign_request, \"console-1\");\n    std::thread b(assign_request, \"console-2\");\n    a.join();\n    b.join();\n    std::printf(\"bays_left=%d\\n\", bays_left);\n    return 0;\n}\n",
+    "explain_ko": "빈 정비 베이 수를 검사한 뒤 차감하기까지가 보호되지 않아, 두 콘솔 태스크가 모두 '1개 남음'을 보고 둘 다 할당 명령을 낸다. 실제 장비에서는 스케줄러 선점이나 다중 코어가 이 틈을 만든다."
+   },
+   "good": {
+    "code": "#include <condition_variable>\n#include <cstdio>\n#include <mutex>\n#include <thread>\n\n// 시험 재현: 두 태스크가 같은 순간에 할당을 요청하도록 출발을 맞춘다\nclass Rendezvous {\n    std::mutex m_;\n    std::condition_variable cv_;\n    int arrived_ = 0;\npublic:\n    void meet() {\n        std::unique_lock<std::mutex> lk(m_);\n        if (++arrived_ == 2) cv_.notify_all();\n        else cv_.wait(lk, [this] { return arrived_ >= 2; });\n    }\n};\n\nint bays_left = 1;\nstd::mutex bay_lock;   // 남은 수 검사와 차감을 한 구간으로 묶는다\nRendezvous window;\n\nvoid assign_request(const char *console) {\n    window.meet();\n    std::lock_guard<std::mutex> guard(bay_lock);\n    if (bays_left > 0) {\n        --bays_left;\n        std::printf(\"%s: assignment command issued\\n\", console);\n    } else {\n        std::printf(\"%s: denied, no bay left\\n\", console);\n    }\n}\n\nint main() {\n    std::thread a(assign_request, \"console-1\");\n    std::thread b(assign_request, \"console-2\");\n    a.join();\n    b.join();\n    std::printf(\"bays_left=%d\\n\", bays_left);\n    return 0;\n}\n",
+    "explain_ko": "남은 수 검사와 차감을 같은 뮤텍스 구간에 넣어 한 태스크만 성공하게 한다. ISR과 공유하는 값이면 인터럽트 차단이나 원자 명령으로 같은 효과를 낸다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?s)assignment command issued.*assignment command issued",
+    "expect_good": "denied, no bay left"
+   },
+   "refs": [
+    "MITRE CWE-367 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 지상 통제소: 위성 링크 대역(슬롯) 1개를 두 운용 콘솔이 동시에 요청\nvar pool = new UplinkPool(freeSlots: 1);\nusing var bothChecked = new Barrier(2);    // 시험 재현: 두 콘솔이 모두 검사한 뒤 사용하게 순서를 고정\n\nvar t1 = Task.Run(() => pool.Reserve(\"console-1\", bothChecked));\nvar t2 = Task.Run(() => pool.Reserve(\"console-2\", bothChecked));\nawait Task.WhenAll(t1, t2);\nConsole.WriteLine($\"freeSlots={pool.FreeSlots}\");\n\ninternal sealed class UplinkPool(int freeSlots)\n{\n    public int FreeSlots => freeSlots;\n\n    public void Reserve(string console, Barrier window)\n    {\n        if (freeSlots > 0)                 // 검사\n        {\n            window.SignalAndWait();        // 검사와 사용 사이에 다른 콘솔이 끼어든다\n            freeSlots--;                   // 사용: 검사 결과가 이미 낡았다\n            Console.WriteLine($\"{console}: slot reserved\");\n        }\n    }\n}\n",
+    "explain_ko": "남은 슬롯을 검사한 뒤 줄이기 전에 다른 콘솔이 같은 검사를 통과해, 슬롯 1개가 두 번 예약된다."
+   },
+   "good": {
+    "code": "// 지상 통제소: 위성 링크 대역(슬롯) 1개를 두 운용 콘솔이 동시에 요청\nvar pool = new UplinkPool(freeSlots: 1);\nusing var start = new Barrier(2);          // 시험 재현: 두 콘솔이 같은 순간에 요청\n\nvar t1 = Task.Run(() => { start.SignalAndWait(); pool.Reserve(\"console-1\"); });\nvar t2 = Task.Run(() => { start.SignalAndWait(); pool.Reserve(\"console-2\"); });\nawait Task.WhenAll(t1, t2);\nConsole.WriteLine($\"freeSlots={pool.FreeSlots}\");\n\ninternal sealed class UplinkPool(int freeSlots)\n{\n    // 검사와 차감을 한 임계구역으로 묶는다. System.Threading.Lock은 .NET 9 이상\n    // (이전 판은 private readonly object _gate = new();)\n    private readonly Lock _gate = new();\n    private int _free = freeSlots;\n\n    public int FreeSlots { get { lock (_gate) { return _free; } } }\n\n    public void Reserve(string console)\n    {\n        lock (_gate)\n        {\n            if (_free == 0)\n            {\n                Console.WriteLine($\"{console}: denied, no slot\");\n                return;\n            }\n            _free--;\n        }\n        Console.WriteLine($\"{console}: slot reserved\");\n    }\n}\n",
+    "explain_ko": "검사와 차감을 lock 구간 하나로 묶는다. 단순 계수기라면 Interlocked.CompareExchange 반복으로도 원자적으로 처리할 수 있다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?s)slot reserved.*slot reserved",
+    "expect_good": "denied, no slot"
+   },
+   "refs": [
+    "MITRE CWE-367 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.concurrent.CountDownLatch;\n\npublic class Example {\n    static int fuelCells = 1;                       // 정비 베이 예비 전원 팩 잔량\n    static final CountDownLatch BOTH_CHECKED = new CountDownLatch(2);\n\n    static void assignCell(String crew) {\n        if (fuelCells > 0) {                        // 검사\n            BOTH_CHECKED.countDown();               // 시험 재현: 두 정비조가 모두 검사를 마칠 때까지 대기\n            awaitQuietly();\n            fuelCells--;                            // 사용: 이미 다른 정비조가 가져갔을 수 있다\n            System.out.println(crew + \": cell assigned\");\n        }\n    }\n\n    static void awaitQuietly() {\n        try {\n            BOTH_CHECKED.await();\n        } catch (InterruptedException e) {\n            Thread.currentThread().interrupt();\n        }\n    }\n\n    public static void main(String[] args) throws InterruptedException {\n        Thread a = new Thread(() -> assignCell(\"crew-A\"));\n        Thread b = new Thread(() -> assignCell(\"crew-B\"));\n        a.start();\n        b.start();\n        a.join();\n        b.join();\n        System.out.println(\"fuelCells=\" + fuelCells);\n    }\n}\n",
+    "explain_ko": "잔량 확인(if)과 차감(--)이 따로 일어나 두 정비조가 같은 전원 팩 1개를 동시에 배정받는다. 결과 잔량이 음수가 되거나 갱신이 사라진다."
+   },
+   "good": {
+    "code": "import java.util.concurrent.CountDownLatch;\nimport java.util.concurrent.atomic.AtomicInteger;\n\npublic class Example {\n    static final AtomicInteger FUEL_CELLS = new AtomicInteger(1);\n    static final CountDownLatch START = new CountDownLatch(2);\n\n    static void assignCell(String crew) {\n        START.countDown();                          // 시험 재현: 두 정비조가 동시에 요청\n        awaitQuietly();\n        // 검사와 차감을 하나의 원자적 연산으로: 0보다 클 때만 1 줄인다\n        int before = FUEL_CELLS.getAndUpdate(n -> n > 0 ? n - 1 : n);\n        System.out.println(crew + (before > 0 ? \": cell assigned\" : \": denied, no cell left\"));\n    }\n\n    static void awaitQuietly() {\n        try {\n            START.await();\n        } catch (InterruptedException e) {\n            Thread.currentThread().interrupt();\n        }\n    }\n\n    public static void main(String[] args) throws InterruptedException {\n        Thread a = new Thread(() -> assignCell(\"crew-A\"));\n        Thread b = new Thread(() -> assignCell(\"crew-B\"));\n        a.start();\n        b.start();\n        a.join();\n        b.join();\n        System.out.println(\"fuelCells=\" + FUEL_CELLS.get());\n    }\n}\n",
+    "explain_ko": "AtomicInteger.getAndUpdate()로 '0보다 클 때만 1 줄이기'를 한 번의 원자적 연산으로 처리한다. 여러 값을 함께 바꿔야 하면 synchronized나 Lock으로 검사·사용 구간 전체를 묶는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?s)cell assigned.*cell assigned",
+    "expect_good": "denied, no cell left"
+   },
+   "refs": [
+    "MITRE CWE-367 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 시간 및 상태 3-1 '경쟁 조건: 검사시점과 사용시점'(인쇄 195쪽) 참고"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import threading\n\nreserved = {}                           # 정비 베이 번호 → 정비조\nboth_checked = threading.Barrier(2)     # 시험용: 두 정비조가 검사를 마친 뒤에 함께 쓰게 한다\n\n\n# 정비조가 빈 정비 베이를 예약한다\ndef reserve(bay, crew):\n    if bay not in reserved:             # 검사 시점\n        both_checked.wait()             # 검사와 사용 사이(로그 기록·DB 조회 등)\n        reserved[bay] = crew            # 사용 시점: 그사이 다른 정비조도 같은 검사를 통과했다\n        print(f\"bay {bay} reserved by {crew}\")\n\n\nworkers = [threading.Thread(target=reserve, args=(3, c)) for c in (\"crew-A\", \"crew-B\")]\nfor w in workers:\n    w.start()\nfor w in workers:\n    w.join()\n",
+    "explain_ko": "'비어 있는가'를 검사한 뒤 잠깐 다른 일을 하고 예약을 쓴다. 두 스레드가 거의 동시에 검사를 통과하면 둘 다 같은 베이를 예약한다. GIL(전역 인터프리터 잠금)은 바이트코드 한 단위만 보호하므로 검사와 쓰기 사이의 경쟁조건을 막지 못한다. 파일에서 os.path.exists()·os.access()로 확인한 뒤 open()하는 것도 같은 꼴이다."
+   },
+   "good": {
+    "code": "import threading\nimport time\n\nreserved = {}\nreserved_lock = threading.Lock()\n\n\ndef reserve(bay, crew):\n    with reserved_lock:                 # 검사와 사용을 한 임계 구역에서 원자적으로\n        if bay in reserved:\n            print(f\"bay {bay} already taken by {reserved[bay]}; {crew} refused\")\n            return\n        time.sleep(0.05)                # 시험용: 검사와 사용 사이의 작업(로그 기록·DB 조회 등)을 흉내 낸다\n        reserved[bay] = crew\n        print(f\"bay {bay} reserved by {crew}\")\n\n\nworkers = [threading.Thread(target=reserve, args=(3, c)) for c in (\"crew-A\", \"crew-B\")]\nfor w in workers:\n    w.start()\nfor w in workers:\n    w.join()\n",
+    "explain_ko": "검사와 사용을 같은 잠금 안에서 한 번에 한다(I-07). 파일이면 확인 후 열기 대신 os.open(…, O_CREAT | O_EXCL)처럼 검사와 생성을 운영체제가 원자적으로 하는 호출을 쓰고, 프로세스 사이라면 DB 트랜잭션·파일 잠금을 쓴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "(?s)bay 3 reserved by .*bay 3 reserved by",
+    "expect_good": "crew-[AB] refused"
+   },
+   "refs": [
+    "MITRE CWE-367 Demonstrative Example 4(여러 스레드가 검사 후 갱신) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 시간 및 상태 3-1 '경쟁조건: 검사시점과 사용시점(TOCTOU)'(인쇄 120쪽) 참고"
+   ]
+  }
+ }
+}

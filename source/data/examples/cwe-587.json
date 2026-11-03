@@ -1,0 +1,62 @@
+{
+ "cwe": "587",
+ "scenario_ko": "관성 센서 초기화 때 플래시의 공장 보정 영역을 읽거나(C), 보드 식별 정보(OTP 영역)의 하드웨어 개정 번호로 구동 드라이버를 고른다(C++). C#은 탑재 컴퓨터에서 unsafe 코드로 같은 보정 영역을 읽는 경우다. 이 영역의 위치는 MCU와 보드 메모리 배치에 따라 달라진다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n\ntypedef struct {\n    uint32_t magic;            /* 0xCA1B0001이면 유효 */\n    int32_t gyro_bias[3];      /* 공장 보정값 */\n} CalBlock;\n\n/* 관성 센서 초기화: 플래시의 보정 영역을 읽는다 */\nstatic int load_gyro_bias(int32_t out[3])\n{\n    /* 보드 A의 링커 배치를 보고 주소를 숫자로 적어 넣었다.\n       보드·메모리 배치가 바뀌어도 이 숫자는 그대로 남는다 */\n    const CalBlock *cal = (const CalBlock *)0x0807F000u;\n    if (cal->magic != 0xCA1B0001u) {\n        return -1;\n    }\n    for (int i = 0; i < 3; ++i) {\n        out[i] = cal->gyro_bias[i];\n    }\n    return 0;\n}\n\nint main(void)\n{\n    int32_t bias[3];\n    if (load_gyro_bias(bias) != 0) {\n        puts(\"calibration block missing\");\n        return 1;\n    }\n    printf(\"bias %d %d %d\\n\", (int)bias[0], (int)bias[1], (int)bias[2]);\n    return 0;\n}\n",
+    "explain_ko": "보드 한 종류의 링커 배치를 보고 보정 영역 주소를 숫자로 응용 코드에 적어 넣는다. 보드 개정·메모리 배치가 바뀌면 다른 데이터를 보정값으로 읽거나 접근 오류로 멈추며, 호스트에서 돌리면 바로 비정상 종료한다."
+   },
+   "good": {
+    "code": "#include <stdint.h>\n#include <stdio.h>\n\ntypedef struct {\n    uint32_t magic;            /* 0xCA1B0001이면 유효 */\n    int32_t gyro_bias[3];      /* 공장 보정값 */\n} CalBlock;\n\n/* BSP가 제공하는 보정 영역 객체. 실제 타깃에서는 링커 스크립트가 보드별\n   보정 섹션에 배치하고 여기서는 선언만 둔다(호스트 시험에서는 아래 정의로 대신한다) */\nextern const CalBlock bsp_cal_block;\n\n/* 관성 센서 초기화: 플래시의 보정 영역을 읽는다 */\nstatic int load_gyro_bias(int32_t out[3])\n{\n    const CalBlock *cal = &bsp_cal_block;   /* 주소는 링커가 정한다: 숫자 주소 없음 */\n    if (cal->magic != 0xCA1B0001u) {\n        return -1;\n    }\n    for (int i = 0; i < 3; ++i) {\n        out[i] = cal->gyro_bias[i];\n    }\n    return 0;\n}\n\n/* 호스트 시험용 대역(타깃 빌드에서는 BSP 소스가 정의) */\nconst CalBlock bsp_cal_block = {0xCA1B0001u, {12, -7, 3}};\n\nint main(void)\n{\n    int32_t bias[3];\n    if (load_gyro_bias(bias) != 0) {\n        puts(\"calibration block missing\");\n        return 1;\n    }\n    printf(\"bias %d %d %d\\n\", (int)bias[0], (int)bias[1], (int)bias[2]);\n    return 0;\n}\n",
+    "explain_ko": "보정 영역은 BSP가 제공하는 객체로 선언만 하고 실제 위치는 보드별 링커 스크립트가 정한다. 레지스터처럼 고정 주소가 불가피하면 벤더 헤더·HAL 한 곳에만 두고 편차로 기록한다(MCU-06·LC-03)."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "clang-analyzer-optin.core.FixedAddressDereference"
+   },
+   "refs": [
+    "MITRE CWE-587 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdint>\n#include <cstdio>\n\n// 공장에서 기록한 보드 식별 정보(OTP 영역)\nstruct BoardInfo {\n    std::uint32_t hw_rev;\n    std::uint32_t serial;\n};\n\n// 하드웨어 개정 번호에 따라 구동 드라이버를 고른다\nclass DriverSelector {\npublic:\n    bool use_new_imu() const {\n        // 1차 시제 보드의 메모리 맵에서 옮겨 적은 주소. MCU·보드가 바뀌어도 그대로 남는다\n        const auto *info = reinterpret_cast<const BoardInfo *>(0x1FFF7800u);\n        return info->hw_rev >= 3u;\n    }\n};\n\nint main() {\n    DriverSelector sel;\n    std::printf(\"new IMU driver: %s\\n\", sel.use_new_imu() ? \"yes\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "reinterpret_cast로 숫자 주소를 구조체 포인터로 바꿔 응용 클래스 안에서 바로 읽는다. 같은 주소가 여러 곳에 흩어지면 보드가 바뀔 때 고칠 곳을 놓치기 쉽다."
+   },
+   "good": {
+    "code": "#include <cstdint>\n#include <cstdio>\n\n// 공장에서 기록한 보드 식별 정보(OTP 영역)\nstruct BoardInfo {\n    std::uint32_t hw_rev;\n    std::uint32_t serial;\n};\n\nnamespace bsp {\n// 보드별 위치는 BSP(벤더 헤더·링커 스크립트) 한 곳에서만 정하고 응용 코드는 이 함수만 쓴다\nconst BoardInfo &board_info();\n}  // namespace bsp\n\n// 하드웨어 개정 번호에 따라 구동 드라이버를 고른다\nclass DriverSelector {\npublic:\n    bool use_new_imu() const {\n        return bsp::board_info().hw_rev >= 3u;   // 숫자 주소 없이 BSP가 준 객체로 읽는다\n    }\n};\n\n// 호스트 시험용 대역. 타깃 빌드에서는 BSP 소스가 보드 메모리 맵에 맞춰 정의한다\nconst BoardInfo &bsp::board_info() {\n    static const BoardInfo host_info{3u, 1042u};\n    return host_info;\n}\n\nint main() {\n    DriverSelector sel;\n    std::printf(\"new IMU driver: %s\\n\", sel.use_new_imu() ? \"yes\" : \"no\");\n    return 0;\n}\n",
+    "explain_ko": "보드 정보는 bsp::board_info() 접근 함수 하나로만 얻고, 그 정의(주소 결정)는 보드별 BSP 소스에 둔다. reinterpret_cast는 HAL의 한정된 위치에만 허용한다(LCPP-05)."
+   },
+   "check": {
+    "tool": "clang-tidy",
+    "expect": "clang-analyzer-optin.core.FixedAddressDereference"
+   },
+   "refs": [
+    "MITRE CWE-587 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 관성 센서 초기화: 탑재 컴퓨터의 공장 보정 영역을 unsafe 포인터로 읽는다\nunsafe\n{\n    // 보드 A의 메모리 배치를 보고 주소를 숫자로 적어 넣었다.\n    // 보드·메모리 배치가 바뀌어도 이 숫자는 그대로 남는다\n    CalBlock* cal = (CalBlock*)0x0807F000;\n    if (cal->Magic != 0xCA1B0001u)\n    {\n        Console.WriteLine(\"calibration block missing\");\n        return;\n    }\n    Console.WriteLine($\"bias {cal->BiasX} {cal->BiasY} {cal->BiasZ}\");\n}\n\n// 보정 영역의 배치: 확인값과 세 축의 공장 보정값\ninternal readonly record struct CalBlock(uint Magic, int BiasX, int BiasY, int BiasZ);\n",
+    "explain_ko": "unsafe 코드에서 숫자 주소를 구조체 포인터로 바꿔 보정 영역을 바로 읽는다. 보드·메모리 배치가 바뀌면 다른 데이터를 보정값으로 읽거나 접근 오류로 멈추며, 이 예시를 호스트에서 돌리면 AccessViolationException으로 프로세스가 비정상 종료된다."
+   },
+   "good": {
+    "code": "// 관성 센서 초기화: 보정 영역은 보드 지원 계층이 넘겨준 값으로만 읽는다\nCalBlock cal = BoardSupport.ReadCalibration();\nif (cal.Magic != 0xCA1B0001u)\n{\n    Console.WriteLine(\"calibration block missing\");\n    return;\n}\nConsole.WriteLine($\"bias {cal.BiasX} {cal.BiasY} {cal.BiasZ}\");\n\n// 보드 지원 계층: 보정 영역의 위치는 이 한 곳에서만 다룬다.\n// 실제 장비에서는 보드별 구성(장치 트리·설치 구성 파일)에서 받은 주소로 이곳에서만 매핑하고,\n// 응용 코드에는 숫자 주소도 unsafe 포인터도 내주지 않는다.\ninternal static class BoardSupport\n{\n    // 호스트 시험용 대역: 정해진 보정 블록을 돌려준다\n    public static CalBlock ReadCalibration() => new(0xCA1B0001u, 12, -7, 3);\n}\n\n// 보정 영역의 배치: 확인값과 세 축의 공장 보정값\ninternal readonly record struct CalBlock(uint Magic, int BiasX, int BiasY, int BiasZ);\n",
+    "explain_ko": "보정 영역의 위치는 보드 지원 계층(BoardSupport) 한 곳에서만 다루고, 응용 코드는 숫자 주소나 unsafe 포인터 없이 값만 받는다. 예시의 ReadCalibration은 호스트 시험용 대체 구현이며, 실제 장비에서는 보드별 구성에서 받은 주소로 그 한 곳에서만 매핑하고 unsafe 코드는 전용 어셈블리로 격리한다(LCS-02·MCU-06)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "AccessViolationException|calibration block missing",
+    "expect_good": "bias 12 -7 3"
+   },
+   "refs": [
+    "MITRE CWE-587 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ },
+ "not_applicable": {
+  "Java": "Java는 정수를 참조로 바꿀 수 없어 고정 주소를 참조에 넣을 수 없다. 장치 메모리 접근이 필요하면 JNI나 FFM(java.lang.foreign) 같은 네이티브 경계 한 곳에 모으고, JNI로 부르는 네이티브 코드에는 C 예시를 적용한다(LJ-08).",
+  "Python": "Python 문법에는 정수를 객체 참조로 바꾸는 방법이 없어 고정 주소를 참조에 넣을 수 없다. ctypes.cast(정수, POINTER(…))·from_address나 /dev/mem의 mmap으로 장치 주소를 직접 다루는 경우에는 C와 같은 문제가 생기므로 그 코드를 한 모듈에 모으고 C 예시와 C 지침을 적용한다."
+ }
+}

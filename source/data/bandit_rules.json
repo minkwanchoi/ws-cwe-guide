@@ -1,0 +1,1310 @@
+{
+ "meta": {
+  "title": "Bandit 규칙과 CWE·이 가이드 지침 대응",
+  "source": "Bandit 1.9.4 소스의 규칙 정의(PyPI 휠, 태그 1.9.4와 대조)",
+  "checked": "2026. 11. 1.",
+  "list_url": "https://bandit.readthedocs.io/en/1.9.4/plugins/index.html",
+  "count": 75,
+  "groups": [
+   "기타 점검(B1xx)",
+   "프레임워크 설정(B2xx)",
+   "위험한 함수 호출(B3xx)",
+   "위험한 모듈 가져오기(B4xx)",
+   "암호·인증서(B5xx)",
+   "삽입(B6xx)",
+   "XSS(B7xx)"
+  ]
+ },
+ "rules": [
+  {
+   "id": "B101",
+   "name": "assert_used",
+   "ko": "`assert` 사용(`-O` 실행 때 코드에서 제거)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/asserts.py#L67",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "703"
+   ],
+   "cwe": [
+    "703"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B102",
+   "name": "exec_used",
+   "ko": "`exec` 사용",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/exec.py#L51",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "95"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "`exec`에 입력이 들어가는 결과로 대응(5.7 각주)",
+   "guides": []
+  },
+  {
+   "id": "B103",
+   "name": "set_bad_file_permissions",
+   "ko": "`chmod`로 파일에 지나치게 넓은 권한을 주는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_bad_file_permissions.py#L72",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "732"
+   ],
+   "cwe": [
+    "732"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B104",
+   "name": "hardcoded_bind_all_interfaces",
+   "ko": "문자열 `0.0.0.0`(모든 네트워크 인터페이스에 바인딩할 가능성)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_bind_all_interfaces.py#L43",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "605"
+   ],
+   "cwe": [
+    "605"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B105",
+   "name": "hardcoded_password_string",
+   "ko": "문자열에 하드코드된 비밀번호",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_hardcoded_password.py#L28",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "259"
+   ],
+   "cwe": [
+    "259"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07",
+    "LPY-12"
+   ]
+  },
+  {
+   "id": "B106",
+   "name": "hardcoded_password_funcarg",
+   "ko": "함수 인자로 넘기는 하드코드된 비밀번호",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_hardcoded_password.py#L148",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "259"
+   ],
+   "cwe": [
+    "259"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07",
+    "LPY-12"
+   ]
+  },
+  {
+   "id": "B107",
+   "name": "hardcoded_password_default",
+   "ko": "함수 인자 기본값에 둔 하드코드된 비밀번호",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_hardcoded_password.py#L208",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "259"
+   ],
+   "cwe": [
+    "259"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07",
+    "LPY-12"
+   ]
+  },
+  {
+   "id": "B108",
+   "name": "hardcoded_tmp_directory",
+   "ko": "`/tmp` 같은 임시 경로를 하드코드하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/general_hardcoded_tmp.py#L64",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "377"
+   ],
+   "cwe": [
+    "59"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit은 CWE-377을 붙이지만 CWE 5.0에서 폐기되어 MITRE가 매핑을 금지한다(Prohibited). 이 가이드는 임시 파일 경로를 악용하는 결과(링크 따라가기)로 대응을 잡았다.",
+   "guides": [
+    "LPY-06"
+   ]
+  },
+  {
+   "id": "B110",
+   "name": "try_except_pass",
+   "ko": "`try-except-pass`로 예외를 무시하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/try_except_pass.py#L87",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "703"
+   ],
+   "cwe": [
+    "390",
+    "755"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "예외를 무시하는 결과로 대응(5.7 각주)",
+   "guides": [
+    "LPY-08"
+   ]
+  },
+  {
+   "id": "B112",
+   "name": "try_except_continue",
+   "ko": "반복문 안 `try-except-continue`로 예외를 무시하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/try_except_continue.py#L89",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "703"
+   ],
+   "cwe": [
+    "390",
+    "755"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "예외를 무시하는 결과로 대응(5.7 각주)",
+   "guides": [
+    "LPY-08"
+   ]
+  },
+  {
+   "id": "B113",
+   "name": "request_without_timeout",
+   "ko": "`requests` 등의 호출에 시간 제한(timeout)을 두지 않는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/request_without_timeout.py#L55",
+   "group": "기타 점검(B1xx)",
+   "cwe_bandit": [
+    "400"
+   ],
+   "cwe": [
+    "400"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B201",
+   "name": "flask_debug_true",
+   "ko": "Flask 앱을 `debug=True`로 실행하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/app_debug.py#L49",
+   "group": "프레임워크 설정(B2xx)",
+   "cwe_bandit": [
+    "94"
+   ],
+   "cwe": [
+    "489",
+    "94"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "운용에 남은 디버그 기능(CWE-489)이 주 대응이고, 디버거를 통한 코드 실행(CWE-94)을 함께 적음",
+   "guides": []
+  },
+  {
+   "id": "B202",
+   "name": "tarfile_unsafe_members",
+   "ko": "`tarfile.extractall`을 `filter='data'` 없이 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/tarfile_unsafe_members.py#L104",
+   "group": "프레임워크 설정(B2xx)",
+   "cwe_bandit": [
+    "22"
+   ],
+   "cwe": [
+    "22"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-06"
+   ]
+  },
+  {
+   "id": "B301",
+   "name": "pickle",
+   "ko": "`pickle`류로 역직렬화하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L359",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "502"
+   ],
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B302",
+   "name": "marshal",
+   "ko": "`marshal`로 역직렬화하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L383",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "502"
+   ],
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B303",
+   "name": "md5",
+   "ko": "MD5·SHA-1 같은 약한 해시를 암호 라이브러리에서 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L393",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B304",
+   "name": "ciphers",
+   "ko": "ARC4·DES·Blowfish 같은 약한 암호 알고리즘을 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L414",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B305",
+   "name": "cipher_modes",
+   "ko": "ECB 암호 운용 방식을 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L443",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B306",
+   "name": "mktemp_q",
+   "ko": "`tempfile.mktemp`로 임시 파일 이름을 만드는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L453",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "377"
+   ],
+   "cwe": [
+    "59"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit은 CWE-377을 붙이지만 CWE 5.0에서 폐기되어 MITRE가 매핑을 금지한다(Prohibited). 이 가이드는 임시 파일 경로를 악용하는 결과(링크 따라가기)로 대응을 잡았다.",
+   "guides": [
+    "LPY-06"
+   ]
+  },
+  {
+   "id": "B307",
+   "name": "eval",
+   "ko": "`eval` 사용",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L463",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "95"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "`eval`에 입력이 들어가는 결과로 대응(5.7 각주)",
+   "guides": [
+    "LPY-04"
+   ]
+  },
+  {
+   "id": "B308",
+   "name": "mark_safe",
+   "ko": "Django `mark_safe` 호출(XSS 검토 요구)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L474",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "79"
+   ],
+   "cwe": [
+    "79"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B310",
+   "name": "urllib_urlopen",
+   "ko": "`urllib.request.urlopen` 등의 호출(허용 스킴 점검 요구, `file:` 등)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L487",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "22"
+   ],
+   "cwe": [
+    "22"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B311",
+   "name": "random",
+   "ko": "`random` 모듈 함수 호출(보안 용도에 부적합)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L507",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "330"
+   ],
+   "cwe": [
+    "330"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B312",
+   "name": "telnetlib",
+   "ko": "`telnetlib`로 평문 통신하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L532",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B313",
+   "name": "xml_bad_cElementTree",
+   "ko": "`xml.etree.cElementTree` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L554",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B314",
+   "name": "xml_bad_ElementTree",
+   "ko": "`xml.etree.ElementTree` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L569",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B315",
+   "name": "xml_bad_expatreader",
+   "ko": "`xml.sax.expatreader` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L584",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B316",
+   "name": "xml_bad_expatbuilder",
+   "ko": "`xml.dom.expatbuilder` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L594",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B317",
+   "name": "xml_bad_sax",
+   "ko": "`xml.sax` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L604",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B318",
+   "name": "xml_bad_minidom",
+   "ko": "`xml.dom.minidom` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L614",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B319",
+   "name": "xml_bad_pulldom",
+   "ko": "`xml.dom.pulldom` 해석 함수 호출(신뢰할 수 없는 XML에 취약)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L624",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B321",
+   "name": "ftplib",
+   "ko": "`ftplib`로 평문 통신하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L638",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B323",
+   "name": "unverified_context",
+   "ko": "인증서를 검증하지 않는 `ssl._create_unverified_context`를 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/calls.py#L652",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "295"
+   ],
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B324",
+   "name": "hashlib_insecure_functions",
+   "ko": "`hashlib`의 MD4·MD5·SHA-1을 보안 용도로 쓰거나 `crypt`에 약한 방식을 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/hashlib_insecure_functions.py#L110",
+   "group": "위험한 함수 호출(B3xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B401",
+   "name": "import_telnetlib",
+   "ko": "`telnetlib` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L247",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B402",
+   "name": "import_ftplib",
+   "ko": "`ftplib` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L259",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B403",
+   "name": "import_pickle",
+   "ko": "`pickle`류 모듈 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L271",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "502"
+   ],
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B404",
+   "name": "import_subprocess",
+   "ko": "`subprocess` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L283",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B405",
+   "name": "import_xml_etree",
+   "ko": "`xml.etree` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L305",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B406",
+   "name": "import_xml_sax",
+   "ko": "`xml.sax` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L316",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B407",
+   "name": "import_xml_expat",
+   "ko": "`xml.dom.expatbuilder` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L327",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B408",
+   "name": "import_xml_minidom",
+   "ko": "`xml.dom.minidom` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L338",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B409",
+   "name": "import_xml_pulldom",
+   "ko": "`xml.dom.pulldom` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L349",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "611",
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 외부 개체 참조(CWE-611)·개체 확장(CWE-776)으로 대응. 실제 발생 여부는 해석기 설정과 Python·expat 판에 따라 다르다(5.7 각주)",
+   "guides": [
+    "LPY-03"
+   ]
+  },
+  {
+   "id": "B411",
+   "name": "import_xmlrpclib",
+   "ko": "`xmlrpc` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L362",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "776"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "Bandit이 경고하는 XML 공격을 개체 확장으로 대응",
+   "guides": []
+  },
+  {
+   "id": "B412",
+   "name": "import_httpoxy",
+   "ko": "CGI 처리기(`wsgiref.handlers.CGIHandler` 등) 가져오기(httpoxy 취약점)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L376",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "284"
+   ],
+   "cwe": [
+    "284"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B413",
+   "name": "import_pycrypto",
+   "ko": "유지보수가 끝난 `pycrypto` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L392",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B415",
+   "name": "import_pyghmi",
+   "ko": "IPMI 라이브러리 `pyghmi` 가져오기",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/blacklists/imports.py#L414",
+   "group": "위험한 모듈 가져오기(B4xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B501",
+   "name": "request_with_no_cert_validation",
+   "ko": "`requests` 등에서 `verify=False`로 인증서 검증을 끄는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/crypto_request_no_cert_validation.py#L54",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "295"
+   ],
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B502",
+   "name": "ssl_with_bad_version",
+   "ko": "폐기된 SSL/TLS 버전을 명시하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/insecure_ssl_tls.py#L31",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B503",
+   "name": "ssl_with_bad_defaults",
+   "ko": "함수 기본값에 폐기된 SSL/TLS 버전을 두는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/insecure_ssl_tls.py#L157",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B504",
+   "name": "ssl_with_no_version",
+   "ko": "SSL/TLS 버전을 지정하지 않고 `ssl.wrap_socket`을 부르는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/insecure_ssl_tls.py#L223",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "327"
+   ],
+   "cwe": [
+    "327"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B505",
+   "name": "weak_cryptographic_key",
+   "ko": "DSA·RSA·EC 키를 안전하지 않은 길이로 만드는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/weak_cryptographic_key.py#L159",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "326"
+   ],
+   "cwe": [
+    "326"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B506",
+   "name": "yaml_load",
+   "ko": "`yaml.load`를 `SafeLoader`·`CSafeLoader` 없이 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/yaml_load.py#L49",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "20"
+   ],
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "안전하지 않은 로더의 임의 객체 생성으로 대응(5.7 각주)",
+   "guides": []
+  },
+  {
+   "id": "B507",
+   "name": "ssh_no_host_key_verification",
+   "ko": "`paramiko`에서 SSH 호스트 키 검증을 생략하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/ssh_no_host_key_verification.py#L45",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "295"
+   ],
+   "cwe": [
+    "295"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-07"
+   ]
+  },
+  {
+   "id": "B508",
+   "name": "snmp_insecure_version",
+   "ko": "SNMP v1·v2c를 쓰는 것(`CommunityData`의 `mpModel` 0·1)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/snmp_security_check.py#L10",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B509",
+   "name": "snmp_weak_cryptography",
+   "ko": "SNMPv3를 암호화 없이 쓰는 것(`noAuthNoPriv`·`authNoPriv`)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/snmp_security_check.py#L61",
+   "group": "암호·인증서(B5xx)",
+   "cwe_bandit": [
+    "319"
+   ],
+   "cwe": [
+    "319"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B601",
+   "name": "paramiko_calls",
+   "ko": "`paramiko`의 `exec_command`로 셸 명령을 실행하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_paramiko.py#L48",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B602",
+   "name": "subprocess_popen_with_shell_equals_true",
+   "ko": "`subprocess`를 `shell=True`로 호출하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L107",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-05"
+   ]
+  },
+  {
+   "id": "B603",
+   "name": "subprocess_without_shell_equals_true",
+   "ko": "`shell=True` 없는 `subprocess` 호출(신뢰할 수 없는 입력이 실행되는지 확인 요구)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L234",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B604",
+   "name": "any_other_function_with_shell_equals_true",
+   "ko": "그 밖의 함수를 `shell=True`로 호출하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L320",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B605",
+   "name": "start_process_with_a_shell",
+   "ko": "`os.system`·`os.popen` 등 셸을 거치는 프로세스 실행",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L405",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-05"
+   ]
+  },
+  {
+   "id": "B606",
+   "name": "start_process_with_no_shell",
+   "ko": "`os.exec*`·`os.spawn*` 등 셸 없는 프로세스 실행",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L508",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B607",
+   "name": "start_process_with_partial_path",
+   "ko": "실행 파일을 부분 경로로 지정하는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_shell.py#L602",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "78"
+   ],
+   "cwe": [
+    "78"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": [
+    "LPY-05"
+   ]
+  },
+  {
+   "id": "B608",
+   "name": "hardcoded_sql_expressions",
+   "ko": "문자열 연산(`+`·`%`·`format`·`replace`·f-string)으로 SQL 문을 만드는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_sql.py#L128",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "89"
+   ],
+   "cwe": [
+    "89"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B609",
+   "name": "linux_commands_wildcard_injection",
+   "ko": "`chown`·`chmod`·`tar`·`rsync` 셸 명령에 와일드카드(`*`)를 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/injection_wildcard.py#L110",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "155"
+   ],
+   "cwe": [
+    "155"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B610",
+   "name": "django_extra_used",
+   "ko": "Django `extra`에 상수가 아닌 SQL 조각을 넘기는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/django_sql_injection.py#L20",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "89"
+   ],
+   "cwe": [
+    "89"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B611",
+   "name": "django_rawsql_used",
+   "ko": "Django `RawSQL`에 상수가 아닌 SQL을 넘기는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/django_sql_injection.py#L109",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "89"
+   ],
+   "cwe": [
+    "89"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B612",
+   "name": "logging_config_insecure_listen",
+   "ko": "`logging.config.listen`을 `verify` 없이 쓰는 것(소켓으로 받은 설정 일부가 `eval`을 거침)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/logging_config_insecure_listen.py#L46",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "94"
+   ],
+   "cwe": [
+    "94"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B613",
+   "name": "trojansource",
+   "ko": "소스에 유니코드 양방향 제어 문자가 있는 것(Trojan Source)",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/trojansource.py#L54",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "838"
+   ],
+   "cwe": [
+    "838"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B614",
+   "name": "pytorch_load",
+   "ko": "`torch.load`·`torch.serialization.load`를 `weights_only=True` 없이 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/pytorch_load.py#L50",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "502"
+   ],
+   "cwe": [
+    "502"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B615",
+   "name": "huggingface_unsafe_download",
+   "ko": "Hugging Face 모델·데이터를 커밋 해시로 고정하지 않고 내려받는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/huggingface_unsafe_download.py#L70",
+   "group": "삽입(B6xx)",
+   "cwe_bandit": [
+    "494"
+   ],
+   "cwe": [
+    "494"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B701",
+   "name": "jinja2_autoescape_false",
+   "ko": "Jinja2 자동 이스케이프를 끄거나 지정하지 않는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/jinja2_templates.py#L73",
+   "group": "XSS(B7xx)",
+   "cwe_bandit": [
+    "94"
+   ],
+   "cwe": [
+    "79"
+   ],
+   "cwe_source": "판단",
+   "cwe_note": "자동 이스케이프를 끈 결과(XSS)로 대응",
+   "guides": []
+  },
+  {
+   "id": "B702",
+   "name": "use_of_mako_templates",
+   "ko": "자동 이스케이프가 기본이 아닌 Mako 템플릿을 쓰는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/mako_templates.py#L50",
+   "group": "XSS(B7xx)",
+   "cwe_bandit": [
+    "80"
+   ],
+   "cwe": [
+    "80"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B703",
+   "name": "django_mark_safe",
+   "ko": "Django `mark_safe`·`SafeString` 등에 안전이 확인되지 않은 값을 넘기는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/django_xss.py#L241",
+   "group": "XSS(B7xx)",
+   "cwe_bandit": [
+    "80"
+   ],
+   "cwe": [
+    "80"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  },
+  {
+   "id": "B704",
+   "name": "markupsafe_markup_xss",
+   "ko": "`markupsafe.Markup`·`flask.Markup`에 상수가 아닌 값을 넘기는 것",
+   "url": "https://github.com/PyCQA/bandit/blob/1.9.4/bandit/plugins/markupsafe_markup_xss.py#L87",
+   "group": "XSS(B7xx)",
+   "cwe_bandit": [
+    "79"
+   ],
+   "cwe": [
+    "79"
+   ],
+   "cwe_source": "Bandit과 같음",
+   "cwe_note": "",
+   "guides": []
+  }
+ ]
+}

@@ -1,0 +1,99 @@
+{
+ "cwe": "285",
+ "scenario_ko": "운용자 콘솔이 임무 데이터 삭제·정비 기록 삭제·항법 설정 초기화 같은 중요 명령을 받는다. 요청한 사용자는 이미 로그인(인증)했지만 역할은 관찰자·운용자·정비자로 다르며, 설계상 정비자만 이 명령을 실행할 수 있다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stddef.h>\n\ntypedef enum { ROLE_OBSERVER, ROLE_OPERATOR, ROLE_MAINTAINER } Role;\n\ntypedef struct {\n    const char *user;\n    Role role;\n    int logged_in;             /* 인증은 이미 끝난 세션 */\n} Session;\n\nstatic const char *ROLE_NAME[] = { \"OBSERVER\", \"OPERATOR\", \"MAINTAINER\" };\n\n/* 임무 데이터 일괄 삭제: 중요 명령 */\nstatic const char *purge_mission_data(const Session *s)\n{\n    if (!s->logged_in) {\n        return \"DENIED (login required)\";\n    }\n    /* 로그인 여부만 보고, 이 역할에 삭제 권한이 있는지는 확인하지 않는다 */\n    return \"EXECUTED\";\n}\n\nint main(void)\n{\n    const Session users[] = {\n        { \"obs01\", ROLE_OBSERVER, 1 },\n        { \"mnt07\", ROLE_MAINTAINER, 1 },\n    };\n    for (size_t i = 0; i < sizeof users / sizeof users[0]; ++i) {\n        printf(\"user=%s role=%s cmd=PURGE_MISSION -> %s\\n\", users[i].user,\n               ROLE_NAME[users[i].role], purge_mission_data(&users[i]));\n    }\n    return 0;\n}\n",
+    "explain_ko": "로그인(인증) 여부만 확인하고 요청자 역할에 삭제 권한이 있는지는 확인하지 않아, 관찰자도 임무 데이터를 지울 수 있다. 인증은 '누구인가', 인가는 '이 일을 해도 되는가'를 따로 확인해야 한다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <stddef.h>\n\ntypedef enum { ROLE_OBSERVER, ROLE_OPERATOR, ROLE_MAINTAINER, ROLE_COUNT } Role;\ntypedef enum { CMD_VIEW_STATUS = 1u << 0, CMD_LOAD_PLAN = 1u << 1, CMD_PURGE_MISSION = 1u << 2 } Command;\n\ntypedef struct {\n    const char *user;\n    Role role;\n    int logged_in;\n} Session;\n\nstatic const char *ROLE_NAME[ROLE_COUNT] = { \"OBSERVER\", \"OPERATOR\", \"MAINTAINER\" };\n\n/* 설계 단계에서 정한 권한 매트릭스: 역할별로 허용한 명령만 1 */\nstatic const unsigned PERMITTED[ROLE_COUNT] = {\n    [ROLE_OBSERVER]   = CMD_VIEW_STATUS,\n    [ROLE_OPERATOR]   = CMD_VIEW_STATUS | CMD_LOAD_PLAN,\n    [ROLE_MAINTAINER] = CMD_VIEW_STATUS | CMD_LOAD_PLAN | CMD_PURGE_MISSION,\n};\n\n/* 모든 명령 진입점이 부르는 공통 인가 함수: 모르는 값은 거부(default deny) */\nstatic int authorized(const Session *s, Command cmd)\n{\n    if (!s->logged_in || (unsigned)s->role >= ROLE_COUNT) {\n        return 0;\n    }\n    return (PERMITTED[s->role] & (unsigned)cmd) != 0;\n}\n\nstatic const char *purge_mission_data(const Session *s)\n{\n    if (!authorized(s, CMD_PURGE_MISSION)) {\n        return \"DENIED (role not permitted)\";\n    }\n    return \"EXECUTED\";\n}\n\nint main(void)\n{\n    const Session users[] = {\n        { \"obs01\", ROLE_OBSERVER, 1 },\n        { \"mnt07\", ROLE_MAINTAINER, 1 },\n    };\n    for (size_t i = 0; i < sizeof users / sizeof users[0]; ++i) {\n        printf(\"user=%s role=%s cmd=PURGE_MISSION -> %s\\n\", users[i].user,\n               ROLE_NAME[users[i].role], purge_mission_data(&users[i]));\n    }\n    return 0;\n}\n",
+    "explain_ko": "설계 단계에서 정한 역할별 권한 매트릭스를 표로 두고, 모든 명령 진입점이 같은 인가 함수를 거치게 한다(D-04). 범위를 벗어난 역할 값이나 표에 없는 명령은 거부한다(기본 거부)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "role=OBSERVER cmd=PURGE_MISSION -> EXECUTED",
+    "expect_good": "role=OBSERVER cmd=PURGE_MISSION -> DENIED"
+   },
+   "refs": [
+    "MITRE CWE-285 Demonstrative Example 1(요청자 권한 확인 없이 조회 처리) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-1 '부적절한 인가'(인쇄 77쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <map>\n#include <string>\n#include <vector>\n\nenum class Role { Observer, Operator, Maintainer };\nenum class Command { ViewStatus, LoadPlan, PurgeMission };\n\n// 요청 메시지: 사용자 이름과 명령\nstruct Request {\n    std::string user;\n    Command cmd;\n};\n\n// 인증 때 장비가 기록한 역할\nconst std::map<std::string, Role> kSessions{{\"obs01\", Role::Observer}, {\"mnt07\", Role::Maintainer}};\n\nconst char *role_text(const std::string &user) {\n    auto s = kSessions.find(user);\n    if (s == kSessions.end()) return \"NONE\";\n    switch (s->second) {\n    case Role::Observer: return \"OBSERVER\";\n    case Role::Operator: return \"OPERATOR\";\n    default: return \"MAINTAINER\";\n    }\n}\n\n// 콘솔 화면이 관찰자에게는 삭제 버튼을 숨기므로 장비 쪽 처리기는 역할을 보지 않는다\nstd::string handle(const Request &rq) {\n    switch (rq.cmd) {\n    case Command::PurgeMission: return \"EXECUTED\";\n    case Command::LoadPlan: return \"PLAN LOADED\";\n    default: return \"STATUS OK\";\n    }\n}\n\nint main() {\n    // 관찰자가 화면을 거치지 않고 명령 메시지를 직접 보낸 경우\n    std::vector<Request> inbox{{\"obs01\", Command::PurgeMission}, {\"mnt07\", Command::PurgeMission}};\n    for (const auto &rq : inbox) {\n        std::cout << \"user=\" << rq.user << \" role=\" << role_text(rq.user)\n                  << \" cmd=PURGE_MISSION -> \" << handle(rq) << '\\n';\n    }\n    return 0;\n}\n",
+    "explain_ko": "콘솔 화면이 버튼을 숨기는 것에만 기대고 장비 쪽 처리기는 세션의 역할을 보지 않는다. 화면을 거치지 않고 명령 메시지를 직접 보내면 관찰자도 삭제를 실행할 수 있다."
+   },
+   "good": {
+    "code": "#include <iostream>\n#include <map>\n#include <set>\n#include <string>\n#include <vector>\n\nenum class Role { Observer, Operator, Maintainer };\nenum class Command { ViewStatus, LoadPlan, PurgeMission };\n\n// 요청 메시지에는 명령만 담는다. 신원과 역할은 메시지로 받지 않는다\nstruct Request {\n    Command cmd;\n};\n\n// 인증 때 장비가 연결에 묶어 둔 세션(요청 메시지로 바꿀 수 없다)\nstruct Session {\n    std::string user;\n    Role role;\n};\n\n// 명령별 허용 역할도 장비 쪽 한 곳에 둔다\nconst std::map<Command, std::set<Role>> kPolicy{\n    {Command::ViewStatus, {Role::Observer, Role::Operator, Role::Maintainer}},\n    {Command::LoadPlan, {Role::Operator, Role::Maintainer}},\n    {Command::PurgeMission, {Role::Maintainer}},\n};\n\nconst char *role_text(Role r) {\n    return r == Role::Observer ? \"OBSERVER\" : r == Role::Operator ? \"OPERATOR\" : \"MAINTAINER\";\n}\n\n// peer는 메시지가 들어온 연결의 세션이다. 인증하지 않은 연결이면 nullptr이다\nstd::string handle(const Session *peer, const Request &rq) {\n    if (peer == nullptr) return \"DENIED (no session)\";\n    auto p = kPolicy.find(rq.cmd);\n    if (p == kPolicy.end() || p->second.count(peer->role) == 0) {  // 표에 없으면 거부\n        return std::string(\"DENIED (role \") + role_text(peer->role) + \" not permitted)\";\n    }\n    return rq.cmd == Command::PurgeMission ? \"EXECUTED\" : \"DONE\";\n}\n\nint main() {\n    const Session observer{\"obs01\", Role::Observer};\n    const Session maintainer{\"mnt07\", Role::Maintainer};\n    struct Incoming {\n        const Session *peer;\n        Request rq;\n    };\n    // 관찰자가 명령 메시지를 직접 보내거나, 인증하지 않은 연결에서 보내도 거부된다\n    std::vector<Incoming> inbox{{&observer, {Command::PurgeMission}}, {nullptr, {Command::PurgeMission}},\n                                {&maintainer, {Command::PurgeMission}}};\n    for (const auto &in : inbox) {\n        std::cout << \"user=\" << (in.peer != nullptr ? in.peer->user : \"-\") << \" cmd=PURGE_MISSION -> \"\n                  << handle(in.peer, in.rq) << '\\n';\n    }\n    return 0;\n}\n",
+    "explain_ko": "요청 메시지에는 명령만 담고, 신원과 역할은 장비 쪽 세션(인증 때 연결에 묶어 둔 값)에서 가져온다. 메시지 안의 역할 값이나 사용자 이름은 보내는 쪽이 바꿀 수 있기 때문이다. 세션은 인증된 연결(또는 추측할 수 없는 세션 토큰)로 찾으며, 메시지에 적힌 사용자 이름으로 찾지 않는다. 명령별 허용 역할도 장비 쪽 정책 표 한 곳에 두고 처리 전에 확인하며, 세션이 없거나 표에 없는 명령·역할 조합은 거부한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "role=OBSERVER cmd=PURGE_MISSION -> EXECUTED",
+    "expect_good": "cmd=PURGE_MISSION -> DENIED \\(role OBSERVER not permitted\\)"
+   },
+   "refs": [
+    "MITRE CWE-285 Demonstrative Example 1(요청자 권한 확인 없이 조회 처리) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.List;\n\npublic class Example {\n    enum Role { OBSERVER, OPERATOR, MAINTAINER }\n\n    record User(String id, Role role) {}\n\n    // 정비 기록 보관소: 기록 삭제는 중요 기능\n    static final class RecordArchive {\n        String deleteRecord(User caller, String recordId) {\n            if (caller == null) {\n                return \"DENIED (no session)\";\n            }\n            // 세션만 있으면 누구든 삭제할 수 있다: 역할 확인이 없다\n            return \"EXECUTED delete \" + recordId;\n        }\n    }\n\n    public static void main(String[] args) {\n        RecordArchive archive = new RecordArchive();\n        for (User u : List.of(new User(\"obs01\", Role.OBSERVER), new User(\"mnt07\", Role.MAINTAINER))) {\n            System.out.println(\"user=\" + u.id() + \" role=\" + u.role() + \" cmd=DELETE_RECORD -> \"\n                    + archive.deleteRecord(u, \"MR-0042\"));\n        }\n    }\n}\n",
+    "explain_ko": "세션이 있는지만 보고 역할을 확인하지 않아 관찰자 계정도 정비 기록을 지울 수 있다."
+   },
+   "good": {
+    "code": "import java.util.Collections;\nimport java.util.EnumMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.Set;\n\npublic class Example {\n    enum Role { OBSERVER, OPERATOR, MAINTAINER }\n    enum Action { READ_RECORD, DELETE_RECORD }\n\n    record User(String id, Role role) {}\n\n    // 권한 매트릭스: 역할마다 허용한 동작만 둔다(실행 중에 바뀌지 않게 수정 불가로 감싼다)\n    static final Map<Role, Set<Action>> GRANTS = Collections.unmodifiableMap(new EnumMap<Role, Set<Action>>(Map.of(\n            Role.OBSERVER, Set.of(Action.READ_RECORD),\n            Role.OPERATOR, Set.of(Action.READ_RECORD),\n            Role.MAINTAINER, Set.of(Action.READ_RECORD, Action.DELETE_RECORD))));\n\n    static boolean allowed(User u, Action a) {\n        return u != null && GRANTS.getOrDefault(u.role(), Set.of()).contains(a);\n    }\n\n    static final class RecordArchive {\n        String deleteRecord(User caller, String recordId) {\n            if (!allowed(caller, Action.DELETE_RECORD)) {     // 기본은 거부\n                return \"DENIED (role not permitted)\";\n            }\n            return \"EXECUTED delete \" + recordId;\n        }\n    }\n\n    public static void main(String[] args) {\n        RecordArchive archive = new RecordArchive();\n        for (User u : List.of(new User(\"obs01\", Role.OBSERVER), new User(\"mnt07\", Role.MAINTAINER))) {\n            System.out.println(\"user=\" + u.id() + \" role=\" + u.role() + \" cmd=DELETE_RECORD -> \"\n                    + archive.deleteRecord(u, \"MR-0042\"));\n        }\n    }\n}\n",
+    "explain_ko": "역할별 허용 동작을 수정 불가로 감싼 EnumMap 권한 매트릭스로 두고 삭제 전에 확인한다. 매트릭스에 없는 역할은 빈 집합으로 처리해 거부한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "role=OBSERVER cmd=DELETE_RECORD -> EXECUTED",
+    "expect_good": "role=OBSERVER cmd=DELETE_RECORD -> DENIED"
+   },
+   "refs": [
+    "MITRE CWE-285 Demonstrative Example 1(요청자 권한 확인 없이 조회 처리) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-2 '부적절한 인가'(인쇄 120쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "var operatorSession = new ConsoleSession(\"opr03\", Role.Operator, IsAuthenticated: true);\nvar maintSession = new ConsoleSession(\"mnt07\", Role.Maintainer, IsAuthenticated: true);\n\nforeach (var s in new[] { operatorSession, maintSession })\n{\n    Console.WriteLine($\"user={s.User} role={s.Role} cmd=RESET_NAV_CONFIG -> {ConfigService.ResetNavConfig(s)}\");\n}\n\nenum Role { Observer, Operator, Maintainer }\n\nsealed record ConsoleSession(string User, Role Role, bool IsAuthenticated);\n\nstatic class ConfigService\n{\n    // 항법 장치 설정 초기화: 정비자만 해야 하는 중요 명령\n    public static string ResetNavConfig(ConsoleSession s)\n    {\n        if (!s.IsAuthenticated)\n        {\n            return \"DENIED (login required)\";\n        }\n        // 인증 여부만 확인한다: 운용자도 정비 전용 명령을 실행할 수 있다\n        return \"EXECUTED\";\n    }\n}\n",
+    "explain_ko": "인증 여부만 확인하므로 운용자 역할도 정비 전용인 항법 설정 초기화를 실행할 수 있다."
+   },
+   "good": {
+    "code": "var operatorSession = new ConsoleSession(\"opr03\", Role.Operator, IsAuthenticated: true);\nvar maintSession = new ConsoleSession(\"mnt07\", Role.Maintainer, IsAuthenticated: true);\n\nforeach (var s in new[] { operatorSession, maintSession })\n{\n    Console.WriteLine($\"user={s.User} role={s.Role} cmd=RESET_NAV_CONFIG -> {ConfigService.ResetNavConfig(s)}\");\n}\n\nenum Role { Observer, Operator, Maintainer }\n\nenum Op { ViewConfig, ResetNavConfig }\n\nsealed record ConsoleSession(string User, Role Role, bool IsAuthenticated);\n\nstatic class ConfigService\n{\n    // 권한 매트릭스를 한 곳에 두고, 나열하지 않은 조합은 모두 거부한다\n    static bool Permits(Role role, Op op) => (role, op) switch\n    {\n        (_, Op.ViewConfig) => true,\n        (Role.Maintainer, Op.ResetNavConfig) => true,\n        _ => false,\n    };\n\n    public static string ResetNavConfig(ConsoleSession s)\n    {\n        if (!s.IsAuthenticated || !Permits(s.Role, Op.ResetNavConfig))\n        {\n            return \"DENIED (role not permitted)\";\n        }\n        return \"EXECUTED\";\n    }\n}\n",
+    "explain_ko": "(역할, 동작) 쌍을 switch 식 권한 표로 정의하고 나열하지 않은 조합은 모두 거부한다. 하위 역할로 상위 기능을 부르는 부정 시험을 함께 둔다(T-06)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "role=Operator cmd=RESET_NAV_CONFIG -> EXECUTED",
+    "expect_good": "role=Operator cmd=RESET_NAV_CONFIG -> DENIED"
+   },
+   "refs": [
+    "MITRE CWE-285 Demonstrative Example 1(요청자 권한 확인 없이 조회 처리) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "from dataclasses import dataclass\n\n\n@dataclass\nclass Session:\n    user: str\n    role: str                     # OPERATOR, MAINTAINER, OBSERVER\n    authenticated: bool = True\n\n\n# 운용자 콘솔의 중요 명령 처리기: 로그인 여부만 보고 실행한다\ndef execute(session, command):\n    if not session.authenticated:\n        return \"login required\"\n    return f\"role={session.role} cmd={command} -> EXECUTED\"      # 역할을 확인하지 않음\n\n\nprint(execute(Session(\"kim\", \"OPERATOR\"), \"SHOW_STATUS\"))\nprint(execute(Session(\"lee\", \"OBSERVER\"), \"DELETE_MISSION_DATA\"))  # 관찰자도 삭제 명령 실행\n",
+    "explain_ko": "로그인(인증)했는지만 보고 명령을 실행한다. 관찰자 계정으로도 임무 데이터 삭제 같은 중요 명령이 실행된다. 화면에서 버튼을 감추는 것만으로는 막지 못한다. 명령은 콘솔 밖에서도 보낼 수 있다."
+   },
+   "good": {
+    "code": "from dataclasses import dataclass\n\n# 명령마다 허용 역할을 한곳에 정의한다(표에 없는 명령은 모두 거부)\nALLOWED_ROLES = {\n    \"SHOW_STATUS\": {\"OPERATOR\", \"MAINTAINER\", \"OBSERVER\"},\n    \"DELETE_MISSION_DATA\": {\"MAINTAINER\"},\n    \"RESET_NAV_CONFIG\": {\"MAINTAINER\"},\n}\n\n\n@dataclass\nclass Session:\n    user: str\n    role: str\n    authenticated: bool             # 기본값을 두지 않는다. 인증 절차가 끝난 쪽에서만 True로 넣는다\n\n\ndef execute(session, command):\n    if not session.authenticated:\n        return \"login required\"\n    if session.role not in ALLOWED_ROLES.get(command, set()):\n        return f\"role={session.role} cmd={command} -> DENIED\"\n    return f\"role={session.role} cmd={command} -> EXECUTED\"\n\n\nprint(execute(Session(\"kim\", \"OPERATOR\", True), \"SHOW_STATUS\"))\nprint(execute(Session(\"lee\", \"OBSERVER\", True), \"DELETE_MISSION_DATA\"))\n",
+    "explain_ko": "명령별 허용 역할을 표 하나에 정의하고, 명령을 실행하기 직전에 서버 쪽 처리기에서 요청자의 역할을 그 표와 대조한다(D-04). 표에 없는 명령은 기본으로 거부한다. 역할 표는 형상 항목으로 관리하고, 부정 시험으로 거부되는지 확인한다(T-06)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "role=OBSERVER cmd=DELETE_MISSION_DATA -> EXECUTED",
+    "expect_good": "role=OBSERVER cmd=DELETE_MISSION_DATA -> DENIED"
+   },
+   "refs": [
+    "MITRE CWE-285 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-2 '부적절한 인가'(인쇄 73쪽) 참고"
+   ]
+  }
+ }
+}

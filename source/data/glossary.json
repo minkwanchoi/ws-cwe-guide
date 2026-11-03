@@ -1,0 +1,2183 @@
+{
+ "checked_at": "2026-10-18",
+ "rules": [
+  "근거 우선순위: ① 국립국어원 표준국어대사전·외래어 표기법 → ② TTA 정보통신용어사전·TTA 단체표준 → ③ 행안부·KISA 「소프트웨어 개발보안 가이드」(보안약점 항목명) → ④ SPRi 보고서 → ⑤ 방위사업청 「무기체계 소프트웨어 개발 및 관리 매뉴얼」(시험 항목명) → ⑥ 현업 관용(개발자 관점). 문서 종류가 정해진 말은 그 문서의 용어를 따른다(보안약점 이름은 행안부, 신뢰성 시험 항목은 방위사업청).",
+  "개발자 관점: 빌드, 스택, 힙, 컴파일러, 펌웨어처럼 굳은 외래어는 억지로 순화하지 않고 한글로만 쓴다. 순화어(완충기, 모래상자 등)는 쓰지 않는다.",
+  "병기 원칙: 지침 하나하나가 독립적으로 읽히므로 병기는 지침 단위로 한다. 한 지침(제목을 제외한 본문) 안에서 rule이 '한글(영어) 병기'인 용어는 처음 나올 때 '퍼징(fuzzing)'처럼 적고, 같은 지침 안의 두 번째 등장부터는 한글만 쓴다. 다음 지침에서는 다시 첫 등장에 병기한다.",
+  "제목에는 병기하지 않는다. 용어가 제목에만 나오면 제목에 병기하고, 본문에도 나오면 본문 첫 등장에 병기한다. 표·목록 항목은 같은 지침 안에서 가장 먼저 나오는 위치에서 병기한다.",
+  "rule이 '한글만'인 용어(스택, 힙, 컴파일러, 펌웨어, 타깃, 셸 등)는 영어를 병기하지 않는다. rule이 '영어 유지'인 약어(SBOM, ISR, MPU, MMU, RTOS, BSP, HAL, DMA, CI, HILS, JTAG, MC/DC)는 약어를 그대로 쓰고, 지침별 첫 등장에 display의 한글 풀이를 괄호로 붙인다(예: ISR(인터럽트 서비스 루틴)). MC/DC는 한글 풀이 없이 약어만 쓴다.",
+  "코드·옵션·API·함수·파일명·식별자·도구와 제품 이름(-fstack-protector-strong, ASan, libFuzzer, AFL++, heap_4, U-Boot 등)은 영문 원형 그대로 쓰며 병기 대상이 아니다.",
+  "외래어 표기는 국립국어원 외래어 표기법과 표준국어대사전을 따른다: 타깃(타겟 X), 셸(쉘 X), 라이선스(라이센스 X), 디렉터리(디렉토리 X), 메시지(메세지 X), 해시(해쉬 X), 오버플로(오버플로우 X). 행안부 약점명을 원문 그대로 인용할 때만 '오버플로우'·'해쉬'를 허용한다. CWE-759는 '해쉬' 대신 '해시'를 쓴 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 항목명 '솔트 없이 일방향 해시 함수 사용'을 이름으로 쓴다.",
+  "CWE 항목은 '보안약점', CVE처럼 공개된 개별 결함은 '취약점'이라 쓴다. 약점 이름은 행안부 가이드 항목명을 따른다: 경쟁조건(검사 시점과 사용 시점), 해제된 자원 사용, 이중 해제, 널 포인터 역참조, SQL 삽입, 운영체제 명령어 삽입, 경로 조작, 하드코드된 …, 포맷 스트링 삽입. 이름은 「소프트웨어 개발보안 가이드」(2021. 11.) 구현단계 항목명을 글자 그대로 쓰되, 다음은 의도적으로 달리 적는다: CWE-476은 항목명 'Null Pointer 역참조' 대신 같은 항목 본문의 한글 표기 '널 포인터(Null Pointer) 역참조'를 쓴다(영문 병기는 C 상수 표기 NULL). CWE-495는 '메소드'만 '메서드'로 적는다(가이드 전체 표기, 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 부록도 '메서드'). CWE-759는 '해시'(위 외래어 규칙). 구현단계 기준이 통합했거나 따로 두지 않은 CWE-259·312·319·497은 분석·설계단계 사례 그림 제목을 쓴다. CWE-755 '부적절한 예외 처리'는 KISA 문서에서 CWE-754 항목의 이름이다. 이런 이름마다 근거를 cwe_ko_commentary.json의 name_note에 적고, 해설 페이지와 부록 F '약점 이름 표기 주석'에 싣는다.",
+  "시험 용어: '시험'으로 통일하고 '테스트'는 쓰지 않는다. 단위시험·통합시험·회귀시험·정적시험·동적시험·침투 시험처럼 방위사업청·KISA 용례의 붙여 쓰기를 따른다. 정적시험·동적시험은 방위사업청 신뢰성 시험 항목명이고, 일반 기법은 정적 분석·동적 분석이다.",
+  "커버리지는 방위사업청 용어 '코드 실행률'(문장 실행률, 분기 실행률, MC/DC)을 표준으로 쓰고 첫 등장에 '코드 실행률(Coverage)'로 병기한다.",
+  "업데이트와 갱신: 소프트웨어·펌웨어 이미지를 교체하는 행위는 '업데이트', 키·인증서·라이선스·취약점 DB·SBOM의 최신화는 '갱신'.",
+  "오류와 예외: 일반 처리는 '오류 처리'(에러 X), 언어의 예외 메커니즘은 '예외 처리'. 오탐/미탐은 지침 본문 용어이고 방위사업청 문서를 인용할 때만 '거짓 경보'를 쓴다.",
+  "띄어쓰기: 두 어절 이상의 명사구는 띄어 쓴다(신뢰 경계, 공격 표면, 정적 분석, 최소 권한, 메모리 누수). 행안부 약점명과 방위사업청 시험 항목명 등 관용적으로 붙여 쓰는 말은 용례대로 붙인다(경쟁조건, 허용목록, 임계구역, 단위시험, 형상관리).",
+  "verdict: VERIFIED는 url의 원문에서 채택 표기가 글자 그대로 확인된 경우이다(대조 기록은 공개하지 않는다). NEEDS_REVIEW는 ① 방위사업청 매뉴얼 원문을 못 구해 해설 논문(2차)로만 확인했거나, ② 표기 규칙을 적용한 추론이거나, ③ 공식 용례를 못 찾아 현업 관용으로 권고하는 경우이다. 사유는 note에 적었다.",
+  "단계 이름: 수명주기 5단계 '요구사항 분석·설계·구현·통합 및 시험·유지보수'를 쓴다('○○ 단계'로 띄어 씀). 이 가이드의 단계는 '수명주기 단계', CWE의 Phase 값은 'CWE 단계(Phase)'라 부르고 '개발단계'·'생명주기(SDLC)'·'테스트 단계'는 쓰지 않는다(행안부·KISA 인용 제외). 단계 안의 개별 활동·항목명은 '시험'을 쓴다(정적시험·동적시험·단위시험·회귀시험·침투 시험, 시험 케이스)."
+ ],
+ "terms": [
+  {
+   "en": "security weakness (CWE)",
+   "ko": "보안약점",
+   "display": "보안약점",
+   "rule": "한글만",
+   "variants": [
+    "약점",
+    "보안 약점"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 375쪽(부록 용어 정의)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "CWE=보안약점, CVE=취약점으로 구분한다. 행안부 가이드가 보안약점을 '잠재적인 보안취약점'으로 정의한다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 3,
+    "variants": {
+     "약점": 26
+    }
+   }
+  },
+  {
+   "en": "vulnerability (CVE)",
+   "ko": "취약점",
+   "display": "취약점",
+   "rule": "한글만",
+   "variants": [
+    "취약성",
+    "보안 취약점",
+    "보안취약점"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 10쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "CVE처럼 실제 공개·악용되는 결함은 취약점, CWE 분류의 코드 결함은 보안약점으로 구분한다. '취약성'은 쓰지 않는다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 21,
+    "variants": {}
+   }
+  },
+  {
+   "en": "secure coding",
+   "ko": "시큐어코딩",
+   "display": "시큐어코딩(secure coding)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "시큐어 코딩",
+    "보안 코딩"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 10쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "시큐어 코딩": 1
+    }
+   }
+  },
+  {
+   "en": "threat modeling",
+   "ko": "위협 모델링",
+   "display": "위협 모델링(threat modeling)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "위협모델링",
+    "위협 모델"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 23쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "위협 모델": 2
+    }
+   }
+  },
+  {
+   "en": "injection",
+   "ko": "삽입",
+   "display": "삽입(injection)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "인젝션",
+    "SQL 인젝션"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 4쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "행안부 약점명은 'SQL 삽입', '운영체제 명령어 삽입', '포맷 스트링 삽입'처럼 '삽입'을 쓴다. 가이드 본문 라이브러리 설명에는 'SQL인젝션'도 섞여 있다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 5,
+    "variants": {
+     "인젝션": 2
+    }
+   }
+  },
+  {
+   "en": "format string",
+   "ko": "포맷 스트링",
+   "display": "포맷 스트링(format string)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "형식 문자열",
+    "포맷스트링"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 5쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "형식 문자열": 2
+    }
+   }
+  },
+  {
+   "en": "deserialization",
+   "ko": "역직렬화",
+   "display": "역직렬화(deserialization)",
+   "rule": "한글(영어) 병기",
+   "variants": [],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 313쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 4,
+    "variants": {}
+   }
+  },
+  {
+   "en": "race condition",
+   "ko": "경쟁조건",
+   "display": "경쟁조건(race condition)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "레이스",
+    "레이스 컨디션",
+    "경쟁 조건",
+    "경쟁 상태"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 40쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "행안부 약점명은 붙여 쓴 '경쟁조건'. 가이드 코드 예제에는 '레이스 컨디션'도 나오지만 약점명은 경쟁조건이다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "레이스": 6
+    }
+   }
+  },
+  {
+   "en": "TOCTOU",
+   "ko": "검사 시점과 사용 시점",
+   "display": "검사 시점과 사용 시점(TOCTOU)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "TOCTOU 경쟁조건",
+    "검사 후 사용"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 40쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {}
+   }
+  },
+  {
+   "en": "use-after-free",
+   "ko": "해제된 자원 사용",
+   "display": "해제된 자원 사용(use-after-free)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "해제된 메모리 사용",
+    "해제 후 사용",
+    "UAF"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 40쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "행안부 약점명은 '해제된 자원 사용'. 현행 지침의 '해제된 메모리 사용(Use After Free)'은 메모리 한정이라 약점명과 어긋난다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "해제된 메모리 사용": 1
+    }
+   }
+  },
+  {
+   "en": "double free",
+   "ko": "이중 해제",
+   "display": "이중 해제(double free)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "중복 해제",
+    "이중 반환"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 309쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "현행 지침의 '중복 해제(Double Free)'를 '이중 해제'로 통일한다(가이드 용례).",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "중복 해제": 3,
+     "이중 반환": 1
+    }
+   }
+  },
+  {
+   "en": "NULL pointer dereference",
+   "ko": "널 포인터 역참조",
+   "display": "널 포인터(NULL pointer) 역참조",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "NULL 포인터 역참조",
+    "널 참조",
+    "Null Pointer 역참조"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 298쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "코드 상수는 NULL로 그대로 쓴다. 2021 가이드 구현단계 항목명은 'Null Pointer 역참조'(PDF 298쪽 = 인쇄 296쪽)이지만, 같은 항목 본문이 쓰는 한글 표기를 약점 이름(CWE-476)으로 삼는다(의도적 선택).",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {}
+   }
+  },
+  {
+   "en": "hard-coded",
+   "ko": "하드코드된",
+   "display": "하드코드된",
+   "rule": "한글만",
+   "variants": [
+    "하드코딩",
+    "하드 코딩",
+    "하드코드"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 5쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "하드코딩": 1,
+     "하드코드": 4
+    }
+   }
+  },
+  {
+   "en": "plaintext",
+   "ko": "평문",
+   "display": "평문",
+   "rule": "한글만",
+   "variants": [
+    "평문 저장",
+    "plain text"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 121쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 6,
+    "variants": {
+     "평문 저장": 2
+    }
+   }
+  },
+  {
+   "en": "allowlist",
+   "ko": "허용목록",
+   "display": "허용목록(allowlist)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "화이트리스트",
+    "허용 목록",
+    "허용 리스트"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 보안약점 진단가이드」 — PDF 60쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=9&attachSeq=1&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "가이드 용어 정의에는 '화이트리스트(Whitelist)'도 실려 있으나 보안대책 본문은 '허용목록'을 쓴다. 지침에서는 허용목록으로 통일한다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 6,
+    "variants": {
+     "화이트리스트": 1,
+     "허용 목록": 4
+    }
+   }
+  },
+  {
+   "en": "least privilege",
+   "ko": "최소 권한",
+   "display": "최소 권한",
+   "rule": "한글만",
+   "variants": [
+    "최소권한",
+    "최소한의 권한"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 48쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 13,
+    "variants": {}
+   }
+  },
+  {
+   "en": "sandbox",
+   "ko": "샌드박스",
+   "display": "샌드박스(sandbox)",
+   "rule": "한글(영어) 병기",
+   "variants": [],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 375쪽(부록 용어 정의)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 6,
+    "variants": {}
+   }
+  },
+  {
+   "en": "static analysis",
+   "ko": "정적 분석",
+   "display": "정적 분석(static analysis)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "정적분석",
+    "정적 검사",
+    "정적시험(국방 시험 항목명)"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 27쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "도구·기법 문맥은 '정적 분석', 방위사업청 신뢰성 시험 항목명은 '정적시험'으로 구분한다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 8,
+    "variants": {
+     "정적분석": 27,
+     "정적시험(국방 시험 항목명)": 4
+    }
+   }
+  },
+  {
+   "en": "dynamic analysis",
+   "ko": "동적 분석",
+   "display": "동적 분석(dynamic analysis)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "동적분석",
+    "동적 검사",
+    "동적시험(국방 시험 항목명)"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 24쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 3,
+    "variants": {
+     "동적분석": 5
+    }
+   }
+  },
+  {
+   "en": "false positive",
+   "ko": "오탐",
+   "display": "오탐(false positive)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "오탐지",
+    "거짓 경보"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 보안약점 진단가이드」 — PDF 192쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=9&attachSeq=1&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "방위사업청 매뉴얼은 '거짓 경보'를 쓴다. 지침 본문은 오탐으로 통일하고 매뉴얼 인용 시에만 거짓 경보를 쓴다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {}
+   }
+  },
+  {
+   "en": "false negative",
+   "ko": "미탐",
+   "display": "미탐(false negative)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "미탐지"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 보안약점 진단가이드」 — PDF 28쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=9&attachSeq=1&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {}
+   }
+  },
+  {
+   "en": "code review",
+   "ko": "코드 리뷰",
+   "display": "코드 리뷰",
+   "rule": "한글만",
+   "variants": [
+    "코드리뷰",
+    "코드 검토",
+    "동료 검토",
+    "리뷰"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 26쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 3,
+    "variants": {
+     "코드리뷰": 2,
+     "동료 검토": 1,
+     "리뷰": 11
+    }
+   }
+  },
+  {
+   "en": "open source",
+   "ko": "오픈소스",
+   "display": "오픈소스",
+   "rule": "한글만",
+   "variants": [
+    "오픈 소스",
+    "OSS",
+    "공개SW"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 69쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "SPRi 보고서는 '공개SW'를 병용한다. 개발자 관점의 '오픈소스'로 통일하고 OSS는 도구·표 제목의 약어로만 쓴다.",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "OSS": 15
+    }
+   }
+  },
+  {
+   "en": "stack",
+   "ko": "스택",
+   "display": "스택",
+   "rule": "한글만",
+   "variants": [
+    "Stack",
+    "stack"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 75쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "굳은 외래어라 한글만 쓴다. 가이드도 최초 1회 영문을 병기하나 지침은 단독으로 읽히므로 병기하지 않는다.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 78,
+    "variants": {
+     "Stack": 6,
+     "stack": 21
+    }
+   }
+  },
+  {
+   "en": "heap",
+   "ko": "힙",
+   "display": "힙",
+   "rule": "한글만",
+   "variants": [
+    "heap",
+    "Heap"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 75쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "FreeRTOS heap_4처럼 식별자 이름은 영문 그대로 둔다.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "heap": 7,
+     "Heap": 2
+    }
+   }
+  },
+  {
+   "en": "critical section",
+   "ko": "임계구역",
+   "display": "임계구역(critical section)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "임계 구역",
+    "크리티컬 섹션",
+    "임계코드"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 376쪽(부록 용어 정의)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 4,
+    "variants": {
+     "크리티컬 섹션": 1
+    }
+   }
+  },
+  {
+   "en": "error handling",
+   "ko": "오류 처리",
+   "display": "오류 처리",
+   "rule": "한글만",
+   "variants": [
+    "에러 처리",
+    "에러처리",
+    "오류처리"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 128쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "'에러'는 쓰지 않고 '오류'로 통일한다. 가이드 소제목에는 '에러처리'가 남아 있다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 9,
+    "variants": {
+     "오류처리": 3
+    }
+   }
+  },
+  {
+   "en": "unit test",
+   "ko": "단위시험",
+   "display": "단위시험(unit test)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "단위 시험",
+    "단위 테스트",
+    "단위테스트",
+    "유닛 테스트"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 27쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 7,
+    "variants": {}
+   }
+  },
+  {
+   "en": "integration test",
+   "ko": "통합시험",
+   "display": "통합시험(integration test)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "통합 시험",
+    "통합 테스트"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 27쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "통합 시험": 2
+    }
+   }
+  },
+  {
+   "en": "configuration management",
+   "ko": "형상관리",
+   "display": "형상관리(configuration management)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "형상 관리",
+    "버전 관리",
+    "형상 통제"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 26쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 8,
+    "variants": {
+     "형상 통제": 1
+    }
+   }
+  },
+  {
+   "en": "path traversal",
+   "ko": "경로 조작",
+   "display": "경로 조작(path traversal)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "경로 순회",
+    "디렉터리 순회",
+    "Path Traversal"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 4쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "행안부 약점명은 '경로 조작 및 자원 삽입'. 가이드 부록 용어 정의에는 '경로순회'도 있으나 약점명은 경로 조작이다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "경로 순회": 1,
+     "Path Traversal": 1
+    }
+   }
+  },
+  {
+   "en": "OS command injection",
+   "ko": "운영체제 명령어 삽입",
+   "display": "운영체제 명령어 삽입(OS command injection)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "OS 명령 삽입",
+    "명령어 인젝션",
+    "명령 삽입"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 4쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "명령 삽입": 1
+    }
+   }
+  },
+  {
+   "en": "authorization",
+   "ko": "인가",
+   "display": "인가(authorization)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "권한 부여"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 5쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "'인증'(authentication)과 혼동되기 쉬워 지침별 첫 등장에 영문을 병기한다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 9,
+    "variants": {}
+   }
+  },
+  {
+   "en": "digital signature",
+   "ko": "전자서명",
+   "display": "전자서명(digital signature)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "디지털 서명",
+    "서명"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 5쪽(목차)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "현행 지침은 '서명'(서명 검증 등)을 주로 쓴다. 기술 일반을 가리킬 때는 '전자서명', 이미지·번들 서명 검증처럼 문맥이 분명할 때는 '서명'을 허용한다.",
+   "category": "보안약점·개발보안",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "서명": 29
+    }
+   }
+  },
+  {
+   "en": "static test (방위사업청 매뉴얼)",
+   "ko": "정적시험",
+   "display": "정적시험",
+   "rule": "한글만",
+   "variants": [
+    "정적 시험",
+    "정적 테스트"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제1장 개요 8. 용어 정의(소프트웨어 정적 시험) — 본문 인쇄 11쪽",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 제2024-6호 본문 원문(제1장 8. 용어 정의 더. 1))에서 확인(2026-10-19). 매뉴얼은 정의에서 '소프트웨어 정적(Static) 시험', 구분에서 '정적시험'으로 적는다. 신뢰성 시험 항목명으로만 쓴다. 일반 정적 분석 도구 활동은 '정적 분석'으로 구분한다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 4,
+    "variants": {}
+   }
+  },
+  {
+   "en": "dynamic test (방위사업청 매뉴얼)",
+   "ko": "동적시험",
+   "display": "동적시험",
+   "rule": "한글만",
+   "variants": [
+    "동적 시험",
+    "동적 테스트"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제1장 개요 8. 용어 정의(소프트웨어 동적 시험) — 본문 인쇄 11쪽",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 제2024-6호 본문 원문(제1장 8. 용어 정의 더. 2))에서 확인(2026-10-19). 매뉴얼은 정의에서 '소프트웨어 동적(Dynamic) 시험', 구분에서 '동적시험'으로 적는다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "동적 시험": 3
+    }
+   }
+  },
+  {
+   "en": "code coverage",
+   "ko": "코드 실행률",
+   "display": "코드 실행률(Coverage)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "코드 커버리지",
+    "커버리지",
+    "실행률",
+    "coverage"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제1장 개요 8. 용어 정의(소프트웨어 동적 시험) — 본문 인쇄 11쪽",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 제2024-6호 본문 원문(제1장 8. 용어 정의 더. 2))에서 '코드 실행률(Coverage)' 표기를 확인(2026-10-19). 현행 지침은 '커버리지'(34회)를 주로 쓰고 '실행률'(MCU-08)이 섞여 있다. 방위사업청 시험 용어에 맞춰 '코드 실행률'을 표준으로 하고 첫 등장에 커버리지를 병기한다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "코드 커버리지": 1,
+     "커버리지": 36,
+     "실행률": 1,
+     "coverage": 3
+    }
+   }
+  },
+  {
+   "en": "statement coverage",
+   "ko": "문장 실행률",
+   "display": "문장 실행률(statement coverage)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "문장 커버리지",
+    "구문 커버리지"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 부록 7 소프트웨어 신뢰성/보안성 시험 절차 — 인쇄 7-8쪽(용어 정의)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 부록 7 용어 정의에서 확인(2026-10-18). 매뉴얼은 '문장(Statement) 실행률'처럼 영문을 가운데 끼워 적고, 시험 기준에서는 '시험종류(문장, 분기, MC/DC)에 대한 코드 실행률'이라 쓴다. 이 가이드의 '문장 실행률(statement coverage)'은 병기 위치만 다르다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {}
+   }
+  },
+  {
+   "en": "branch coverage",
+   "ko": "분기 실행률",
+   "display": "분기 실행률(branch coverage)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "분기 커버리지",
+    "분기 커버"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 부록 7 소프트웨어 신뢰성/보안성 시험 절차 — 인쇄 7-8쪽(용어 정의)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 부록 7 용어 정의에서 확인(2026-10-18). 매뉴얼은 '분기(Branch) 실행률'처럼 영문을 가운데 끼워 적는다. 이 가이드의 '분기 실행률(branch coverage)'은 병기 위치만 다르다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "분기 커버리지": 2,
+     "분기 커버": 2
+    }
+   }
+  },
+  {
+   "en": "coding rule",
+   "ko": "코딩규칙",
+   "display": "코딩규칙(coding rule)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "코딩 규칙",
+    "코딩 표준",
+    "코딩 컨벤션"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 본문 인쇄 11쪽(정적시험 정의)·부록 6 제목 「무기체계 소프트웨어 코딩규칙」",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼은 붙여 쓴 '코딩규칙'이 다수(본문 정적시험 정의 '코딩규칙(Coding Rule) 검증', 부록 6 제목, 본문 6회·부록 71회)이고 부록 7 용어 정의에서만 '코딩 규칙'(본문 1회·부록 10회)이다. 2026-10-18 저자 결정으로 매뉴얼 항목명을 따라 '코딩규칙'으로 통일했다(이전에는 띄어쓰기 원칙으로 '코딩 규칙'). '사업 코딩 표준'(과제가 정한 규칙 집합)과 'SEI CERT 코딩 표준'(고유 명칭)은 다른 말이라 그대로 둔다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {}
+   }
+  },
+  {
+   "en": "source code metric",
+   "ko": "소스코드 메트릭",
+   "display": "소스코드 메트릭(source code metric)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "코드 메트릭",
+    "메트릭"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제1장 용어 정의(소프트웨어 정적 시험) — 본문 인쇄 11쪽",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 원문에서 확인(2026-10-18): 정적 시험 정의(인쇄 11쪽)와 '소스코드 메트릭(Code Metrics)를 준수'(인쇄 112쪽). 매뉴얼은 '소스코드'를 붙여 쓴다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "메트릭": 2
+    }
+   }
+  },
+  {
+   "en": "tailoring",
+   "ko": "테일러링",
+   "display": "테일러링(tailoring)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "tailoring",
+    "적용 범위 조정"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 부록 7 소프트웨어 신뢰성/보안성 시험 절차 — 인쇄 7-3쪽(신뢰성시험 테일러링 적용 범위) 및 본문 인쇄 5쪽(5. 테일러링 지침)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 원문에서 확인(2026-10-18). 매뉴얼은 산출물·세부서식과 신뢰성시험 항목의 적용 범위를 조정하는 일을 '테일러링'이라 부른다(본문 '5. 테일러링 지침', 부록 7 '사업 유형별 소프트웨어 신뢰성시험 테일러링 적용 범위'). 이 가이드는 MISRA 규칙 일부를 적용에서 제외·조정하는 절차에도 같은 말을 쓴다. 이전 메모의 '방위사업청 문서 인용 시 적용 범위 조정으로 풀어 쓴다'는 2차 논문 서술에 근거한 것으로, 매뉴얼 자체가 '테일러링'을 쓰므로 풀어 쓸 필요가 없다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 7,
+    "variants": {
+     "tailoring": 1
+    }
+   }
+  },
+  {
+   "en": "SBOM",
+   "ko": "SBOM",
+   "display": "SBOM(소프트웨어 구성명세서)",
+   "rule": "영어 유지",
+   "variants": [
+    "소프트웨어 자재명세서",
+    "SW명세서",
+    "자재 명세서",
+    "구성 목록"
+   ],
+   "source": "SPRi 「SW명세서(SBOM) 도입 및 활성화 방안 연구」 — 요약문",
+   "url": "https://spri.kr/posts/view/23644?code=data_all&study_type=research",
+   "verdict": "VERIFIED",
+   "note": "약어를 유지하고 지침별 첫 등장에 '(소프트웨어 구성명세서)'를 병기한다. SPRi는 'SW구성명세서'를 쓴다.",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 11,
+    "variants": {
+     "구성 목록": 1
+    }
+   }
+  },
+  {
+   "en": "software supply chain",
+   "ko": "소프트웨어 공급망",
+   "display": "소프트웨어 공급망(software supply chain)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "SW공급망",
+    "공급망"
+   ],
+   "source": "과학기술정보통신부(한국인터넷진흥원)·국가정보원 「AI 일상화 시대를 준비하는 소프트웨어(SW) 공급망 보안 강화 로드맵」 — KISA 게시물(2026. 6. 24.)",
+   "url": "https://www.kisa.or.kr/2060204/form?postSeq=24",
+   "verdict": "VERIFIED",
+   "note": "과기정통부·국정원 합동 로드맵 이름에서 '소프트웨어(SW) 공급망'을 확인했다(2026-10-28). 같은 게시물 제목·본문은 'SW 공급망'도 함께 쓴다. '공급망'은 우리말샘 표제어 '공급-망(供給網)'「명사」『경제』로도 확인. 이 가이드는 'SW'를 풀어 '소프트웨어 공급망'으로 쓰고, 서지·문서 제목(「SW공급망 강화를 위한 글로벌 동향」 등)은 원문대로 둔다. 표준국어대사전에는 '공급망' 표제어가 없다(SD07).",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "공급망": 2
+    }
+   }
+  },
+  {
+   "en": "target",
+   "ko": "타깃",
+   "display": "타깃",
+   "rule": "한글만",
+   "variants": [
+    "타겟",
+    "대상 장비",
+    "표적"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%83%80%EA%B9%83",
+   "verdict": "VERIFIED",
+   "note": "'타겟'은 표준국어대사전에 없다. 호스트(host)와 짝으로 쓰는 실제 장비는 '타깃'(실타깃, 타깃 보드).",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 60,
+    "variants": {}
+   }
+  },
+  {
+   "en": "shell",
+   "ko": "셸",
+   "display": "셸",
+   "rule": "한글만",
+   "variants": [
+    "쉘",
+    "shell"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EC%85%B8",
+   "verdict": "VERIFIED",
+   "note": "현행 지침은 '쉘' 4회, '셸' 2회가 섞여 있다. 표준국어대사전 표기 '셸'로 통일한다.",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "shell": 1
+    }
+   }
+  },
+  {
+   "en": "license",
+   "ko": "라이선스",
+   "display": "라이선스",
+   "rule": "한글만",
+   "variants": [
+    "라이센스",
+    "license"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%9D%BC%EC%9D%B4%EC%84%A0%EC%8A%A4",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 19,
+    "variants": {}
+   }
+  },
+  {
+   "en": "compiler",
+   "ko": "컴파일러",
+   "display": "컴파일러",
+   "rule": "한글만",
+   "variants": [
+    "컴파일 러",
+    "compiler"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 41,
+    "variants": {}
+   }
+  },
+  {
+   "en": "firmware",
+   "ko": "펌웨어",
+   "display": "펌웨어",
+   "rule": "한글만",
+   "variants": [
+    "firmware",
+    "내장 소프트웨어"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%8E%8C%EC%9B%A8%EC%96%B4",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {}
+   }
+  },
+  {
+   "en": "buffer",
+   "ko": "버퍼",
+   "display": "버퍼",
+   "rule": "한글만",
+   "variants": [
+    "buffer",
+    "완충기"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%B2%84%ED%8D%BC",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 33,
+    "variants": {}
+   }
+  },
+  {
+   "en": "library",
+   "ko": "라이브러리",
+   "display": "라이브러리",
+   "rule": "한글만",
+   "variants": [
+    "library",
+    "라이브러리 함수"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 29,
+    "variants": {}
+   }
+  },
+  {
+   "en": "update",
+   "ko": "업데이트",
+   "display": "업데이트",
+   "rule": "한글만",
+   "variants": [
+    "갱신",
+    "update"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EC%97%85%EB%8D%B0%EC%9D%B4%ED%8A%B8",
+   "verdict": "VERIFIED",
+   "note": "소프트웨어·펌웨어 이미지 교체는 '업데이트', 키·인증서·라이선스·취약점 DB의 최신화는 '갱신'으로 구분한다(현행 지침은 갱신 39회·업데이트 12회 혼재).",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {
+     "갱신": 39
+    }
+   }
+  },
+  {
+   "en": "debug",
+   "ko": "디버그",
+   "display": "디버그",
+   "rule": "한글만",
+   "variants": [
+    "debug",
+    "디버깅"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%94%94%EB%B2%84%EA%B7%B8",
+   "verdict": "VERIFIED",
+   "note": "",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 35,
+    "variants": {}
+   }
+  },
+  {
+   "en": "overflow",
+   "ko": "오버플로",
+   "display": "오버플로",
+   "rule": "한글만",
+   "variants": [
+    "오버플로우",
+    "overflow"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '오버플로(overflow)' 「001」「002」 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%98%A4%EB%B2%84%ED%94%8C%EB%A1%9C",
+   "verdict": "VERIFIED",
+   "note": "우리말샘 전문가 감수 표제어 '오버플로'(「001」 산술 넘침, 「002」 저장 공간 넘침, 모두 『정보·통신』)로 확인(2026-10-28). '오버플로우'는 우리말샘·표준국어대사전 모두 표제어가 없다(OD05, SD06은 '오버플로'도 없음). 행안부 가이드는 '오버플로우'를 쓰므로 행안부 약점명(메모리 버퍼 오버플로우, 정수형 오버플로우)을 인용할 때만 원문대로 둔다. 현행 지침은 '오버플로' 22회로 일관.",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 22,
+    "variants": {
+     "overflow": 3
+    }
+   }
+  },
+  {
+   "en": "hash",
+   "ko": "해시",
+   "display": "해시",
+   "rule": "한글만",
+   "variants": [
+    "해쉬",
+    "hash"
+   ],
+   "source": "TTA 「TTA 정보통신용어사전」 — 표제어 '해시 함수(hash function)'",
+   "url": "https://terms.tta.or.kr/dictionary/dictionaryView.do?subject=%ED%95%B4%EC%8B%9C+%ED%95%A8%EC%88%98",
+   "verdict": "VERIFIED",
+   "note": "TTA 용어사전 표제어 '해시 함수'(설명문의 '해시 값(hash value)')와 행안부 가이드 본문 '[참고 3] 일방향 해시 함수'(인쇄 97쪽)에서 '해시'를 확인(2026-10-18; TTA 사이트가 접속 불가라 원 발행처 페이지의 웹 아카이브 보관본 2026-07-10으로 대조). 외래어 표기법 제3항([ʃ] 어말→'시')과도 맞다. 행안부 가이드 약점명은 '해쉬'(솔트 없는 일방향 해쉬함수 사용)이고 본문은 '해시'와 '해쉬'를 섞어 쓴다. 현행 지침은 '해시' 28회로 일관. 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.)는 항목명을 '솔트 없이 일방향 해시 함수 사용'(PDF 3쪽 목차)으로 적어 '해시'를 쓴다 — CWE-759 이름은 이 표기를 따른다(확인 2026-10-17).",
+   "category": "외래어 표기",
+   "corpus_count": {
+    "ko": 28,
+    "variants": {
+     "hash": 2
+    }
+   }
+  },
+  {
+   "en": "method",
+   "ko": "메서드",
+   "display": "메서드",
+   "rule": "한글만",
+   "variants": [
+    "메소드"
+   ],
+   "source": "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) — PDF 172쪽(부록 구현단계 보안약점 제거 기준)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=13&attachSeq=1&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "의도적 선택. 2021 가이드 항목명은 'Public 메소드부터 반환된 Private 배열'(PDF 326쪽 = 인쇄 324쪽)이고 KISA 가이드 본문은 대개 '메소드'를 쓰지만, 이 가이드는 해설·지침 전체가 '메서드'로 일관하므로 CWE-495 이름도 '메소드'만 '메서드'로 바꾸고 나머지('부터')는 2021 원문대로 둔다. 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 부록 기준표가 '메서드'로 적은 것을 KISA 쪽 용례로 삼는다(확인 2026-10-17).",
+   "category": "보안약점·개발보안"
+  },
+  {
+   "en": "fuzzing",
+   "ko": "퍼징",
+   "display": "퍼징(fuzzing)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "퍼즈 시험",
+    "퍼저",
+    "Fuzzer",
+    "fuzz"
+   ],
+   "source": "TTA 「TTA 정보통신용어사전」 — TTA표준 항목(단체표준 정보 보호 기술 용어)",
+   "url": "https://terms.tta.or.kr/dictionary/searchList.do?keyword=FUZZING",
+   "verdict": "VERIFIED",
+   "note": "TTA 용어사전 일반 표제어는 '퍼즈 시험(Fuzzing)'이고, TTA 단체표준(정보 보호 기술 용어)은 '인공지능 퍼징'처럼 '퍼징'을 쓴다. 현행 지침은 '퍼징' 24회. 현업·표준에서 통용되는 '퍼징'으로 통일하고 '퍼즈 시험'은 TTA 표제어 인용 시에만 쓴다. 도구명(AFL++, libFuzzer)은 영문 유지.",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 24,
+    "variants": {
+     "Fuzzer": 4,
+     "fuzz": 1
+    }
+   }
+  },
+  {
+   "en": "memory leak",
+   "ko": "메모리 누수",
+   "display": "메모리 누수(memory leak)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "누수",
+    "리소스 누수",
+    "leak"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 부록 6 무기체계 소프트웨어 코딩규칙 — 인쇄 6-38쪽(C++ 전용 규칙 1) 설명)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 부록 6 코딩규칙 설명(인쇄 6-38쪽)과 우리말샘 표제어 '메모리 누수'『정보·통신』으로 확인(2026-10-28). 우리말샘 원어 표기 'memory漏水'는 사전 표기 그대로다. 행안부 C 시큐어코딩 가이드(2012)도 '메모리 누수'를 쓴다(OCR). 현행 지침은 '누수' 4회.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "누수": 4,
+     "leak": 1
+    }
+   }
+  },
+  {
+   "en": "sanitizer",
+   "ko": "새니타이저",
+   "display": "새니타이저(sanitizer)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "sanitizer",
+    "ASan/UBSan(도구명)"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 공식 한글 용어를 찾지 못했다. 일반 명사는 '새니타이저', 도구명(AddressSanitizer, ASan/UBSan/TSan/MSan)과 컴파일 옵션(-fsanitize=…)은 영문 원형 유지. 현행 지침은 영문 'sanitizer' 위주(15회), '새니타이저'는 1회. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "sanitizer": 15,
+     "ASan/UBSan(도구명)": 11
+    }
+   }
+  },
+  {
+   "en": "hardening",
+   "ko": "하드닝",
+   "display": "하드닝(hardening)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "보안 강화 옵션",
+    "강화 옵션",
+    "보호 기능",
+    "보호 옵션",
+    "보안 강화"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 행안부·KISA 가이드의 '보안강화'(예: 보안강화 활동)는 보안 활동 전반을 가리켜 컴파일러·링커·OS 보호 옵션(PIE, RELRO, FORTIFY 등)의 'hardening'과 뜻이 다르다. 현행 지침은 하드닝 15회와 '보호 기능·보호 옵션·강화 옵션'이 혼재. 빌드 옵션 문맥은 '하드닝'으로 통일하고, '보호 기능'은 NX·MPU 같은 OS·하드웨어 메모리 보호에만 쓴다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다. 참고 용례: 우리말샘 표제어 '하드닝' — 표기는 같으나 『생명』 뜻.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 15,
+    "variants": {
+     "보호 기능": 3,
+     "보호 옵션": 1
+    }
+   }
+  },
+  {
+   "en": "stack canary",
+   "ko": "스택 카나리",
+   "display": "스택 카나리(stack canary)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "카나리",
+    "스택 보호",
+    "스택 가드"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 76쪽(인쇄 74쪽, 메모리 버퍼 오버플로우 설계 시 고려사항)",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인, 2026-10-18 재확인). 현행 지침은 '카나리' 11회와 '스택 보호' 6회(-fstack-protector 옵션 의미)가 섞여 있다. 행안부 가이드는 같은 기법을 '스택가드(StackGuard)'로 소개하나 이는 특정 구현 이름이다(인쇄 74쪽). 표준국어대사전에 '카나리'는 없다. 일반 명사는 '스택 카나리', 옵션은 -fstack-protector-strong 원형 유지. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다. 참고 용례: 행안부 가이드 인쇄 74쪽(PDF 76쪽) — 특정 구현 이름.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 9,
+    "variants": {
+     "카나리": 11,
+     "스택 보호": 6,
+     "스택 가드": 3
+    }
+   }
+  },
+  {
+   "en": "mitigation",
+   "ko": "완화책",
+   "display": "완화책(mitigation)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "완화",
+    "대책",
+    "대응책"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어 '완화책'",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EC%99%84%ED%99%94%EC%B1%85",
+   "verdict": "VERIFIED",
+   "note": "표준국어대사전 표제어로 확인(2026-10-18). 행안부 가이드는 '취약점을 완화시킬'처럼 동사형만 쓴다. 명사형 '완화책'은 현행 지침 12회로 일관되어 유지한다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {
+     "완화": 16
+    }
+   }
+  },
+  {
+   "en": "attack surface",
+   "ko": "공격 표면",
+   "display": "공격 표면(attack surface)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "공격면",
+    "공격 표면적"
+   ],
+   "source": "행정안전부 「전자정부 SW 개발·운영자를 위한 C 시큐어코딩 가이드」 3판(2012. 9.) — 인쇄 77쪽(부적절한 인가, 안전한 코딩기법)",
+   "url": "https://www.kisa.or.kr/2060204/form?postSeq=5&page=1",
+   "verdict": "VERIFIED",
+   "note": "행안부 C 시큐어코딩 가이드 3판 인쇄 77쪽 '공격표면(attack surface)'으로 확인(2026-10-28, OCR 본문을 쪽 이미지로 대조; Java 가이드 3판 같은 항목도 같은 문장). 원문은 붙여 쓴 '공격표면'이고, 한글 맞춤법 제50항(전문 용어는 띄어 씀이 원칙, 붙여 쓰기 허용)에 따라 이 가이드는 원칙형 '공격 표면'을 쓴다. 우리말샘·표준국어대사전에는 표제어가 없다(OD13·OD14·OD84). 현행 원천에 '공격면'이 데이터 2곳(env_os·env_tool)에 남아 있다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "공격면": 3
+    }
+   }
+  },
+  {
+   "en": "trust boundary",
+   "ko": "신뢰 경계",
+   "display": "신뢰 경계(trust boundary)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "신뢰경계",
+    "신뢰 영역"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '신뢰경계' 7회, '신뢰 경계' 1회. 두 어절 명사구이므로 '신뢰 경계'로 띄어 쓴다. 공식 용례는 확인하지 못했다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 1,
+    "variants": {
+     "신뢰경계": 7
+    }
+   }
+  },
+  {
+   "en": "secure boot",
+   "ko": "보안 부팅",
+   "display": "보안 부팅(secure boot)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "시큐어 부트",
+    "Secure Boot",
+    "서명 부팅"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '보안 부팅' 10회, 'Secure Boot' 1회. 제품 기능명(U-Boot verified boot 등)은 영문 유지. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 10,
+    "variants": {
+     "Secure Boot": 1
+    }
+   }
+  },
+  {
+   "en": "ISR",
+   "ko": "ISR",
+   "display": "ISR(인터럽트 서비스 루틴)",
+   "rule": "영어 유지",
+   "variants": [
+    "인터럽트 핸들러",
+    "인터럽트 서비스"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '인터럽트 서비스 루틴(interrupt service routine)' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8%20%EC%84%9C%EB%B9%84%EC%8A%A4%20%EB%A3%A8%ED%8B%B4",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이 '인터럽트 서비스 루틴'을 우리말샘 전문가 감수 표제어(원어 interrupt service routine)로, '인터럽트'를 표준국어대사전 표제어로 확인(2026-10-28). 약어 'ISR' 자체의 공식 용례는 TTA 접속 불가로 확인하지 못했다(풀이의 머리글자). 현행 지침은 'ISR' 67회로 약어가 사실상 표준이며 지침별 첫 등장에 한글 풀이를 병기한다. 비슷한 표제어 '인터럽트 처리 루틴'도 있다(OD20).",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 67,
+    "variants": {}
+   }
+  },
+  {
+   "en": "watchdog",
+   "ko": "워치독",
+   "display": "워치독(watchdog)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "와치독",
+    "감시 타이머"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '워치도그(watchdog)' 「명사」『기계』, '워치도그 타이머' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=watchdog",
+   "verdict": "NEEDS_REVIEW",
+   "note": "관용 표기 유지(2026-10-28 결정). 참고로 우리말샘 전문가 감수 표제어는 '워치도그'(「명사」『기계』, 규범 미확정 표시 없음)와 '워치도그 타이머'『정보·통신』(규범 미확정), 같은 뜻의 '감시 타이머'다. '워치독'은 네트워크 뜻의 '워치독 스푸핑'에만 나온다. 표준국어대사전 표제어 없음, TTA 접속 불가. 현행 지침은 '워치독' 20곳(가이드 5·데이터 15)으로 일관. 레지스터·퓨즈 이름(WDT)은 영문 유지.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 10,
+    "variants": {}
+   }
+  },
+  {
+   "en": "MPU",
+   "ko": "MPU",
+   "display": "MPU(메모리 보호 장치)",
+   "rule": "영어 유지",
+   "variants": [],
+   "source": "국립국어원 「우리말샘」 — 표제어 '메모리 보호 장치' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EB%B3%B4%ED%98%B8%20%EC%9E%A5%EC%B9%98",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이 '메모리 보호 장치'를 우리말샘 전문가 감수 표제어로 확인(2026-10-28). 약어 'MPU'의 공식 용례는 TTA 접속 불가로 확인하지 못했다. 약어 유지, 지침별 첫 등장에 '메모리 보호 장치' 병기. MMU와 구분.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 31,
+    "variants": {}
+   }
+  },
+  {
+   "en": "MMU",
+   "ko": "MMU",
+   "display": "MMU(메모리 관리 장치)",
+   "rule": "영어 유지",
+   "variants": [],
+   "source": "국립국어원 「우리말샘」 — 표제어 '메모리 관리 장치' 「002」 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EA%B4%80%EB%A6%AC%20%EC%9E%A5%EC%B9%98",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이 '메모리 관리 장치'를 우리말샘 전문가 감수 표제어(「002」 가상 주소를 물리 주소로 바꾸는 장치)로 확인(2026-10-28). 약어 'MMU'의 공식 용례는 TTA 접속 불가로 확인하지 못했다. 약어 유지, 지침별 첫 등장에 '메모리 관리 장치' 병기.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 24,
+    "variants": {}
+   }
+  },
+  {
+   "en": "RTOS",
+   "ko": "RTOS",
+   "display": "RTOS(실시간 운영체제)",
+   "rule": "영어 유지",
+   "variants": [
+    "실시간 OS"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '실시간 운영 체제' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%8B%A4%EC%8B%9C%EA%B0%84%20%EC%9A%B4%EC%98%81%20%EC%B2%B4%EC%A0%9C",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이를 우리말샘 전문가 감수 표제어 '실시간 운영 체제'로 확인(2026-10-28). 사전 원칙형은 '운영 체제'를 띄어 쓰고, 이 가이드의 '실시간 운영체제'(25회)는 한글 맞춤법 제50항의 붙여 쓰기 허용 범위로 본다. 원칙형으로 맞추려면 '실시간 운영 체제'(가이드·데이터 22곳). 약어 'RTOS'의 공식 용례는 TTA 접속 불가로 확인하지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 29,
+    "variants": {}
+   }
+  },
+  {
+   "en": "bare-metal",
+   "ko": "베어메탈",
+   "display": "베어메탈(bare-metal)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "No OS",
+    "OS 없음"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '베어메탈' 12회로 일관. '(No OS)'는 표 제목에서만 쓴다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {
+     "No OS": 1
+    }
+   }
+  },
+  {
+   "en": "BSP",
+   "ko": "BSP",
+   "display": "BSP(보드 지원 패키지)",
+   "rule": "영어 유지",
+   "variants": [],
+   "source": "방위사업청 매뉴얼 제2024-6호 제1장 용어 정의 — 본문 인쇄 11쪽(터. BSP)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 용어 정의('BSP(Board Support Package)란, 칩 제조사에서 제공한 하드웨어를 구동하기 위한 보조소프트웨어')에서 약어 용례를 확인(2026-10-18). 매뉴얼은 영문 풀이만 적고 한글 풀이는 두지 않는다. 약어 유지(현행 38회). 첫 등장에 '보드 지원 패키지' 병기.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 38,
+    "variants": {}
+   }
+  },
+  {
+   "en": "HAL",
+   "ko": "HAL",
+   "display": "HAL(하드웨어 추상화 계층)",
+   "rule": "영어 유지",
+   "variants": [],
+   "source": "국립국어원 「우리말샘」 — 표제어 '하드웨어 추상화 계층' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%20%EC%B6%94%EC%83%81%ED%99%94",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이 '하드웨어 추상화 계층'을 우리말샘 전문가 감수 표제어로 확인(2026-10-28). 약어 'HAL'의 공식 용례는 TTA 접속 불가로 확인하지 못했다. 약어 유지, 첫 등장에 '하드웨어 추상화 계층' 병기.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 18,
+    "variants": {}
+   }
+  },
+  {
+   "en": "DMA",
+   "ko": "DMA",
+   "display": "DMA(직접 메모리 접근)",
+   "rule": "영어 유지",
+   "variants": [],
+   "source": "국립국어원 「우리말샘」 — 표제어 '직접 메모리 접근' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%A7%81%EC%A0%91%20%EB%A9%94%EB%AA%A8%EB%A6%AC%20%EC%A0%91%EA%B7%BC",
+   "verdict": "VERIFIED",
+   "note": "병기하는 한글 풀이 '직접 메모리 접근'을 우리말샘 전문가 감수 표제어로 확인(2026-10-28). 같은 뜻의 '직접 메모리 액세스'(OD33)·'직접 기억 장치 접근'(OD32)도 표제어로 있다. 약어 'DMA'는 우리말샘 '사이클 도용 직접 메모리 접근' 뜻풀이에 '디엠에이(DMA)'로 나온다. 약어 유지, 첫 등장에 '직접 메모리 접근' 병기.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {}
+   }
+  },
+  {
+   "en": "JTAG",
+   "ko": "JTAG",
+   "display": "JTAG",
+   "rule": "영어 유지",
+   "variants": [
+    "디버그 포트",
+    "JTAG/SWD"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 약어 유지(현행 14회). 한글 풀이 없이 쓰되, 맥락에 따라 '디버그 포트(JTAG/SWD)'로 풀어 쓴다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 14,
+    "variants": {
+     "디버그 포트": 6,
+     "JTAG/SWD": 4
+    }
+   }
+  },
+  {
+   "en": "toolchain",
+   "ko": "툴체인",
+   "display": "툴체인(toolchain)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "도구체인",
+    "도구 체인",
+    "툴 체인"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '툴체인' 5회, '도구체인' 3회. 개발자 관점의 '툴체인'으로 통일. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 5,
+    "variants": {
+     "도구체인": 3
+    }
+   }
+  },
+  {
+   "en": "continuous integration",
+   "ko": "CI",
+   "display": "CI(지속적 통합)",
+   "rule": "영어 유지",
+   "variants": [
+    "지속적 통합"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 약어 유지(현행 12회). 첫 등장에 '지속적 통합' 병기. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 15,
+    "variants": {}
+   }
+  },
+  {
+   "en": "reproducible build",
+   "ko": "재현 가능한 빌드",
+   "display": "재현 가능한 빌드(reproducible build)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "재현 빌드",
+    "재현성 있는 빌드"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '재현 가능' 3회, '재현성' 1회. 활동은 '재현 가능한 빌드', 속성은 '재현성'으로 쓴다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "재현 빌드": 1
+    }
+   }
+  },
+  {
+   "en": "fault injection",
+   "ko": "오류 주입",
+   "display": "오류 주입(fault injection)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "결함 주입",
+    "오류주입"
+   ],
+   "source": "한국산학기술학회논문지 「소프트웨어 소스코드 구조분석 기반 무기체계 자동시험장비의 소프트웨어 유효성 검증방안 연구」 — PDF 2쪽",
+   "url": "https://kais99.org/jkais/journal/Vol25no04/Vol25no04p14.pdf",
+   "verdict": "VERIFIED",
+   "note": "현행 지침은 '오류 주입' 5회, '결함 주입' 1회, '오류주입' 1회. 오류 주입으로 통일한다(KCI 논문 1건의 용례이므로 TTA 등 추가 용례 확인 권장).",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 5,
+    "variants": {
+     "결함 주입": 1,
+     "오류주입": 1
+    }
+   }
+  },
+  {
+   "en": "HILS",
+   "ko": "HILS",
+   "display": "HILS(하드웨어 연동 모의시험)",
+   "rule": "영어 유지",
+   "variants": [
+    "HIL"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 HIL 6회, HILS 1회. HILS로 통일하고 첫 등장에 '하드웨어 연동 모의시험' 병기. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다. 참고 용례: 우리말샘 표제어 '모의시험' 「002」 — 한글 풀이의 구성어만. 매뉴얼 제2024-6호에는 'HILS'·'HIL'이 나오지 않는다.",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "HIL": 6
+    }
+   }
+  },
+  {
+   "en": "WCET",
+   "ko": "최악 실행 시간",
+   "display": "최악 실행 시간(WCET)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "최악 실행시간",
+    "WCET"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '최악 실행시간' 3회, 'WCET' 2회. 띄어 쓴 '최악 실행 시간(WCET)'으로 통일. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다. 참고 용례: 우리말샘 표제어 '실행 시간' — 구성어만.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 0,
+    "variants": {
+     "최악 실행시간": 3,
+     "WCET": 2
+    }
+   }
+  },
+  {
+   "en": "rule pack",
+   "ko": "규칙 집합",
+   "display": "규칙 집합(rule pack)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "룰팩",
+    "규칙 세트",
+    "룰 세트",
+    "룰셋"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 도구 벤더 용어로 공식 용례를 찾지 못했다. 2026-10-19: 외래어 '룰팩' 대신 일반어 '규칙 집합'으로 적는다(이전 지침 표기 '룰팩' 10회, '규칙 세트' 1회). 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 10,
+    "variants": {
+     "규칙 세트": 1
+    }
+   }
+  },
+  {
+   "en": "deviation (MISRA)",
+   "ko": "편차",
+   "display": "편차(deviation)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "deviation",
+    "예외 승인",
+    "일탈"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어 '편차(偏差)'",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%8E%B8%EC%B0%A8",
+   "verdict": "VERIFIED",
+   "note": "표준국어대사전 표제어 '편차(偏差)'로 표기를 확인(2026-10-18). 사전 뜻은 탄착점 거리·통계 편차이고, MISRA Compliance의 deviation(규칙을 적용하지 않는 사유를 기록한 예외)이라는 기술 뜻은 사전에 없다. 현행 지침은 '편차' 13회, 'deviation' 2회. 방위사업청 매뉴얼 부록 7은 코딩규칙 미준수 소명을 '코딩규칙점검 FA 사유서'(별첨 1-7, 인쇄 7-22쪽)라 부르고, 매뉴얼을 해설한 논문은 '예외 부분 및 사유 첨부'라 쓴다. 2026-10-18 저자 결정: 지침 본문은 '편차'를 유지하고, 매뉴얼 제출 서식을 가리킬 때는 'FA 사유서'(코딩규칙점검·취약점점검)를 함께 적는다(I-01·T-01 산출물).",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 13,
+    "variants": {
+     "deviation": 2
+    }
+   }
+  },
+  {
+   "en": "regression test",
+   "ko": "회귀시험",
+   "display": "회귀시험(regression test)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "회귀 시험",
+    "회귀 테스트"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '회귀시험' 14회. 단위시험·통합시험처럼 붙여 쓴다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다. 참고 용례: 우리말샘 표제어 '회귀 테스트' — 다른 표기. '테스트' 대신 '시험'을 쓰는 원칙에 따라 '회귀시험'을 유지한다. 원천 데이터에 띄어 쓴 '회귀 시험'이 7곳(lang_view_a.json) 남아 있다.",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 14,
+    "variants": {}
+   }
+  },
+  {
+   "en": "test",
+   "ko": "시험",
+   "display": "시험",
+   "rule": "한글만",
+   "variants": [
+    "테스트",
+    "테스팅"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제2장 Ⅹ 소프트웨어 통합 및 시험 — 인쇄 62쪽",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "방위사업청 매뉴얼은 '시험'을 쓰고(본문 추출 텍스트 기준 '시험' 591회, '테스트' 1회) 행안부·KISA 가이드는 '테스트'(테스트단계·침투 테스트 등)를 쓴다. 국방 소프트웨어 지침이므로 '시험'으로 통일한다(테스트 케이스 → 시험 케이스). 2026-10-17 수명주기 5단계 개정으로 단계 이름도 매뉴얼 표기 '통합 및 시험'으로 바꾸었다. 행안부·KISA 문서를 인용하거나 도구 이름에 들어간 경우만 '테스트'를 그대로 둔다.",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 125,
+    "variants": {
+     "테스트": 9
+    }
+   }
+  },
+  {
+   "en": "penetration test",
+   "ko": "침투 시험",
+   "display": "침투 시험(penetration test)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "침투시험",
+    "침투 테스트",
+    "모의 침투 테스트"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '침투 시험' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%B9%A8%ED%88%AC%20%EC%8B%9C%ED%97%98",
+   "verdict": "VERIFIED",
+   "note": "우리말샘 전문가 감수 표제어 '침투 시험'『정보·통신』으로 채택 표기를 확인(2026-10-28). 행안부 가이드는 '침투 테스트'(인쇄 25쪽)를 쓰지만 이 가이드는 시험 통일 원칙과 사전 표제어에 맞춰 '침투 시험'을 쓴다. 현행 지침은 '침투 시험' 2회, '침투시험' 1회(제50항 붙여 쓰기 허용).",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "침투시험": 1
+    }
+   }
+  },
+  {
+   "en": "build",
+   "ko": "빌드",
+   "display": "빌드",
+   "rule": "한글만",
+   "variants": [
+    "컴파일(빌드 의미)",
+    "build"
+   ],
+   "source": "한국산학기술학회논문지 「무기체계 성능개량사업 SW 신뢰성 시험 효율적 검증 방안 연구」 — PDF 8쪽",
+   "url": "https://www.kais99.org/jkais/journal/Vol23No07/vol23no07p46.pdf",
+   "verdict": "VERIFIED",
+   "note": "용례 출처는 KCI 논문 1건이다. 표준국어대사전에는 없다. 현행 지침은 '빌드' 64회와 '컴파일' 49회(컴파일러·컴파일 옵션 포함)가 있다. 산출물을 만드는 전 과정은 '빌드', 소스를 기계어로 번역하는 단계는 '컴파일'로 구분한다. 표준국어대사전 미등재 외래어.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 64,
+    "variants": {
+     "컴파일(빌드 의미)": 49
+    }
+   }
+  },
+  {
+   "en": "vendor",
+   "ko": "벤더",
+   "display": "벤더",
+   "rule": "한글만",
+   "variants": [
+    "공급업체",
+    "제조사",
+    "업체"
+   ],
+   "source": "TTA 정보통신용어사전 — 표제어 '벤더(vendor)'(원 발행처 페이지의 웹 아카이브 보관본, 2026. 5. 18.)",
+   "url": "https://web.archive.org/web/20260518131345/https://terms.tta.or.kr/dictionary/searchList.do?keyword=%EB%B2%A4%EB%8D%94",
+   "verdict": "VERIFIED",
+   "note": "TTA 정보통신용어사전 표제어 '벤더, vendor'(원 발행처 페이지의 웹 아카이브 보관본 2026-05-18; 원 사이트는 2026-10-28에도 접속 불가)와 우리말샘 전문가 감수 표제어 '벤더(vendor)' 「001」『정보·통신』으로 확인(2026-10-28). TTA 단체표준(TTAK.KO-12.0341/R1 등)도 '벤더'를 쓴다. 칩·도구 공급사는 '벤더'(벤더 BSP, 벤더 컴파일러)로 통일하고, 계약 상대는 '협력업체'로 구분한다. 현행 지침 '벤더' 22회.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 22,
+    "variants": {
+     "제조사": 2,
+     "업체": 2
+    }
+   }
+  },
+  {
+   "en": "host",
+   "ko": "호스트",
+   "display": "호스트",
+   "rule": "한글만",
+   "variants": [
+    "host",
+    "개발 PC"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 부록 7 소프트웨어 신뢰성/보안성 시험 절차 — 인쇄 7-5쪽(동적시험 수행 환경)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼 부록 7(실제 하드웨어(Target)에서 시험이 제한되는 경우 '호스트(Host) 환경'에서 동적시험)과 본문 인쇄 63쪽, 행안부 가이드 '악의적인 호스트에'(인쇄 278쪽)에서 확인(2026-10-18). 현행 지침은 '호스트' 20회로 일관. '타깃'과 짝으로 쓴다. 표준국어대사전에는 표제어가 없다.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 25,
+    "variants": {
+     "host": 3
+    }
+   }
+  },
+  {
+   "en": "wrapper",
+   "ko": "래퍼",
+   "display": "래퍼",
+   "rule": "한글만",
+   "variants": [
+    "wrapper",
+    "래핑 계층"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '래퍼(wrapper)' 「002」",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EB%9E%98%ED%8D%BC",
+   "verdict": "VERIFIED",
+   "note": "wrapper의 한글 표기 '래퍼'를 우리말샘 전문가 감수 표제어(「002」 플러그인이 작동하게 하는 소프트웨어)로 확인(2026-10-28). 사전 뜻은 플러그인 래퍼로, 하위 API를 감싸는 코드 계층(HAL 래퍼, OSAL 래퍼)이라는 이 가이드의 뜻보다 좁다(표기 확인, 기술 뜻은 TTA 미확인). 현행 지침 '래퍼' 18회로 일관.",
+   "category": "빌드·도구",
+   "corpus_count": {
+    "ko": 18,
+    "variants": {}
+   }
+  },
+  {
+   "en": "task (RTOS)",
+   "ko": "태스크",
+   "display": "태스크",
+   "rule": "한글만",
+   "variants": [
+    "task",
+    "작업"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '태스크(task)' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%ED%83%9C%EC%8A%A4%ED%81%AC",
+   "verdict": "VERIFIED",
+   "note": "우리말샘 전문가 감수 표제어 '태스크(task)'『정보·통신』로 확인(2026-10-28). 우리말샘은 '태스크 관리·태스크 동기화' 등 '태스크' 복합어 80개를 싣는다. RTOS의 실행 단위는 '태스크'(25회), 범용 OS는 '스레드'로 구분한다. 표준국어대사전에는 표제어가 없다(SD08).",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 25,
+    "variants": {
+     "task": 1,
+     "작업": 1
+    }
+   }
+  },
+  {
+   "en": "mutex",
+   "ko": "뮤텍스",
+   "display": "뮤텍스(mutex)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "상호배제 객체",
+    "mutex"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '뮤텍스 객체(mutex客體)' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EB%AE%A4%ED%85%8D%EC%8A%A4",
+   "verdict": "VERIFIED",
+   "note": "mutex의 한글 표기 '뮤텍스'를 우리말샘 전문가 감수 표제어 '뮤텍스 객체'『정보·통신』로 확인(2026-10-28). 사전은 '규범 표기는 미확정'이라 적는다(다른 표기 제안은 없음). 한글 표기만으로 뜻이 불분명하므로 지침별 첫 등장에 영어를 병기한다. 현행 지침 '뮤텍스' 5회.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 5,
+    "variants": {}
+   }
+  },
+  {
+   "en": "semaphore",
+   "ko": "세마포어",
+   "display": "세마포어(semaphore)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "semaphore"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '세마포(semaphore)' 「002」~「004」 『정보·통신』(규범 표기 '세마포르')",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%84%B8%EB%A7%88%ED%8F%AC",
+   "verdict": "NEEDS_REVIEW",
+   "note": "관용 표기 유지(2026-10-28 결정). 참고로 우리말샘 전문가 감수 표제어는 '세마포'(「002」~「004」 『정보·통신』)이고 '규범 표기는 세마포르'라고 적는다(이진 세마포 → 이진 세마포르 등도 같음). '세마포어'는 우리말샘·표준국어대사전에 없다. TTA 접속 불가. 현행 지침은 '세마포어' 6곳(데이터). 지침별 첫 등장에 영어를 병기한다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 4,
+    "variants": {}
+   }
+  },
+  {
+   "en": "priority inversion",
+   "ko": "우선순위 역전",
+   "display": "우선순위 역전(priority inversion)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "priority inversion"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '우선순위 역전' 3회. 공식 용례는 확인하지 못했다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 3,
+    "variants": {}
+   }
+  },
+  {
+   "en": "dynamic memory allocation",
+   "ko": "동적 할당",
+   "display": "동적 할당",
+   "rule": "한글만",
+   "variants": [
+    "동적 메모리 할당",
+    "동적 메모리",
+    "malloc 사용"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 309쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "현행 지침은 '동적 할당' 16회, '동적 메모리' 4회. 정적 할당과 짝을 이루는 '동적 할당'으로 통일한다.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 16,
+    "variants": {
+     "동적 메모리": 4
+    }
+   }
+  },
+  {
+   "en": "static memory allocation",
+   "ko": "정적 할당",
+   "display": "정적 할당",
+   "rule": "한글만",
+   "variants": [
+    "정적 메모리 할당",
+    "정적 메모리",
+    "정적 풀"
+   ],
+   "source": "국립국어원 「우리말샘」 — 표제어 '정적 할당' 『정보·통신』",
+   "url": "https://opendict.korean.go.kr/search/searchResult?focus_name=query&query=%EC%A0%95%EC%A0%81%20%ED%95%A0%EB%8B%B9",
+   "verdict": "VERIFIED",
+   "note": "우리말샘 전문가 감수 표제어 '정적 할당'『정보·통신』으로 확인(2026-10-28). 같은 사전에 '정적 기억 영역 할당'도 있다. 현행 지침은 '정적 할당' 7회, '정적 메모리' 6회. '정적 할당'으로 통일한다.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 7,
+    "variants": {
+     "정적 메모리 할당": 3,
+     "정적 메모리": 6,
+     "정적 풀": 2
+    }
+   }
+  },
+  {
+   "en": "stack painting",
+   "ko": "스택 페인팅",
+   "display": "스택 페인팅(stack painting)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "스택 워터마크",
+    "워터마크 점검"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '스택 페인팅' 4회와 '워터마크' 4회가 섞여 있다. '스택 페인팅'으로 통일하고 측정값은 '스택 워터마크'로 부른다. 공식 용례는 없다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "메모리",
+   "corpus_count": {
+    "ko": 3,
+    "variants": {
+     "스택 워터마크": 2,
+     "워터마크 점검": 1
+    }
+   }
+  },
+  {
+   "en": "instrumentation",
+   "ko": "계측",
+   "display": "계측(instrumentation)",
+   "rule": "한글(영어) 병기",
+   "variants": [
+    "계측 코드",
+    "instrumentation"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어 '계측'",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EA%B3%84%EC%B8%A1",
+   "verdict": "VERIFIED",
+   "note": "표준국어대사전 표제어(일반 뜻: 양을 헤아리거나 잼)로 표기를 확인(2026-10-18). 측정 코드를 끼워 넣는 instrumentation의 기술 용례(TTA 용어사전)는 사이트 접속 불가로 확인하지 못했다. 현행 지침은 '계측' 9회(계측 코드, 계측 빌드).",
+   "category": "시험·검증",
+   "corpus_count": {
+    "ko": 15,
+    "variants": {
+     "계측 코드": 1
+    }
+   }
+  },
+  {
+   "en": "air-gapped network",
+   "ko": "폐쇄망",
+   "display": "폐쇄망",
+   "rule": "한글만",
+   "variants": [
+    "망분리",
+    "망 분리",
+    "오프라인 환경",
+    "air-gapped"
+   ],
+   "source": "",
+   "url": "",
+   "verdict": "NEEDS_REVIEW",
+   "note": "현업 관용 표기(공식 용례 미확인). 현행 지침은 '폐쇄망' 13회, '오프라인' 23회(오프라인 미러·번들처럼 수식어), '망분리' 2회. 외부와 물리적으로 단절된 망은 '폐쇄망', 반입 절차로 갱신하는 대상은 '오프라인 미러·번들'로 쓴다. 기관 내부 개발망(내부망)은 폐쇄망과 구분한다. 2026-10-28 재확인: TTA 정보통신용어사전은 여전히 접속 불가(원 발행처 페이지의 웹 아카이브 보관본도 없음)이고, 우리말샘·표준국어대사전·행안부/KISA 가이드 5종·매뉴얼 제2024-6호에서 같은 뜻의 용례를 찾지 못했다.",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 13,
+    "variants": {
+     "망분리": 2
+    }
+   }
+  },
+  {
+   "en": "import/export control",
+   "ko": "반입·반출",
+   "display": "반입·반출",
+   "rule": "한글만",
+   "variants": [
+    "반입",
+    "반출",
+    "이관"
+   ],
+   "source": "국립국어원 「표준국어대사전」 — 표제어 '반입'·'반출'",
+   "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%B0%98%EC%9E%85",
+   "verdict": "VERIFIED",
+   "note": "표준국어대사전 표제어 '반입(搬入)'·'반출(搬出)'로 확인(2026-10-18). 현행 지침은 '반입' 23회. 외부에서 들여오는 것은 '반입', 내보내는 것은 '반출'로 짝을 이뤄 쓴다.",
+   "category": "공급망·형상",
+   "corpus_count": {
+    "ko": 2,
+    "variants": {
+     "반입": 31,
+     "반출": 8,
+     "이관": 3
+    }
+   }
+  },
+  {
+   "en": "kernel",
+   "ko": "커널",
+   "display": "커널",
+   "rule": "한글만",
+   "variants": [
+    "kernel",
+    "커널 모드"
+   ],
+   "source": "KISA·행정안전부 「소프트웨어 개발보안 가이드」 — PDF 26쪽",
+   "url": "https://www.kisa.or.kr/post/fileDownload?menuSeq=2060204&postSeq=5&attachSeq=2&lang_type=KO",
+   "verdict": "VERIFIED",
+   "note": "가이드 용례는 '커널-모드' 1건이다. 현행 지침은 '커널' 19회로 일관. 표준국어대사전에서 표제어를 확인하지 못했다.",
+   "category": "임베디드·보안 기능",
+   "corpus_count": {
+    "ko": 24,
+    "variants": {
+     "커널 모드": 9
+    }
+   }
+  },
+  {
+   "en": "software life cycle",
+   "ko": "소프트웨어 수명주기",
+   "display": "소프트웨어 수명주기",
+   "rule": "한글만",
+   "variants": [
+    "생명주기",
+    "소프트웨어 개발 생명주기",
+    "SDLC",
+    "개발단계"
+   ],
+   "source": "방위사업청 매뉴얼 제2024-6호 제3장 Ⅱ 품질보증 — 인쇄 97쪽(관련 문서 ISO/IEC/IEEE 12207 'Software Life Cycle Processes', 인쇄 3쪽)",
+   "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+   "verdict": "VERIFIED",
+   "note": "매뉴얼은 '생명주기'·'SDLC'를 쓰지 않고 '수명주기'를 쓴다. 행안부·KISA 「소프트웨어 개발보안 가이드」는 '소프트웨어 개발 생명주기(SDLC)'라 쓴다(인쇄 16쪽) — 인용할 때만 그대로 둔다. 이 가이드의 5단계(요구사항 분석·설계·구현·통합 및 시험·유지보수)는 '수명주기 단계', CWE의 Phase 값은 'CWE 단계(Phase)'로 부른다. 매뉴얼의 '개발단계'는 사업 단계(탐색개발·체계개발·양산)를 가리킬 때도 있어 이 가이드의 단계 이름으로 쓰지 않는다.",
+   "category": "국방 시험(매뉴얼)",
+   "corpus_count": {
+    "ko": 12,
+    "variants": {}
+   }
+  },
+ {
+  "en": "FA 사유서",
+  "ko": "FA 사유서",
+  "display": "FA 사유서(매뉴얼 서식 이름)",
+  "rule": "영어 유지",
+  "variants": [],
+  "source": "방위사업청 매뉴얼 제2024-6호 부록 7 별첨 1-7·1-8 — 인쇄 7-22쪽",
+  "url": "https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&SelctgryId=6",
+  "verdict": "VERIFIED",
+  "note": "매뉴얼의 코딩규칙점검·취약점점검 서식 이름이다. 매뉴얼은 FA를 따로 풀어 적지 않으며, 같은 서식 예시에 'False Alarm' 표기가 함께 나온다.",
+  "category": "국방 시험(매뉴얼)",
+  "corpus_count": {
+   "ko": 0,
+   "variants": {}
+  }
+ },
+ {
+  "en": "SOAR (State-of-the-Art Resources)",
+  "ko": "SOAR",
+  "display": "SOAR(CWE 탐지 방법이 인용하는 보고서, MITRE 참고문헌 REF-1479)",
+  "rule": "영어 유지",
+  "variants": [],
+  "source": "Larsen 외, State-of-the-Art Resources (SOAR) for Software Vulnerability Detection, Test, and Evaluation(2014. 7.), CWE 5.0 External_References REF-1479",
+  "url": "https://www.ida.org/-/media/feature/publications/s/st/stateoftheart-resources-soar-for-software-vulnerability-detection-test-and-evaluation/p-5061.ashx",
+  "verdict": "VERIFIED",
+  "note": "CWE 5.0 XML의 External_Reference REF-1479로 확인(2026-11-02). 6.2 ①의 효과성 표시는 이 보고서를 인용한 CWE 탐지 방법의 표기다.",
+  "category": "시험·검증",
+  "corpus_count": {
+   "ko": 0,
+   "variants": {}
+  }
+ },
+ {
+  "en": "SAST (static application security testing)",
+  "ko": "SAST",
+  "display": "SAST(정적 애플리케이션 보안 시험)",
+  "rule": "영어 유지",
+  "variants": [],
+  "source": "",
+  "url": "",
+  "verdict": "NEEDS_REVIEW",
+  "note": "현업 관용 약어. 이 가이드는 소스코드를 실행하지 않고 보안약점을 찾는 정적 분석 도구를 가리킬 때 쓴다.",
+  "category": "시험·검증",
+  "corpus_count": {
+   "ko": 0,
+   "variants": {}
+  }
+ }
+ ]
+}

@@ -1,0 +1,97 @@
+{
+ "cwe": "307",
+ "scenario_ko": "정비 키패드·운용자 콘솔·정비 정보 시스템·키 적재 장비가 PIN이나 비밀번호로 로그인을 받는다. 예시의 main(Python은 맨 아래 반복문)은 공격자가 가능한 값을 처음부터 차례로 넣어 보는 무차별 대입을 흉내 내며, 실패 횟수 제한이 있는지에 따라 결과가 갈린다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n\n/* 예시용 등록 PIN: 실제로는 보호 저장소에 둔 해시와 비교한다 */\nstatic const unsigned enrolled_pin = 7351u;\n\n/* 정비 키패드 로그인: 틀려도 횟수를 세지 않고 바로 다시 받는다 */\nstatic int keypad_login(unsigned pin)\n{\n    return pin == enrolled_pin;\n}\n\nint main(void)\n{\n    /* 공격자가 0000부터 9999까지 차례로 넣어 보는 상황 */\n    unsigned tries = 0;\n    for (unsigned pin = 0; pin <= 9999u; ++pin) {\n        ++tries;\n        if (keypad_login(pin)) {\n            printf(\"UNLOCKED after %u attempts\\n\", tries);\n            return 0;\n        }\n    }\n    puts(\"all attempts failed\");\n    return 0;\n}\n",
+    "explain_ko": "틀린 PIN을 세지도 늦추지도 않아 4자리 PIN 전체(1만 개)를 차례로 넣으면 결국 열린다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n\n#define MAX_FAILURES 5u\n\nstatic const unsigned enrolled_pin = 7351u;    /* 시험용 등록값(실제로는 보호 저장소의 해시) */\n\n/* 실패 횟수와 잠금 상태: 실제로는 비휘발성 메모리에 두어 전원을 다시 넣어도 유지한다 */\nstatic struct { unsigned failures; int locked; } guard;\n\ntypedef enum { LOGIN_OK, LOGIN_BAD_PIN, LOGIN_LOCKED } LoginResult;\n\nstatic LoginResult keypad_login(unsigned pin)\n{\n    if (guard.locked) {\n        return LOGIN_LOCKED;                    /* 해제는 관리자 절차로만 */\n    }\n    if (pin == enrolled_pin) {\n        guard.failures = 0;\n        return LOGIN_OK;\n    }\n    if (++guard.failures >= MAX_FAILURES) {\n        guard.locked = 1;                       /* 감사 로그에도 남긴다 */\n    }\n    return LOGIN_BAD_PIN;\n}\n\nint main(void)\n{\n    unsigned tries = 0;\n    for (unsigned pin = 0; pin <= 9999u; ++pin) {\n        ++tries;\n        LoginResult r = keypad_login(pin);\n        if (r == LOGIN_OK) {\n            printf(\"UNLOCKED after %u attempts\\n\", tries);\n            return 0;\n        }\n        if (r == LOGIN_LOCKED) {\n            printf(\"LOCKED after %u failures; attempt %u refused\\n\", guard.failures, tries);\n            return 0;\n        }\n    }\n    puts(\"all attempts failed\");\n    return 0;\n}\n",
+    "explain_ko": "실패 횟수를 세어 한도(5회)에서 잠그고, 잠금 해제는 관리자 절차로만 한다. 전원 재인가로 횟수가 초기화되지 않도록 실제로는 비휘발성 메모리에 두고, 비교 전에 횟수를 먼저 저장해 판정 직후 전원을 끊어 기록을 건너뛰지 못하게 한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "UNLOCKED after \\d+ attempts",
+    "expect_good": "LOCKED after \\d+ failures; attempt \\d+ refused"
+   },
+   "refs": [
+    "MITRE CWE-307 Demonstrative Example 4(시도 횟수 제한 없는 사용자 확인 반복) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <cstdio>\n#include <iostream>\n#include <string>\n\n// 지상 통제 콘솔의 운용자 인증 서비스\nclass OperatorAuth {\npublic:\n    explicit OperatorAuth(std::string code) : code_(std::move(code)) {}\n\n    // 실패해도 기록·지연·잠금이 없어 같은 계정으로 끝없이 다시 시도할 수 있다\n    bool verify(const std::string &account, const std::string &code) {\n        (void)account;\n        return code == code_;\n    }\n\nprivate:\n    std::string code_;\n};\n\nint main() {\n    OperatorAuth auth(\"482916\");  // 시험용 등록값(실제로는 보호 저장소)\n    char guess[8];\n    for (long n = 0; n < 1000000; ++n) {        // 6자리 코드를 전수 대입\n        std::snprintf(guess, sizeof guess, \"%06ld\", n);\n        if (auth.verify(\"opr03\", guess)) {\n            std::cout << \"UNLOCKED after \" << n + 1 << \" attempts\\n\";\n            return 0;\n        }\n    }\n    std::cout << \"not found\\n\";\n    return 0;\n}\n",
+    "explain_ko": "운용자 인증 서비스가 실패를 기록하지 않아 6자리 코드도 무차별 대입으로 찾아낸다."
+   },
+   "good": {
+    "code": "#include <cstdio>\n#include <iostream>\n#include <map>\n#include <string>\n\nclass OperatorAuth {\npublic:\n    enum class Result { Ok, Rejected, Locked };\n    static constexpr int kMaxFailures = 5;\n\n    explicit OperatorAuth(const std::map<std::string, std::string> &enrolled) {\n        for (const auto &[account, code] : enrolled) accounts_[account] = Entry{code, 0};\n    }\n\n    // 등록 계정별 실패 횟수를 장비 쪽에 남기고, 한도를 넘으면 잠근다\n    Result verify(const std::string &account, const std::string &code) {\n        auto it = accounts_.find(account);      // 모르는 계정 이름으로 집계 항목을 늘리지 않는다\n        if (it == accounts_.end()) return Result::Rejected;\n        Entry &e = it->second;\n        if (e.failures >= kMaxFailures) return Result::Locked;   // 잠금 해제는 관리자 절차로\n        if (code == e.code) {\n            e.failures = 0;\n            return Result::Ok;\n        }\n        ++e.failures;                           // 실제로는 지연 시간도 늘리고 감사 로그를 남긴다\n        return Result::Rejected;\n    }\n\nprivate:\n    struct Entry { std::string code; int failures; };\n    std::map<std::string, Entry> accounts_;\n};\n\nint main() {\n    OperatorAuth auth({{\"opr03\", \"482916\"}});   // 시험용 등록값(실제로는 보호 저장소의 해시)\n    char guess[8];\n    for (long n = 0; n < 1000000; ++n) {\n        std::snprintf(guess, sizeof guess, \"%06ld\", n);\n        auto r = auth.verify(\"opr03\", guess);\n        if (r == OperatorAuth::Result::Ok) {\n            std::cout << \"UNLOCKED after \" << n + 1 << \" attempts\\n\";\n            return 0;\n        }\n        if (r == OperatorAuth::Result::Locked) {\n            std::cout << \"LOCKED after \" << OperatorAuth::kMaxFailures << \" failures; attempt \" << n + 1 << \" refused\\n\";\n            return 0;\n        }\n    }\n    std::cout << \"not found\\n\";\n}\n",
+    "explain_ko": "등록 계정별 실패 횟수를 장비 쪽에 두고 한도에서 잠근다. 등록되지 않은 계정 이름으로는 집계 항목을 만들지 않고 거부해, 임의 이름을 보내 메모리를 늘리지 못하게 한다. 예시의 코드 값은 시험용 등록값이다. 실제로는 보호 저장소의 해시와 비교하고, 실패할수록 응답 지연을 늘리며 감사 로그를 남긴다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "UNLOCKED after \\d+ attempts",
+    "expect_good": "LOCKED after \\d+ failures; attempt \\d+ refused"
+   },
+   "refs": [
+    "MITRE CWE-307 Demonstrative Example 2(인증 시도 제한 없음) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "public class Example {\n    // 정비 정보 시스템 로그인: 실패해도 아무 제약 없이 다시 받는다\n    static final class MaintPortal {\n        private final String passcode;\n\n        MaintPortal(String passcode) {\n            this.passcode = passcode;\n        }\n\n        boolean signIn(String user, String typed) {\n            return user.equals(\"tech11\") && typed.equals(passcode);\n        }\n    }\n\n    public static void main(String[] args) {\n        MaintPortal portal = new MaintPortal(\"w7k2\");    // 시험용 등록값(실제로는 보호 저장소)\n        String chars = \"abcdefghijklmnopqrstuvwxyz0123456789\";\n        int tries = 0;\n        for (char a : chars.toCharArray())\n            for (char b : chars.toCharArray())\n                for (char c : chars.toCharArray())\n                    for (char d : chars.toCharArray()) {\n                        tries++;\n                        if (portal.signIn(\"tech11\", \"\" + a + b + c + d)) {\n                            System.out.println(\"UNLOCKED after \" + tries + \" attempts\");\n                            return;\n                        }\n                    }\n        System.out.println(\"not found\");\n    }\n}\n",
+    "explain_ko": "로그인 실패에 아무 제약이 없어 4자리 영숫자 암호를 무차별 대입으로 찾아낸다."
+   },
+   "good": {
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class Example {\n    enum Outcome { OK, REJECTED, LOCKED }\n\n    static final class MaintPortal {\n        static final int MAX_FAILURES = 5;\n        private final Map<String, String> enrolled;\n        private final Map<String, Integer> failures = new HashMap<>();   // 서버 쪽에 보관\n\n        MaintPortal(Map<String, String> enrolled) {\n            this.enrolled = Map.copyOf(enrolled);\n        }\n\n        // 읽기·비교·갱신을 한 덩어리로 묶어 동시 요청에서 횟수를 잃지 않게 한다\n        synchronized Outcome signIn(String user, String typed) {\n            String passcode = enrolled.get(user);\n            if (passcode == null) {\n                return Outcome.REJECTED;                  // 모르는 계정 이름으로 집계 항목을 늘리지 않는다\n            }\n            int failed = failures.getOrDefault(user, 0);\n            if (failed >= MAX_FAILURES) {\n                return Outcome.LOCKED;                    // 관리자 해제 전까지 거부\n            }\n            if (typed.equals(passcode)) {\n                failures.remove(user);\n                return Outcome.OK;\n            }\n            failures.put(user, failed + 1);               // 실제로는 감사 로그·경보도 남긴다\n            return Outcome.REJECTED;\n        }\n    }\n\n    public static void main(String[] args) {\n        // 시험용 등록값(실제로는 보호 저장소의 해시)\n        MaintPortal portal = new MaintPortal(Map.of(\"tech11\", \"w7k2\"));\n        String chars = \"abcdefghijklmnopqrstuvwxyz0123456789\";\n        int tries = 0;\n        for (char a : chars.toCharArray())\n            for (char b : chars.toCharArray())\n                for (char c : chars.toCharArray())\n                    for (char d : chars.toCharArray()) {\n                        tries++;\n                        Outcome o = portal.signIn(\"tech11\", \"\" + a + b + c + d);\n                        if (o == Outcome.OK) {\n                            System.out.println(\"UNLOCKED after \" + tries + \" attempts\");\n                            return;\n                        }\n                        if (o == Outcome.LOCKED) {\n                            System.out.println(\"LOCKED after \" + MaintPortal.MAX_FAILURES\n                                    + \" failures; attempt \" + tries + \" refused\");\n                            return;\n                        }\n                    }\n        System.out.println(\"not found\");\n    }\n}\n",
+    "explain_ko": "등록 계정별 실패 횟수를 서버 쪽에 두고 한도에서 잠근다. 등록되지 않은 계정 이름은 집계 항목을 만들지 않고 거부해 임의 이름으로 메모리를 늘리지 못하게 하고, 동시 요청에서 횟수를 잃지 않게 읽기와 갱신을 묶는다. 실제 서비스에서는 출처(단말)별 횟수도 함께 세고, 연속 실패 자동화 시험으로 확인한다(T-06)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "UNLOCKED after \\d+ attempts",
+    "expect_good": "LOCKED after \\d+ failures; attempt \\d+ refused"
+   },
+   "refs": [
+    "MITRE CWE-307 Demonstrative Example 2(인증 시도 제한 없음) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "var gate = new KeyLoaderGate(expectedPin: \"5308\");    // 시험용 등록값(실제로는 보호 저장소)\nint tries = 0;\nfor (int n = 0; n < 10000; n++)\n{\n    tries++;\n    if (gate.Unlock(n.ToString(\"D4\", System.Globalization.CultureInfo.InvariantCulture)))\n    {\n        Console.WriteLine($\"UNLOCKED after {tries} attempts\");\n        return;\n    }\n}\nConsole.WriteLine(\"not found\");\n\n// 키 적재 장비(fill device) 잠금 해제: 틀린 PIN을 몇 번이고 받아 준다\nsealed class KeyLoaderGate(string expectedPin)\n{\n    public bool Unlock(string pin) => string.Equals(pin, expectedPin, StringComparison.Ordinal);\n}\n",
+    "explain_ko": "키 적재 장비의 잠금 해제가 틀린 PIN을 몇 번이고 받아 주어 4자리 PIN을 무차별 대입으로 찾아낸다."
+   },
+   "good": {
+    "code": "var gate = new KeyLoaderGate(expectedPin: \"5308\");   // 시험용 등록값(실제로는 보호 저장소의 해시)\nint tries = 0;\nfor (int n = 0; n < 10000; n++)\n{\n    tries++;\n    var r = gate.Unlock(n.ToString(\"D4\", System.Globalization.CultureInfo.InvariantCulture));\n    if (r == UnlockResult.Ok)\n    {\n        Console.WriteLine($\"UNLOCKED after {tries} attempts\");\n        return;\n    }\n    if (r == UnlockResult.Locked)\n    {\n        Console.WriteLine($\"LOCKED after {KeyLoaderGate.MaxFailures} failures; attempt {tries} refused\");\n        return;\n    }\n}\nConsole.WriteLine(\"not found\");\n\nenum UnlockResult { Ok, Rejected, Locked }\n\n// 실패 횟수를 세어 한도에서 잠근다(실제로는 횟수를 비휘발성 저장소에 두고, 잠기면 키를 소거하는 정책도 검토)\nsealed class KeyLoaderGate(string expectedPin)\n{\n    public const int MaxFailures = 3;\n    int failures;\n\n    public UnlockResult Unlock(string pin)\n    {\n        if (failures >= MaxFailures)\n        {\n            return UnlockResult.Locked;\n        }\n        if (string.Equals(pin, expectedPin, StringComparison.Ordinal))\n        {\n            failures = 0;\n            return UnlockResult.Ok;\n        }\n        failures++;\n        return UnlockResult.Rejected;\n    }\n}\n",
+    "explain_ko": "실패 횟수를 세어 3회에서 잠근다. 실제 장비에서는 횟수를 비휘발성 저장소에 두어 전원을 다시 넣어도 유지하고, 비교 전에 횟수를 먼저 저장해 판정 직후 전원을 끊어 기록을 건너뛰지 못하게 하며, 잠기면 보관 키를 소거할지 정책으로 정한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "UNLOCKED after \\d+ attempts",
+    "expect_good": "LOCKED after \\d+ failures; attempt \\d+ refused"
+   },
+   "refs": [
+    "MITRE CWE-307 Demonstrative Example 2(인증 시도 제한 없음) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import hmac\n\nPIN_VERIFIER = \"4817\"                 # 시험용 등록값. 실제로는 해시 검증값을 보호 저장소에 둔다\n\n\nclass KeypadLogin:\n    def try_pin(self, pin):\n        return hmac.compare_digest(pin.encode(), PIN_VERIFIER.encode())   # 실패 횟수를 세지 않는다\n\n\n# 정비 키패드에 PIN을 차례로 넣어 보는 공격자\nlogin = KeypadLogin()\nfor n in range(10000):\n    if login.try_pin(f\"{n:04d}\"):\n        print(f\"UNLOCKED after {n + 1} attempts\")\n        break\n",
+    "explain_ko": "PIN 확인 실패를 세지 않는다. 네 자리 PIN은 경우의 수가 1만 개뿐이라 키패드나 원격 정비 접속에서 차례로 넣어 보면 금방 맞힌다. 예시에서는 4818번째 시도에서 풀린다."
+   },
+   "good": {
+    "code": "import hmac\nimport time\n\nPIN_VERIFIER = \"4817\"                 # 시험용 등록값. 실제로는 해시 검증값을 보호 저장소에 둔다\nMAX_FAILURES = 5\nLOCK_SECONDS = 900\n\n\nclass KeypadLogin:\n    def __init__(self):\n        self.failures = 0\n        self.locked_until = 0.0\n\n    def try_pin(self, pin):\n        now = time.monotonic()\n        if now < self.locked_until:\n            return \"locked\"\n        if hmac.compare_digest(pin.encode(), PIN_VERIFIER.encode()):\n            self.failures = 0\n            return \"ok\"\n        self.failures += 1\n        if self.failures >= MAX_FAILURES:       # 연속 실패가 한도에 이르면 잠그고 감사 기록을 남긴다\n            self.locked_until = now + LOCK_SECONDS\n            print(f\"audit: keypad locked after {self.failures} failures\")\n        return \"fail\"\n\n\nlogin = KeypadLogin()\nfor n in range(10000):\n    result = login.try_pin(f\"{n:04d}\")\n    if result == \"ok\":\n        print(f\"UNLOCKED after {n + 1} attempts\")\n        break\n    if result == \"locked\":\n        print(f\"locked at attempt {n + 1}: guessing stopped\")\n        break\n",
+    "explain_ko": "연속 실패 횟수를 세어 한도(예: 5회)에 이르면 일정 시간 잠그고 감사 기록을 남긴다. 성공하면 횟수를 0으로 되돌린다. 실패 횟수와 남은 잠금 시간은 프로그램을 다시 시작해도 유지되게 저장해야 하고(time.monotonic() 값은 재부팅 뒤 비교할 수 없다), 잠금 시간·한도는 보안 요구사항에서 정한다(R-01). 계정 단위 잠금이 서비스 거부로 악용될 수 있으면 점증 지연이나 관리자 해제를 함께 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "UNLOCKED after \\d+ attempts",
+    "expect_good": "locked at attempt \\d+: guessing stopped"
+   },
+   "refs": [
+    "MITRE CWE-307 Demonstrative Example 2(시도 횟수 제한 없는 인증 확인) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-16 '반복된 인증시도 제한 기능 부재'(인쇄 117쪽) 참고"
+   ]
+  }
+ }
+}

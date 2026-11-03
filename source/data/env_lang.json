@@ -1,0 +1,1022 @@
+{
+ "envs": [
+  {
+   "axis": "개발 언어",
+   "env": "C",
+   "code": "LC",
+   "traits": "포인터 연산과 수동 메모리 관리로 CWE-119 계열 결함에 가장 취약하며, 미정의·구현정의 동작이 컴파일러·타깃(MCU/DSP)별로 달라진다. 매뉴얼 제2024-6호의 정적시험은 부록 6 코딩규칙(MISRA C:2012·C:2023 등, 사유를 밝혀 선정·조정)과 취약점 점검(CWE-658/659/660·보안약점 점검 목록 — 도구 지원 항목은 모두 적용)을 요구한다.",
+   "constraints": "ASLR·DEP·스택 카나리(stack canary) 등 OS/컴파일러 완화책(mitigation)은 MMU(메모리 관리 장치) 없는 MCU·RTOS(실시간 운영체제)에서 불가하거나 제한되므로 MPU(메모리 보호 장치) 영역 설정, 정적 할당, 경계 검사 코딩규칙(coding rule)으로 대체한다. AddressSanitizer는 런타임이 필요하므로 MMU 없는 MCU·베어메탈 타깃에서는 쓸 수 없고 호스트 빌드에서 시험한다.",
+   "key_cwe": [
+    "119",
+    "120",
+    "121",
+    "125",
+    "787",
+    "134",
+    "190",
+    "416",
+    "457",
+    "476"
+   ],
+   "guides": [
+    {
+     "id": "LC-01",
+     "phase": "설계",
+     "title": "동적 할당 배제 설계",
+     "guide": "최대 메시지·버퍼 크기를 설계 단계에서 확정하고 정적 배열·고정 풀로 할당한다. 런타임 malloc/free는 금지하고(MISRA C:2012 Rule 21.3) 불가피하면 편차(deviation) 승인 후 격리한다.",
+     "cwe": [
+      "415",
+      "416",
+      "401"
+     ],
+     "basis": "MISRA C:2012 Rule 21.3, SEI CERT MEM 규칙, CWE-415·416·401 완화책"
+    },
+    {
+     "id": "LC-02",
+     "phase": "설계",
+     "title": "신뢰 경계 입력 검증 계층",
+     "guide": "통신 프레임·센서값·파일 등 외부 입력은 진입 함수 한 곳에서 길이·범위·열거값을 검증한 뒤에만 내부로 전달한다. 검증 실패 경로는 안전 상태 전이로 설계한다.",
+     "cwe": [
+      "119",
+      "129"
+     ],
+     "basis": "CWE-119/129 완화책(입력 검증), CERT ARR30-C"
+    },
+    {
+     "id": "LC-03",
+     "phase": "설계",
+     "title": "타깃 의존 동작 HAL 격리",
+     "guide": "엔디언, 구조체 패딩, int 크기 등 타깃·컴파일러 의존 부분은 HAL(하드웨어 추상화 계층)에 모으고 고정폭 정수형(stdint.h)을 쓰되, 8비트 형이 없는 타깃(C28x)은 uint_least8_t와 마스크로 처리한다. 직접 비트필드·공용체 변환은 금지한다.",
+     "cwe": [
+      "190",
+      "681",
+      "587"
+     ],
+     "basis": "MISRA C:2012 Dir 4.6, Rule 19.2, 6.1"
+    },
+    {
+     "id": "LC-04",
+     "phase": "구현",
+     "title": "금지 문자열 함수 대체",
+     "guide": "gets, strcpy, strcat, sprintf 사용을 금지하고 길이 인자를 받는 함수를 쓰되 snprintf 반환값 검사와 널 종료 보장을 코드로 확인한다. memcpy는 길이를 대상 크기와 비교한 뒤 호출한다. MISRA C:2012 Rule 21.6을 적용하는 과제에서 snprintf를 쓰면 편차(deviation)로 기록하거나 자체 경계 검사 함수를 쓴다(규칙 범위는 사용 판 원문으로 확정).",
+     "cwe": [
+      "120",
+      "119",
+      "787",
+      "125",
+      "170",
+      "676"
+     ],
+     "basis": "CERT STR31-C/STR32-C, MISRA C:2012 Rule 21.6, 17.7"
+    },
+    {
+     "id": "LC-05",
+     "phase": "구현",
+     "title": "정수 연산 오버플로 방지",
+     "guide": "버퍼 크기·인덱스 계산 전에 오버플로를 검사하고 부호 있음/없음 혼용 비교와 암묵적 축소 변환을 금지한다. 부호 없는 정수 랩어라운드에 의존하는 로직은 주석과 편차(deviation)로 관리한다.",
+     "cwe": [
+      "190",
+      "191",
+      "195",
+      "193"
+     ],
+     "basis": "MISRA C:2012 Rule 10.1~10.8, 12.4, CERT INT30-C/INT32-C"
+    },
+    {
+     "id": "LC-06",
+     "phase": "구현",
+     "title": "포맷 스트링·반환값 처리",
+     "guide": "printf류 포맷 인자는 리터럴 상수로 고정하고 모든 함수 반환값과 NULL 포인터를 역참조 전에 검사한다. 반환값을 의도적으로 버릴 때만 (void) 캐스트를 사용한다. printf류를 쓸 때 MISRA C:2012 Rule 21.6과의 관계는 LC-04를 따른다.",
+     "cwe": [
+      "134",
+      "476"
+     ],
+     "basis": "MISRA C:2012 Rule 17.7, Dir 4.7, Dir 4.11, CERT FIO30-C"
+    },
+    {
+     "id": "LC-07",
+     "phase": "구현",
+     "title": "초기화와 객체 수명 관리",
+     "guide": "자동 변수는 선언 시 초기화하고 지역 변수·스택 버퍼의 주소를 반환하거나 전역에 저장하지 않는다. 해제 후 포인터 NULL 설정은 심층 방어로 더한다.",
+     "cwe": [
+      "457",
+      "562",
+      "416",
+      "415"
+     ],
+     "basis": "MISRA C:2012 Rule 9.1, 18.6, CERT DCL30-C"
+    },
+    {
+     "id": "LC-08",
+     "phase": "통합 및 시험",
+     "title": "경고 0건과 규칙 편차 관리",
+     "guide": "타깃 컴파일러의 최대 경고 수준(-Wall -Wextra -Wconversion -Wformat-security 등)에서 경고 0건을 CI(지속적 통합) 통과 조건으로 두고 MISRA 검사기와 CWE-658 점검(도구 지원 항목 전부)을 병행한다. 편차(deviation)는 승인 대장에 근거와 함께 기록한다.",
+     "cwe": [
+      "119",
+      "190",
+      "467",
+      "628"
+     ],
+     "basis": "매뉴얼 제2024-6호 코딩규칙 선정·조정(부록 6-3쪽), MISRA Compliance"
+    },
+    {
+     "id": "LC-09",
+     "phase": "구현",
+     "title": "호스트 동적 분석과 타깃 코드 실행률",
+     "guide": "동일 소스를 호스트에서 ASan/UBSan(-fsanitize=address,undefined)과 퍼징(fuzzing) 도구(libFuzzer, AFL++)로 검사하고, 요구사항 기반 코드 실행률(Coverage)은 실제 타깃 하드웨어에서 별도로 측정한다. 스택 사용량도 타깃에서 스택 페인팅(stack painting)으로 실측한다. 호스트와 타깃의 자료형 크기가 다르면 호스트 UBSan이 잡지 못하는 결함은 타깃 자료형을 설정한 정적 분석과 타깃 경계값 시험으로 확인한다(I-10).",
+     "cwe": [
+      "787",
+      "125",
+      "121"
+     ],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽), CWE-119 탐지 방법"
+    },
+    {
+     "id": "LC-10",
+     "phase": "유지보수",
+     "title": "컴파일러·BSP 변경 재검증",
+     "guide": "컴파일러 버전·최적화 옵션·BSP(보드 지원 패키지) 변경 시 미정의 동작이 새로 드러날 수 있으므로 전체 정적시험과 타깃 회귀시험(regression test)을 다시 수행하고 도구 버전을 형상관리(configuration management)한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "MISRA C:2012 Dir 1.1/Rule 1.3, 벤더 릴리스 노트 검토"
+    }
+   ]
+  },
+  {
+   "axis": "개발 언어",
+   "env": "C++",
+   "code": "LCPP",
+   "traits": "RAII·스마트 포인터 등 안전한 추상화를 제공하지만 C와 호환되는 포인터·배열 위험이 그대로 남고, 예외·소멸자·객체 수명·템플릿 등 C++ 고유 결함이 추가된다. 매뉴얼 제2024-6호 부록 6은 MISRA C++:2008·C++:2023과 C++ Core Guidelines를 관련 표준으로 들며, C++14 이후 코드는 사업에서 판을 정해 매핑해야 한다(AUTOSAR C++14는 AUTOSAR가 폐기 문서로 표시하고 작업을 MISRA에 넘겼다).",
+   "constraints": "임베디드에서는 -fno-exceptions, -fno-rtti, 동적 할당 금지가 흔해 예외 기반 오류 처리와 STL 동적 컨테이너에 의존하는 완화책(mitigation)을 쓸 수 없다. 반환 코드 규약, 고정 용량 컨테이너(ETL 등), 사용자 정의 할당자로 대체한다.",
+   "key_cwe": [
+    "119",
+    "416",
+    "415",
+    "404",
+    "476",
+    "457",
+    "390",
+    "755",
+    "362",
+    "396"
+   ],
+   "guides": [
+    {
+     "id": "LCPP-01",
+     "phase": "설계",
+     "title": "RAII 소유권 모델",
+     "guide": "자원 소유자를 객체 하나로 정하고 raw new/delete를 금지하며 unique_ptr 등 RAII 래퍼로 수명을 관리한다. 동적 할당 금지 프로젝트는 placement new와 고정 풀로 제한한다.",
+     "cwe": [
+      "404",
+      "415",
+      "416"
+     ],
+     "basis": "AUTOSAR C++14 A18-5-2, MISRA C++:2008 18-4-1"
+    },
+    {
+     "id": "LCPP-02",
+     "phase": "설계",
+     "title": "오류 처리 정책 단일화",
+     "guide": "예외 사용 여부를 프로젝트 전체에서 하나로 결정한다. 예외를 쓰면 소멸자 noexcept와 최상위 핸들러를 두고, 쓰지 않으면 모든 반환 코드 검사를 정적 분석(static analysis)으로 강제한다.",
+     "cwe": [
+      "755",
+      "390",
+      "396"
+     ],
+     "basis": "MISRA C++:2008 15장(예외), AUTOSAR A15-x · [보완] (CWE-755 원문에 완화책 없음, 2.7 규칙 3)"
+    },
+    {
+     "id": "LCPP-03",
+     "phase": "설계",
+     "title": "다형 클래스 설계 규칙",
+     "guide": "다형성을 가진 기반 클래스는 가상 소멸자를 두고 복사·이동을 delete하여 슬라이싱을 막는다. 생성자·소멸자에서 가상 함수 호출을 금지한다.",
+     "cwe": [
+      "404",
+      "457"
+     ],
+     "basis": "MISRA C++:2008 12-1-1, 12-8-2, AUTOSAR A12-x"
+    },
+    {
+     "id": "LCPP-04",
+     "phase": "구현",
+     "title": "배열·포인터 연산 대체",
+     "guide": "C 배열과 포인터 산술 대신 std::array, 범위 검사 접근(at, 예외를 끈 빌드는 실패 시 동작을 확인한 뒤 쓴다), span 계열 뷰를 사용하고 인덱싱 이외의 포인터 산술을 금지한다. string_view·span은 원본 수명 이내에서만 보관한다.",
+     "cwe": [
+      "119",
+      "125",
+      "787",
+      "416",
+      "469",
+      "562"
+     ],
+     "basis": "MISRA C++:2008 5-0-15, 5-0-16, CERT CTR50-CPP"
+    },
+    {
+     "id": "LCPP-05",
+     "phase": "구현",
+     "title": "캐스트와 변환 통제",
+     "guide": "C 스타일 캐스트와 const_cast를 금지하고 reinterpret_cast는 HAL(하드웨어 추상화 계층)의 한정된 위치에만 허용한다. RTTI가 꺼진 빌드에서는 dynamic_cast 대신 명시적 타입 태그를 쓴다.",
+     "cwe": [
+      "704",
+      "681",
+      "587"
+     ],
+     "basis": "MISRA C++:2008 5-2-4, 5-2-5, AUTOSAR A5-2-x"
+    },
+    {
+     "id": "LCPP-06",
+     "phase": "구현",
+     "title": "반복자·참조 무효화 방지",
+     "guide": "컨테이너 수정 중 보관한 반복자·참조·포인터를 재사용하지 않고, 지역 객체에 대한 참조를 반환하거나 람다 참조 캡처를 비동기로 넘기지 않는다.",
+     "cwe": [
+      "416",
+      "825",
+      "562"
+     ],
+     "basis": "CERT CTR51-CPP, EXP54-CPP, DCL30-C 대응"
+    },
+    {
+     "id": "LCPP-07",
+     "phase": "구현",
+     "title": "동시성과 초기화 순서",
+     "guide": "태스크·스레드 간 공유 데이터는 std::lock_guard 등 RAII 잠금으로 보호하고(ISR(인터럽트 서비스 루틴)과 공유하는 데이터는 잠금 대신 인터럽트를 막는 임계구역(critical section)이나 원자 연산으로 보호한다) 전역·정적 객체의 초기화 순서 의존을 금지한다. RTOS(실시간 운영체제) 태스크 간 공유는 우선순위 역전(priority inversion)까지 설계서에 명시한다.",
+     "cwe": [
+      "362",
+      "367",
+      "457"
+     ],
+     "basis": "CERT CON50-CPP, CON51-CPP, DCL56-CPP, AUTOSAR A3-3-x"
+    },
+    {
+     "id": "LCPP-08",
+     "phase": "통합 및 시험",
+     "title": "규칙 집합 매핑과 도구 검증",
+     "guide": "적용 규칙(MISRA C++:2008, AUTOSAR C++14, MISRA C++:2023)을 정하고 도구가 지원하는 규칙과 미지원 규칙을 표로 만들어 미지원 항목은 코드 리뷰로 보완한다. 컴파일러가 지원하는 C++ 표준과 도구 파서가 지원하는 표준이 일치하는지 확인한다.",
+     "cwe": [],
+     "basis": "MISRA 사이트·포럼 공지(AUTOSAR C++14 통합 계획, 상세 추적표 미제공 답변 2024. 3. 8.), AUTOSAR C++14 지침 3장(MISRA 이관), 도구 벤더 규칙 지원표"
+    },
+    {
+     "id": "LCPP-09",
+     "phase": "구현",
+     "title": "호스트 새니타이저와 타깃 코드 실행률",
+     "guide": "호스트 빌드에서 ASan/UBSan 빌드와 별도의 TSan 빌드로 단위시험(unit test)을 수행하고, 요구사항 기반 코드 실행률(Coverage)은 실제 타깃에서 측정한다. 예외·RTTI·최적화 옵션은 타깃 빌드와 동일하게 맞춘다.",
+     "cwe": [
+      "416",
+      "362",
+      "476"
+     ],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽), Clang/GCC 새니타이저 문서"
+    },
+    {
+     "id": "LCPP-10",
+     "phase": "유지보수",
+     "title": "언어 표준·툴체인 고정",
+     "guide": "-std 옵션, 표준 라이브러리 구현체, 컴파일러 버전을 형상 항목으로 고정하고 변경 시 규칙 매핑표와 편차(deviation) 대장을 함께 갱신한다. 규칙 집합 전환(2008에서 2023)은 별도 변경 절차로 수행한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "AUTOSAR C++14 서문, MISRA Compliance:2020"
+    }
+   ]
+  },
+  {
+   "axis": "개발 언어",
+   "env": "C#",
+   "code": "LCS",
+   "traits": "관리형 런타임으로 버퍼 오버플로 위험은 낮지만 unsafe 블록, P/Invoke·Marshal, 역직렬화(deserialization, BinaryFormatter), 리플렉션, 암호 API 오용이 주된 위험이다. C# 전용 CWE 언어 뷰가 없어 취약점 점검 범위를 일반 CWE로 정해야 한다. 코딩규칙은 매뉴얼 제2024-6호 부록 6의 C# Coding conventions·.NET Framework Design Guidelines를 따른다.",
+   "constraints": "CWE-658/659/660 같은 언어별 목록이 없으므로 보안약점 점검 목록(44개)과 CWE-658/660 가운데 C#에서도 생길 수 있는 CWE를 선별한 C# 점검 기준표를 협의 절차(2.5)에 따라 확정한다. .NET Framework의 Code Access Security는 .NET(Core 이후)에서 제거되어 샌드박스(sandbox)에 의존할 수 없고, 격리는 프로세스·OS 수준으로 대체한다.",
+   "key_cwe": [
+    "502",
+    "119",
+    "787",
+    "190",
+    "327",
+    "330",
+    "259",
+    "390",
+    "476",
+    "404"
+   ],
+   "guides": [
+    {
+     "id": "LCS-01",
+     "phase": "요구사항 분석",
+     "title": "C# CWE 매핑 기준 수립",
+     "guide": "C# 전용 CWE 뷰가 없으므로 「보안약점 점검 목록(44개)」과 CWE-658/660 가운데 C#에서도 생길 수 있는 항목을 골라 C# 점검 기준표를 작성하고 해당·비해당 사유를 협의 절차(2.5)에 따라 확정해 점검 기준으로 삼는다. Microsoft .NET 보안 규칙의 비해당 판정(웹 전용 14개 등, 부록 D)은 웹 UI(ASP.NET)를 두지 않는 데스크톱·서비스 기준이므로, 웹 UI를 두는 과제는 그 규칙을 다시 판정해 C# 점검 기준표에 적는다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 취약점 점검(도구 지원 항목 모두 적용·미지원 항목은 대안·사유 협의, 부록 7-10쪽), MITRE CWE 언어 뷰 부재"
+    },
+    {
+     "id": "LCS-02",
+     "phase": "설계",
+     "title": "unsafe·P/Invoke 경계 최소화",
+     "guide": "unsafe 코드와 네이티브 호출은 전용 어셈블리 한 곳으로 격리하고 나머지 프로젝트는 AllowUnsafeBlocks를 끈다. 네이티브 측 코드에는 C/C++ 언어 지침을 동일하게 적용한다.",
+     "cwe": [
+      "119",
+      "787",
+      "125",
+      "170",
+      "415",
+      "416",
+      "467",
+      "469",
+      "562",
+      "587",
+      "676"
+     ],
+     "basis": ".NET 보안 가이드(unsafe), CA1401, MISRA/CERT 네이티브 규칙"
+    },
+    {
+     "id": "LCS-03",
+     "phase": "설계",
+     "title": "직렬화 정책 수립",
+     "guide": "BinaryFormatter, SoapFormatter, NetDataContractSerializer, LosFormatter 사용을 금지하고 신뢰 경계(trust boundary) 데이터는 스키마가 고정된 JSON·DataContract 계열을 쓴다. 다형 타입 이름 자동 해석은 끈다(Newtonsoft.Json의 TypeNameHandling은 None). DataSet·DataTable의 ReadXml은 신뢰한 입력에만 쓰고, 직렬화하는 형식 안에 DataSet·DataTable을 두지 않는다. 외부 XML은 DtdProcessing을 Prohibit으로 둔 XmlReader로 읽고 XmlUrlResolver를 쓰지 않으며, XmlSerializer·DataSet·XPathDocument·스키마도 그 XmlReader로 읽는다(보조 항목 CWE-611).",
+     "cwe": [
+      "502",
+      "611"
+     ],
+     "basis": "Microsoft BinaryFormatter 보안 가이드(.NET 9부터 내장 구현이 사용 시 예외 발생), CA2300 계열, CA2326~CA2330(TypeNameHandling), CA2350~CA2356·CA2361·CA2362(DataSet·DataTable), CA3061·CA5366·CA5369~CA5372·CA5374(XML 외부 참조), 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 제4장 제1절 8 부적절한 XML 외부 개체 참조(인쇄 170쪽)"
+    },
+    {
+     "id": "LCS-04",
+     "phase": "구현",
+     "title": "P/Invoke 선언과 마샬링",
+     "guide": "DllImport 시그니처를 헤더와 일치시키고 StringBuilder 용량과 CharSet을 명시하며 핸들은 SafeHandle로 감싼다. 로드 경로를 DefaultDllImportSearchPaths로 제한하고 AllocHGlobal로 할당한 메모리는 try/finally로 해제한다.",
+     "cwe": [
+      "119",
+      "404",
+      "415"
+     ],
+     "basis": "CA2101, CA5392, .NET 마샬링 문서, CWE-404"
+    },
+    {
+     "id": "LCS-05",
+     "phase": "구현",
+     "title": "checked 산술과 크기 계산",
+     "guide": "버퍼·배열 크기와 인덱스 계산은 checked 컨텍스트 또는 프로젝트 CheckForOverflowUnderflow 옵션으로 오버플로를 예외화하고 stackalloc 크기는 상한을 검증한다.",
+     "cwe": [
+      "190",
+      "191",
+      "787"
+     ],
+     "basis": ".NET checked 연산 문서, CWE-190 완화책"
+    },
+    {
+     "id": "LCS-06",
+     "phase": "구현",
+     "title": "자원 수명과 Dispose",
+     "guide": "IDisposable 객체는 using으로 감싸고 비관리 자원은 SafeHandle을 사용하며 종료자(finalizer)에 정리를 의존하지 않는다. 장기 실행 서비스는 핸들·메모리 증가를 모니터링한다.",
+     "cwe": [
+      "404",
+      "772"
+     ],
+     "basis": "CA2000, CA1816, .NET Dispose 패턴"
+    },
+    {
+     "id": "LCS-07",
+     "phase": "구현",
+     "title": "암호·난수·비밀 관리",
+     "guide": "보안 용도 난수는 RandomNumberGenerator를 쓰고 System.Random을 금지하며 MD5·SHA-1·DES·3DES와 ECB 운용 모드는 사용하지 않는다. 비밀번호·키를 소스나 설정 파일에 두지 않는다. 비밀번호 저장과 비밀번호 기반 키 유도에는 폐기된 PasswordDeriveBytes를 쓰지 않고, Rfc2898DeriveBytes에 기본값(SHA-1)보다 강한 해시와 충분한 반복 횟수를 지정한다(보조 항목 CWE-916). TLS 버전(SslProtocols·SecurityProtocolType)은 코드에 고정하지 않고 운영체제 기본값을 따르며 폐기된 판을 지정하지 않는다. 서버 인증서 검증 콜백(ServerCertificateValidationCallback 등)이 무조건 true를 돌려주게 하지 않고, 인증서 폐기 목록 검사를 끄지 않으며, 루트 인증서 저장소에 인증서를 추가하지 않는다(보조 항목 CWE-295·299).",
+     "cwe": [
+      "327",
+      "330",
+      "259",
+      "321",
+      "916",
+      "295",
+      "299"
+     ],
+     "basis": "CA5350, CA5351, CA5358, CA5394, CA5373·CA5379·CA5387·CA5388(키 유도), CA5364·CA5386·CA5397·CA5398(TLS 판), CA5359·CA5380·CA5381(인증서 검증), CA5399·CA5400(인증서 폐기 목록 검사), CWE-327/330, 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 제4장 제2절 11 부적절한 인증서 유효성 검증(인쇄 257쪽)"
+    },
+    {
+     "id": "LCS-08",
+     "phase": "구현",
+     "title": "예외와 null 안전",
+     "guide": "빈 catch 블록과 불필요한 catch(Exception)을 금지하고 Nullable 참조 형식을 켜고(Nullable enable) null 경고를 오류로 승격한다. 예외 메시지에 내부 경로·비밀을 포함하지 않는다.",
+     "cwe": [
+      "390",
+      "755",
+      "476",
+      "209",
+      "396"
+     ],
+     "basis": "CA1031, CS86xx 경고 · [보완] (CWE-755 원문에 완화책 없음, 2.7 규칙 3)"
+    },
+    {
+     "id": "LCS-09",
+     "phase": "통합 및 시험",
+     "title": "Roslyn 분석기와 경고 오류화",
+     "guide": "Microsoft.CodeAnalysis.NetAnalyzers의 분석 모드를 올린다. .NET 10 기본값에서는 Security 범주 규칙이 하나도 경고로 켜지지 않는다. 전체 규칙은 AnalysisMode를 All로 두어 켜고(이 가이드의 예시 검증 설정), Security 범주만 올릴 때는 AnalysisModeSecurity를 All로 두거나 AnalysisLevelSecurity를 버전-모드 값으로 고정한다. Recommended 모드는 Security 범주 94개 중 24개만 켜므로 CA2100·CA2300·CA5390·CA5394 같은 규칙이 빠진다. 범주별로 올리면 이 가이드가 쓰는 Security 밖 규칙(CA1031·CA1065는 Design, CA2000은 Reliability, CA1816은 Usage, CA1819는 Performance, CA2101은 Globalization 범주)은 그 범주를 따로 켠다. .NET Framework 대상 프로젝트는 EnableNETAnalyzers를 true로 두고, AnalysisMode 대신 AnalysisLevel을 버전-모드 값(예: latest-all)으로 둔다(.NET SDK 10.0.402의 net48 대상에서는 AnalysisMode를 All로만 두면 어떤 분석 규칙도 경고하지 않았다). 켠 규칙은 .editorconfig로 오류 수준에 고정하고 TreatWarningsAsErrors를 적용한다. 규칙을 끄면 사유를 코드에 표시하고, 끈 규칙과 사유를 FA 사유서에 적는다. CA3001~CA3012는 HTTP 요청 입력만 추적하므로 콘솔·파일·소켓 입력에서 생기는 경로 조작·명령 삽입(CWE-22·78)은 코드 리뷰와 공격 입력 실행 시험으로 확인한다. CA3075·CA3077은 .NET Framework 대상에서만 동작하므로 .NET(Core 이후) 대상은 DtdProcessing.Parse·XmlUrlResolver를 BannedApiAnalyzers(BannedSymbols.txt)로 금지하거나 코드 리뷰 점검표에 넣는다(보조 항목 CWE-611). 압축 항목 경로를 대상 경로에 그대로 쓰는 코드는 CA5389가 경고한다. SecurityCodeScan 같은 추가 분석기는 유지보수 상태(마지막 릴리스 5.6.7, 2022. 9. 5.)와 사용하는 SDK와의 호환을 확인하고 쓴다. 상용 도구 결과는 C# 점검 기준표로 보고한다.",
+     "cwe": [
+      "502",
+      "327",
+      "89",
+      "22",
+      "78",
+      "611"
+     ],
+     "basis": ".NET 코드 분석 규칙 문서(코드 분석 개요, Security rules, MSBuild 속성 AnalysisModeSecurity·AnalysisLevelSecurity·EnableNETAnalyzers, CA3001~CA3012·CA3075·CA5389 규칙 문서), dotnet/sdk 분석기 소스(CA3075·CA3077의 .NET Framework 판 판정), BannedApiAnalyzers 문서, .NET SDK 10.0.402 분석 모드 구성과 빌드 실험(net10.0 2026. 10. 18., net48 2026. 10. 28.), SecurityCodeScan 릴리스 기록, 매뉴얼 제2024-6호 시험확인서 서식(부록 7-27쪽)·코딩규칙점검·취약점점검 FA 사유서(부록 7 별첨 1-7·1-8, 인쇄 7-22쪽)"
+    },
+    {
+     "id": "LCS-10",
+     "phase": "유지보수",
+     "title": "런타임·패키지 패치 관리",
+     "guide": "대상 .NET 런타임의 지원 종료 일정을 추적하고 NuGet 패키지는 packages.lock.json과 사내 미러로 고정한다. dotnet list package --vulnerable은 .NET SDK 9.0.300부터 AuditSources(없으면 PackageSources)에서 취약점 정보를 받으므로, 폐쇄망에서는 이를 제공하는 사내 소스를 지정하고 데이터 반입 기준일을 점검 보고서에 기록한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": ".NET 지원 정책, Microsoft Learn dotnet list package"
+    },
+    {
+     "id": "LCS-11",
+     "phase": "통합 및 시험",
+     "title": "코드 실행률 도구의 시험종류 지원 확인",
+     "guide": "매뉴얼 제2024-6호 동적시험은 결함의 발생빈도·영향성·제어가능성을 평가해 코드 실행률 시험종류(문장·분기·MC/DC)를 정하고, 정한 시험종류의 실행률 100%를 합격 기준으로 둔다. 착수 때 .NET 코드 실행률 도구가 정한 시험종류를 잴 수 있는지 확인한다(예: coverlet README가 밝힌 지원 범위는 라인·분기·메서드 실행률이다). 인증된 도구가 없어 coverlet 같은 도구를 쓰거나 잴 수 없는 시험종류(예: MC/DC)의 대안이 필요하면 소프트웨어 검토회의(신뢰성시험계획)에서 정하고, 실제 타깃 시험이 제한되어 호스트에서 쟀다면 타깃 환경과의 차이를 STD에 적는다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 동적시험(인증 도구가 없을 때 시험 도구 결정·타깃 시험 제한 시 호스트 시험과 차이 분석 부록 7-5쪽, 시험종류 설정 부록 7-13쪽, 합격 기준 부록 7-15쪽), coverlet README"
+    },
+    {
+     "id": "LCS-12",
+     "phase": "통합 및 시험",
+     "title": "메시지 파서·역직렬화 퍼징",
+     "guide": "외부 입력을 해석하는 코드(MAVLink 등 ICD 메시지 파서, 설정·로그 파일 해석, 역직렬화)가 있으면 SharpFuzz 같은 .NET용 실행 경로 피드백 기반 퍼징 도구(coverage-guided fuzzer)로 호스트에서 시험하고, 처리되지 않은 예외·무한 반복·과도한 메모리 사용을 결함으로 판정한다. SharpFuzz로 계측하려면 계측 도구를 돌리는 장비에 .NET 8.0 이상이 설치되어 있어야 하고 AFL 엔진은 Linux·macOS에서 돌므로(Windows에서는 libFuzzer 엔진), .NET Framework 대상 코드는 시범 적용으로 계측이 되는지 먼저 확인한다. 결함을 일으킨 입력은 회귀시험 자료로 보존한다.",
+     "cwe": [
+      "248",
+      "400"
+     ],
+     "basis": "SharpFuzz README(요구사항, CVE 절), T-04 퍼징"
+    },
+    {
+     "id": "LCS-13",
+     "phase": "유지보수",
+     "title": "SDK·분석기 변경 시 재분석",
+     "guide": ".NET SDK나 코드 분석기 버전을 바꿀 때는 전체 정적 분석을 다시 돌려 새로 생긴 경고를 판정하고 형상 기록을 갱신한다. 이 변경이 계획한 시점에만 일어나도록 global.json으로 SDK 버전을 고정하고(패키지 잠금 파일을 쓰면 rollForward를 disable로), AnalysisLevel을 기본값 latest 대신 특정 릴리스 값으로 정한다. LCS-09의 분석 모드는 9.0-all처럼 버전-모드 복합값으로 함께 고정할 수 있다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "Microsoft Learn MSBuild 속성(AnalysisLevel 기본값·버전-모드 복합값), Microsoft Learn global.json(rollForward)"
+    }
+   ]
+  },
+  {
+   "axis": "개발 언어",
+   "env": "Java",
+   "code": "LJ",
+   "traits": "JVM이 메모리 안전성을 제공하지만 역직렬화(deserialization), 삽입(injection), 예외 처리 오류, 가변 객체 노출, 동시성 결함이 주된 위험이다. CWE-660 항목 상당수가 J2EE·서블릿·EJB 등 웹 프레임워크 대상이라 일반 임베디드 Java에는 적용되지 않는다.",
+   "constraints": "서블릿·EJB·JSP·Struts 등을 쓰지 않으면 해당 CWE-660 항목은 사용 기술 목록과 대조해 비해당[테일러링(tailoring)] 사유를 문서화한다. SecurityManager는 JDK 17에서 제거 예정으로 표시되고 이후 버전에서 비활성화되어 샌드박스(sandbox)에 의존할 수 없으므로 OS·컨테이너 격리로 대체한다.",
+   "key_cwe": [
+    "502",
+    "396",
+    "390",
+    "476",
+    "362",
+    "495",
+    "496",
+    "111",
+    "191",
+    "209"
+   ],
+   "guides": [
+    {
+     "id": "LJ-01",
+     "phase": "요구사항 분석",
+     "title": "CWE-660 테일러링 판정표",
+     "guide": "프로젝트가 쓰는 프레임워크·API 목록과 CWE-660 항목을 대조해 J2EE/웹 전용 항목은 비해당 사유를 쓰고 나머지는 점검 대상으로 확정한다. 판정표는 확정 후 형상관리(configuration management)한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 취약점 점검(도구 지원 항목 모두 적용·미지원 항목은 대안·사유 협의, 부록 7-10쪽), CWE-660 항목 구성"
+    },
+    {
+     "id": "LJ-02",
+     "phase": "설계",
+     "title": "역직렬화 최소화 설계",
+     "guide": "Serializable 구현을 지양하고, 불가피하면 서명·HMAC으로 변조 여부를 확인하고 ObjectInputFilter(JEP 290) 허용목록(allowlist)으로 클래스를 제한한다. 새 가젯이 계속 발견되므로 허용목록만으로는 충분하지 않다. 외부 입력을 ObjectInputStream으로 직접 읽는 설계는 금지한다. 외부 XML은 DOCTYPE 선언을 금지한 해석기로 읽는다(DocumentBuilderFactory·SAXParserFactory는 disallow-doctype-decl 기능을 true로, XMLInputFactory는 SUPPORT_DTD를 false로 둔다). DTD가 필요하거나 TransformerFactory·SchemaFactory·Validator를 쓰면 ACCESS_EXTERNAL_DTD·ACCESS_EXTERNAL_SCHEMA·ACCESS_EXTERNAL_STYLESHEET를 빈 문자열로 두고, XMLInputFactory를 뺀 나머지 팩토리에서는 FEATURE_SECURE_PROCESSING도 코드에서 명시적으로 켠다(JDK 기본값은 외부 개체를 읽는다, 보조 항목 CWE-611).",
+     "cwe": [
+      "502",
+      "611"
+     ],
+     "basis": "SEI CERT SER12-J, JEP 290, CWE-502, Oracle Java SE 21 JAXP 보안 가이드(Java API for XML Processing (JAXP) Security Guide), Java SE 21 API(XMLConstants·XMLInputFactory·DocumentBuilderFactory), SEI CERT IDS17-J, 행정안전부·KISA 「소프트웨어 개발보안 가이드」(2021) 제4장 제1절 8 부적절한 XML 외부 개체 참조(인쇄 170쪽)"
+    },
+    {
+     "id": "LJ-03",
+     "phase": "설계",
+     "title": "최소 공개와 불변 객체",
+     "guide": "필드는 private final을 기본으로 하고 가변 객체·배열은 방어적 복사로 주고받으며 public static 가변 필드를 금지한다. 보안 판단에 쓰는 클래스는 final로 선언한다.",
+     "cwe": [
+      "495",
+      "496",
+      "374"
+     ],
+     "basis": "SEI CERT OBJ01-J/OBJ05-J, CWE-495/496"
+    },
+    {
+     "id": "LJ-04",
+     "phase": "구현",
+     "title": "삽입·경로 검증",
+     "guide": "SQL은 PreparedStatement, 외부 프로세스는 ProcessBuilder 인자 배열을 쓰며 파일 경로는 정규화 후 허용 디렉터리 안인지 검사한다. 문자열 연결로 명령을 만들지 않는다.",
+     "cwe": [
+      "78",
+      "89",
+      "22"
+     ],
+     "basis": "SEI CERT IDS00-J/IDS01-J/IDS07-J/FIO16-J"
+    },
+    {
+     "id": "LJ-05",
+     "phase": "구현",
+     "title": "예외 처리 규약",
+     "guide": "빈 catch, catch(Throwable), NullPointerException 포착(시험 장치 코드 제외), finally 블록 내 return을 금지하고 예외 메시지에 민감정보를 넣지 않는다. 검사 예외는 상위 계층에서 의미 있는 처리로 변환한다.",
+     "cwe": [
+      "390",
+      "396",
+      "209",
+      "755"
+     ],
+     "basis": "SEI CERT ERR00-J, ERR08-J, ERR04-J"
+    },
+    {
+     "id": "LJ-06",
+     "phase": "구현",
+     "title": "자원 관리와 동시성",
+     "guide": "try-with-resources로 자원을 닫고 공개 객체를 락으로 쓰지 않으며 락 획득 순서를 문서화한다. 스레드 간 공유 변수는 원자 클래스·불변 객체·락으로 보호한다. volatile은 가시성만 보장하므로 단순 플래그처럼 값을 대입만 하는 변수에 쓰고, 증가·검사 후 갱신 같은 복합 연산에는 원자 클래스나 락을 쓴다.",
+     "cwe": [
+      "404",
+      "362",
+      "367"
+     ],
+     "basis": "SEI CERT ERR54-J, LCK00-J, VNA00-J·VNA02-J"
+    },
+    {
+     "id": "LJ-07",
+     "phase": "구현",
+     "title": "정수 연산 오버플로 방지",
+     "guide": "크기·인덱스 계산은 Math.addExact, multiplyExact, toIntExact(Java 8 이상)를 사용하고 축소 형변환 전에 범위를 검증한다. 부동소수점 비교는 NaN과 오차를 고려한 별도 규칙으로 처리한다.",
+     "cwe": [
+      "190",
+      "191",
+      "681"
+     ],
+     "basis": "SEI CERT NUM00-J, NUM12-J(축소 형변환 범위 검사)"
+    },
+    {
+     "id": "LJ-08",
+     "phase": "구현",
+     "title": "JNI·네이티브 경계 통제",
+     "guide": "JNI 사용은 래퍼 클래스 한 곳으로 제한하고 네이티브 쪽은 C/C++ 지침(LC, LCPP)을 그대로 적용한다. 배열 길이와 null은 네이티브 호출 전에 Java 쪽에서 검증한다.",
+     "cwe": [
+      "111",
+      "119",
+      "170",
+      "415",
+      "416",
+      "467",
+      "469",
+      "562",
+      "587",
+      "676"
+     ],
+     "basis": "CWE-111, SEI CERT JNI 규칙, Oracle JNI 가이드"
+    },
+    {
+     "id": "LJ-09",
+     "phase": "통합 및 시험",
+     "title": "SpotBugs 계열과 코드 실행률 도구",
+     "guide": "SpotBugs+FindSecBugs, PMD와 상용 도구로 CWE-660 점검 결과(도구 지원 항목 전부)를 산출하고, 코드 실행률(Coverage) 도구가 타깃 JVM에서 동작하는지[에이전트 계측(instrumentation) 가능 여부] 사전 확인한다. 실타깃 측정이 어려우면 협의 절차(2.5)에 따라 대체 근거를 확정한다.",
+     "cwe": [
+      "502",
+      "396"
+     ],
+     "basis": "매뉴얼 제2024-6호 동적시험(실제 타깃·요구사항 기반 코드 실행률, 본문 인쇄 11쪽·부록 7-5·7-15쪽), FindSecBugs 규칙"
+    },
+    {
+     "id": "LJ-10",
+     "phase": "유지보수",
+     "title": "JDK·라이브러리 패치",
+     "guide": "JDK LTS 버전을 고정하고 분기별 보안 패치(CPU, Critical Patch Update)를 반영하며 서드파티 JAR은 OWASP Dependency-Check 등으로 취약점 DB(오프라인 갱신분) 대조 후 허용목록(allowlist)에서만 사용한다.",
+     "cwe": [
+      "1104",
+      "502"
+     ],
+     "basis": "Oracle CPU, Log4Shell 사례(CWE-502/917)"
+    }
+   ]
+  },
+  {
+   "axis": "개발 언어",
+   "env": "Python",
+   "code": "LPY",
+   "traits": "매뉴얼과의 관계와 보안 점검 권고는 5.7에 있다. 동적 타입·인터프리터 특성상 eval/exec, pickle, subprocess, 임시 파일, 패키지 공급망이 주된 위험이다.",
+   "constraints": "메모리 안전 계열 CWE는 대부분 비해당이고 CWE 언어 뷰와 MISRA류 코딩규칙(coding rule)도 없으므로 조직 자체 기준(Bandit·린터 규칙)을 정해 쓴다. 폐쇄망에서는 pip의 외부 인덱스를 쓸 수 없어 내부 미러와 해시 고정으로 대체한다.",
+   "key_cwe": [
+    "78",
+    "95",
+    "502",
+    "22",
+    "59",
+    "259",
+    "327",
+    "330",
+    "390",
+    "1104"
+   ],
+   "guides": [
+    {
+     "id": "LPY-01",
+     "phase": "요구사항 분석",
+     "title": "적용 범위와 도구 신뢰성",
+     "guide": "신뢰성시험 범위 포함 여부(과제의 선택 사항), 신뢰성시험 외 다른 시험 제도의 포함 여부(검토 필요), Python 코드의 보안 점검 범위를 과제에서 정해 기록한다. 시험 합부 판정에 영향을 주는 스크립트는 입력·출력 사양과 검증 결과를 문서화하고 형상관리(configuration management)한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 적용 대상 언어(부록 7, 인쇄 7-2쪽), 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12., 인쇄 4·5쪽), 시험 도구 신뢰성"
+    },
+    {
+     "id": "LPY-02",
+     "phase": "설계",
+     "title": "의존성 최소화와 고정",
+     "guide": "표준 라이브러리를 우선하고 외부 패키지는 승인 목록에서만 쓰며 requirements에 정확한 버전과 해시(--require-hashes)를 고정한다. 설치원은 사내 미러로 제한한다.",
+     "cwe": [
+      "1104",
+      "494"
+     ],
+     "basis": "pip 해시 검사 모드, PyPA 보안 권고, 공급망 위험"
+    },
+    {
+     "id": "LPY-03",
+     "phase": "설계",
+     "title": "신뢰 경계 데이터 형식",
+     "guide": "외부에서 들어오는 데이터를 pickle, marshal, shelve, yaml.load로 읽지 않고 JSON이나 yaml.safe_load, 스키마 검증을 쓴다. 내부 캐시용 pickle은 서명·무결성 검증 후에만 허용한다. 외부 XML은 표준 라이브러리 XML 해석기(xml.etree·minidom·sax 등)로 바로 읽지 않고 defusedxml로 해석한다(보조 항목 CWE-611).",
+     "cwe": [
+      "502",
+      "611"
+     ],
+     "basis": "Python pickle 문서 경고, Bandit B301/B302/B506, Bandit B313~B319·B405~B409(XML 해석), CWE-502, 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제1절 8(부적절한 XML 외부 개체 참조)"
+    },
+    {
+     "id": "LPY-04",
+     "phase": "구현",
+     "title": "동적 코드 실행 금지",
+     "guide": "eval, exec, compile, __import__에 외부 입력을 전달하지 않으며 설정·수식 해석은 전용 파서를 쓴다. ast.literal_eval도 깊게 중첩된 입력으로 메모리·스택을 소모시킬 수 있으므로 신뢰할 수 없는 데이터에는 쓰지 않는다. 템플릿 엔진은 자동 이스케이프를 켠다.",
+     "cwe": [
+      "95"
+     ],
+     "basis": "Bandit B102/B307, CWE-95 완화책"
+    },
+    {
+     "id": "LPY-05",
+     "phase": "구현",
+     "title": "subprocess 안전 사용",
+     "guide": "os.system과 shell=True를 금지하고 인자를 리스트로 전달하며 실행 파일은 절대 경로로 지정한다. 외부 입력을 명령 옵션으로 쓸 때는 허용목록(allowlist)으로 검증하고 timeout을 지정한다.",
+     "cwe": [
+      "78"
+     ],
+     "basis": "Bandit B602/B605/B607(부분 경로 실행), CWE-78 완화책"
+    },
+    {
+     "id": "LPY-06",
+     "phase": "구현",
+     "title": "파일·임시 파일·압축 해제",
+     "guide": "임시 파일은 tempfile.mkstemp/NamedTemporaryFile로 만들고 경로는 resolve 후 허용 디렉터리 안인지 확인한다. tarfile/zipfile 해제 시 경로 조작(path traversal)을 검증하고 tarfile은 지원 버전에서 filter 인자를 data로 지정한다.",
+     "cwe": [
+      "22",
+      "59"
+     ],
+     "basis": "PEP 706, Bandit B108/B202(tarfile 해제)/B306(mktemp), CWE-22/59"
+    },
+    {
+     "id": "LPY-07",
+     "phase": "구현",
+     "title": "비밀·난수·assert 사용",
+     "guide": "보안 용도는 secrets 모듈을 쓰고 random 모듈과 md5·sha1 해시는 보안 용도로 쓰지 않으며 비밀을 소스에 두지 않는다. assert는 -O 실행 시 제거되므로 입력 검증에 쓰지 않는다. 비밀번호를 저장하거나 비밀번호에서 키를 만들 때는 솔트와 반복 횟수를 둔 키 유도 함수를 쓴다(보조 항목 CWE-916). 폐기된 SSL/TLS 버전을 지정하지 않고, requests의 verify=False나 인증서를 검증하지 않는 ssl 문맥처럼 인증서 검증을 끄지 않으며, SSH 자동화에서 호스트 키 검증을 생략하지 않는다(보조 항목 CWE-295).",
+     "cwe": [
+      "259",
+      "327",
+      "330",
+      "617",
+      "295",
+      "916"
+     ],
+     "basis": "Bandit B105·B106·B107(하드코드 비밀번호)/B303·B324(약한 해시: B303은 pycryptodome·cryptography, B324는 hashlib)/B311/B101(assert), Bandit B501·B323·B507(인증서·호스트 키 검증)/B502~B504(SSL/TLS 버전), Python assert 문서, 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제2절 11(부적절한 인증서 유효성 검증)"
+    },
+    {
+     "id": "LPY-08",
+     "phase": "구현",
+     "title": "예외 처리 규약",
+     "guide": "bare except와 except Exception: pass를 금지하고 예외는 구체 형식으로 처리하며 실패를 시험 결과에서 통과로 처리하지 않도록 종료 코드를 전파한다.",
+     "cwe": [
+      "390",
+      "755"
+     ],
+     "basis": "CWE-755, Bandit B110/B112"
+    },
+    {
+     "id": "LPY-09",
+     "phase": "통합 및 시험",
+     "title": "Bandit·린터·취약점 점검",
+     "guide": "bandit -r을 중간 이상 심각도에서 실패 조건으로 두고 ruff(S 규칙), mypy 정적 타입 검사, pip-audit 점검을 CI(지속적 통합)에 넣는다. pip-audit는 기본이 온라인 조회이므로 폐쇄망에서는 사내 OSV 호환 서버를 -s osv와 --osv-url로 지정하는 방식 등을 사전 검증한다. 코드 실행률(Coverage)은 coverage.py로 호스트에서 측정한다.",
+     "cwe": [
+      "78",
+      "95",
+      "502"
+     ],
+     "basis": "Bandit 문서(CWE 매핑), pip-audit README, 매뉴얼 제2024-6호 적용 대상 언어 밖 보완(부록 7-2쪽)"
+    },
+    {
+     "id": "LPY-10",
+     "phase": "유지보수",
+     "title": "인터프리터·패키지 업데이트",
+     "guide": "지원 종료(EOL)된 Python 버전을 쓰지 않도록 연 단위로 점검하고, 패키지 업데이트는 반입된 wheel을 검증하고 재현 가능한 빌드를 거쳐 락 파일과 함께 반영한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "Python 릴리스 주기(PEP 602), PyPA 가이드"
+    },
+    {
+     "id": "LPY-11",
+     "phase": "통합 및 시험",
+     "title": "입력 해석기 퍼징과 실행 플랫폼",
+     "guide": "외부 입력을 해석하는 Python 코드(MAVLink 등 메시지 파서, 로그·설정 파일 해석기)가 있으면 Atheris 같은 실행 경로 피드백 기반 퍼징 도구(coverage-guided fuzzer)로 시험하고, 처리되지 않은 예외로 빠져나오는 입력을 결함으로 판정해 회귀시험 자료로 보존한다. Atheris 현행 판은 Linux·macOS와 Python 3.11~3.13만 지원하므로 Windows에서 도는 Python 코드는 OS에 의존하지 않는 해석기 모듈을 Linux 호스트(가상 머신 등)에서 시험하고, 인터프리터를 업데이트할 때(LPY-10) 지원 버전을 함께 확인한다.",
+     "cwe": [
+      "248",
+      "400"
+     ],
+     "basis": "Atheris README(지원 플랫폼·버전), T-04 퍼징"
+    },
+    {
+     "id": "LPY-12",
+     "phase": "통합 및 시험",
+     "title": "배포본 디버그 코드·중요정보 잔존 검사",
+     "guide": "Python 소프트웨어를 배포·반입하기 전에 디버그 코드(breakpoint()·pdb 호출, 시험용 우회 분기, 웹 UI의 debug 모드)와 소스·주석·설정 파일에 남은 비밀번호·키를 찾아 제거한다. Ruff T100(디버거 호출)·Bandit B105(하드코드 비밀번호) 같은 규칙과 배포본 문자열 검사를 함께 쓴다. PyInstaller 등으로 묶은 배포본에도 컴파일된 .pyc가 들어가 디컴파일될 수 있으므로 소스와 같은 기준으로 검사한다.",
+     "cwe": [
+      "489",
+      "259",
+      "321",
+      "615"
+     ],
+     "basis": "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제6절 2(제거되지 않고 남은 디버그 코드)·제2절 6(하드코드된 중요정보)·13(주석문 안에 포함된 시스템 주요정보), Ruff T100, Bandit B105, PyInstaller 문서"
+    },
+    {
+     "id": "LPY-13",
+     "phase": "유지보수",
+     "title": "SBOM 기반 의존 패키지 취약점 대응",
+     "guide": "Python 소프트웨어가 의존하는 패키지 목록을 SBOM으로 만들어(pip-audit --format cyclonedx-json 등) 배포본과 함께 형상관리한다. 새 취약점이 알려지면 SBOM에서 해당 구성요소를 찾고, 담당자 공유 → 소스코드 수정·예외처리 같은 임시 조치 또는 개선 버전 반영 → SBOM 갱신 순으로 대응한다. pip-audit가 감사하는 대상은 Python 패키지(로컬 환경·requirements 파일)이므로 인터프리터와 휠(wheel)에 함께 든 네이티브 라이브러리는 따로 목록에 넣는다. LPY-09가 시험 시점의 점검이라면 이 지침은 운용 중 새로 알려진 취약점에 대한 대응이며, 폐쇄망에서는 반입한 취약점 데이터의 기준일을 기록한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제7절 2(취약한 API 사용) 다. 사후 관리, pip-audit README"
+    }
+   ]
+  },
+  {
+   "axis": "개발·시험 망 환경",
+   "env": "내부망",
+   "code": "NET-IN",
+   "traits": "인터넷과 분리된 기관 내부 개발망으로 CI(지속적 통합) 서버와 환경별 VM, 공유 소프트웨어 신뢰성 시험 도구를 운영한다. 외부 연동은 망연계·승인된 경로로 제한되며 도구 업데이트와 취약점 데이터는 통제된 반입 경로를 거친다.",
+   "constraints": "클라우드 SAST·SCA, 온라인 라이선스 활성화, 공개 패키지 저장소 직접 접근, NVD 실시간 조회 등 CWE 일반 완화책(mitigation)이 전제하는 외부 접근은 불가하다. 사내 미러, 오프라인 규칙 집합(rule pack), 내부 라이선스 서버로 대체한다.",
+   "key_cwe": [
+    "285",
+    "306",
+    "732",
+    "259",
+    "521",
+    "494",
+    "1104",
+    "319",
+    "312",
+    "307"
+   ],
+   "guides": [
+    {
+     "id": "NET-IN-01",
+     "phase": "설계",
+     "title": "CI 서버 공용 시 보안 통제",
+     "guide": "내부망 CI(지속적 통합) 서버가 폐쇄망 사용자까지 함께 지원하는 통합 구성이면 취약점 관련 추가 시험을 하고 사용자별 접근 권한을 엄격히 관리한다. 망별 전용 서버로 나눌지, 한 서버에서 논리적으로 분리할지는 보안 요구 수준에 따른 위험평가로 정해 사업의 승인 절차를 따른다.",
+     "cwe": [
+      "285",
+      "668"
+     ],
+     "basis": "논문 4.3절(통합 환경의 보안 이슈 대응: 추가 취약점 시험·사용자별 접근 권한 관리) + 망분리 정책(서버 분리 판단)"
+    },
+    {
+     "id": "NET-IN-02",
+     "phase": "설계",
+     "title": "환경별 VM 표준 이미지",
+     "guide": "OS·컴파일러·BSP(보드 지원 패키지) 조합별 VM 이미지를 읽기 전용 기준 이미지와 프로젝트 스냅샷으로 관리하고 이미지 해시와 버전을 기록한다. 개발자가 이미지를 임의로 변경하지 못하게 한다.",
+     "cwe": [
+      "732"
+     ],
+     "basis": "형상관리 요구, 재현 가능 환경 원칙"
+    },
+    {
+     "id": "NET-IN-03",
+     "phase": "설계",
+     "title": "접근통제와 직무분리",
+     "guide": "CI(지속적 통합) 계정은 역할 기반으로 부여하고 공유 계정을 금지하며 개발자와 릴리스 승인자를 분리한다. 서비스 계정은 최소 권한만 부여하고 관리 콘솔 접근은 내부 인증(MFA 가능 시 적용)으로 보호한다.",
+     "cwe": [
+      "285",
+      "306",
+      "732",
+      "521"
+     ],
+     "basis": "CWE-285/306 완화책, CI 서버 접근통제"
+    },
+    {
+     "id": "NET-IN-04",
+     "phase": "구현",
+     "title": "비밀·자격증명 관리",
+     "guide": "저장소 인증정보, 서명키, 라이선스 키를 소스·빌드 스크립트에 두지 않고 CI(지속적 통합) 비밀 저장소에 보관하며, 커밋 전후 비밀 탐지 도구를 사내에 설치해 검사한다.",
+     "cwe": [
+      "259",
+      "798",
+      "321"
+     ],
+     "basis": "CWE-259/798 완화책"
+    },
+    {
+     "id": "NET-IN-05",
+     "phase": "구현",
+     "title": "사내 패키지 저장소 사용",
+     "guide": "의존 라이브러리와 툴체인(toolchain)은 사내 아티팩트 저장소에서만 받고 외부 직접 접근을 방화벽으로 차단한다. 반입분은 해시·서명 검증 후 등록하고 출처를 기록한다.",
+     "cwe": [
+      "494",
+      "1104"
+     ],
+     "basis": "CWE-494 완화책, 공급망 통제"
+    },
+    {
+     "id": "NET-IN-06",
+     "phase": "구현",
+     "title": "재현 가능한 빌드",
+     "guide": "컴파일러·도구 버전과 옵션을 고정하고 빌드 시각·절대 경로가 산출물에 섞이지 않도록 하며(SOURCE_DATE_EPOCH, -ffile-prefix-map 등) 산출물 SHA-256을 시험 기록과 함께 저장한다.",
+     "cwe": [
+      "494"
+     ],
+     "basis": "Reproducible Builds 지침, 형상관리"
+    },
+    {
+     "id": "NET-IN-07",
+     "phase": "통합 및 시험",
+     "title": "도구 라이선스 스케줄링",
+     "guide": "고가 정적 분석(static analysis)·코드 실행률(Coverage) 도구는 내부 라이선스 서버에서 동시 사용 수를 관리하고 CI(지속적 통합) 큐에 예약·우선순위를 둔다. 라이선스 확보 실패로 시험이 생략되면 통과가 아닌 미수행으로 기록하고 빌드를 실패시킨다.",
+     "cwe": [],
+     "basis": "논문 4.3절(스케줄링·우선순위로 도구 선점 문제 완화) + 시험 완전성(지침 고유 요구)"
+    },
+    {
+     "id": "NET-IN-08",
+     "phase": "통합 및 시험",
+     "title": "규칙 집합·CWE/CVE 데이터 갱신 검증",
+     "guide": "반입된 SAST 규칙 집합(rule pack)과 CWE/CVE 데이터는 서명·해시 확인 후 시험 서버에 적용하고, 결함 샘플 세트로 검출 회귀시험(regression test)을 통과한 뒤 운영 서버에 승격한다. 규칙 집합 버전을 시험 결과에 기록한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "도구 신뢰성, 오프라인 갱신 절차"
+    },
+    {
+     "id": "NET-IN-09",
+     "phase": "통합 및 시험",
+     "title": "소스·시험 결과 추적성",
+     "guide": "커밋 ID, 빌드 번호, 도구·규칙 집합(rule pack) 버전, 타깃 하드웨어 식별자, 정적시험·동적시험 결과를 하나의 ID로 연결하여 보관한다. 실타깃 코드 실행률(Coverage) 로그는 원본을 보존한다.",
+     "cwe": [],
+     "basis": "매뉴얼 제2024-6호 시험확인서 서식(부록 7-27쪽), 형상관리"
+    },
+    {
+     "id": "NET-IN-10",
+     "phase": "유지보수",
+     "title": "CI 로그·이미지 정기 점검",
+     "guide": "CI(지속적 통합) 접근·빌드 로그를 정기 검토하고 VM 이미지와 도구의 보안 패치 주기를 정해 반입 절차로 업데이트한다. 지원 종료 도구는 대체 계획을 수립한다.",
+     "cwe": [
+      "285",
+      "1104"
+     ],
+     "basis": "운영 감사, 도구 수명주기 관리"
+    }
+   ]
+  },
+  {
+   "axis": "개발·시험 망 환경",
+   "env": "폐쇄망",
+   "code": "NET-CL",
+   "traits": "외부와 물리적으로 단절되어 모든 도구·데이터가 매체를 통한 반입으로만 들어오고 결과물은 승인 후에만 반출된다. 규칙 집합(rule pack)·CWE/CVE 데이터가 최신이 아닐 수 있고 라이선스도 오프라인으로 운용해야 한다.",
+   "constraints": "온라인 업데이트, 원격 라이선스 활성화, 외부 패키지 설치, 클라우드 협업은 불가하며 CWE 완화책(mitigation) 중 최신 취약점 정보에 의존하는 항목은 지연된다. 오프라인 번들, 데이터 기준일 표기, 반입 검사 절차로 대체한다.",
+   "key_cwe": [
+    "494",
+    "1104",
+    "732",
+    "312",
+    "319",
+    "285",
+    "306",
+    "307",
+    "521",
+    "259"
+   ],
+   "guides": [
+    {
+     "id": "NET-CL-01",
+     "phase": "설계",
+     "title": "반입·반출 통제 절차",
+     "guide": "반입은 전용 스테이징 PC에서 다중 엔진 악성코드 검사와 해시 대조 후 승인 기록을 남기고, 반출은 보안 담당 검토를 거쳐 필요한 결과물에 한정한다. 소스 전체 반출은 금지한다.",
+     "cwe": [
+      "494",
+      "732"
+     ],
+     "basis": "CWE-494 완화책, 보안업무 규정(반입·반출)"
+    },
+    {
+     "id": "NET-CL-02",
+     "phase": "설계",
+     "title": "CI 서버 공용 통제와 단방향 반입",
+     "guide": "폐쇄망과 내부망이 한 CI(지속적 통합) 서버를 함께 쓰는 통합 환경이면 취약점 관련 추가 시험과 사용자별 접근 권한의 엄격한 관리를 적용한다. 별도 서버로 나눌지는 위험평가로 정하며, 데이터 이동은 반입 경로를 통한 단방향을 기본으로 한다.",
+     "cwe": [
+      "285",
+      "668"
+     ],
+     "basis": "논문 4.3절(추가 취약점 시험·사용자별 접근 권한 관리) + 망분리 정책(서버 분리 판단·단방향 반입)"
+    },
+    {
+     "id": "NET-CL-03",
+     "phase": "설계",
+     "title": "오프라인 업데이트 번들 설계",
+     "guide": "SAST 규칙 집합(rule pack), CWE/CVE 데이터, 도구 패치를 정기 번들로 묶어 버전 매니페스트와 해시·서명을 붙이고 이전 버전은 롤백용으로 보관한다. 번들 주기와 승인자를 사전에 정한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "오프라인 배포 절차, 형상관리"
+    },
+    {
+     "id": "NET-CL-04",
+     "phase": "구현",
+     "title": "완전 오프라인 의존성 확보",
+     "guide": "빌드에 필요한 모든 패키지와 툴체인(toolchain)을 사전 반입하고 락 파일과 해시로 고정하며, 빌드 에이전트의 외부 통신은 차단하여 시도 시 실패하도록 설정한다.",
+     "cwe": [
+      "494",
+      "1104"
+     ],
+     "basis": "재현 가능 빌드, 공급망 통제"
+    },
+    {
+     "id": "NET-CL-05",
+     "phase": "통합 및 시험",
+     "title": "오프라인 라이선스 운용",
+     "guide": "라이선스 파일·로컬 라이선스 서버·동글의 만료일과 동시 사용 수를 대장으로 관리하고, 갱신 파일 반입 주기를 만료일보다 앞서 계획한다. 만료로 시험이 누락되면 미수행으로 기록한다.",
+     "cwe": [],
+     "basis": "논문 2·4장(소량 라이선스로 인한 도구 선점 문제) + 오프라인 라이선스 운영(지침 고유 요구)"
+    },
+    {
+     "id": "NET-CL-06",
+     "phase": "구현",
+     "title": "이동식 매체 보호",
+     "guide": "반입·반출 매체는 등록 대장으로 관리하고 암호화와 자동 실행 차단을 적용하며 사용 후 안전 소거하거나 폐기한다. 개인 매체의 연결은 금지한다.",
+     "cwe": [
+      "312",
+      "319",
+      "732"
+     ],
+     "basis": "CWE-312/732 완화책, 매체 보안 규정"
+    },
+    {
+     "id": "NET-CL-07",
+     "phase": "구현",
+     "title": "계정·감사 통제",
+     "guide": "공유 계정을 금지하고 로그인 실패 횟수 제한과 최소 권한을 적용하며 내부 NTP로 시각을 맞춰 로그를 보존한다. 로그를 반출할 때는 검토를 거친다.",
+     "cwe": [
+      "285",
+      "306",
+      "307",
+      "521"
+     ],
+     "basis": "CWE-307/521 완화책"
+    },
+    {
+     "id": "NET-CL-08",
+     "phase": "통합 및 시험",
+     "title": "데이터 기준일과 규칙 회귀",
+     "guide": "보고서에 CWE/CVE·규칙 집합(rule pack) 기준일을 명시하고 기준일로부터 정한 기간이 지나면 경고하며, 갱신 후에는 결함 샘플 세트로 검출 회귀시험(regression test)을 수행한다. 신규 반입 시 SBOM(소프트웨어 구성명세서)을 재대조한다.",
+     "cwe": [
+      "1104"
+     ],
+     "basis": "오프라인 환경의 정보 지연 대응"
+    },
+    {
+     "id": "NET-CL-09",
+     "phase": "통합 및 시험",
+     "title": "재현성과 추적성 검증",
+     "guide": "독립된 두 VM에서 동일 소스를 빌드해 산출물 해시가 같은지 확인하고(도구 특성으로 해시가 달라지면 차이 원인을 분석해 기록한다), 소스·도구·규칙 집합(rule pack)·타깃 시험 로그를 하나의 ID로 연결해 증적으로 보존한다.",
+     "cwe": [
+      "494"
+     ],
+     "basis": "Reproducible Builds, 매뉴얼 제2024-6호 시험확인서 서식(부록 7-27쪽)"
+    },
+    {
+     "id": "NET-CL-10",
+     "phase": "유지보수",
+     "title": "백업·복구·폐기 관리",
+     "guide": "CI(지속적 통합) VM 이미지, 도구 설치본, 라이선스, 이전 규칙 집합(rule pack)을 암호화 백업하고 복구 절차를 정기 훈련한다. 반입 이력은 감사하며 폐기 시 매체와 디스크를 안전 소거한다.",
+     "cwe": [
+      "312",
+      "732"
+     ],
+     "basis": "운영 보안 규정, 형상관리"
+    }
+   ]
+  }
+ ]
+}

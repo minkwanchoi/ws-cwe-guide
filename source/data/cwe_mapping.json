@@ -1,0 +1,4754 @@
+{
+ "license_note": "Copyright © 2006–2026, The MITRE Corporation. CWE and the CWE logo are trademarks of The MITRE Corporation. Use per https://cwe.mitre.org/about/termsofuse.html CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.",
+ "source": "MITRE CWE 5.0 XML(cwec_v5.0.xml, 2026-10-28), Weakness/Mapping_Notes·Related_Weaknesses(View 1000 ChildOf). 원문 영문 그대로.",
+ "version": "5.0",
+ "date": "2026-10-28",
+ "cwe": {
+  "5": {
+   "name": "J2EE Misconfiguration: Data Transmission Without Encryption",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "319",
+     "name": "Cleartext Transmission of Sensitive Information",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "6": {
+   "name": "J2EE Misconfiguration: Insufficient Session-ID Length",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "334",
+     "name": "Small Space of Random Values",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "7": {
+   "name": "J2EE Misconfiguration: Missing Custom Error Page",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "756",
+     "name": "Missing Custom Error Page",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "8": {
+   "name": "J2EE Misconfiguration: Entity Bean Declared Remote",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "9": {
+   "name": "J2EE Misconfiguration: Weak Access Permissions for EJB Methods",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "266",
+     "name": "Incorrect Privilege Assignment",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "14": {
+   "name": "Compiler Removal of Code to Clear Buffers",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "733",
+     "name": "Compiler Optimization Removal or Modification of Security-critical Code",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "22": {
+   "name": "Improper Limitation of a Pathname to a Restricted Directory",
+   "abstraction": "Base",
+   "status": "Stable",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry might have children that would be more appropriate.",
+   "comments": "Examine children of this entry to see if there is a better fit. Consider children such as CWE-23 (or its descendants) for relative path traversal, or CWE-36 for absolute path traversal.",
+   "suggestions": [
+    {
+     "id": "23",
+     "comment": "relative path traversal - also consider descendants"
+    },
+    {
+     "id": "36",
+     "comment": "absolute path traversal"
+    }
+   ],
+   "parents": [
+    {
+     "id": "706",
+     "name": "Use of Incorrectly-Resolved Name or Reference",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "23",
+     "name": "Relative Path Traversal",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "36",
+     "name": "Absolute Path Traversal",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "59": {
+   "name": "Improper Link Resolution Before File Access",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "706",
+     "name": "Use of Incorrectly-Resolved Name or Reference",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "61",
+     "name": "UNIX Symbolic Link (Symlink) Following",
+     "abstraction": "Compound",
+     "usage": "Allowed"
+    },
+    {
+     "id": "62",
+     "name": "UNIX Hard Link",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "64",
+     "name": "Windows Shortcut Following (.LNK)",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "65",
+     "name": "Windows Hard Link",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1386",
+     "name": "Insecure Operation on Windows Junction / Mount Point",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "78": {
+   "name": "Improper Neutralization of Special Elements used in an OS Command",
+   "abstraction": "Base",
+   "status": "Stable",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "77",
+     "name": "Improper Neutralization of Special Elements used in a Command",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "89": {
+   "name": "Improper Neutralization of Special Elements used in an SQL Command",
+   "abstraction": "Base",
+   "status": "Stable",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "943",
+     "name": "Improper Neutralization of Special Elements in Data Query Logic",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "564",
+     "name": "Use of Hibernate with HQL/SQL Query String Containing External Input",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "95": {
+   "name": "Improper Neutralization of Directives in Dynamically Evaluated Code",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "94",
+     "name": "Improper Control of Generation of Code",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "99": {
+   "name": "Improper Control of Resource Identifiers",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is a Class and might have Base-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "74",
+     "name": "Improper Neutralization of Special Elements in Output Used by a Downstream Component",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "641",
+     "name": "Improper Restriction of Names for Files and Other Resources",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "694",
+     "name": "Use of Multiple Resources with Duplicate Identifier",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "914",
+     "name": "Improper Control of Dynamically-Identified Variables",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "102": {
+   "name": "Struts: Duplicate Validation Forms",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "694",
+     "name": "Use of Multiple Resources with Duplicate Identifier",
+     "abstraction": "Base"
+    },
+    {
+     "id": "1173",
+     "name": "Improper Use of Validation Framework",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "103": {
+   "name": "Struts: Incomplete validate() Method Definition",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "104": {
+   "name": "Struts: Form Bean Does Not Extend Validation Class",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "105": {
+   "name": "Struts: Form Field Without Validator",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1173",
+     "name": "Improper Use of Validation Framework",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "106": {
+   "name": "Struts: Plug-in Framework not in Use",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1173",
+     "name": "Improper Use of Validation Framework",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "107": {
+   "name": "Struts: Unused Validation Form",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "561",
+     "name": "Dead Code",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "108": {
+   "name": "Struts: Unvalidated Action Form",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1173",
+     "name": "Improper Use of Validation Framework",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "109": {
+   "name": "Struts: Validator Turned Off",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1173",
+     "name": "Improper Use of Validation Framework",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "110": {
+   "name": "Struts: Validator Without Form Field",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1164",
+     "name": "Irrelevant Code",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "111": {
+   "name": "Direct Use of Unsafe JNI",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "119": {
+   "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+   "abstraction": "Class",
+   "status": "Stable",
+   "usage": "Discouraged",
+   "rationale": "CWE-119 is commonly misused in low-information vulnerability reports when lower-level CWEs could be used instead, or when more details about the vulnerability are available.",
+   "comments": "Look at CWE-119's children and its descendants, which should generally be a better fit. Since this issue is resultant from other weaknesses, conduct root cause analysis to determine the error(s) that led to operations outside of intended buffer boundaries.",
+   "suggestions": [
+    {
+     "id": "787",
+     "comment": "Out-of-bounds write (or descendants)"
+    },
+    {
+     "id": "125",
+     "comment": "Out-of-bounds read (or descendants)"
+    },
+    {
+     "id": "825",
+     "comment": "expired pointer dereference (or descendants)"
+    }
+   ],
+   "parents": [
+    {
+     "id": "118",
+     "name": "Incorrect Access of Indexable Resource",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "125",
+     "name": "Out-of-bounds Read",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "466",
+     "name": "Return of Pointer Value Outside of Expected Range",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "786",
+     "name": "Access of Memory Location Before Start of Buffer",
+     "abstraction": "Base",
+     "usage": "Discouraged"
+    },
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "788",
+     "name": "Access of Memory Location After End of Buffer",
+     "abstraction": "Base",
+     "usage": "Discouraged"
+    },
+    {
+     "id": "805",
+     "name": "Buffer Access with Incorrect Length Value",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "822",
+     "name": "Untrusted Pointer Dereference",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "823",
+     "name": "Use of Out-of-range Pointer Offset",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "824",
+     "name": "Access of Uninitialized Pointer",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "825",
+     "name": "Expired Pointer Dereference",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "120": {
+   "name": "Buffer Copy without Checking Size of Input",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed-with-Review",
+   "rationale": "There are some indications that this CWE ID might be misused and selected simply because it mentions \"buffer overflow\" - an increasingly vague term. This CWE entry is only appropriate for \"Buffer Copy\" operations (not buffer reads), in which where there is no \"Checking [the] Size of Input\", and (by implication of the copy) writing past the end of the buffer.",
+   "comments": "If the vulnerability being analyzed involves out-of-bounds reads, then consider CWE-125 or descendants. For root cause analysis: if there is any input validation, consider children of CWE-20 such as CWE-1284. If there is a calculation error for buffer sizes, consider CWE-131 or similar.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "121": {
+   "name": "Stack-based Buffer Overflow",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "788",
+     "name": "Access of Memory Location After End of Buffer",
+     "abstraction": "Base"
+    },
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "122": {
+   "name": "Heap-based Buffer Overflow",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "788",
+     "name": "Access of Memory Location After End of Buffer",
+     "abstraction": "Base"
+    },
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "123": {
+   "name": "Write-what-where Condition",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "124": {
+   "name": "Buffer Underwrite",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "786",
+     "name": "Access of Memory Location Before Start of Buffer",
+     "abstraction": "Base"
+    },
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "125": {
+   "name": "Out-of-bounds Read",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "126",
+     "name": "Buffer Over-read",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "127",
+     "name": "Buffer Under-read",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "126": {
+   "name": "Buffer Over-read",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "125",
+     "name": "Out-of-bounds Read",
+     "abstraction": "Base"
+    },
+    {
+     "id": "788",
+     "name": "Access of Memory Location After End of Buffer",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "127": {
+   "name": "Buffer Under-read",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "125",
+     "name": "Out-of-bounds Read",
+     "abstraction": "Base"
+    },
+    {
+     "id": "786",
+     "name": "Access of Memory Location Before Start of Buffer",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "128": {
+   "name": "Wrap-around Error",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "129": {
+   "name": "Improper Validation of Array Index",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1285",
+     "name": "Improper Validation of Specified Index, Position, or Offset in Input",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "130": {
+   "name": "Improper Handling of Length Parameter Inconsistency",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "240",
+     "name": "Improper Handling of Inconsistent Structural Elements",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "131": {
+   "name": "Incorrect Calculation of Buffer Size",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "467",
+     "name": "Use of sizeof() on a Pointer Type",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "134": {
+   "name": "Use of Externally-Controlled Format String",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "135": {
+   "name": "Incorrect Calculation of Multi-Byte String Length",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "158": {
+   "name": "Improper Neutralization of Null Byte or NUL Character",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "138",
+     "name": "Improper Neutralization of Special Elements",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "170": {
+   "name": "Improper Null Termination",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "707",
+     "name": "Improper Neutralization",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "188": {
+   "name": "Reliance on Data/Memory Layout",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1105",
+     "name": "Insufficient Encapsulation of Machine-Dependent Functionality",
+     "abstraction": "Base"
+    },
+    {
+     "id": "435",
+     "name": "Improper Interaction Between Multiple Correctly-Behaving Entities",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "198",
+     "name": "Use of Incorrect Byte Ordering",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "190": {
+   "name": "Integer Overflow or Wraparound",
+   "abstraction": "Base",
+   "status": "Stable",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Be careful of terminology problems with \"overflow,\" \"underflow,\" and \"wraparound\" - see Terminology Notes. Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [
+    {
+     "id": "191",
+     "comment": "Integer Underflow (Wrap or Wraparound). Consider CWE-191 when the result is less than the minimum value that can be represented (sometimes called \"underflows\")."
+    }
+   ],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "680",
+     "name": "Integer Overflow to Buffer Overflow",
+     "abstraction": "Compound",
+     "usage": "Discouraged"
+    }
+   ]
+  },
+  "191": {
+   "name": "Integer Underflow (Wrap or Wraparound)",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "192": {
+   "name": "Integer Coercion Error",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "193": {
+   "name": "Off-by-one Error",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "194": {
+   "name": "Unexpected Sign Extension",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "195": {
+   "name": "Signed to Unsigned Conversion Error",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "196": {
+   "name": "Unsigned to Signed Conversion Error",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "197": {
+   "name": "Numeric Truncation Error",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "209": {
+   "name": "Generation of Error Message Containing Sensitive Information",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "200",
+     "name": "Exposure of Sensitive Information to an Unauthorized Actor",
+     "abstraction": "Class"
+    },
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "210",
+     "name": "Self-generated Error Message Containing Sensitive Information",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "211",
+     "name": "Externally-Generated Error Message Containing Sensitive Information",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "550",
+     "name": "Server-generated Error Message Containing Sensitive Information",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "242": {
+   "name": "Use of Inherently Dangerous Function",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1177",
+     "name": "Use of Prohibited Code",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "243": {
+   "name": "Creation of chroot Jail Without Changing Working Directory",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    },
+    {
+     "id": "669",
+     "name": "Incorrect Resource Transfer Between Spheres",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "244": {
+   "name": "Improper Clearing of Heap Memory Before Release",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "226",
+     "name": "Sensitive Information in Resource Not Removed Before Reuse",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "245": {
+   "name": "J2EE Bad Practices: Direct Management of Connections",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "246": {
+   "name": "J2EE Bad Practices: Direct Use of Sockets",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "248": {
+   "name": "Uncaught Exception",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    },
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "600",
+     "name": "Uncaught Exception in Servlet",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "259": {
+   "name": "Use of Hard-coded Password",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "798",
+     "name": "Use of Hard-coded Credentials",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "285": {
+   "name": "Improper Authorization",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Discouraged",
+   "rationale": "CWE-285 is high-level and lower-level CWEs can frequently be used instead. It is a level-1 Class (i.e., a child of a Pillar).",
+   "comments": "Look at CWE-285's children and descendants.",
+   "suggestions": [
+    {
+     "id": "862",
+     "comment": "Missing Authorization"
+    },
+    {
+     "id": "863",
+     "comment": "Incorrect Authorization"
+    },
+    {
+     "id": "732",
+     "comment": "Incorrect Permission Assignment for Critical Resource"
+    }
+   ],
+   "parents": [
+    {
+     "id": "284",
+     "name": "Improper Access Control",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "356",
+     "name": "Missing User Interaction for Potentially Unsafe Action",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "552",
+     "name": "Files or Directories Accessible to External Parties",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "862",
+     "name": "Missing Authorization",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "863",
+     "name": "Incorrect Authorization",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "926",
+     "name": "Improper Export of Android Application Components",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "927",
+     "name": "Use of Implicit Intent for Sensitive Communication",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1230",
+     "name": "Exposure of Sensitive Information Through Metadata",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1256",
+     "name": "Improper Restriction of Software Interfaces to Hardware Features",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1297",
+     "name": "Unprotected Confidential Information on Device is Accessible by OSAT Vendors",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1328",
+     "name": "Security Version Number Mutable to Older Versions",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1470",
+     "name": "Improper External Identity Verification",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    }
+   ]
+  },
+  "295": {
+   "name": "Improper Certificate Validation",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "287",
+     "name": "Improper Authentication",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "296",
+     "name": "Improper Following of a Certificate's Chain of Trust",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "297",
+     "name": "Improper Validation of Certificate with Host Mismatch",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "298",
+     "name": "Improper Validation of Certificate Expiration",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "299",
+     "name": "Improper Check for Certificate Revocation",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "599",
+     "name": "Missing Validation of OpenSSL Certificate",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "299": {
+   "name": "Improper Check for Certificate Revocation",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "295",
+     "name": "Improper Certificate Validation",
+     "abstraction": "Base"
+    },
+    {
+     "id": "404",
+     "name": "Improper Resource Shutdown or Release",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "370",
+     "name": "Missing Check for Certificate Revocation after Initial Check",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "306": {
+   "name": "Missing Authentication for Critical Functionality",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "287",
+     "name": "Improper Authentication",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "288",
+     "name": "Authentication Bypass Using an Alternate Path or Channel",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "322",
+     "name": "Key Exchange without Entity Authentication",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "307": {
+   "name": "Improper Restriction of Excessive Authentication Attempts",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1390",
+     "name": "Weak Authentication",
+     "abstraction": "Class"
+    },
+    {
+     "id": "799",
+     "name": "Improper Control of Interaction Frequency",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "312": {
+   "name": "Cleartext Storage of Sensitive Information",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "311",
+     "name": "Missing Encryption of Sensitive Data",
+     "abstraction": "Class"
+    },
+    {
+     "id": "922",
+     "name": "Insecure Storage of Sensitive Information",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "313",
+     "name": "Cleartext Storage in a File or on Disk",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "314",
+     "name": "Cleartext Storage in the Registry",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "315",
+     "name": "Cleartext Storage of Sensitive Information in a Cookie",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "316",
+     "name": "Cleartext Storage of Sensitive Information in Memory",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "317",
+     "name": "Cleartext Storage of Sensitive Information in GUI",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "318",
+     "name": "Cleartext Storage of Sensitive Information in Executable",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "526",
+     "name": "Cleartext Storage of Sensitive Information in an Environment Variable",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "319": {
+   "name": "Cleartext Transmission of Sensitive Information",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "311",
+     "name": "Missing Encryption of Sensitive Data",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "5",
+     "name": "J2EE Misconfiguration: Data Transmission Without Encryption",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "614",
+     "name": "Sensitive Cookie in HTTPS Session Without 'Secure' Attribute",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1428",
+     "name": "Reliance on HTTP instead of HTTPS",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "321": {
+   "name": "Use of Hard-coded Cryptographic Key",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "798",
+     "name": "Use of Hard-coded Credentials",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "327": {
+   "name": "Use of a Broken or Risky Cryptographic Algorithm",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is a Class and might have Base-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "693",
+     "name": "Protection Mechanism Failure",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "328",
+     "name": "Use of Weak Hash",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "780",
+     "name": "Use of RSA Algorithm without OAEP",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1240",
+     "name": "Use of a Cryptographic Primitive with a Risky Implementation",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "330": {
+   "name": "Use of Insufficiently Random Values",
+   "abstraction": "Class",
+   "status": "Stable",
+   "usage": "Discouraged",
+   "rationale": "This CWE entry is a level-1 Class (i.e., a child of a Pillar). It might have lower-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "693",
+     "name": "Protection Mechanism Failure",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "331",
+     "name": "Insufficient Entropy",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "334",
+     "name": "Small Space of Random Values",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "335",
+     "name": "Incorrect Usage of Seeds in Pseudo-Random Number Generator (PRNG)",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "338",
+     "name": "Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "340",
+     "name": "Generation of Predictable Numbers or Identifiers",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "344",
+     "name": "Use of Invariant Value in Dynamically Changing Context",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1204",
+     "name": "Generation of Weak Initialization Vector (IV)",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1241",
+     "name": "Use of Predictable Algorithm in Random Number Generator",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "362": {
+   "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is a Class and might have Base-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "662",
+     "name": "Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "364",
+     "name": "Signal Handler Race Condition",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "366",
+     "name": "Race Condition within a Thread",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "367",
+     "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "368",
+     "name": "Context Switching Race Condition",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "421",
+     "name": "Race Condition During Access to Alternate Channel",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "689",
+     "name": "Permission Race Condition During Resource Copy",
+     "abstraction": "Compound",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1223",
+     "name": "Race Condition for Write-Once Attributes",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1298",
+     "name": "Hardware Logic Contains Race Conditions",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "364": {
+   "name": "Signal Handler Race Condition",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "362",
+     "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "432",
+     "name": "Dangerous Signal Handler not Disabled During Sensitive Operations",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "828",
+     "name": "Signal Handler with Functionality that is not Asynchronous-Safe",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "831",
+     "name": "Signal Handler Function Associated with Multiple Signals",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "366": {
+   "name": "Race Condition within a Thread",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "362",
+     "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "367": {
+   "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "362",
+     "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "363",
+     "name": "Race Condition Enabling Link Following",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "369": {
+   "name": "Divide By Zero",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "374": {
+   "name": "Passing Mutable Objects to an Untrusted Method",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "375": {
+   "name": "Returning a Mutable Object to an Untrusted Caller",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "382": {
+   "name": "J2EE Bad Practices: Use of System.exit()",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "383": {
+   "name": "J2EE Bad Practices: Direct Use of Threads",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "390": {
+   "name": "Detection of Error Condition Without Action",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "395": {
+   "name": "Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    },
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "396": {
+   "name": "Declaration of Catch for Generic Exception",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    },
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    },
+    {
+     "id": "221",
+     "name": "Information Loss or Omission",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "397": {
+   "name": "Declaration of Throws for Generic Exception",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    },
+    {
+     "id": "221",
+     "name": "Information Loss or Omission",
+     "abstraction": "Class"
+    },
+    {
+     "id": "703",
+     "name": "Improper Check or Handling of Exceptional Conditions",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "400": {
+   "name": "Uncontrolled Resource Consumption",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Discouraged",
+   "rationale": "CWE-400 is intended for incorrect behaviors in which the product is expected to track and restrict how many resources it consumes, but CWE-400 is often misused because it is conflated with the \"technical impact\" of vulnerabilities in which resource consumption occurs. It is sometimes used for low-information vulnerability reports. It is a level-1 Class (i.e., a child of a Pillar).",
+   "comments": "Closely analyze the specific mistake that is causing resource consumption, and perform a CWE mapping for that mistake. Consider children/descendants.",
+   "suggestions": [
+    {
+     "id": "770",
+     "comment": "Allocation of Resources Without Limits or Throttling (or descendants)"
+    },
+    {
+     "id": "771",
+     "comment": "Missing Missing Reference to Active Allocated Resource"
+    },
+    {
+     "id": "772",
+     "comment": "Missing Release of Resource after Effective Lifetime"
+    },
+    {
+     "id": "410",
+     "comment": "Insufficient Resource Pool"
+    },
+    {
+     "id": "834",
+     "comment": "Excessive Iteration"
+    },
+    {
+     "id": "405",
+     "comment": "Asymmetric Resource Consumption (Amplification) (or descendants)"
+    }
+   ],
+   "parents": [
+    {
+     "id": "664",
+     "name": "Improper Control of a Resource Through its Lifetime",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "405",
+     "name": "Asymmetric Resource Consumption (Amplification)",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "770",
+     "name": "Allocation of Resources Without Limits or Throttling",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "771",
+     "name": "Missing Reference to Active Allocated Resource",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "779",
+     "name": "Logging of Excessive Data",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "920",
+     "name": "Improper Restriction of Power Consumption",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1235",
+     "name": "Incorrect Use of Autoboxing and Unboxing for Performance Critical Operations",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1246",
+     "name": "Improper Write Handling in Limited-write Non-Volatile Memories",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "401": {
+   "name": "Missing Release of Memory after Effective Lifetime",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "772",
+     "name": "Missing Release of Resource after Effective Lifetime",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "403": {
+   "name": "Exposure of File Descriptor to Unintended Control Sphere",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "402",
+     "name": "Transmission of Private Resources into a New Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "404": {
+   "name": "Improper Resource Shutdown or Release",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is a Class and might have Base-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "664",
+     "name": "Improper Control of a Resource Through its Lifetime",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "299",
+     "name": "Improper Check for Certificate Revocation",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "459",
+     "name": "Incomplete Cleanup",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "763",
+     "name": "Release of Invalid Pointer or Reference",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "772",
+     "name": "Missing Release of Resource after Effective Lifetime",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "415": {
+   "name": "Double Free",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "825",
+     "name": "Expired Pointer Dereference",
+     "abstraction": "Base"
+    },
+    {
+     "id": "1341",
+     "name": "Multiple Releases of Same Resource or Handle",
+     "abstraction": "Base"
+    },
+    {
+     "id": "666",
+     "name": "Operation on Resource in Wrong Phase of Lifetime",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "416": {
+   "name": "Use After Free",
+   "abstraction": "Variant",
+   "status": "Stable",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "825",
+     "name": "Expired Pointer Dereference",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "457": {
+   "name": "Use of Uninitialized Variable",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "908",
+     "name": "Use of Uninitialized Resource",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "460": {
+   "name": "Improper Cleanup on Thrown Exception",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "459",
+     "name": "Incomplete Cleanup",
+     "abstraction": "Base"
+    },
+    {
+     "id": "755",
+     "name": "Improper Handling of Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "462": {
+   "name": "Duplicate Key in Associative List (Alist)",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "694",
+     "name": "Use of Multiple Resources with Duplicate Identifier",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "463": {
+   "name": "Deletion of Data Structure Sentinel",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "707",
+     "name": "Improper Neutralization",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "464": {
+   "name": "Addition of Data Structure Sentinel",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "138",
+     "name": "Improper Neutralization of Special Elements",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "466": {
+   "name": "Return of Pointer Value Outside of Expected Range",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "467": {
+   "name": "Use of sizeof() on a Pointer Type",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "131",
+     "name": "Incorrect Calculation of Buffer Size",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "468": {
+   "name": "Incorrect Pointer Scaling",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "469": {
+   "name": "Use of Pointer Subtraction to Determine Size",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "470": {
+   "name": "Use of Externally-Controlled Input to Select Classes or Code",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "913",
+     "name": "Improper Control of Dynamically-Managed Code Resources",
+     "abstraction": "Class"
+    },
+    {
+     "id": "610",
+     "name": "Externally Controlled Reference to a Resource in Another Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "474": {
+   "name": "Use of Function with Inconsistent Implementations",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "758",
+     "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "589",
+     "name": "Call to Non-ubiquitous API",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "476": {
+   "name": "NULL Pointer Dereference",
+   "abstraction": "Base",
+   "status": "Stable",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "710",
+     "name": "Improper Adherence to Coding Standards",
+     "abstraction": "Pillar"
+    },
+    {
+     "id": "754",
+     "name": "Improper Check for Unusual or Exceptional Conditions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "478": {
+   "name": "Missing Default Case in Multiple Condition Expression",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1023",
+     "name": "Incomplete Comparison with Missing Factors",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "479": {
+   "name": "Signal Handler Use of a Non-reentrant Function",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "828",
+     "name": "Signal Handler with Functionality that is not Asynchronous-Safe",
+     "abstraction": "Variant"
+    },
+    {
+     "id": "663",
+     "name": "Use of a Non-reentrant Function in a Concurrent Context",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "480": {
+   "name": "Use of Incorrect Operator",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "670",
+     "name": "Always-Incorrect Control Flow Implementation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "481",
+     "name": "Assigning instead of Comparing",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "482",
+     "name": "Comparing instead of Assigning",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "597",
+     "name": "Use of Wrong Operator in String Comparison",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1077",
+     "name": "Floating Point Comparison with Incorrect Operator",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "481": {
+   "name": "Assigning instead of Comparing",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "480",
+     "name": "Use of Incorrect Operator",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "482": {
+   "name": "Comparing instead of Assigning",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "480",
+     "name": "Use of Incorrect Operator",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "483": {
+   "name": "Incorrect Block Delimitation",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "670",
+     "name": "Always-Incorrect Control Flow Implementation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "484": {
+   "name": "Omitted Break Statement in Switch",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "710",
+     "name": "Improper Adherence to Coding Standards",
+     "abstraction": "Pillar"
+    },
+    {
+     "id": "670",
+     "name": "Always-Incorrect Control Flow Implementation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "486": {
+   "name": "Comparison of Classes by Name",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1025",
+     "name": "Comparison Using Wrong Factors",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "487": {
+   "name": "Reliance on Package-level Scope",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "664",
+     "name": "Improper Control of a Resource Through its Lifetime",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "489": {
+   "name": "Active Debug Code",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "710",
+     "name": "Improper Adherence to Coding Standards",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "11",
+     "name": "ASP.NET Misconfiguration: Creating Debug Binary",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "491": {
+   "name": "Public cloneable() Method Without Final",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "492": {
+   "name": "Use of Inner Class Containing Sensitive Data",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "493": {
+   "name": "Critical Public Variable Without Final Modifier",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "500",
+     "name": "Public Static Field Not Marked Final",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "494": {
+   "name": "Download of Code Without Integrity Check",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "345",
+     "name": "Insufficient Verification of Data Authenticity",
+     "abstraction": "Class"
+    },
+    {
+     "id": "669",
+     "name": "Incorrect Resource Transfer Between Spheres",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "495": {
+   "name": "Private Data Structure Returned From A Public Method",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "496": {
+   "name": "Public Data Assigned to Private Array-Typed Field",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "497": {
+   "name": "Exposure of Sensitive System Information to an Unauthorized Control Sphere",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "200",
+     "name": "Exposure of Sensitive Information to an Unauthorized Actor",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "214",
+     "name": "Invocation of Process Using Visible Sensitive Information",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "548",
+     "name": "Exposure of Information Through Directory Listing",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "498": {
+   "name": "Cloneable Class Containing Sensitive Information",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "499": {
+   "name": "Serializable Class Containing Sensitive Data",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "500": {
+   "name": "Public Static Field Not Marked Final",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "493",
+     "name": "Critical Public Variable Without Final Modifier",
+     "abstraction": "Variant"
+    }
+   ],
+   "children": []
+  },
+  "502": {
+   "name": "Deserialization of Untrusted Data",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "913",
+     "name": "Improper Control of Dynamically-Managed Code Resources",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "521": {
+   "name": "Weak Password Requirements",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1391",
+     "name": "Use of Weak Credentials",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "258",
+     "name": "Empty Password in Configuration File",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "536": {
+   "name": "Servlet Runtime Error Message Containing Sensitive Information",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "211",
+     "name": "Externally-Generated Error Message Containing Sensitive Information",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "537": {
+   "name": "Java Runtime Error Message Containing Sensitive Information",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "211",
+     "name": "Externally-Generated Error Message Containing Sensitive Information",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "543": {
+   "name": "Use of Singleton Pattern Without Synchronization in a Multithreaded Context",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "820",
+     "name": "Missing Synchronization",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "555": {
+   "name": "J2EE Misconfiguration: Plaintext Password in Configuration File",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "260",
+     "name": "Password in Configuration File",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "558": {
+   "name": "Use of getlogin() in Multithreaded Application",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "663",
+     "name": "Use of a Non-reentrant Function in a Concurrent Context",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "560": {
+   "name": "Use of umask() with chmod-style Argument",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "687",
+     "name": "Function Call With Incorrectly Specified Argument Value",
+     "abstraction": "Variant"
+    }
+   ],
+   "children": []
+  },
+  "562": {
+   "name": "Return of Stack Variable Address",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "758",
+     "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "567": {
+   "name": "Unsynchronized Access to Shared Data in a Multithreaded Context",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "820",
+     "name": "Missing Synchronization",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "568": {
+   "name": "finalize() Method Without super.finalize()",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    },
+    {
+     "id": "459",
+     "name": "Incomplete Cleanup",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "572": {
+   "name": "Call to Thread run() instead of start()",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "821",
+     "name": "Incorrect Synchronization",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "574": {
+   "name": "EJB Bad Practices: Use of Synchronization Primitives",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    },
+    {
+     "id": "821",
+     "name": "Incorrect Synchronization",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "575": {
+   "name": "EJB Bad Practices: Use of AWT Swing",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "576": {
+   "name": "EJB Bad Practices: Use of Java I/O",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "577": {
+   "name": "EJB Bad Practices: Use of Sockets",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "578": {
+   "name": "EJB Bad Practices: Use of Class Loader",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "695",
+     "name": "Use of Low-Level Functionality",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "579": {
+   "name": "J2EE Bad Practices: Non-serializable Object Stored in Session",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "580": {
+   "name": "clone() Method Without super.clone()",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "664",
+     "name": "Improper Control of a Resource Through its Lifetime",
+     "abstraction": "Pillar"
+    },
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "581": {
+   "name": "Object Model Violation: Just One of Equals and Hashcode Defined",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    },
+    {
+     "id": "697",
+     "name": "Incorrect Comparison",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "582": {
+   "name": "Array Declared Public, Final, and Static",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "583": {
+   "name": "finalize() Method Declared Public",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "585": {
+   "name": "Empty Synchronized Block",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1071",
+     "name": "Empty Code Block",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "586": {
+   "name": "Explicit Call to Finalize()",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1076",
+     "name": "Insufficient Adherence to Expected Conventions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "587": {
+   "name": "Assignment of a Fixed Address to a Pointer",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "344",
+     "name": "Use of Invariant Value in Dynamically Changing Context",
+     "abstraction": "Base"
+    },
+    {
+     "id": "758",
+     "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "588": {
+   "name": "Attempt to Access Child of a Non-structure Pointer",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "704",
+     "name": "Incorrect Type Conversion or Cast",
+     "abstraction": "Class"
+    },
+    {
+     "id": "758",
+     "name": "Reliance on Undefined, Unspecified, or Implementation-Defined Behavior",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "590": {
+   "name": "Free of Memory not on the Heap",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "762",
+     "name": "Mismatched Memory Management Routines",
+     "abstraction": "Variant"
+    }
+   ],
+   "children": []
+  },
+  "594": {
+   "name": "J2EE Framework: Saving Unserializable Objects to Disk",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1076",
+     "name": "Insufficient Adherence to Expected Conventions",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "595": {
+   "name": "Comparison of Object References Instead of Object Contents",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1025",
+     "name": "Comparison Using Wrong Factors",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "597",
+     "name": "Use of Wrong Operator in String Comparison",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "597": {
+   "name": "Use of Wrong Operator in String Comparison",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "595",
+     "name": "Comparison of Object References Instead of Object Contents",
+     "abstraction": "Variant"
+    },
+    {
+     "id": "480",
+     "name": "Use of Incorrect Operator",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "600": {
+   "name": "Uncaught Exception in Servlet",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "248",
+     "name": "Uncaught Exception",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "607": {
+   "name": "Public Static Final Field References Mutable Object",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "471",
+     "name": "Modification of Assumed-Immutable Data (MAID)",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "608": {
+   "name": "Struts: Non-private Field in ActionForm Class",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "609": {
+   "name": "Double-Checked Locking",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "667",
+     "name": "Improper Locking",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "611": {
+   "name": "Improper Restriction of XML External Entity Reference",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "610",
+     "name": "Externally Controlled Reference to a Resource in Another Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "615": {
+   "name": "Inclusion of Sensitive Information in Source Code Comments",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "540",
+     "name": "Inclusion of Sensitive Information in Source Code",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "617": {
+   "name": "Reachable Assertion",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "628": {
+   "name": "Function Call with Incorrectly Specified Arguments",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "573",
+     "name": "Improper Following of Specification by Caller",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "683",
+     "name": "Function Call With Incorrect Order of Arguments",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "685",
+     "name": "Function Call With Incorrect Number of Arguments",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "686",
+     "name": "Function Call With Incorrect Argument Type",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "687",
+     "name": "Function Call With Incorrectly Specified Argument Value",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "688",
+     "name": "Function Call With Incorrect Variable or Reference as Argument",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "663": {
+   "name": "Use of a Non-reentrant Function in a Concurrent Context",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "662",
+     "name": "Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "479",
+     "name": "Signal Handler Use of a Non-reentrant Function",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "558",
+     "name": "Use of getlogin() in Multithreaded Application",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "676": {
+   "name": "Use of Potentially Dangerous Function",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1177",
+     "name": "Use of Prohibited Code",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "785",
+     "name": "Use of Path Manipulation Function without Maximum-sized Buffer",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "680": {
+   "name": "Integer Overflow to Buffer Overflow",
+   "abstraction": "Compound",
+   "status": "Draft",
+   "usage": "Discouraged",
+   "rationale": "This CWE entry is a named chain, which combines multiple weaknesses.",
+   "comments": "Mapping to each separate weakness in the chain would be more precise.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "190",
+     "name": "Integer Overflow or Wraparound",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "681": {
+   "name": "Incorrect Conversion between Numeric Types",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "704",
+     "name": "Incorrect Type Conversion or Cast",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "192",
+     "name": "Integer Coercion Error",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "194",
+     "name": "Unexpected Sign Extension",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "195",
+     "name": "Signed to Unsigned Conversion Error",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "196",
+     "name": "Unsigned to Signed Conversion Error",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "197",
+     "name": "Numeric Truncation Error",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "685": {
+   "name": "Function Call With Incorrect Number of Arguments",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "628",
+     "name": "Function Call with Incorrectly Specified Arguments",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "688": {
+   "name": "Function Call With Incorrect Variable or Reference as Argument",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "628",
+     "name": "Function Call with Incorrectly Specified Arguments",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "689": {
+   "name": "Permission Race Condition During Resource Copy",
+   "abstraction": "Compound",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This is a Composite of multiple weaknesses that must all occur simultaneously.",
+   "comments": "While composites are supported in CWE, they have not been a focus of research. There is a chance that future research or CWE scope clarifications will change or deprecate them. Perform root-cause analysis to determine which weaknesses allow this issue to occur, and map to those weaknesses. For example, the delayed permission-setting in the resource copy might be intended functionality, but creation in a location with insecure permissions might not.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "362",
+     "name": "Concurrent Execution using Shared Resource with Improper Synchronization",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "690": {
+   "name": "Unchecked Return Value to NULL Pointer Dereference",
+   "abstraction": "Compound",
+   "status": "Draft",
+   "usage": "Discouraged",
+   "rationale": "This CWE entry is a named chain, which combines multiple weaknesses.",
+   "comments": "Mapping to each separate weakness in the chain would be more precise.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "252",
+     "name": "Unchecked Return Value",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "704": {
+   "name": "Incorrect Type Conversion or Cast",
+   "abstraction": "Class",
+   "status": "Incomplete",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is a Class and might have Base-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1474",
+     "name": "Non-Equivalent Data Transformation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "588",
+     "name": "Attempt to Access Child of a Non-structure Pointer",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "681",
+     "name": "Incorrect Conversion between Numeric Types",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "843",
+     "name": "Access of Resource Using Incompatible Type",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1389",
+     "name": "Incorrect Parsing of Numbers with Different Radices",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "732": {
+   "name": "Incorrect Permission Assignment for Critical Resource",
+   "abstraction": "Class",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "While the name itself indicates an assignment of permissions for resources, this is often misused for vulnerabilities in which \"permissions\" are not checked, which is an \"authorization\" weakness (CWE-285 or descendants) within CWE's model [REF-1287].",
+   "comments": "Closely analyze the specific mistake that is allowing the resource to be exposed, and perform a CWE mapping for that mistake.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "285",
+     "name": "Improper Authorization",
+     "abstraction": "Class"
+    },
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "276",
+     "name": "Incorrect Default Permissions",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "277",
+     "name": "Insecure Inherited Permissions",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "278",
+     "name": "Insecure Preserved Inherited Permissions",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "279",
+     "name": "Incorrect Execution-Assigned Permissions",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "281",
+     "name": "Improper Preservation of Permissions",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "493",
+     "name": "Critical Public Variable Without Final Modifier",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "582",
+     "name": "Array Declared Public, Final, and Static",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "583",
+     "name": "finalize() Method Declared Public",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "608",
+     "name": "Struts: Non-private Field in ActionForm Class",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "766",
+     "name": "Critical Data Element Declared Public",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "1004",
+     "name": "Sensitive Cookie Without 'HttpOnly' Flag",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "733": {
+   "name": "Compiler Optimization Removal or Modification of Security-critical Code",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1038",
+     "name": "Insecure Automated Optimizations",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "14",
+     "name": "Compiler Removal of Code to Clear Buffers",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "755": {
+   "name": "Improper Handling of Exceptional Conditions",
+   "abstraction": "Class",
+   "status": "Incomplete",
+   "usage": "Discouraged",
+   "rationale": "This CWE entry is a level-1 Class (i.e., a child of a Pillar). It might have lower-level children that would be more appropriate",
+   "comments": "Examine children of this entry to see if there is a better fit",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "703",
+     "name": "Improper Check or Handling of Exceptional Conditions",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": [
+    {
+     "id": "209",
+     "name": "Generation of Error Message Containing Sensitive Information",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "248",
+     "name": "Uncaught Exception",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "274",
+     "name": "Improper Handling of Insufficient Privileges",
+     "abstraction": "Base",
+     "usage": "Discouraged"
+    },
+    {
+     "id": "280",
+     "name": "Improper Handling of Insufficient Permissions or Privileges",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "333",
+     "name": "Improper Handling of Insufficient Entropy in TRNG",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "390",
+     "name": "Detection of Error Condition Without Action",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "392",
+     "name": "Missing Report of Error Condition",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "395",
+     "name": "Use of NullPointerException Catch to Detect NULL Pointer Dereference",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "396",
+     "name": "Declaration of Catch for Generic Exception",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "460",
+     "name": "Improper Cleanup on Thrown Exception",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "544",
+     "name": "Missing Standardized Error Handling Mechanism",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "636",
+     "name": "Not Failing Securely",
+     "abstraction": "Class",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "756",
+     "name": "Missing Custom Error Page",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "759": {
+   "name": "Use of a One-Way Hash without a Salt",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "916",
+     "name": "Use of Password Hash With Insufficient Computational Effort",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "761": {
+   "name": "Free of Pointer not at Start of Buffer",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "763",
+     "name": "Release of Invalid Pointer or Reference",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "762": {
+   "name": "Mismatched Memory Management Routines",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "763",
+     "name": "Release of Invalid Pointer or Reference",
+     "abstraction": "Base"
+    }
+   ],
+   "children": [
+    {
+     "id": "590",
+     "name": "Free of Memory not on the Heap",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "763": {
+   "name": "Release of Invalid Pointer or Reference",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "404",
+     "name": "Improper Resource Shutdown or Release",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "761",
+     "name": "Free of Pointer not at Start of Buffer",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "762",
+     "name": "Mismatched Memory Management Routines",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "766": {
+   "name": "Critical Data Element Declared Public",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "732",
+     "name": "Incorrect Permission Assignment for Critical Resource",
+     "abstraction": "Class"
+    },
+    {
+     "id": "1061",
+     "name": "Insufficient Encapsulation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "767": {
+   "name": "Access to Critical Private Variable via Public Method",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "668",
+     "name": "Exposure of Resource to Wrong Sphere",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "768": {
+   "name": "Incorrect Short Circuit Evaluation",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "705",
+     "name": "Incorrect Control Flow Scoping",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "781": {
+   "name": "Improper Address Validation in IOCTL with METHOD_NEITHER I/O Control Code",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1285",
+     "name": "Improper Validation of Specified Index, Position, or Offset in Input",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "782": {
+   "name": "Exposed IOCTL with Insufficient Access Control",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "749",
+     "name": "Exposed Dangerous Method or Function",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "783": {
+   "name": "Operator Precedence Logic Error",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "670",
+     "name": "Always-Incorrect Control Flow Implementation",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "785": {
+   "name": "Use of Path Manipulation Function without Maximum-sized Buffer",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "676",
+     "name": "Use of Potentially Dangerous Function",
+     "abstraction": "Base"
+    },
+    {
+     "id": "787",
+     "name": "Out-of-bounds Write",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "786": {
+   "name": "Access of Memory Location Before Start of Buffer",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Discouraged",
+   "rationale": "The CWE entry might be misused when lower-level CWE entries might be available. It also overlaps existing CWE entries and might be deprecated in the future.",
+   "comments": "If the \"Access\" operation is known to be a read or a write, then investigate children of entries such as CWE-787: Out-of-bounds Write and CWE-125: Out-of-bounds Read.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "124",
+     "name": "Buffer Underwrite",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "127",
+     "name": "Buffer Under-read",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "787": {
+   "name": "Out-of-bounds Write",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed-with-Review",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities. However, closer examination is required.",
+   "comments": "While this CWE is allowed for mapping, it has more specific children that might be a better fit. Carefully read both the name and description to ensure that this mapping is appropriate. Consider the root cause errors that have led to the out-of-bounds write by examining \"CanFollow\" relationships for this entry.",
+   "suggestions": [
+    {
+     "id": "120",
+     "comment": "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+    },
+    {
+     "id": "121",
+     "comment": "Stack-based Buffer Overflow"
+    },
+    {
+     "id": "122",
+     "comment": "Heap-based Buffer Overflow"
+    },
+    {
+     "id": "124",
+     "comment": "Buffer Underwrite ('Buffer Underflow')"
+    }
+   ],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "120",
+     "name": "Buffer Copy without Checking Size of Input",
+     "abstraction": "Base",
+     "usage": "Allowed-with-Review"
+    },
+    {
+     "id": "121",
+     "name": "Stack-based Buffer Overflow",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "122",
+     "name": "Heap-based Buffer Overflow",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "123",
+     "name": "Write-what-where Condition",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "124",
+     "name": "Buffer Underwrite",
+     "abstraction": "Base",
+     "usage": "Allowed"
+    },
+    {
+     "id": "785",
+     "name": "Use of Path Manipulation Function without Maximum-sized Buffer",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "788": {
+   "name": "Access of Memory Location After End of Buffer",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Discouraged",
+   "rationale": "The CWE entry might be misused when lower-level CWE entries might be available. It also overlaps existing CWE entries and might be deprecated in the future.",
+   "comments": "If the \"Access\" operation is known to be a read or a write, then investigate children of entries such as CWE-787: Out-of-bounds Write and CWE-125: Out-of-bounds Read.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "121",
+     "name": "Stack-based Buffer Overflow",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "122",
+     "name": "Heap-based Buffer Overflow",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "126",
+     "name": "Buffer Over-read",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "789": {
+   "name": "Memory Allocation with Excessive Size Value",
+   "abstraction": "Variant",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "770",
+     "name": "Allocation of Resources Without Limits or Throttling",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "805": {
+   "name": "Buffer Access with Incorrect Length Value",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "806",
+     "name": "Buffer Access Using Size of Source Buffer",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "806": {
+   "name": "Buffer Access Using Size of Source Buffer",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "805",
+     "name": "Buffer Access with Incorrect Length Value",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "822": {
+   "name": "Untrusted Pointer Dereference",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "823": {
+   "name": "Use of Out-of-range Pointer Offset",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "824": {
+   "name": "Access of Uninitialized Pointer",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "825": {
+   "name": "Expired Pointer Dereference",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "119",
+     "name": "Improper Restriction of Operations within the Bounds of a Memory Buffer",
+     "abstraction": "Class"
+    },
+    {
+     "id": "672",
+     "name": "Operation on a Resource after Expiration or Release",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "415",
+     "name": "Double Free",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "416",
+     "name": "Use After Free",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "828": {
+   "name": "Signal Handler with Functionality that is not Asynchronous-Safe",
+   "abstraction": "Variant",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Variant level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "364",
+     "name": "Signal Handler Race Condition",
+     "abstraction": "Base"
+    }
+   ],
+   "children": [
+    {
+     "id": "479",
+     "name": "Signal Handler Use of a Non-reentrant Function",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "839": {
+   "name": "Numeric Range Comparison Without Minimum Check",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "1023",
+     "name": "Incomplete Comparison with Missing Factors",
+     "abstraction": "Class"
+    },
+    {
+     "id": "1284",
+     "name": "Improper Validation of Specified Quantity in Input",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "843": {
+   "name": "Access of Resource Using Incompatible Type",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "704",
+     "name": "Incorrect Type Conversion or Cast",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "910": {
+   "name": "Use of Expired File Descriptor",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "672",
+     "name": "Operation on a Resource after Expiration or Release",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "911": {
+   "name": "Improper Update of Reference Count",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "664",
+     "name": "Improper Control of a Resource Through its Lifetime",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "916": {
+   "name": "Use of Password Hash With Insufficient Computational Effort",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "328",
+     "name": "Use of Weak Hash",
+     "abstraction": "Base"
+    }
+   ],
+   "children": [
+    {
+     "id": "759",
+     "name": "Use of a One-Way Hash without a Salt",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    },
+    {
+     "id": "760",
+     "name": "Use of a One-Way Hash with a Predictable Salt",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "917": {
+   "name": "Improper Neutralization of Special Elements used in an Expression Language Statement",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "77",
+     "name": "Improper Neutralization of Special Elements used in a Command",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "1235": {
+   "name": "Incorrect Use of Autoboxing and Unboxing for Performance Critical Operations",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "400",
+     "name": "Uncontrolled Resource Consumption",
+     "abstraction": "Class"
+    }
+   ],
+   "children": []
+  },
+  "1325": {
+   "name": "Improperly Controlled Sequential Memory Allocation",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "770",
+     "name": "Allocation of Resources Without Limits or Throttling",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "1335": {
+   "name": "Incorrect Bitwise Shift of Integer",
+   "abstraction": "Base",
+   "status": "Draft",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "682",
+     "name": "Incorrect Calculation",
+     "abstraction": "Pillar"
+    }
+   ],
+   "children": []
+  },
+  "1336": {
+   "name": "Improper Neutralization of Special Elements Used in a Template Engine",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "94",
+     "name": "Improper Control of Generation of Code",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  },
+  "1341": {
+   "name": "Multiple Releases of Same Resource or Handle",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "675",
+     "name": "Multiple Operations on Resource in Single-Operation Context",
+     "abstraction": "Class"
+    }
+   ],
+   "children": [
+    {
+     "id": "415",
+     "name": "Double Free",
+     "abstraction": "Variant",
+     "usage": "Allowed"
+    }
+   ]
+  },
+  "1429": {
+   "name": "Missing Security-Relevant Feedback for Unexecuted Operations in Hardware Interface",
+   "abstraction": "Base",
+   "status": "Incomplete",
+   "usage": "Allowed",
+   "rationale": "This CWE entry is at the Base level of abstraction, which is a preferred level of abstraction for mapping to the root causes of vulnerabilities.",
+   "comments": "Carefully read both the name and description to ensure that this mapping is an appropriate fit. Do not try to 'force' a mapping to a lower-level Base/Variant simply to comply with this preferred level of abstraction.",
+   "suggestions": [],
+   "parents": [
+    {
+     "id": "223",
+     "name": "Omission of Security-relevant Information",
+     "abstraction": "Base"
+    }
+   ],
+   "children": []
+  }
+ }
+}

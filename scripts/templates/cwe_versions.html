@@ -1,0 +1,247 @@
+<!doctype html>
+<!--
+{{LICENSE}}
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CWE 버전 비교 · {{TITLE}}</title>
+<!-- 외부 자원을 불러오지 않는다. 고른 파일은 이 브라우저 안에서만 읽는다 -->
+<style>
+:root{--bg:#fff;--paper:#fff;--ink:#1b2422;--muted:#5d6a67;--line:#d5dcda;--soft:#eaefed;--accent:#28575f;--accent-ink:#fff;--warn:#9a5b12;--warn-bg:#fbf1e3;
+  --f-body:"IBM Plex Sans KR","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR","NanumGothic",system-ui,sans-serif;--f-mono:"IBM Plex Mono",Consolas,"D2Coding",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121817;--paper:#18201f;--ink:#e3e9e7;--muted:#9aa8a5;--line:#2e3a38;--soft:#1f2928;--accent:#7fb5bd;--accent-ink:#0e1514;--warn:#e2a95c;--warn-bg:#2b2216;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121817;--paper:#18201f;--ink:#e3e9e7;--muted:#9aa8a5;--line:#2e3a38;--soft:#1f2928;--accent:#7fb5bd;--accent-ink:#0e1514;--warn:#e2a95c;--warn-bg:#2b2216;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 var(--f-body)}
+main{max-width:980px;margin:0 auto;padding:0 16px 56px}
+{{SITEBAR_CSS}}
+.to-top{position:fixed;right:16px;bottom:16px;padding:7px 14px;border-radius:18px;background:#28575f;color:#fff;font-size:13px;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.3);z-index:5}
+.to-top:hover{background:#1d4148}
+@media print{.to-top{display:none}}
+.sitemenu{display:flex;flex-wrap:wrap;gap:2px 14px;background:var(--soft);padding:6px 16px;font-size:13.5px;margin:0}
+.sitemenu a{color:var(--ink);text-decoration:none}
+.sitemenu a:hover{text-decoration:underline}
+.sitemenu a[aria-current]{color:var(--accent);font-weight:700}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sitebar{background:#1d4148}}
+:root[data-theme="dark"] .sitebar{background:#1d4148}
+h1{font-weight:600;font-size:calc(1.6*var(--u));letter-spacing:-.01em;line-height:1.3;margin:20px 0 8px}h2{font-size:1.1rem;font-weight:600;margin:0 0 .5em}
+a{color:var(--accent)}
+section{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:16px;margin:16px 0}
+.note{color:var(--muted);font-size:.9rem;margin:.4em 0}
+.warn{background:var(--warn-bg);color:var(--warn);padding:8px 12px;border-radius:6px;margin:.6em 0}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;word-break:keep-all;overflow-wrap:break-word}
+@media (max-width:720px){th,td{min-width:4.5em}table{display:block;overflow-x:auto}}
+th{background:var(--soft);font-weight:600}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+input[type=text]{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);width:14em;max-width:100%}
+select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:.6em 0}
+code{font-family:var(--f-mono);font-size:.92em}
+details{margin:.5em 0}summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+{{SITEBAR}}
+{{MENU}}
+<main>
+<h1>CWE 버전 비교</h1>
+<p>CWE는 판마다 규칙 구성이 바뀐다. 사업이 기준으로 삼은 CWE 판과 이 가이드의 기준 판(CWE {{BASE}})이 다르면, 여기서 뷰별 규칙 수와 달라진 번호를 확인한다.</p>
+
+<section>
+<h2>1. 비교할 CWE 파일 불러오기(선택)</h2>
+<p class="note">MITRE <a href="https://cwe.mitre.org/data/archive.html" target="_blank" rel="noopener">CWE 아카이브</a>에서 받은 <code>cwec_vX.Y.xml.zip</code> 또는 압축을 푼 <code>.xml</code>을 고른다. 여러 파일을 함께 고를 수 있다. 파일은 이 브라우저 안에서만 읽고 어디로도 보내지 않으며, 페이지를 닫으면 사라진다. 아래 표에는 이 가이드가 미리 계산한 판이 들어 있어 파일 없이도 볼 수 있다.</p>
+<div class="row"><input type="file" id="files" accept=".xml,.zip" multiple aria-label="CWE XML 파일"></div>
+<div class="row"><label for="extra">함께 볼 뷰 번호</label><input type="text" id="extra" placeholder="예: 1154, 868"><span class="note">불러온 파일에서만 계산한다.</span></div>
+<div id="msg" aria-live="polite"></div>
+</section>
+
+<section>
+<h2>2. 판별 규칙 수</h2>
+<div class="scroll"><table id="counts"></table></div>
+<p class="note">언어 뷰(CWE-658·659·660)는 그 판의 약점 가운데 적용 언어가 C·C++·Java인 것을 센다. 합집합은 세 뷰에 하나라도 든 수다. 옛 판(3.0 전)의 복합 요소(Compound_Element)도 MITRE 뷰 정의대로 함께 센다. 사업이 점검하는 규칙은 도구 지원과 협의로 달라지므로 이 수가 사업의 점검 범위 자체는 아니다.</p>
+</section>
+
+<section>
+<h2>3. 두 판 사이에 달라진 규칙</h2>
+<div class="row"><label for="from">기준 판</label><select id="from"></select><label for="to">비교 판</label><select id="to"></select></div>
+<div id="diff"></div>
+</section>
+
+<section>
+<h2>4. 보안약점 점검 목록(44개)의 판별 상태</h2>
+<p class="note">매뉴얼의 44개 번호가 그 판에 있는지, 폐기(Deprecated)되었는지 본다. 불러온 파일에서만 계산한다.</p>
+<div id="list44"><p class="note">파일을 불러오면 표시된다.</p></div>
+</section>
+
+<p class="note">CWE 번호와 수는 MITRE CWE에서 계산했다. Copyright © 2006–2026, The MITRE Corporation. CWE는 The MITRE Corporation의 상표다. 이용 조건은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE Terms of Use</a>와 이 가이드의 '출처와 이용 조건'에 있다.</p>
+</main>
+<script>
+(function(){
+"use strict";
+var D={{DATA}};
+var LANG={658:"C",659:"C++",660:"Java"},MAIN=[658,659,660];
+var S197=new Set(D.scope),SUP=new Set(D.supp),PAGES=new Set(D.pages);
+var vers=D.versions.map(function(v){var views={};MAIN.forEach(function(id){views[id]=new Set(v.views[id])});return {version:v.version,date:v.date,total:v.weaknesses,views:views,src:"이 가이드가 계산",names:null,status:null}});
+var $=function(id){return document.getElementById(id)};
+function el(tag,text,cls){var e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e}
+function vkey(v){return String(v).split(".").map(Number)}
+function vcmp(a,b){var x=vkey(a.version),y=vkey(b.version);for(var i=0;i<Math.max(x.length,y.length);i++){var d=(x[i]||0)-(y[i]||0);if(d)return d}return 0}
+function numSort(a,b){return Number(a)-Number(b)}
+
+/* zip 읽기: 외부 라이브러리 없이 중앙 디렉터리에서 첫 .xml 항목을 찾아 푼다.
+   압축 폭탄으로 탭이 멈추지 않게 파일 크기(50 MB), 풀린 XML 크기(200 MB), 압축비(100배)에 상한을 둔다(CWE 5.0 XML은 약 20 MB). */
+var MAXZIP=50*1048576,MAXXML=200*1048576,MAXRATIO=100;
+async function inflateLimited(data){
+  var r=new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader(),parts=[],total=0;
+  for(;;){var x=await r.read();if(x.done)break;total+=x.value.byteLength;
+    if(total>MAXXML||total>Math.max(data.byteLength,1)*MAXRATIO){await r.cancel();throw new Error("압축을 풀면 너무 커서 읽지 않는다(상한 200 MB·압축비 100배)")}
+    parts.push(x.value)}
+  return await new Blob(parts).text();
+}
+async function unzip(buf){
+  var dv=new DataView(buf),eocd=-1;
+  for(var i=buf.byteLength-22;i>=0&&i>buf.byteLength-66000;i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}}
+  if(eocd<0)throw new Error("zip 파일을 읽지 못했다");
+  var count=dv.getUint16(eocd+10,true),p=dv.getUint32(eocd+16,true),dec=new TextDecoder();
+  for(var n=0;n<count;n++){
+    var method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true),usize=dv.getUint32(p+24,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+    var name=dec.decode(new Uint8Array(buf,p+46,nl));
+    if(/\.xml$/i.test(name)){
+      if(usize>MAXXML)throw new Error("zip 안의 XML이 너무 커서 읽지 않는다(상한 200 MB)");
+      var start=off+30+dv.getUint16(off+26,true)+dv.getUint16(off+28,true);
+      if(start+csize>buf.byteLength)throw new Error("zip 파일이 손상되었다");
+      var data=new Uint8Array(buf,start,csize);
+      if(method===0)return dec.decode(data);
+      if(method!==8)throw new Error("지원하지 않는 압축 방식이다");
+      if(typeof DecompressionStream==="undefined")throw new Error("이 브라우저는 zip을 풀 수 없다. 압축을 푼 .xml을 고른다");
+      return await inflateLimited(data);
+    }
+    p+=46+nl+xl+cl;
+  }
+  throw new Error("zip 안에 .xml 파일이 없다");
+}
+function parseXml(text){
+  var doc=new DOMParser().parseFromString(text,"application/xml");
+  if(doc.getElementsByTagName("parsererror").length){
+    /* 옛 판 일부는 xhtml 접두어를 선언하지 않는다 */
+    doc=new DOMParser().parseFromString(text.replace(/<Weakness_Catalog\b/,'<Weakness_Catalog xmlns:xhtml="http://www.w3.org/1999/xhtml"'),"application/xml");
+    if(doc.getElementsByTagName("parsererror").length)throw new Error("XML을 해석하지 못했다");
+  }
+  return doc;
+}
+function all(root,name){return Array.prototype.slice.call(root.getElementsByTagNameNS("*",name))}
+function memberView(doc,vid){
+  var view=all(doc,"View").filter(function(v){return v.getAttribute("ID")===String(vid)})[0];
+  if(!view)return null;
+  var cats={};all(doc,"Category").concat(all(doc,"Grouping")).forEach(function(c){cats[c.getAttribute("ID")]=c});
+  var hasWeak=function(id){return !!wk[id]};
+  var wk={};all(doc,"Weakness").forEach(function(w){wk[w.getAttribute("ID")]=w});
+  var out=new Set(),seen=new Set(),stack=all(view,"Has_Member").map(function(m){return m.getAttribute("CWE_ID")});
+  if(!stack.length)return null;
+  while(stack.length){
+    var id=stack.pop();if(seen.has(id))continue;seen.add(id);
+    if(hasWeak(id)){out.add(id);continue}
+    if(cats[id])all(cats[id],"Has_Member").forEach(function(m){if(m.getAttribute("View_ID")===String(vid))stack.push(m.getAttribute("CWE_ID"))});
+  }
+  /* 뷰 안의 하위 관계(ChildOf)를 따라간다 */
+  var changed=true;
+  while(changed){changed=false;
+    Object.keys(wk).forEach(function(id){if(out.has(id))return;
+      if(all(wk[id],"Related_Weakness").some(function(r){return r.getAttribute("Nature")==="ChildOf"&&r.getAttribute("View_ID")===String(vid)&&out.has(r.getAttribute("CWE_ID"))})){out.add(id);changed=true}})}
+  return out;
+}
+function analyze(text,fname){
+  var doc=parseXml(text),root=doc.documentElement;
+  var version=root.getAttribute("Version")||root.getAttribute("Catalog_Version");
+  if(!version)throw new Error("CWE 카탈로그 파일이 아니다");
+  var names={},status={},views={};MAIN.forEach(function(id){views[id]=new Set()});
+  var items=all(doc,"Weakness").concat(all(doc,"Compound_Element"));
+  items.forEach(function(w){
+    var id=w.getAttribute("ID");names[id]=w.getAttribute("Name");status[id]=w.getAttribute("Status");
+    var langs=new Set();all(w,"Language").forEach(function(l){var n=l.getAttribute("Name")||l.getAttribute("Language_Name");if(n)langs.add(n)});
+    MAIN.forEach(function(v){if(langs.has(LANG[v]))views[v].add(id)});
+  });
+  var res={version:version,date:root.getAttribute("Date")||root.getAttribute("Catalog_Date")||"",total:items.length,views:views,src:fname,names:names,status:status,doc:doc};
+  return res;
+}
+function extraIds(){return ($("extra").value.match(/\d+/g)||[]).filter(function(x,i,a){return a.indexOf(x)===i&&!LANG[x]})}
+function union(v){var u=new Set();MAIN.forEach(function(id){v.views[id].forEach(function(x){u.add(x)})});return u}
+function renderCounts(){
+  var t=$("counts");t.textContent="";var ex=extraIds();
+  var head=el("tr");["CWE 판","발표일","약점 수","CWE-658(C)","CWE-659(C++)","CWE-660(Java)","세 뷰 합집합"].concat(ex.map(function(x){return "CWE-"+x})).concat(["출처"]).forEach(function(h){head.appendChild(el("th",h))});t.appendChild(head);
+  vers.forEach(function(v){
+    var r=el("tr");r.appendChild(el("td",v.version+(v.version===D.base?" (이 가이드 기준)":"")));r.appendChild(el("td",String(v.date||"").replace(/^(\d{4})-0?(\d+)-0?(\d+)$/,"$1. $2. $3.")));r.appendChild(el("td",String(v.total),"n"));
+    MAIN.forEach(function(id){r.appendChild(el("td",String(v.views[id].size),"n"))});r.appendChild(el("td",String(union(v).size),"n"));
+    ex.forEach(function(x){var s=v.doc?memberView(v.doc,x):null;r.appendChild(el("td",s?String(s.size):"—","n"))});
+    r.appendChild(el("td",v.src));t.appendChild(r);
+  });
+  if(ex.length){var note=$("msg");if(!note.querySelector(".exnote")){note.appendChild(el("p","—는 미리 계산한 판이거나, 그 판에 없거나 구성원 목록으로 정의되지 않은 뷰다.","note exnote"))}}
+}
+function fillSel(){
+  [$("from"),$("to")].forEach(function(s,i){var keep=s.value;s.textContent="";vers.forEach(function(v){var o=el("option",v.version);o.value=v.version;s.appendChild(o)});
+    if(keep&&vers.some(function(v){return v.version===keep}))s.value=keep;else s.value=i===0?vers[0].version:vers[vers.length-1].version});
+}
+function scopeCell(id){
+  var td=el("td");
+  if(S197.has(id)||SUP.has(id)){
+    var a=el("a",S197.has(id)?"범위 안":"보조 항목");a.href=PAGES.has(id)?D.cwe_href.replace("{n}",id):"https://cwe.mitre.org/data/definitions/"+id+".html";td.appendChild(a);
+  }else td.textContent="범위 밖";
+  return td;
+}
+function nameOf(id,a,b){return (b.names&&b.names[id])||(a.names&&a.names[id])||D.names[id]||""}
+function renderDiff(){
+  var box=$("diff");box.textContent="";
+  var a=vers.filter(function(v){return v.version===$("from").value})[0],b=vers.filter(function(v){return v.version===$("to").value})[0];
+  if(!a||!b||a===b){box.appendChild(el("p","서로 다른 두 판을 고른다.","note"));return}
+  var t=el("table"),h=el("tr");["뷰","기준 판 수","비교 판 수","늘어남","줄어듦"].forEach(function(x){h.appendChild(el("th",x))});t.appendChild(h);
+  var rows=MAIN.map(function(id){return {label:"CWE-"+id+"("+LANG[id]+")",A:a.views[id],B:b.views[id]}});rows.push({label:"세 뷰 합집합",A:union(a),B:union(b)});
+  rows.forEach(function(r){r.add=Array.from(r.B).filter(function(x){return !r.A.has(x)}).sort(numSort);r.del=Array.from(r.A).filter(function(x){return !r.B.has(x)}).sort(numSort);
+    var tr=el("tr");tr.appendChild(el("td",r.label));tr.appendChild(el("td",String(r.A.size),"n"));tr.appendChild(el("td",String(r.B.size),"n"));tr.appendChild(el("td",String(r.add.length),"n"));tr.appendChild(el("td",String(r.del.length),"n"));t.appendChild(tr)});
+  var sc=el("div","","scroll");sc.appendChild(t);box.appendChild(sc);
+  var u=rows[3];[["늘어난 규칙",u.add],["줄어든 규칙",u.del]].forEach(function(p){
+    var d=el("details");if(p[1].length)d.open=true;d.appendChild(el("summary",p[0]+" "+p[1].length+"개(세 뷰 합집합)"));
+    if(p[1].length){var w=el("div","","scroll"),tt=el("table"),hh=el("tr");["CWE","이름","들어 있는 뷰","이 가이드"].forEach(function(x){hh.appendChild(el("th",x))});tt.appendChild(hh);
+      p[1].forEach(function(id){var tr=el("tr");tr.appendChild(el("td","CWE-"+id));tr.appendChild(el("td",nameOf(id,a,b)));
+        var src=p[0]==="늘어난 규칙"?b:a;tr.appendChild(el("td",MAIN.filter(function(m){return src.views[m].has(id)}).map(function(m){return LANG[m]}).join("·")));tr.appendChild(scopeCell(id));tt.appendChild(tr)});
+      w.appendChild(tt);d.appendChild(w)}
+    box.appendChild(d)});
+}
+function render44(){
+  var box=$("list44"),files=vers.filter(function(v){return v.status});box.textContent="";
+  if(!files.length){box.appendChild(el("p","파일을 불러오면 표시된다.","note"));return}
+  var t=el("table"),h=el("tr");["CWE 판","그 판에 있음","폐기","없음","폐기·없는 번호"].forEach(function(x){h.appendChild(el("th",x))});t.appendChild(h);
+  files.forEach(function(v){var dep=D.list44.filter(function(i){return v.status[i]==="Deprecated"}),miss=D.list44.filter(function(i){return !(i in v.status)}),tr=el("tr");
+    tr.appendChild(el("td",v.version));tr.appendChild(el("td",String(D.list44.length-miss.length),"n"));tr.appendChild(el("td",String(dep.length),"n"));tr.appendChild(el("td",String(miss.length),"n"));
+    tr.appendChild(el("td",dep.concat(miss).map(function(i){return "CWE-"+i}).join(", ")||"—"));t.appendChild(tr)});
+  var w=el("div","","scroll");w.appendChild(t);box.appendChild(w);
+}
+function renderAll(){renderCounts();fillSel();renderDiff();render44()}
+async function loadFile(f){
+  if(f.size>MAXXML)throw new Error("파일이 너무 커서 읽지 않는다(상한 200 MB)");
+  if(/\.zip$/i.test(f.name)&&f.size>MAXZIP)throw new Error("zip 파일이 너무 커서 읽지 않는다(상한 50 MB)");
+  var buf=await f.arrayBuffer(),sig=new DataView(buf).getUint32(0,true);
+  var text=sig===0x04034b50?await unzip(buf):new TextDecoder().decode(buf);
+  return analyze(text,f.name);
+}
+async function addBuffers(list){
+  var msg=$("msg");msg.textContent="";msg.appendChild(el("p","파일을 읽는 중이다. 큰 파일은 몇 초 걸린다.","note"));
+  var errs=[];
+  for(var i=0;i<list.length;i++){try{var r=await loadFile(list[i]);vers=vers.filter(function(v){return v.version!==r.version});vers.push(r)}catch(e){errs.push(list[i].name+": "+e.message)}}
+  vers.sort(vcmp);msg.textContent="";errs.forEach(function(e){msg.appendChild(el("p",e,"warn"))});renderAll();
+}
+window.cweVersionCompare={load:addBuffers,get versions(){return vers}};
+$("files").addEventListener("change",function(e){addBuffers(Array.prototype.slice.call(e.target.files))});
+$("extra").addEventListener("change",renderCounts);
+$("from").addEventListener("change",renderDiff);$("to").addEventListener("change",renderDiff);
+renderAll();
+})();
+</script>
+{{SITEFOOT}}
+<a class="to-top" id="to-top" href="#" hidden>↑ 맨 위로</a>
+<script>(function(){var b=document.getElementById("to-top");function f(){b.hidden=window.pageYOffset<300}window.addEventListener("scroll",f,{passive:true});f();b.addEventListener("click",function(e){e.preventDefault();window.scrollTo(0,0)})})();</script>
+</body>
+</html>

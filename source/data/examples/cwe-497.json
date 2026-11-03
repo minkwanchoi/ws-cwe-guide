@@ -1,0 +1,98 @@
+{
+ "cwe": "497",
+ "scenario_ko": "정비 단말이나 지상 통제 화면이 장비에 상태 조회를 보내면 장비는 운용 상태를 돌려준다. 장비 안에는 내부 빌드 식별자·빌드 서버 이름·키 파일 위치·메모리 배치·디버그 포트 상태 같은 시스템 데이터도 있는데, 이것이 상태 응답에 함께 실리면 공격 대상을 파악하는 데 쓰인다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    const char *fw_full;      /* 내부 빌드 식별자 */\n    const char *build_host;\n    const char *key_path;\n    unsigned    ram_base;\n    int         jtag_open;\n    int         mode;\n    int         battery_pct;\n} SysInfo;\n\nstatic const SysInfo sys = {\n    \"3.4.1-rc2+g9f1c\", \"bldsrv-07\", \"/opt/gcs/conf/link.key\",\n    0x20000000u, 1, 2, 87\n};\n\n/* 정비 단말의 STATUS 요청에 대한 응답 */\nstatic int status_reply(char *out, size_t n)\n{\n    /* 내부 구조체의 모든 필드를 응답에 싣는다 */\n    return snprintf(out, n, \"mode=%d batt=%d fw=%s host=%s key=%s ram=0x%08X jtag=%d\",\n                    sys.mode, sys.battery_pct, sys.fw_full, sys.build_host,\n                    sys.key_path, sys.ram_base, sys.jtag_open);\n}\n\nint main(void)\n{\n    char out[256];\n    if (status_reply(out, sizeof out) > 0) {\n        printf(\"STATUS -> %s\\n\", out);\n    }\n    return 0;\n}\n",
+    "explain_ko": "상태 응답을 만들면서 내부 구조체의 필드를 모두 싣는다. 빌드 서버 이름, 키 파일 위치, RAM 시작 주소, JTAG 개방 여부까지 단말로 나간다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    const char *fw_full;      /* 내부 빌드 식별자: 정비 로그 전용 */\n    const char *fw_public;    /* ICD에 정의된 외부 공개 판 번호 */\n    const char *build_host;\n    const char *key_path;\n    unsigned    ram_base;\n    int         jtag_open;\n    int         mode;\n    int         battery_pct;\n} SysInfo;\n\nstatic const SysInfo sys = {\n    \"3.4.1-rc2+g9f1c\", \"3.4\", \"bldsrv-07\", \"/opt/gcs/conf/link.key\",\n    0x20000000u, 1, 2, 87\n};\n\n/* 응답에는 ICD가 허용한 필드만 골라 싣는다 */\nstatic int status_reply(char *out, size_t n)\n{\n    return snprintf(out, n, \"mode=%d batt=%d fw=%s\",\n                    sys.mode, sys.battery_pct, sys.fw_public);\n}\n\nint main(void)\n{\n    char out[128];\n    if (status_reply(out, sizeof out) > 0) {\n        printf(\"STATUS -> %s\\n\", out);\n    }\n    return 0;\n}\n",
+    "explain_ko": "ICD가 외부 공개를 허용한 필드(모드·배터리·공개 버전 번호)만 골라 응답을 만든다. 내부 빌드 식별자는 정비 로그용으로 따로 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "host=bldsrv|key=/opt/gcs",
+    "expect_good": "(?m)STATUS -> mode=2 batt=87 fw=3\\.4$"
+   },
+   "refs": [
+    "MITRE CWE-497 Demonstrative Example 1(PATH 환경 변수를 표준 오류로 출력) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 캡슐화 6-2 '시스템 데이터 정보노출'(인쇄 190쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <map>\n#include <string>\n\nint main() {\n    // 장비 구성 저장소(내부용 항목과 외부 공개 항목이 섞여 있다)\n    const std::map<std::string, std::string> cfg = {\n        {\"sys.mode\", \"STANDBY\"},\n        {\"sys.health\", \"OK\"},\n        {\"sys.build\", \"bldsrv-07 2026-09-30 debug-sym\"},\n        {\"radio.key_file\", \"/opt/gcs/conf/link.key\"},\n        {\"net.peer\", \"192.0.2.17:7001\"},\n    };\n\n    // DIAG 응답: 구성 항목 전부를 그대로 보낸다\n    std::string reply;\n    for (const auto &[key, value] : cfg) {\n        reply += key + \"=\" + value + \";\";\n    }\n    std::cout << \"DIAG -> \" << reply << '\\n';\n    return 0;\n}\n",
+    "explain_ko": "진단 응답에서 구성 저장소 전체를 반복문으로 펼쳐 보낸다. 공개 항목과 내부 항목(키 파일·빌드 정보·상대 장비 주소)이 섞여 있어 모두 나간다."
+   },
+   "good": {
+    "code": "#include <array>\n#include <iostream>\n#include <map>\n#include <string>\n\nint main() {\n    const std::map<std::string, std::string> cfg = {\n        {\"sys.mode\", \"STANDBY\"},\n        {\"sys.health\", \"OK\"},\n        {\"sys.build\", \"bldsrv-07 2026-09-30 debug-sym\"},\n        {\"radio.key_file\", \"/opt/gcs/conf/link.key\"},\n        {\"net.peer\", \"192.0.2.17:7001\"},\n    };\n\n    // 외부로 보내도 되는 항목을 허용목록으로 정해 두고 그것만 싣는다\n    constexpr std::array<const char *, 2> kExported = {\"sys.mode\", \"sys.health\"};\n    std::string reply;\n    for (const char *key : kExported) {\n        auto it = cfg.find(key);\n        reply += std::string(key) + \"=\" + (it != cfg.end() ? it->second : \"N/A\") + \";\";\n    }\n    std::cout << \"DIAG -> \" << reply << '\\n';\n    return 0;\n}\n",
+    "explain_ko": "외부로 보낼 항목을 허용목록으로 정해 두고 그 항목만 찾아 싣는다. 구성에 항목이 늘어도 응답이 저절로 늘지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "radio\\.key_file=/opt|bldsrv-07",
+    "expect_good": "DIAG -> sys\\.mode=STANDBY;sys\\.health=OK;"
+   },
+   "refs": [
+    "MITRE CWE-497 Demonstrative Example 4(데이터베이스 연결 문자열을 콘솔에 출력) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.util.Properties;\n\npublic class Example {\n    static Properties loadDeviceState() {\n        Properties dev = new Properties();\n        dev.setProperty(\"mode\", \"STANDBY\");\n        dev.setProperty(\"health\", \"OK\");\n        dev.setProperty(\"build.host\", \"bldsrv-07\");\n        dev.setProperty(\"crypto.keyFile\", \"/opt/gcs/conf/link.key\");\n        dev.setProperty(\"db.url\", \"jdbc:h2:/opt/gcs/data/log\");\n        return dev;\n    }\n\n    // 지상 통제 화면의 상태 조회 응답\n    static String statusReply(Properties dev) {\n        return \"STATUS \" + dev;      // Properties.toString은 모든 항목을 펼친다\n    }\n\n    public static void main(String[] args) {\n        System.out.println(statusReply(loadDeviceState()));\n    }\n}\n",
+    "explain_ko": "Properties 객체를 문자열 연결로 응답에 넣는다. Properties.toString()은 모든 항목을 펼치므로 키 파일 위치와 DB 주소가 함께 나간다."
+   },
+   "good": {
+    "code": "import java.util.List;\nimport java.util.Properties;\nimport java.util.StringJoiner;\n\npublic class Example {\n    // 외부로 보내도 되는 항목(ICD 상태 메시지 정의)\n    static final List<String> EXPORTED = List.of(\"mode\", \"health\");\n\n    static Properties loadDeviceState() {\n        Properties dev = new Properties();\n        dev.setProperty(\"mode\", \"STANDBY\");\n        dev.setProperty(\"health\", \"OK\");\n        dev.setProperty(\"build.host\", \"bldsrv-07\");\n        dev.setProperty(\"crypto.keyFile\", \"/opt/gcs/conf/link.key\");\n        dev.setProperty(\"db.url\", \"jdbc:h2:/opt/gcs/data/log\");\n        return dev;\n    }\n\n    static String statusReply(Properties dev) {\n        StringJoiner out = new StringJoiner(\", \", \"STATUS {\", \"}\");\n        for (String key : EXPORTED) {\n            out.add(key + \"=\" + dev.getProperty(key, \"N/A\"));\n        }\n        return out.toString();\n    }\n\n    public static void main(String[] args) {\n        System.out.println(statusReply(loadDeviceState()));\n    }\n}\n",
+    "explain_ko": "ICD 상태 메시지 정의에 있는 키만 허용목록으로 꺼내 응답을 만든다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "crypto\\.keyFile=/opt|bldsrv-07",
+    "expect_good": "STATUS \\{mode=STANDBY, health=OK\\}"
+   },
+   "refs": [
+    "MITRE CWE-497 Demonstrative Example 4(데이터베이스 연결 문자열을 콘솔에 출력) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 캡슐화 6-3 '시스템 데이터 정보 누출'(인쇄 274쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "// 정비 단말의 상태 조회 요청에 대한 응답\nstatic string StatusReply(DeviceState s) => \"STATUS -> \" + s;   // record를 통째로 문자열로\n\nvar state = new DeviceState(\"STANDBY\", 87, \"bldsrv-07\", \"/opt/gcs/conf/link.key\");\nConsole.WriteLine(StatusReply(state));\n\n// record의 자동 ToString은 모든 공개 속성을 이름과 값으로 펼친다\ninternal sealed record DeviceState(string Mode, int BatteryPct, string BuildHost, string KeyPath);\n",
+    "explain_ko": "record를 문자열로 바꿔 응답에 넣는다. record가 자동으로 만드는 ToString은 모든 공개 속성을 이름과 값으로 펼치므로 키 파일 위치와 빌드 서버 이름이 나간다."
+   },
+   "good": {
+    "code": "using System.Globalization;\n\nvar state = new DeviceState(\"STANDBY\", 87, \"bldsrv-07\", \"/opt/gcs/conf/link.key\");\n\n// 응답 전용 형식으로 옮겨 ICD가 허용한 필드만 보낸다\nConsole.WriteLine(\"STATUS -> \" + StatusMessage.From(state));\n\ninternal sealed record DeviceState(string Mode, int BatteryPct, string BuildHost, string KeyPath)\n{\n    // 실수로 문자열이 되어도 내부 값이 펼쳐지지 않게 한다\n    public override string ToString() => $\"DeviceState(mode={Mode})\";\n}\n\ninternal sealed record StatusMessage(string Mode, int BatteryPct)\n{\n    public static StatusMessage From(DeviceState s)\n    {\n        ArgumentNullException.ThrowIfNull(s);\n        return new StatusMessage(s.Mode, s.BatteryPct);\n    }\n\n    public override string ToString() =>\n        string.Create(CultureInfo.InvariantCulture, $\"mode={Mode} batt={BatteryPct}\");\n}\n",
+    "explain_ko": "응답 전용 형식(StatusMessage)으로 옮겨 허용한 필드만 보내고, 내부 record의 ToString도 재정의해 실수로 문자열이 되어도 내부 값이 펼쳐지지 않게 한다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "KeyPath = /opt/gcs|BuildHost = bldsrv",
+    "expect_good": "STATUS -> mode=STANDBY batt=87"
+   },
+   "refs": [
+    "MITRE CWE-497 Demonstrative Example 4(데이터베이스 연결 문자열을 콘솔에 출력) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import json\nimport os\nimport platform\nimport sys\n\nBUILD_INFO = {\"build_host\": \"bldsrv-07.dev.invalid\", \"source_tree\": \"/home/build/gcs-r12\"}\nos.environ.setdefault(\"GCS_KEY_FILE\", \"/opt/gcs/keys/link.key\")    # 시험 준비: 운용 환경 변수\n\n\n# 정비 단말의 상태 조회에 장비 상태를 돌려준다\ndef status_response():\n    return json.dumps({\n        \"state\": \"NOMINAL\",\n        \"python\": sys.version,                    # 인터프리터 판·빌드 정보\n        \"os\": platform.platform(),\n        \"build\": BUILD_INFO,                      # 내부 빌드 서버·소스 경로\n        \"env\": {k: v for k, v in os.environ.items() if k.startswith(\"GCS_\")},   # 키 파일 위치\n    })\n\n\nprint(status_response())\n",
+    "explain_ko": "상태 조회 응답에 인터프리터 버전, 운영체제 정보, 내부 빌드 서버 이름과 소스 경로, 키 파일 위치를 담은 환경 변수를 함께 돌려준다. 정비 단말에 접근한 사람은 이 정보로 알려진 취약점이 있는 버전을 고르거나 키 파일을 노린다."
+   },
+   "good": {
+    "code": "import json\nimport os\n\nSOFTWARE_VERSION = \"12.4.0\"                       # 운용자에게 필요한 판 번호만\nos.environ.setdefault(\"GCS_KEY_FILE\", \"/opt/gcs/keys/link.key\")\n\n\ndef status_response():\n    # 응답 항목을 허용목록으로 정한다: 운용 판단에 필요한 상태만 돌려준다\n    return json.dumps({\"state\": \"NOMINAL\", \"sw_version\": SOFTWARE_VERSION})\n\n\nprint(status_response())\n",
+    "explain_ko": "응답 항목을 허용목록으로 정해 운용 판단에 필요한 상태와 버전 번호만 돌려준다. 진단에 필요한 상세 정보는 인증된 정비 계정의 별도 진단 명령이나 내부 기록으로만 본다(M-06). os.environ·sys.version·platform 값을 통째로 응답이나 화면에 싣지 않는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "bldsrv-07|/opt/gcs/keys",
+    "expect_good": "{\"state\": \"NOMINAL\", \"sw_version\": \"12.4.0\"}"
+   },
+   "refs": [
+    "MITRE CWE-497 Demonstrative Example 1(PATH 환경 변수를 표준 오류로 출력) 참고, 이 가이드가 새로 작성"
+   ]
+  }
+ }
+}

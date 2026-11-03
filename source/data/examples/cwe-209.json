@@ -1,0 +1,99 @@
+{
+ "cwe": "209",
+ "scenario_ko": "지상 통제 소프트웨어가 원격 운용자 콘솔에서 받은 임무 계획 레코드나 설정 요청을 해석하다 실패하면 오류 응답을 돌려보낸다. 응답은 망 너머 단말로 나가므로, 여기에 내부 파일 위치·키 파일 경로·스택 추적이 담기면 공격자가 다음 공격 대상을 고르는 단서가 된다.",
+ "langs": {
+  "C": {
+   "bad": {
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MISSION_DB \"/opt/gcs/data/mission.db\"\n#define LINK_KEY   \"/opt/gcs/conf/link.key\"\n\n/* 임무 계획 레코드 \"ALT=<m>\"에서 고도를 꺼낸다 */\nstatic int parse_alt(const char *rec, long *alt)\n{\n    char *end = NULL;\n    if (strncmp(rec, \"ALT=\", 4) != 0) {\n        return 11;                          /* 형식 오류 */\n    }\n    *alt = strtol(rec + 4, &end, 10);\n    if (end == rec + 4 || *end != '\\0') {\n        return 12;                          /* 숫자 아님 */\n    }\n    return 0;\n}\n\nstatic void reply(const char *rec, char *resp, size_t n)\n{\n    long alt = 0;\n    int rc = parse_alt(rec, &alt);\n    if (rc != 0) {\n        /* 내부 파일 위치·키 파일·메모리 주소를 응답에 그대로 싣는다 */\n        snprintf(resp, n, \"ERR %d: bad record '%s' (db=%s, key=%s, ctx=%p)\",\n                 rc, rec, MISSION_DB, LINK_KEY, (void *)resp);\n        return;\n    }\n    snprintf(resp, n, \"OK alt=%ld\", alt);\n}\n\nint main(void)\n{\n    char resp[256];\n    reply(\"ALT=1200\", resp, sizeof resp);\n    printf(\"to console: %s\\n\", resp);\n    reply(\"ALT=12O0\", resp, sizeof resp);   /* 숫자 0 대신 영문자 O */\n    printf(\"to console: %s\\n\", resp);\n    return 0;\n}\n",
+    "explain_ko": "해석 실패 응답에 임무 DB 위치, 키 파일 경로, 메모리 주소(%p)를 그대로 넣어 단말로 보낸다. 실행하면 응답 문자열에 키 파일 경로가 실제로 실린다."
+   },
+   "good": {
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MISSION_DB \"/opt/gcs/data/mission.db\"\n\n/* 보호된 내부 진단 로그(정비 권한으로만 열람한다고 가정) */\nstatic char diag_log[8][128];\nstatic size_t diag_count;\n\nstatic void diag(const char *rec, int rc)\n{\n    if (diag_count < 8) {\n        snprintf(diag_log[diag_count++], sizeof diag_log[0],\n                 \"parse rc=%d rec=%.40s db=%s\", rc, rec, MISSION_DB);\n    }\n}\n\nstatic int parse_alt(const char *rec, long *alt)\n{\n    char *end = NULL;\n    if (strncmp(rec, \"ALT=\", 4) != 0) {\n        return 11;\n    }\n    *alt = strtol(rec + 4, &end, 10);\n    if (end == rec + 4 || *end != '\\0') {\n        return 12;\n    }\n    return 0;\n}\n\nstatic void reply(const char *rec, char *resp, size_t n)\n{\n    long alt = 0;\n    int rc = parse_alt(rec, &alt);\n    if (rc != 0) {\n        diag(rec, rc);                      /* 상세 원인은 내부 로그로 */\n        snprintf(resp, n, \"ERR %d: record rejected\", rc);  /* 단말에는 오류 코드만 */\n        return;\n    }\n    snprintf(resp, n, \"OK alt=%ld\", alt);\n}\n\nint main(void)\n{\n    char resp[256];\n    reply(\"ALT=1200\", resp, sizeof resp);\n    printf(\"to console: %s\\n\", resp);\n    reply(\"ALT=12O0\", resp, sizeof resp);\n    printf(\"to console: %s\\n\", resp);\n    printf(\"internal log entries: %zu\\n\", diag_count);\n    return 0;\n}\n",
+    "explain_ko": "상세 원인은 보호된 내부 진단 로그에만 남기고, 단말에는 미리 정한 오류 코드와 짧은 문구만 보낸다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "/opt/gcs/conf/link\\.key",
+    "expect_good": "ERR 12: record rejected"
+   },
+   "refs": [
+    "MITRE CWE-209 Demonstrative Example 2·3(오류 메시지로 구성 파일·디렉터리 위치 노출) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 에러처리 4-1 '오류 메시지 통한 정보 노출'(인쇄 152쪽) 참고"
+   ]
+  },
+  "C++": {
+   "bad": {
+    "code": "#include <iostream>\n#include <stdexcept>\n#include <string>\n\nconst std::string kIcdTable = \"/opt/gcs/conf/icd_v3.xml\";\n\n// ICD 필드 \"갱신 주기(Hz)\"를 정수로 바꾼다\nint decode_rate(const std::string &field) {\n    std::size_t used = 0;\n    int hz = std::stoi(field, &used);\n    if (used != field.size()) {\n        throw std::runtime_error(\"trailing chars in rate field, see \" + kIcdTable + \" row 42\");\n    }\n    return hz;\n}\n\nstd::string handle(const std::string &field) {\n    try {\n        return \"OK rate=\" + std::to_string(decode_rate(field));\n    } catch (const std::exception &e) {\n        return std::string(\"ERR \") + e.what();   // 내부 메시지를 그대로 원격 단말로\n    }\n}\n\nint main() {\n    for (const char *f : {\"50\", \"50Hz\"}) {\n        std::cout << \"to console: \" << handle(f) << '\\n';\n    }\n    return 0;\n}\n",
+    "explain_ko": "내부 진단용으로 만든 예외 메시지(ICD 표 파일 위치·행 번호 포함)를 e.what() 그대로 원격 단말 응답에 붙인다."
+   },
+   "good": {
+    "code": "#include <iostream>\n#include <stdexcept>\n#include <string>\n#include <vector>\n\nconst std::string kIcdTable = \"/opt/gcs/conf/icd_v3.xml\";\nstd::vector<std::string> g_diag;   // 보호된 내부 진단 로그\n\nint decode_rate(const std::string &field) {\n    std::size_t used = 0;\n    int hz = std::stoi(field, &used);\n    if (used != field.size()) {\n        throw std::runtime_error(\"trailing chars in rate field, see \" + kIcdTable + \" row 42\");\n    }\n    return hz;\n}\n\nstd::string handle(const std::string &field) {\n    try {\n        return \"OK rate=\" + std::to_string(decode_rate(field));\n    } catch (const std::invalid_argument &e) {\n        g_diag.push_back(e.what());\n        return \"ERR 0x21 rate field rejected\";      // 단말에는 미리 정한 오류 코드만\n    } catch (const std::out_of_range &e) {\n        g_diag.push_back(e.what());\n        return \"ERR 0x22 rate out of range\";\n    } catch (const std::runtime_error &e) {\n        g_diag.push_back(e.what());                 // 상세 원인은 내부 로그에만\n        return \"ERR 0x23 rate field rejected\";\n    }\n}\n\nint main() {\n    for (const char *f : {\"50\", \"50Hz\"}) {\n        std::cout << \"to console: \" << handle(f) << '\\n';\n    }\n    std::cout << \"internal log entries: \" << g_diag.size() << '\\n';\n    return 0;\n}\n",
+    "explain_ko": "예외 형식별로 잡아 단말에는 오류 코드만 돌려주고, e.what()의 상세 내용은 내부 로그에만 쌓는다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "/opt/gcs/conf",
+    "expect_good": "ERR 0x23 rate field rejected"
+   },
+   "refs": [
+    "MITRE CWE-209 Demonstrative Example 1(잡은 예외를 그대로 출력) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Java": {
+   "bad": {
+    "code": "import java.io.PrintWriter;\nimport java.io.StringWriter;\n\npublic class Example {\n    static final String PLAN_DIR = \"/opt/gcs/missions/\";\n\n    // 임무 계획 파일 머리글 \"LEGS=<구간 수>\"를 읽는다\n    static int readLegCount(String planName, String header) {\n        if (!header.startsWith(\"LEGS=\")) {\n            throw new IllegalArgumentException(\"bad header in \" + PLAN_DIR + planName);\n        }\n        return Integer.parseInt(header.substring(5));\n    }\n\n    static String serve(String planName, String header) {\n        try {\n            return \"OK legs=\" + readLegCount(planName, header);\n        } catch (IllegalArgumentException ex) {\n            StringWriter trace = new StringWriter();\n            ex.printStackTrace(new PrintWriter(trace));\n            return \"ERR\\n\" + trace;              // 스택 추적 전체가 원격 단말로 나간다\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"LEGS=4\"));\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"LEGS=four\"));\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"STEPS=4\"));   // 머리글 자체가 틀린 경우\n    }\n}\n",
+    "explain_ko": "잡은 예외의 printStackTrace 결과를 응답 문자열로 만들어 보낸다. 클래스·메서드 이름과 호출 경로가 드러나고, 머리글 자체가 틀린 경우에는 예외 메시지에 넣은 계획 파일 전체 경로(/opt/gcs/missions/…)까지 단말로 나간다."
+   },
+   "good": {
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class Example {\n    static final String PLAN_DIR = \"/opt/gcs/missions/\";\n    static final List<String> INTERNAL_LOG = new ArrayList<>();   // 보호된 내부 로그\n\n    static int readLegCount(String planName, String header) {\n        if (!header.startsWith(\"LEGS=\")) {\n            throw new IllegalArgumentException(\"bad header in \" + PLAN_DIR + planName);\n        }\n        return Integer.parseInt(header.substring(5));\n    }\n\n    static String serve(String planName, String header) {\n        try {\n            return \"OK legs=\" + readLegCount(planName, header);\n        } catch (IllegalArgumentException ex) {\n            INTERNAL_LOG.add(ex.toString());       // 상세 원인은 내부 로그에만\n            int ref = INTERNAL_LOG.size();\n            return \"ERR E-PLAN-02 plan header rejected (ref \" + ref + \")\";\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"LEGS=4\"));\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"LEGS=four\"));\n        System.out.println(\"to console: \" + serve(\"patrol_07.plan\", \"STEPS=4\"));\n        System.out.println(\"internal log entries: \" + INTERNAL_LOG.size());\n    }\n}\n",
+    "explain_ko": "예외 내용은 내부 로그에 넣고, 단말에는 오류 코드와 내부 로그 참조 번호만 준다(LJ-05)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "at Example\\.readLegCount",
+    "expect_good": "ERR E-PLAN-02 plan header rejected"
+   },
+   "refs": [
+    "MITRE CWE-209 Demonstrative Example 1(잡은 예외를 그대로 출력) 참고, 이 가이드가 새로 작성",
+    "KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 에러처리 4-1 '오류 메시지 통한 정보 노출'(인쇄 227쪽) 참고"
+   ]
+  },
+  "C#": {
+   "bad": {
+    "code": "using System.Globalization;\n\nconst string KeyStore = \"/opt/gcs/conf/link.key\";\n\n// 운용자 콘솔의 \"링크 채널 변경\" 요청을 처리한다\nstring Serve(string field)\n{\n    try\n    {\n        int ch = int.Parse(field, CultureInfo.InvariantCulture);\n        if (ch is < 1 or > 8)\n        {\n            throw new InvalidOperationException($\"channel {ch} not in plan, key file {KeyStore}\");\n        }\n        return $\"OK channel={ch}\";\n    }\n    catch (Exception ex) when (ex is FormatException or OverflowException)\n    {\n        return \"ERR \" + ex;                 // 예외 형식·메시지·스택 추적이 그대로 나간다\n    }\n    catch (InvalidOperationException ex)\n    {\n        return \"ERR \" + ex.Message;         // 키 파일 위치가 담긴 메시지\n    }\n}\n\nConsole.WriteLine(\"to console: \" + Serve(\"3\"));\nConsole.WriteLine(\"to console: \" + Serve(\"3a\"));\nConsole.WriteLine(\"to console: \" + Serve(\"12\"));\n",
+    "explain_ko": "\"ERR \" + ex로 예외 전체(형식·메시지·스택 추적)를 붙이고, 다른 경로에서는 키 파일 위치가 든 ex.Message를 그대로 보낸다."
+   },
+   "good": {
+    "code": "using System.Globalization;\n\nconst string KeyStore = \"/opt/gcs/conf/link.key\";\nvar internalLog = new List<string>();   // 보호된 내부 진단 로그\n\nstring Serve(string field)\n{\n    try\n    {\n        int ch = int.Parse(field, CultureInfo.InvariantCulture);\n        if (ch is < 1 or > 8)\n        {\n            throw new InvalidOperationException($\"channel {ch} not in plan, key file {KeyStore}\");\n        }\n        return $\"OK channel={ch}\";\n    }\n    catch (Exception ex) when (ex is FormatException or OverflowException)     // 숫자 형식 오류와 범위 초과\n    {\n        internalLog.Add(ex.ToString());     // 상세 원인은 내부 로그에만\n        return \"ERR 0x31 channel field rejected\";\n    }\n    catch (InvalidOperationException ex)\n    {\n        internalLog.Add(ex.Message);\n        return \"ERR 0x32 channel not allowed\";   // 단말에는 미리 정한 오류 코드만\n    }\n}\n\nConsole.WriteLine(\"to console: \" + Serve(\"3\"));\nConsole.WriteLine(\"to console: \" + Serve(\"3a\"));\nConsole.WriteLine(\"to console: \" + Serve(\"99999999999\"));\nConsole.WriteLine(\"to console: \" + Serve(\"12\"));\nConsole.WriteLine($\"internal log entries: {internalLog.Count}\");\n",
+    "explain_ko": "예외는 내부 로그에만 남기고 단말에는 미리 정한 오류 코드만 보낸다. 범위를 넘는 숫자의 OverflowException도 함께 잡아, 처리되지 않은 예외의 스택 추적이 나가지 않게 한다. 예외 메시지 자체도 외부로 나갈 수 있다고 보고 다룬다(LCS-08)."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "at System\\.|/opt/gcs/conf",
+    "expect_good": "ERR 0x31 channel field rejected"
+   },
+   "refs": [
+    "MITRE CWE-209 Demonstrative Example 1(잡은 예외를 그대로 출력) 참고, 이 가이드가 새로 작성"
+   ]
+  },
+  "Python": {
+   "bad": {
+    "code": "import traceback\n\nPLAN_DIR = \"/opt/gcs/missions\"        # 지상 통제 소프트웨어의 내부 경로\n\n\ndef parse_leg(record):\n    fields = record.split(\",\")\n    return {\"leg\": int(fields[0]), \"alt_ft\": int(fields[1]), \"file\": f\"{PLAN_DIR}/{fields[2]}\"}\n\n\n# 원격 운용자 콘솔이 보낸 임무 계획 레코드를 해석하고 결과를 돌려준다\ndef handle(record):\n    try:\n        return \"OK \" + str(parse_leg(record))\n    except Exception:\n        return \"ERR\\n\" + traceback.format_exc()      # 내부 호출 경로·파일 위치·코드 줄을 그대로 응답\n\n\nprint(handle(\"3,12000,leg3.wpt\"))\nprint(handle(\"3,FL120\"))\n",
+    "explain_ko": "해석에 실패하면 traceback.format_exc()의 결과를 원격 콘솔에 그대로 돌려준다. 응답에 소스 파일 경로·함수 이름·실패한 코드 줄이 실리고, 공격자는 잘못된 레코드를 바꿔 보내며 내부 구조를 알아낸다. 웹 프레임워크의 디버그 오류 화면을 운용 환경에서 켜 두는 것도 같은 약점이다."
+   },
+   "good": {
+    "code": "import logging\nimport uuid\n\nPLAN_DIR = \"/opt/gcs/missions\"\nlogging.basicConfig(filename=\"gcs-internal.log\", level=logging.INFO)\nlog = logging.getLogger(\"gcs.plan\")\n\n\ndef parse_leg(record):\n    fields = record.split(\",\")\n    return {\"leg\": int(fields[0]), \"alt_ft\": int(fields[1]), \"file\": f\"{PLAN_DIR}/{fields[2]}\"}\n\n\ndef handle(record):\n    try:\n        return \"OK \" + str(parse_leg(record))\n    except (ValueError, IndexError):\n        ref = uuid.uuid4().hex[:8]\n        log.exception(\"plan record rejected ref=%s\", ref)   # 상세 내용은 내부 기록에만\n        return f\"ERR invalid mission record (ref {ref})\"   # 원격에는 일반 문구와 조회 번호만\n\n\nprint(handle(\"3,12000,leg3.wpt\"))\nprint(handle(\"3,FL120\"))\n",
+    "explain_ko": "예상한 예외(ValueError·IndexError)만 잡아 상세 내용은 내부 기록(logging)에 남기고, 원격에는 일반 오류 문구와 조회 번호만 돌려준다(I-06). 정비 담당자는 조회 번호로 내부 기록을 찾는다. 내부 기록 파일은 운용자 계정만 읽을 수 있게 둔다."
+   },
+   "check": {
+    "tool": "run",
+    "expect": "Traceback \\(most recent call last\\)",
+    "expect_good": "ERR invalid mission record \\(ref [0-9a-f]+\\)"
+   },
+   "refs": [
+    "MITRE CWE-209 Demonstrative Example 1(잡은 예외를 그대로 출력) 참고, 이 가이드가 새로 작성",
+    "과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 에러처리 4-1 '오류 메시지 정보노출'(인쇄 126쪽) 참고"
+   ]
+  }
+ }
+}
