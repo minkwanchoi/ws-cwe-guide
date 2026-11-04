@@ -1,3 +1,6 @@
+/* 글꼴: 저장소에 반입한 IBM Plex(assets/vendor/fonts/fonts.css). mkdocs.yml의 theme.font를 끄면 테마가 이 변수를 넣지 않으므로 여기서 준다 */
+:root { --md-text-font: "IBM Plex Sans KR"; --md-code-font: "IBM Plex Mono"; }
+
 /* 색: 선택 도구·버전 비교 도구·단일 문서판과 같은 값(글자 대비 4.5:1 이상) */
 [data-md-color-scheme="default"] {
   --md-primary-fg-color: #28575f; --md-primary-fg-color--light: #3a6f78; --md-primary-fg-color--dark: #1d4148;

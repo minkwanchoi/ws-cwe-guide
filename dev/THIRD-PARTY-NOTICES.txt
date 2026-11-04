@@ -360,7 +360,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 ==============================================================================
-IBM Plex Sans KR, IBM Plex Mono (SIL Open Font License 1.1) - https://github.com/IBM/plex
+IBM Plex Sans KR, IBM Plex Mono (SIL Open Font License 1.1, assets/vendor/fonts/) - https://github.com/IBM/plex
 ==============================================================================
 
 Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
