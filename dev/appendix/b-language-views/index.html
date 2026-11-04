@@ -1,0 +1,3033 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/appendix/b-language-views/">
+      
+      
+        <link rel="prev" href="../a-weakness-list/">
+      
+      
+        <link rel="next" href="../c-environment-guides/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>부록 B 언어 뷰 보안약점 153개와 적용성 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#부록-b-언어-뷰-보안약점-153개와-적용성" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              부록 B 언어 뷰 보안약점 153개와 적용성
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cwe/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#b-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-1. C·C++ 뷰(CWE-658·659) 73개
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-2. Java 뷰(CWE-660) 56개
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-3. C·C++와 Java 뷰 공통 24개
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#b-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-1. C·C++ 뷰(CWE-658·659) 73개
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-2. Java 뷰(CWE-660) 56개
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B-3. C·C++와 Java 뷰 공통 24개
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="부록-b-언어-뷰-보안약점-153개와-적용성">부록 B. 언어 뷰 보안약점 153개와 적용성<a class="headerlink" href="#부록-b-언어-뷰-보안약점-153개와-적용성" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#b-1">B-1. C·C++ 뷰(CWE-658·659) 73개</a></li><li><a href="#b-2">B-2. Java 뷰(CWE-660) 56개</a></li><li><a href="#b-3">B-3. C·C++와 Java 뷰 공통 24개</a></li></ul></details>
+<blockquote>
+<p><strong>이 부록의 역할.</strong> 이 부록은 세 뷰의 구성원 가운데 보안약점 점검 목록 44개를 뺀 153개의 적용성 판정 기준표다. 항목별 구현 지침·도구 미지원 시 대안·근거는 각 항목의 <a href="../../cwe/">규칙별 해설</a>에, 언어별 쪽은 언어별 규칙(<a href="../../cwe/view-c/">C</a>·<a href="../../cwe/view-cpp/">C++</a>·<a href="../../cwe/view-java/">Java</a>)에 있다.</p>
+<p><strong>읽는 법.</strong> 번호와 언어의 대응(658=C, 659=C++, 660=Java)은 MITRE CWE 뷰 정의(<a href="https://cwe.mitre.org/data/definitions/658.html" target="_blank" rel="noopener">CWE-658</a>·<a href="https://cwe.mitre.org/data/definitions/659.html" target="_blank" rel="noopener">659</a>·<a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">660</a>)를 따른다. 구성은 언어 뷰별 <a href="./#b-1">B-1</a> C·C++, <a href="./#b-2">B-2</a> Java, <a href="./#b-3">B-3</a> 두 계열 공통이고, 표마다 '범주' 칸(MITRE <a href="https://cwe.mitre.org/data/definitions/1400.html" target="_blank" rel="noopener">CWE-1400</a>, <a href="../../cwe/#category">색인의 범주</a>)이 있다. <strong>적용성</strong>은 이 가이드의 판정 규칙이다: 사용 기술·특성이 전제된 항목은 '조건부'로 두고 조건을 적는다(과제가 그 기술·특성을 쓰지 않으면 비해당으로 판정하고 그 판정과 사유를 <a href="../g-worksheets/#g-4">부록 G-4</a>에 기록한다).</p>
+</blockquote>
+<h2 id="b-1">B-1. C·C++ 뷰(CWE-658·659) 73개<a class="headerlink" href="#b-1" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="vfilter" hidden><div class="vf-bar"><label>범주 <select data-k="cat"><option value="">전체</option><option>메모리 안전</option><option>자원 수명 관리</option><option>나쁜 코딩 관행</option><option>동시성</option><option>제어 흐름 관리 미흡</option><option>잘못된 계산</option><option>특수 요소 무력화 미흡</option><option>구성요소 상호작용</option><option>보호 메커니즘 실패</option><option>비교</option><option>입력 검증 미흡</option><option>자원 노출</option><option>자원 통제</option></select></label> <label>적용성 <select data-k="app"><option value="">전체</option><option>해당</option><option>조건부</option></select></label> <label>찾기 <input type="search" placeholder="번호나 이름"></label> <span class="vf-count" aria-live="polite"></span></div></div>
+
+<table>
+<thead>
+<tr>
+<th>CWE</th>
+<th>이름</th>
+<th><a href="../../cwe/#category" title="MITRE의 종합 범주(Comprehensive Categorization)가 모든 약점을 하나씩 넣는 묶음. 예: 메모리 안전, 삽입">범주</a></th>
+<th>언어 뷰</th>
+<th><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 [2.5](../ch2-framework.md#sec-2-5) ⑥을 따른다">적용성</a></th>
+<th>조건·판정 근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../cwe/14/">CWE-14</a></td>
+<td>컴파일러의 버퍼 소거 코드 제거(Dead Store Elimination)</td>
+<td>구성요소 상호작용</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/120/">CWE-120</a></td>
+<td>입력 크기 미검사 버퍼 복사(고전적 버퍼 오버플로)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/121/">CWE-121</a></td>
+<td>스택 기반 버퍼 오버플로</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/122/">CWE-122</a></td>
+<td>힙 기반 버퍼 오버플로</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/123/">CWE-123</a></td>
+<td>임의 위치 쓰기 조건(Write-what-where)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/124/">CWE-124</a></td>
+<td>버퍼 언더라이트(Buffer Underflow)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/125/">CWE-125</a></td>
+<td>범위를 벗어난 읽기(Out-of-bounds Read)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/126/">CWE-126</a></td>
+<td>버퍼 오버리드(Buffer Over-read)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/127/">CWE-127</a></td>
+<td>버퍼 언더리드(Buffer Under-read)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/128/">CWE-128</a></td>
+<td>래핑(Wrap-around) 오류</td>
+<td>잘못된 계산</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/129/">CWE-129</a></td>
+<td>배열 인덱스 검증 미흡</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/130/">CWE-130</a></td>
+<td>길이 필드 불일치 처리 미흡</td>
+<td>특수 요소 무력화 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/131/">CWE-131</a></td>
+<td>버퍼 크기 계산 오류</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/135/">CWE-135</a></td>
+<td>멀티바이트 문자열 길이 계산 오류</td>
+<td>잘못된 계산</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/158/">CWE-158</a></td>
+<td>널 바이트·NUL 문자 무력화 미흡</td>
+<td>특수 요소 무력화 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/188/">CWE-188</a></td>
+<td>데이터/메모리 레이아웃 의존</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/193/">CWE-193</a></td>
+<td>경계값 오류(Off-by-one)</td>
+<td>잘못된 계산</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/194/">CWE-194</a></td>
+<td>예기치 않은 부호 확장</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/195/">CWE-195</a></td>
+<td>부호 있는 값에서 부호 없는 값으로의 변환 오류</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/196/">CWE-196</a></td>
+<td>부호 없는 값에서 부호 있는 값으로의 변환 오류</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/242/">CWE-242</a></td>
+<td>본질적으로 위험한 함수 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/243/">CWE-243</a></td>
+<td>작업 디렉터리 변경 없는 chroot 감옥 생성</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>POSIX chroot 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/244/">CWE-244</a></td>
+<td>해제 전 힙 메모리 소거 미흡(Heap Inspection)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/364/">CWE-364</a></td>
+<td>시그널 핸들러 경쟁조건</td>
+<td>동시성</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>시그널(POSIX signal) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/401/">CWE-401</a></td>
+<td>유효 수명 이후 메모리 해제 누락(메모리 누수)</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/403/">CWE-403</a></td>
+<td>비의도 제어 영역에 파일 디스크립터 노출(FD Leak)</td>
+<td>자원 노출</td>
+<td>C</td>
+<td>조건부</td>
+<td>POSIX 프로세스 생성 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/463/">CWE-463</a></td>
+<td>자료구조 센티널 삭제</td>
+<td>특수 요소 무력화 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/464/">CWE-464</a></td>
+<td>자료구조 센티널 추가</td>
+<td>특수 요소 무력화 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/466/">CWE-466</a></td>
+<td>기대 범위를 벗어난 포인터 값 반환</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/468/">CWE-468</a></td>
+<td>잘못된 포인터 스케일링</td>
+<td>잘못된 계산</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/474/">CWE-474</a></td>
+<td>일관성 없는 구현을 가진 함수 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/479/">CWE-479</a></td>
+<td>시그널 핸들러의 비재진입 함수 사용</td>
+<td>동시성</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>시그널(POSIX signal) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/480/">CWE-480</a></td>
+<td>잘못된 연산자 사용</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/482/">CWE-482</a></td>
+<td>대입 대신 비교 사용</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/483/">CWE-483</a></td>
+<td>블록 구분 오류(중괄호 누락)</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/558/">CWE-558</a></td>
+<td>멀티스레드에서 getlogin() 사용</td>
+<td>동시성</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>POSIX getlogin() 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/560/">CWE-560</a></td>
+<td>chmod 방식 인자를 사용한 umask() 호출</td>
+<td>나쁜 코딩 관행</td>
+<td>C</td>
+<td>조건부</td>
+<td>POSIX 파일 권한 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/588/">CWE-588</a></td>
+<td>비구조체 포인터의 멤버 접근</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/590/">CWE-590</a></td>
+<td>힙이 아닌 메모리의 free() 호출</td>
+<td>메모리 안전</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/663/">CWE-663</a></td>
+<td>동시성 환경에서 비재진입 함수 사용</td>
+<td>동시성</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/680/">CWE-680</a></td>
+<td>정수 오버플로로 인한 버퍼 오버플로</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/681/">CWE-681</a></td>
+<td>수치 자료형 간 부적절한 변환</td>
+<td>자원 수명 관리</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/685/">CWE-685</a></td>
+<td>잘못된 인자 개수로 함수 호출</td>
+<td>나쁜 코딩 관행</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/688/">CWE-688</a></td>
+<td>잘못된 변수·참조를 인자로 함수 호출</td>
+<td>나쁜 코딩 관행</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/689/">CWE-689</a></td>
+<td>자원 복사 중 권한 설정 경쟁조건</td>
+<td>동시성</td>
+<td>C</td>
+<td>조건부</td>
+<td>파일시스템 사용(파일시스템(S3)이 '없음' 외의 값)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/690/">CWE-690</a></td>
+<td>널 포인터 역참조로 이어지는 반환값 미검사</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/704/">CWE-704</a></td>
+<td>부적절한 형변환</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/733/">CWE-733</a></td>
+<td>컴파일러 최적화에 의한 보안 코드 제거·변형</td>
+<td>구성요소 상호작용</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/761/">CWE-761</a></td>
+<td>버퍼 시작이 아닌 위치의 포인터 free()</td>
+<td>메모리 안전</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/762/">CWE-762</a></td>
+<td>불일치하는 메모리 관리 함수 사용</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/763/">CWE-763</a></td>
+<td>잘못된 포인터·참조 해제</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/768/">CWE-768</a></td>
+<td>부적절한 단락 평가</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/781/">CWE-781</a></td>
+<td>METHOD_NEITHER IOCTL의 주소 검증 미흡</td>
+<td>입력 검증 미흡</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>Windows 커널 드라이버 개발</td>
+</tr>
+<tr>
+<td><a href="../../cwe/782/">CWE-782</a></td>
+<td>접근 통제가 불충분한 노출 IOCTL</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>커널 드라이버 개발(Windows·Linux IOCTL)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/783/">CWE-783</a></td>
+<td>연산자 우선순위 논리 오류</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/785/">CWE-785</a></td>
+<td>최대 크기 버퍼 없이 경로 조작 함수 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>C·C++</td>
+<td>조건부</td>
+<td>파일시스템 사용(파일시스템(S3)이 '없음' 외의 값)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/786/">CWE-786</a></td>
+<td>버퍼 시작 이전 메모리 접근</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/787/">CWE-787</a></td>
+<td>범위 밖 쓰기</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/788/">CWE-788</a></td>
+<td>버퍼 끝 이후 메모리 접근</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/789/">CWE-789</a></td>
+<td>과도한 크기 값에 의한 메모리 할당</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/805/">CWE-805</a></td>
+<td>잘못된 길이 값으로 버퍼 접근</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/806/">CWE-806</a></td>
+<td>소스 버퍼 크기를 사용한 버퍼 접근</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/822/">CWE-822</a></td>
+<td>신뢰할 수 없는 포인터 역참조</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/823/">CWE-823</a></td>
+<td>범위를 벗어난 포인터 오프셋 사용</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/824/">CWE-824</a></td>
+<td>초기화되지 않은 포인터 접근</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/825/">CWE-825</a></td>
+<td>만료된 포인터 역참조</td>
+<td>메모리 안전</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/828/">CWE-828</a></td>
+<td>비동기 안전하지 않은 시그널 핸들러</td>
+<td>동시성</td>
+<td>C</td>
+<td>조건부</td>
+<td>시그널(POSIX signal) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/839/">CWE-839</a></td>
+<td>최솟값 확인 없는 수치 범위 비교</td>
+<td>비교</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/843/">CWE-843</a></td>
+<td>호환되지 않는 타입으로 자원 접근(타입 혼동)</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/910/">CWE-910</a></td>
+<td>만료된 파일 디스크립터 사용</td>
+<td>자원 통제</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/911/">CWE-911</a></td>
+<td>참조 카운트 갱신 오류</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1325/">CWE-1325</a></td>
+<td>순차 메모리 할당의 제어 미흡</td>
+<td>자원 수명 관리</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1429/">CWE-1429</a></td>
+<td>하드웨어 인터페이스의 미실행 연산에 대한 보안 피드백 누락</td>
+<td>보호 메커니즘 실패</td>
+<td>C·C++</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="b-2">B-2. Java 뷰(CWE-660) 56개<a class="headerlink" href="#b-2" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="vfilter" hidden><div class="vf-bar"><label>범주 <select data-k="cat"><option value="">전체</option><option>나쁜 코딩 관행</option><option>자원 노출</option><option>자원 수명 관리</option><option>동시성</option><option>삽입</option><option>입력 검증 미흡</option><option>비교</option><option>제어 흐름 관리 미흡</option><option>민감정보 노출</option><option>자원 통제</option><option>접근 통제</option><option>난수</option><option>암호화</option><option>예외 상황 검사·처리 미흡</option></select></label> <label>적용성 <select data-k="app"><option value="">전체</option><option>해당</option><option>조건부</option></select></label> <label>찾기 <input type="search" placeholder="번호나 이름"></label> <span class="vf-count" aria-live="polite"></span></div></div>
+
+<table>
+<thead>
+<tr>
+<th>CWE</th>
+<th>이름</th>
+<th><a href="../../cwe/#category" title="MITRE의 종합 범주(Comprehensive Categorization)가 모든 약점을 하나씩 넣는 묶음. 예: 메모리 안전, 삽입">범주</a></th>
+<th>언어 뷰</th>
+<th><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 [2.5](../ch2-framework.md#sec-2-5) ⑥을 따른다">적용성</a></th>
+<th>조건·판정 근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../cwe/5/">CWE-5</a></td>
+<td>J2EE 설정 오류: 암호화 없는 데이터 전송</td>
+<td>암호화</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/6/">CWE-6</a></td>
+<td>J2EE 설정 오류: 불충분한 세션 ID 길이</td>
+<td>난수</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/7/">CWE-7</a></td>
+<td>J2EE 설정 오류: 사용자 정의 오류 페이지 누락</td>
+<td>예외 상황 검사·처리 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/8/">CWE-8</a></td>
+<td>J2EE 설정 오류: 엔티티 빈의 원격 선언</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/9/">CWE-9</a></td>
+<td>J2EE 설정 오류: EJB 메서드의 취약한 접근 권한</td>
+<td>접근 통제</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/95/">CWE-95</a></td>
+<td>동적으로 평가하는 코드의 지시문 무력화 미흡(Eval 삽입)</td>
+<td>삽입</td>
+<td>Java</td>
+<td>조건부</td>
+<td>동적 코드 평가(eval 등) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/102/">CWE-102</a></td>
+<td>Struts: 중복 검증 폼</td>
+<td>삽입</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/103/">CWE-103</a></td>
+<td>Struts: validate() 메서드 정의 미흡</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/104/">CWE-104</a></td>
+<td>Struts: 폼 빈이 검증 클래스를 상속하지 않음</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/105/">CWE-105</a></td>
+<td>Struts: 검증기 없는 폼 필드</td>
+<td>입력 검증 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/106/">CWE-106</a></td>
+<td>Struts: 플러그인 프레임워크 미사용</td>
+<td>입력 검증 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/107/">CWE-107</a></td>
+<td>Struts: 미사용 검증 폼</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/108/">CWE-108</a></td>
+<td>Struts: 검증되지 않은 액션 폼</td>
+<td>입력 검증 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/109/">CWE-109</a></td>
+<td>Struts: 검증기 비활성화</td>
+<td>입력 검증 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/110/">CWE-110</a></td>
+<td>Struts: 폼 필드 없는 검증기</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/111/">CWE-111</a></td>
+<td>안전하지 않은 JNI의 직접 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>JNI(네이티브 코드 호출) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/245/">CWE-245</a></td>
+<td>J2EE 나쁜 관행: 커넥션 직접 관리</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/246/">CWE-246</a></td>
+<td>J2EE 나쁜 관행: 소켓 직접 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/382/">CWE-382</a></td>
+<td>J2EE 나쁜 관행: System.exit() 사용</td>
+<td>제어 흐름 관리 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/383/">CWE-383</a></td>
+<td>J2EE 나쁜 관행: 스레드 직접 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/395/">CWE-395</a></td>
+<td>NullPointerException 포착으로 널 포인터 역참조 탐지</td>
+<td>제어 흐름 관리 미흡</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/470/">CWE-470</a></td>
+<td>외부 입력을 이용한 클래스·코드 선택(안전하지 않은 리플렉션)</td>
+<td>자원 통제</td>
+<td>Java</td>
+<td>조건부</td>
+<td>리플렉션(외부 입력으로 클래스·메서드 선택) 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/486/">CWE-486</a></td>
+<td>클래스 이름 기반 클래스 비교</td>
+<td>비교</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/487/">CWE-487</a></td>
+<td>패키지 수준 접근 범위에 대한 의존</td>
+<td>자원 수명 관리</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/491/">CWE-491</a></td>
+<td>final이 아닌 public cloneable() 메서드</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/492/">CWE-492</a></td>
+<td>민감 데이터를 포함한 내부 클래스 사용</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/499/">CWE-499</a></td>
+<td>민감 데이터를 포함한 직렬화 가능 클래스</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/502/">CWE-502</a></td>
+<td>신뢰할 수 없는 데이터의 역직렬화</td>
+<td>자원 통제</td>
+<td>Java</td>
+<td>조건부</td>
+<td>직렬화 사용</td>
+</tr>
+<tr>
+<td><a href="../../cwe/536/">CWE-536</a></td>
+<td>서블릿 런타임 오류 메시지의 민감 정보 포함</td>
+<td>민감정보 노출</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/537/">CWE-537</a></td>
+<td>Java 런타임 오류 메시지의 민감 정보 포함</td>
+<td>민감정보 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/555/">CWE-555</a></td>
+<td>J2EE 설정 오류: 설정 파일의 평문 비밀번호</td>
+<td>접근 통제</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/567/">CWE-567</a></td>
+<td>다중 스레드 환경에서 동기화하지 않은 공유 데이터 접근</td>
+<td>동시성</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/568/">CWE-568</a></td>
+<td>super.finalize()를 호출하지 않는 finalize() 메서드</td>
+<td>자원 수명 관리</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/572/">CWE-572</a></td>
+<td>start() 대신 Thread run() 호출</td>
+<td>동시성</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/574/">CWE-574</a></td>
+<td>EJB 나쁜 관행: 동기화 기본 요소 사용</td>
+<td>동시성</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/575/">CWE-575</a></td>
+<td>EJB 나쁜 관행: AWT/Swing 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/576/">CWE-576</a></td>
+<td>EJB 나쁜 관행: Java I/O 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/577/">CWE-577</a></td>
+<td>EJB 나쁜 관행: 소켓 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/578/">CWE-578</a></td>
+<td>EJB 나쁜 관행: 클래스 로더 사용</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/579/">CWE-579</a></td>
+<td>J2EE 나쁜 관행: 세션에 직렬화 불가 객체 저장</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/580/">CWE-580</a></td>
+<td>super.clone()을 호출하지 않는 clone() 메서드</td>
+<td>자원 수명 관리</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/581/">CWE-581</a></td>
+<td>객체 모델 위반: equals와 hashCode 중 하나만 정의</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/582/">CWE-582</a></td>
+<td>public, final, static으로 선언된 배열</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/583/">CWE-583</a></td>
+<td>public으로 선언된 finalize() 메서드</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/585/">CWE-585</a></td>
+<td>빈 synchronized 블록</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/586/">CWE-586</a></td>
+<td>finalize() 명시적 호출</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/594/">CWE-594</a></td>
+<td>J2EE 프레임워크: 직렬화 불가 객체의 디스크 저장</td>
+<td>나쁜 코딩 관행</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/595/">CWE-595</a></td>
+<td>객체 내용 대신 참조를 비교</td>
+<td>비교</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/597/">CWE-597</a></td>
+<td>문자열 비교 시 잘못된 연산자 사용</td>
+<td>비교</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/600/">CWE-600</a></td>
+<td>서블릿에서 처리되지 않은 예외</td>
+<td>제어 흐름 관리 미흡</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/607/">CWE-607</a></td>
+<td>가변 객체를 참조하는 public static final 필드</td>
+<td>자원 수명 관리</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/608/">CWE-608</a></td>
+<td>Struts: ActionForm의 비공개가 아닌 필드</td>
+<td>자원 노출</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/609/">CWE-609</a></td>
+<td>이중 검사 잠금(Double-Checked Locking)</td>
+<td>동시성</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/917/">CWE-917</a></td>
+<td>표현 언어(EL) 구문 내 특수 요소 부적절 무력화(EL 삽입)</td>
+<td>삽입</td>
+<td>Java</td>
+<td>조건부</td>
+<td>웹·J2EE·EJB·Struts 프레임워크 사용 — 탑재 소프트웨어에서는 대개 비해당(판정 기록)</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1235/">CWE-1235</a></td>
+<td>성능이 중요한 연산에서 오토박싱·언박싱을 잘못 사용</td>
+<td>자원 수명 관리</td>
+<td>Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1336/">CWE-1336</a></td>
+<td>템플릿 엔진 내 특수 요소 부적절 무력화</td>
+<td>삽입</td>
+<td>Java</td>
+<td>조건부</td>
+<td>템플릿 엔진 사용</td>
+</tr>
+</tbody>
+</table>
+<h2 id="b-3">B-3. C·C++와 Java 뷰 공통 24개<a class="headerlink" href="#b-3" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="vfilter" hidden><div class="vf-bar"><label>범주 <select data-k="cat"><option value="">전체</option><option>자원 노출</option><option>제어 흐름 관리 미흡</option><option>나쁜 코딩 관행</option><option>동시성</option><option>자원 수명 관리</option><option>잘못된 계산</option><option>비교</option></select></label> <label>적용성 <select data-k="app"><option value="">전체</option><option>해당</option><option>조건부</option></select></label> <label>찾기 <input type="search" placeholder="번호나 이름"></label> <span class="vf-count" aria-live="polite"></span></div></div>
+
+<table>
+<thead>
+<tr>
+<th>CWE</th>
+<th>이름</th>
+<th><a href="../../cwe/#category" title="MITRE의 종합 범주(Comprehensive Categorization)가 모든 약점을 하나씩 넣는 묶음. 예: 메모리 안전, 삽입">범주</a></th>
+<th>언어 뷰</th>
+<th><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 [2.5](../ch2-framework.md#sec-2-5) ⑥을 따른다">적용성</a></th>
+<th>조건·판정 근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../cwe/191/">CWE-191</a></td>
+<td>정수 언더플로(Wrap or Wraparound)</td>
+<td>잘못된 계산</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/192/">CWE-192</a></td>
+<td>정수 강제 변환(Coercion) 오류</td>
+<td>자원 수명 관리</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/197/">CWE-197</a></td>
+<td>숫자 절단 오류(Numeric Truncation)</td>
+<td>자원 수명 관리</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/248/">CWE-248</a></td>
+<td>처리되지 않은 예외(Uncaught Exception)</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/362/">CWE-362</a></td>
+<td>동기화 미흡 공유 자원 동시 접근(경쟁조건)</td>
+<td>동시성</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/366/">CWE-366</a></td>
+<td>스레드 내 경쟁조건</td>
+<td>동시성</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/374/">CWE-374</a></td>
+<td>변경 가능 객체를 신뢰할 수 없는 메서드에 전달</td>
+<td>자원 노출</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/375/">CWE-375</a></td>
+<td>변경 가능 객체를 신뢰할 수 없는 호출자에게 반환</td>
+<td>자원 노출</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/396/">CWE-396</a></td>
+<td>일반 예외에 대한 catch 선언</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/397/">CWE-397</a></td>
+<td>일반 예외에 대한 throws 선언</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/460/">CWE-460</a></td>
+<td>예외 발생 시 정리(Cleanup) 미흡</td>
+<td>자원 수명 관리</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/462/">CWE-462</a></td>
+<td>연관 리스트(Alist)의 중복 키</td>
+<td>나쁜 코딩 관행</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/478/">CWE-478</a></td>
+<td>다중 조건식의 default 누락</td>
+<td>비교</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/481/">CWE-481</a></td>
+<td>비교 대신 대입 사용</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/484/">CWE-484</a></td>
+<td>switch문 break 누락</td>
+<td>나쁜 코딩 관행</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/493/">CWE-493</a></td>
+<td>중요 public 변수의 final 미지정</td>
+<td>자원 노출</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/498/">CWE-498</a></td>
+<td>민감정보를 포함한 Cloneable 클래스</td>
+<td>자원 노출</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/500/">CWE-500</a></td>
+<td>final이 아닌 public static 필드</td>
+<td>자원 노출</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/543/">CWE-543</a></td>
+<td>동기화 없는 싱글톤 패턴 사용(멀티스레드)</td>
+<td>동시성</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/617/">CWE-617</a></td>
+<td>도달 가능한 단언문(Assertion)</td>
+<td>제어 흐름 관리 미흡</td>
+<td>C·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/766/">CWE-766</a></td>
+<td>중요 데이터 요소의 public 선언</td>
+<td>나쁜 코딩 관행</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/767/">CWE-767</a></td>
+<td>public 메서드를 통한 중요 private 변수 접근</td>
+<td>자원 노출</td>
+<td>C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1335/">CWE-1335</a></td>
+<td>정수의 잘못된 비트 시프트</td>
+<td>잘못된 계산</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../../cwe/1341/">CWE-1341</a></td>
+<td>동일 자원·핸들의 다중 해제</td>
+<td>나쁜 코딩 관행</td>
+<td>C·C++·Java</td>
+<td>해당</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>집계: 153개 중 해당 107, 조건부 46.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../a-weakness-list/" class="md-footer__link md-footer__link--prev" aria-label="이전: 부록 A 보안약점 점검 목록(44개) 조견표">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                부록 A 보안약점 점검 목록(44개) 조견표
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../c-environment-guides/" class="md-footer__link md-footer__link--next" aria-label="다음: 부록 C 개발환경별 지침 245건">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                부록 C 개발환경별 지침 245건
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

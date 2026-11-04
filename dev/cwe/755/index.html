@@ -1,0 +1,2698 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/cwe/755/">
+      
+      
+        <link rel="prev" href="../733/">
+      
+      
+        <link rel="next" href="../759/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-755 부적절한 예외 처리 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-755-부적절한-예외-처리" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-755 부적절한 예외 처리
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-755 부적절한 예외 처리
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-755 부적절한 예외 처리
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-755-부적절한-예외-처리">CWE-755 부적절한 예외 처리<a class="headerlink" href="#cwe-755-부적절한-예외-처리" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Improper Handling of Exceptional Conditions</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>분류(Class)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>미완성(Incomplete)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>해당</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="취약점의 원인을 이 CWE 번호로 기록해도 되는지에 대한 MITRE의 권고. 허용·검토 후 허용·권장하지 않음·금지가 있다">MITRE 매핑 권고</a></td>
+<td>권장하지 않음(Discouraged) — 결과를 기록할 때는 더 구체적인 CWE를 쓴다(하위 CWE: <a href="../209/">CWE-209</a>·<a href="../248/">CWE-248</a>·<a href="https://cwe.mitre.org/data/definitions/280.html" target="_blank" rel="noopener">CWE-280</a>·<a href="https://cwe.mitre.org/data/definitions/333.html" target="_blank" rel="noopener">CWE-333</a>·<a href="../390/">CWE-390</a>·<a href="https://cwe.mitre.org/data/definitions/392.html" target="_blank" rel="noopener">CWE-392</a>·<a href="../395/">CWE-395</a>·<a href="../396/">CWE-396</a> 외 4개) <details class="cwe-orig"><summary>원문(Mapping Notes)</summary><div lang="en"><p>Rationale: This CWE entry is a level-1 Class (i.e., a child of a Pillar). It might have lower-level children that would be more appropriate</p><p>Comments: Examine children of this entry to see if there is a better fit</p></div></details></td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어: 언어 무관, Python</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/755.html" target="_blank" rel="noopener">MITRE CWE-755</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">이름 표기</p>
+<p>「소프트웨어 개발보안 가이드」(2021. 11., 인쇄 293~295쪽)와 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.)의 '부적절한 예외 처리'는 참고자료가 <a href="https://cwe.mitre.org/data/definitions/754.html" target="_blank" rel="noopener">CWE-754</a>(Improper Check for Unusual or Exceptional Conditions)인 항목이다. 이 가이드는 「보안약점 점검 목록」의 CWE-755에 같은 이름을 쓰므로, KISA 문서와 대조할 때는 이름이 아니라 CWE 번호로 구분한다.</p>
+</div>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>예외 상황을 처리하지 않거나 잘못 처리하는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 예외 상황(exceptional condition)을 처리하지 않거나 잘못 처리하는 약점이다.</p>
+<details class="cwe-orig"><summary>원문(Description)</summary><div lang="en"><p>The product does not handle or incorrectly handles an exceptional condition.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>실현(REALIZATION): 이 약점은 아키텍처 보안 전술을 구현하는 과정에서 생긴다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기타</td>
+<td>기타</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문에 이 항목의 완화책이 없다. 상위 계통(View 1000)에도 완화책이 없어 2.7의 규칙 3에 따라 이 가이드의 지침([보완])을 쓴다. 아래 '이 가이드에서 다루는 곳'의 지침을 함께 본다.</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch4-design/#d-08">D-08</a> 오류 처리·안전 상태 설계</p>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch5-implementation/#i-06">I-06</a> 오류·반환값·예외 처리</p>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch6-integration-test/#t-05">T-05</a> 경계값·오류 주입 시험</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 데이터링크·비행 기록·텔레메트리 처리 코드가 예외 상황(숫자 변환 실패, 정리 중 기록 실패, 운용자의 송신 중지 요청)을 만난다. 예외 상황을 알아차리지 못하거나 엉뚱한 방식으로 처리하면 잘못된 값으로 동작을 계속하거나, 정리 경로에서 프로그램이 비정상 종료되거나, 중지 명령이 무시된다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* 데이터링크 설정 메시지의 "보고 주기(ms)" 필드를 정수로 바꾼다. 성공 0, 실패 -1 */
+static int parse_period(const char *field, int *out)
+{
+    char *end = NULL;
+    errno = 0;
+    *out = (int)strtol(field, &amp;end, 10);      /* 실패해도 변환 도중의 값이 이미 들어간다 */
+    return (end == field || *end != '\0' || errno == ERANGE) ? -1 : 0;
+}
+
+int main(void)
+{
+    const char *fields[] = {"200", "2OO", ""};
+    int period = 500;                         /* 현재 적용 중인 값 */
+    for (int i = 0; i &lt; 3; ++i) {
+        if (parse_period(fields[i], &amp;period) != 0) {
+            printf("warning: bad period field '%s'\n", fields[i]);  /* 감지만 하고 처리하지 않는다 */
+        }
+        printf("report period applied: %d ms\n", period);
+    }
+    return 0;
+}</code></pre>
+<p>C에는 예외가 없어 예외 상황은 반환값·errno로 알린다. 이 코드는 strtol의 실패를 반환값으로 감지하고도 경고만 찍고, 변환 도중에 이미 들어간 값("2OO"는 2 ms, 빈 문자열은 0 ms)을 그대로 적용한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* 성공하면 0, 숫자가 아니면 -1, 허용 범위 밖이면 -2. 실패하면 *out을 건드리지 않는다 */
+static int parse_period(const char *field, int *out)
+{
+    char *end = NULL;
+    errno = 0;
+    long v = strtol(field, &amp;end, 10);         /* 결과는 임시 변수에 받는다 */
+    if (end == field || *end != '\0') {
+        return -1;
+    }
+    if (errno == ERANGE || v &lt; 10 || v &gt; 10000) {
+        return -2;
+    }
+    *out = (int)v;
+    return 0;
+}
+
+int main(void)
+{
+    const char *fields[] = {"200", "2OO", ""};
+    int period = 500;                         /* 현재 적용 중인 값 */
+    for (int i = 0; i &lt; 3; ++i) {
+        int rc = parse_period(fields[i], &amp;period);
+        if (rc != 0) {
+            /* 설계에서 정한 처리: 현재 값을 유지하고 거부 사유를 알린다 */
+            printf("field '%s' rejected (rc=%d): keep %d ms\n", fields[i], rc, period);
+            continue;
+        }
+        printf("report period applied: %d ms\n", period);
+    }
+    return 0;
+}</code></pre>
+<p>변환 결과는 임시 변수에 받고 끝 포인터·ERANGE·허용 범위를 확인해, 실패하면 출력값을 건드리지 않는다. 호출자는 현재 값을 유지하고 거부 사유를 알린다. 실패했을 때 무엇을 할지(이전 값 유지, 안전 상태 전환)는 설계에서 정한다(D-08).</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>report period applied: [02] ms</code> 검출, 좋은 예에서 미검출·<code>field '2OO' rejected</code> 출력 확인 · 참고: MITRE CWE-755 Demonstrative Example 2(실패를 감지하고도 처리하지 않음) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;stdexcept&gt;
+
+// 비행 기록 장치에 남은 데이터를 세션이 끝날 때 기록한다
+class RecorderSession {
+public:
+    void add_frame() { ++pending_; }
+    void media_fault() { media_ok_ = false; }
+
+    void flush() {
+        if (pending_ &gt; 0 &amp;&amp; !media_ok_) {
+            throw std::runtime_error("recorder media write failed");
+        }
+        pending_ = 0;
+    }
+
+    ~RecorderSession() {
+        flush();    // 실패하면 소멸자 밖으로 예외가 나가 std::terminate로 이어진다
+    }
+
+private:
+    int pending_ = 0;
+    bool media_ok_ = true;
+};
+
+int main() {
+    RecorderSession s;
+    s.add_frame();
+    s.media_fault();
+    std::puts("leaving scope");
+    return 0;
+}</code></pre>
+<p>소멸자는 암묵적으로 noexcept인데, 소멸자에서 부른 flush()의 예외가 밖으로 나가 std::terminate로 프로그램이 비정상 종료된다. 기록 매체 고장 한 번이 전체 정지로 번진다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;stdexcept&gt;
+
+class RecorderSession {
+public:
+    void add_frame() { ++pending_; }
+    void media_fault() { media_ok_ = false; }
+
+    // 정상 경로에서는 호출자가 직접 부르고 실패를 처리한다
+    void flush() {
+        if (pending_ &gt; 0 &amp;&amp; !media_ok_) {
+            throw std::runtime_error("recorder media write failed");
+        }
+        pending_ = 0;
+    }
+
+    // 남은 프레임 수를 돌려주고 비운다: 호출자가 예비 장치로 넘길 때 쓴다
+    int take_pending() {
+        const int n = pending_;
+        pending_ = 0;
+        return n;
+    }
+
+    ~RecorderSession() {
+        try {
+            flush();
+        } catch (const std::exception &amp;e) {
+            // 소멸자에서는 예외를 밖으로 내보내지 않고 고장 기록만 남긴다
+            std::printf("recorder fault logged: %s (%d frames lost)\n", e.what(), pending_);
+        } catch (...) {
+            std::printf("recorder fault logged: unknown error (%d frames lost)\n", pending_);
+        }
+    }
+
+private:
+    int pending_ = 0;
+    bool media_ok_ = true;
+};
+
+int main() {
+    RecorderSession s;
+    s.add_frame();
+    s.media_fault();
+    try {
+        s.flush();
+    } catch (const std::exception &amp;e) {
+        std::printf("switch to backup recorder: %s\n", e.what());
+        std::printf("%d frames moved to backup\n", s.take_pending());
+    }
+    std::puts("leaving scope");
+    return 0;
+}</code></pre>
+<p>정상 경로에서는 호출자가 flush()를 직접 불러 실패를 처리(예비 기록 장치로 전환)하고, 소멸자는 어떤 예외든 잡아 고장 기록만 남긴다(LCPP-02). 예비 장치로 넘긴 프레임은 take_pending()으로 비워 소멸자가 다시 처리하지 않게 한다.</p>
+<p class="ex-meta">검증: clang-tidy — 나쁜 예에서 <code>bugprone-exception-escape</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-755 설명 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using (var port = new TelemetryPort())
+{
+    port.Queue(3);
+    port.MarkLinkDown();
+    Console.WriteLine("closing telemetry port");
+}   // Dispose에서 예외가 나가면 정리 경로에서 원래 오류를 덮어쓰거나 프로그램이 멈춘다
+
+internal sealed class TelemetryPort : IDisposable
+{
+    private int pending;
+    private bool linkUp = true;
+
+    public void Queue(int frames) =&gt; pending += frames;
+    public void MarkLinkDown() =&gt; linkUp = false;
+
+    public void Dispose()
+    {
+        if (pending &gt; 0 &amp;&amp; !linkUp)
+        {
+            throw new InvalidOperationException("pending frames lost");
+        }
+        pending = 0;
+    }
+}</code></pre>
+<p>Dispose에서 예외를 던진다. Dispose는 using·finally 같은 정리 경로에서 불리므로 원래 오류를 덮어쓰거나, 이 예시처럼 처리되지 않은 예외로 프로그램을 비정상 종료시킨다. 검증한 분석기 구성(AnalysisMode=All)에서도 CA1065가 이 예시를 경고하지 않아 실행으로 확인한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using (var port = new TelemetryPort())
+{
+    port.Queue(3);
+    port.MarkLinkDown();
+    if (!port.TryFlush())
+    {
+        int frames = port.TakePending();          // 보내지 못한 프레임을 꺼내 예비 링크로 넘긴다
+        Console.WriteLine($"flush failed: {frames} frames handed to backup link");
+    }
+    Console.WriteLine("closing telemetry port");
+}
+
+internal sealed class TelemetryPort : IDisposable
+{
+    private int pending;
+    private bool linkUp = true;
+
+    public int LostOnClose { get; private set; }
+
+    public void Queue(int frames) =&gt; pending += frames;
+    public void MarkLinkDown() =&gt; linkUp = false;
+
+    // 실패할 수 있는 작업은 정상 경로에서 결과를 돌려준다
+    public bool TryFlush()
+    {
+        if (pending &gt; 0 &amp;&amp; !linkUp)
+        {
+            return false;
+        }
+        pending = 0;
+        return true;
+    }
+
+    // 보내지 못한 프레임을 호출자에게 넘기고 큐를 비운다
+    public int TakePending()
+    {
+        int frames = pending;
+        pending = 0;
+        return frames;
+    }
+
+    public void Dispose()
+    {
+        // Dispose에서는 예외를 던지지 않고 잃은 양만 기록한다
+        LostOnClose = pending;
+        pending = 0;
+    }
+}</code></pre>
+<p>실패할 수 있는 송신은 TryFlush로 정상 경로에서 결과를 돌려받아, 실패하면 보내지 못한 프레임을 꺼내 예비 링크로 넘긴다. Dispose는 예외 없이 잃은 양만 기록한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>Unhandled exception. System.InvalidOperationException</code> 검출, 좋은 예에서 미검출·<code>flush failed: 3 frames handed to backup link</code> 출력 확인 · 참고: MITRE CWE-755 설명 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">public class Example {
+    static int sent = 0;
+
+    static void sendFrame(int frame) {
+        sent++;                                        // 텔레메트리 프레임 송신(모의)
+        if (frame == 1) {
+            Thread.currentThread().interrupt();        // 시험용 모의: 운용자가 '송신 중지'를 요청
+        }
+    }
+
+    // 프레임 사이 송신 간격을 맞춘다
+    static void pace() {
+        try {
+            Thread.sleep(5);
+        } catch (InterruptedException e) {
+            // 중지 요청을 삼킨다: 인터럽트 상태도 지워진 채로 돌아간다
+        }
+    }
+
+    public static void main(String[] args) {
+        for (int frame = 0; frame &lt; 5 &amp;&amp; !Thread.currentThread().isInterrupted(); frame++) {
+            sendFrame(frame);
+            pace();
+        }
+        System.out.println("frames sent: " + sent + " of 5 (stop requested after frame 2)");
+    }
+}</code></pre>
+<p>InterruptedException을 잡고 아무것도 하지 않는다. 예외가 던져질 때 인터럽트 상태가 지워지므로 루프가 중지 요청을 보지 못하고 남은 프레임을 모두 보낸다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">public class Example {
+    static int sent = 0;
+
+    static void sendFrame(int frame) {
+        sent++;                                        // 텔레메트리 프레임 송신(모의)
+        if (frame == 1) {
+            Thread.currentThread().interrupt();        // 시험용 모의: 운용자가 '송신 중지'를 요청
+        }
+    }
+
+    // 프레임 사이 송신 간격을 맞춘다
+    static void pace() {
+        try {
+            Thread.sleep(5);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();        // 중지 요청을 호출자에게 되돌려 준다
+        }
+    }
+
+    public static void main(String[] args) {
+        for (int frame = 0; frame &lt; 5 &amp;&amp; !Thread.currentThread().isInterrupted(); frame++) {
+            sendFrame(frame);
+            pace();
+        }
+        if (Thread.currentThread().isInterrupted()) {
+            System.out.println("stop request honored: link set to idle");
+        }
+        System.out.println("frames sent: " + sent + " of 5 (stop requested after frame 2)");
+    }
+}</code></pre>
+<p>잡은 뒤 Thread.currentThread().interrupt()로 인터럽트 상태를 되살려, 루프가 중지 요청을 보고 링크를 대기 상태로 둔다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>frames sent: 5 of 5</code> 검출, 좋은 예에서 미검출·<code>stop request honored</code> 출력 확인 · 참고: MITRE CWE-755 설명 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import time
+
+
+class Transmitter:
+    def __init__(self, stop_at):
+        self.stop_at = stop_at
+
+    def send(self, n):
+        if n == self.stop_at:
+            raise KeyboardInterrupt           # 운용자가 송신 중지(Ctrl+C)를 누른 순간
+        if n == 2:
+            raise ValueError("bad frame")     # 형식 오류 프레임
+        time.sleep(0.01)
+
+
+# 텔레메트리 송신 반복문
+tx, sent = Transmitter(stop_at=3), []
+for n in range(1, 6):
+    try:
+        tx.send(n)
+        sent.append(n)
+    except:                                   # 맨 except: 송신 중지 요청까지 삼킨다
+        continue
+print("frames sent:", sent)
+if any(n &gt; tx.stop_at for n in sent):
+    print("SENT AFTER STOP REQUEST")</code></pre>
+<p>맨 except:는 KeyboardInterrupt·SystemExit·GeneratorExit까지 잡는다. 운용자가 송신 중지를 눌러도 예외가 삼켜져 반복문이 끝까지 송신을 이어 간다. 형식 오류 같은 예상한 예외와 중지 요청을 구분하지 않고 같은 방식으로 처리한다. Bandit은 except 블록이 continue만 하는 꼴을 B112로 보고한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import logging
+import time
+
+log = logging.getLogger("telemetry.tx")
+
+
+class Transmitter:
+    def __init__(self, stop_at):
+        self.stop_at = stop_at
+
+    def send(self, n):
+        if n == self.stop_at:
+            raise KeyboardInterrupt
+        if n == 2:
+            raise ValueError("bad frame")
+        time.sleep(0.01)
+
+
+tx, sent = Transmitter(stop_at=3), []
+try:
+    for n in range(1, 6):
+        try:
+            tx.send(n)
+            sent.append(n)
+        except ValueError as e:              # 예상한 예외만 잡고 기록한다
+            log.warning("frame %d dropped: %s", n, e)
+except KeyboardInterrupt:                    # 중지 요청은 반복문 밖에서 받아 안전하게 멈춘다
+    print(f"transmission stopped by operator at frame {n}")
+print("frames sent:", sent)
+if any(n &gt; tx.stop_at for n in sent):
+    print("SENT AFTER STOP REQUEST")</code></pre>
+<p>잡을 예외를 구체적으로 적어(ValueError) 예상한 오류만 기록하고 넘긴다. KeyboardInterrupt는 반복문 밖에서 받아 송신을 멈추고 안전 상태로 간다(I-06, LPY-08). 넓게 잡아야 할 때도 except Exception으로 하고(KeyboardInterrupt·SystemExit은 Exception이 아니라 BaseException을 직접 상속하므로 빠진다) 기록 후 다시 던진다. 어떤 예외를 어디서 처리할지는 오류 처리 설계에서 정한다(D-08).</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>SENT AFTER STOP REQUEST</code> 검출, 좋은 예에서 미검출·<code>transmission stopped by operator</code> 출력 확인 · 참고: MITRE CWE-755 설명 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 에러처리 4-3 &#x27;부적절한 예외 처리&#x27;(인쇄 133쪽) 참고 — 이 항목의 참고자료 CWE는 <a href="https://cwe.mitre.org/data/definitions/754.html" target="_blank" rel="noopener">CWE-754</a></p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 3건)</summary><div lang="en"><p><b>Example 1.</b> The following example attempts to resolve a hostname.</p><p><i>Bad / Java</i></p><pre><code>protected void doPost (HttpServletRequest req, HttpServletResponse res) throws IOException {
+  String ip = req.getRemoteAddr();
+  InetAddress addr = InetAddress.getByName(ip);
+  ...
+  out.println(&quot;hello &quot; + addr.getHostName());
+}</code></pre><p>A DNS lookup failure will cause the Servlet to throw an exception.</p><p><b>Example 2.</b> The following example attempts to allocate memory for a character. After the call to malloc, an if statement is used to check whether the malloc function failed.</p><p><i>Bad / C</i></p><pre><code>foo=malloc(sizeof(char)); //the next line checks to see if malloc failed
+if (foo==NULL) {
+  //We do nothing so we just ignore the error.
+}</code></pre><p>The conditional successfully detects a NULL return value from malloc indicating a failure, however it does not do anything to handle the problem. Unhandled errors may have unexpected results and may cause the program to crash or terminate.</p><p>Instead, the if block should contain statements that either attempt to fix the problem or notify the user that an error has occurred and continue processing or perform some cleanup and gracefully terminate the program. The following example notifies the user that the malloc function did not allocate the required memory resources and returns an error code.</p><p><i>Good / C</i></p><pre><code>foo=malloc(sizeof(char)); //the next line checks to see if malloc failed
+if (foo==NULL) {
+  printf(&quot;Malloc failed to allocate memory resources&quot;);
+  return -1;
+}</code></pre><p><b>Example 3.</b> The following code mistakenly catches a NullPointerException.</p><p><i>Bad / Java</i></p><pre><code>try {
+
+                    mysteryMethod();
+
+                  } catch (NullPointerException npe) {
+
+                  }</code></pre></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>흔히 SAST(Static Application Security Testing)라 부르는 자동 정적 분석(static analysis)은 소스코드(또는 바이너리·컴파일된 코드)를 실행하지 않고 분석해 이 약점의 일부 사례를 찾을 수 있으며, 대개 데이터 흐름·제어 흐름 모델을 만든 뒤 입력 출처('source')와 외부 구성요소나 운영체제 같은 하위 계층과 상호작용하는 목적지('sink')를 잇는 잠재적 취약 패턴을 찾는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect &quot;sources&quot; (origins of input) with &quot;sinks&quot; (destinations where the data interacts with external components, a lower layer such as the OS, etc.)</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다.</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(C++·Java·C#) 예외를 잡고 아무것도 하지 않는 catch, InterruptedException을 잡고 인터럽트 상태를 되살리지 않는 곳, 소멸자·Dispose·finally에서 예외를 던지는 곳을 찾는다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a>·<a href="../../ch5-implementation/#i-06">I-06</a></td>
+<td>[예시] CWE-755 C++·Java·C# 예시(인터럽트 상태 소실, 소멸자·Dispose 예외)</td>
+</tr>
+<tr>
+<td>(C·C++) strtol처럼 오류를 반환값·errno·끝 포인터로 알리는 함수는 결과를 확인한 뒤 실패면 변환 도중의 값을 쓰지 않는지 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a>·<a href="../../ch5-implementation/#i-06">I-06</a></td>
+<td>[예시] CWE-755 C 예시(strtol 실패를 감지하고도 값 적용)</td>
+</tr>
+<tr>
+<td>기록 매체 고장, 중지 요청, 형식 오류 같은 예외 상황을 주입해 프로그램이 비정상 종료(std::terminate, 처리되지 않은 예외)하거나 요청을 무시하는지 시험한다.</td>
+<td><a href="../../ch6-integration-test/#t-05">T-05</a></td>
+<td>[예시] CWE-755 예시 검증(비정상 종료, 중지 요청 무시 실행 확인)</td>
+</tr>
+<tr>
+<td>(C·C++) -fno-exceptions 빌드와 HardFault 핸들러처럼 예외 대신 다른 수단을 쓰는 곳은 오류 반환 규약과 고장 처리기가 안전 상태 전환·고장 기록을 하는지 설계 산출물과 대조한다.</td>
+<td><a href="../../ch4-design/#d-09">D-09</a>·<a href="../../ch4-design/#d-08">D-08</a></td>
+<td>[보완]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>⓪ 하위 CWE 지원 확인: 도구가 이 번호 대신 하위 CWE(<a href="../209/">CWE-209</a>·<a href="../248/">CWE-248</a>·<a href="https://cwe.mitre.org/data/definitions/280.html" target="_blank" rel="noopener">CWE-280</a>·<a href="https://cwe.mitre.org/data/definitions/333.html" target="_blank" rel="noopener">CWE-333</a>·<a href="../390/">CWE-390</a>·<a href="https://cwe.mitre.org/data/definitions/392.html" target="_blank" rel="noopener">CWE-392</a>·<a href="../395/">CWE-395</a>·<a href="../396/">CWE-396</a> 외 4개)로 보고하는지 먼저 확인한다. 지원하면 '미지원'이 아니며, 지원하는 CWE 목록을 점검 결과·FA 사유서에 근거로 적는다.</li>
+<li>① 원문 탐지 방법은 자동 정적 분석뿐이다. 다른 정적 분석 도구·컴파일러 경고로 점검한다.</li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-755">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>예외·오류 처리 정책(포착 위치, 전파 규칙, 안전 상태)을 설계서에 정의한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>C는 모든 반환값을 검사하고, C++은 구체적 예외 타입을 포착하며 catch(...)로 은폐하지 않는다. 소멸자에서 예외를 던지지 않는다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>구체적 예외를 처리하고 finally/try-with-resources로 정리 작업을 보장한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>오류 주입(fault injection)·경계 시험과 정적 분석으로 미처리 예외를 탐지한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>현장 고장 보고를 분석해 예외 처리 누락을 보완한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>C++ 예외를 비활성화(-fno-exceptions)한 임베디드 환경은 오류 코드 반환 규칙을 일관 적용하고 HardFault 핸들러에서 안전 상태 전환과 고장 기록을 수행한다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>도구가 보고하는 하위 CWE</strong>는 <a href="#detection">도구 미지원 시 대안 ⓪</a>을 본다.</p>
+<p><strong>기준선 활동 3건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-08">D-08</a> 오류 처리·안전 상태 설계 (설계)</li>
+<li><a href="../../ch5-implementation/#i-06">I-06</a> 오류·반환값·예외 처리 (구현)</li>
+<li><a href="../../ch6-integration-test/#t-05">T-05</a> 경계값·오류 주입 시험 (통합 및 시험)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 9건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>탑재 환경 (1건)</td>
+<td><a href="../../appendix/c-environment-guides/#mcu-02">MCU-02</a> 고장 안전 상태 정의</td>
+</tr>
+<tr>
+<td>운영체제/런타임 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#psos-03">PSOS-03</a> 서비스콜 반환값 검사, <a href="../../appendix/c-environment-guides/#frt-03">FRT-03</a> 오버플로·할당 실패 훅</td>
+</tr>
+<tr>
+<td>기반 소프트웨어 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#bsp-04">BSP-04</a> 래퍼에서 검증·반환값 확인, <a href="../../appendix/c-environment-guides/#bsp-09">BSP-09</a> 오류 주입과 코드 실행률</td>
+</tr>
+<tr>
+<td>개발 언어 (4건)</td>
+<td><a href="../../appendix/c-environment-guides/#lcpp-02">LCPP-02</a> 오류 처리 정책 단일화, <a href="../../appendix/c-environment-guides/#lcs-08">LCS-08</a> 예외와 null 안전, <a href="../../appendix/c-environment-guides/#lj-05">LJ-05</a> 예외 처리 규약, <a href="../../appendix/c-environment-guides/#lpy-08">LPY-08</a> 예외 처리 규약</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="https://cwe.mitre.org/data/definitions/703.html" target="_blank" rel="noopener">CWE-703</a></li>
+<li><strong>하위 항목</strong>(이 가이드 범위 197개 안): <a href="../209/">CWE-209</a> 오류 메시지 정보노출, <a href="../248/">CWE-248</a> 처리되지 않은 예외(Uncaught Exception), <a href="../390/">CWE-390</a> 오류 상황 대응 부재, <a href="../395/">CWE-395</a> NullPointerException 포착으로 널 포인터 역참조 탐지, <a href="../396/">CWE-396</a> 일반 예외에 대한 catch 선언, <a href="../460/">CWE-460</a> 예외 발생 시 정리(Cleanup) 미흡</li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 4건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2023-41151" target="_blank" rel="noopener">CVE-2023-41151</a></td>
+<td>OPC UA 서버용 SDK에서 소켓이 쓰기 차단 상태인데 서버가 오류를 보내려 하면 처리되지 않은 예외가 발생한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SDK for OPC Unified Architecture (OPC UA) server has uncaught exception when a socket is blocked for writing but the server tries to send an error</p></div></details></td>
+</tr>
+<tr>
+<td>[REF-1374]</td>
+<td>연쇄: JavaScript 기반 암호화폐 라이브러리가 실패를 보고하지 않고 안전하지 않은 Math.random() 함수로 대체할 수 있어(<a href="https://cwe.mitre.org/data/definitions/392.html" target="_blank" rel="noopener">CWE-392</a>) 엔트로피가 줄고(<a href="https://cwe.mitre.org/data/definitions/332.html" target="_blank" rel="noopener">CWE-332</a>) 비트코인 지갑용 암호 키가 고유하지 않게 생성된다(<a href="https://cwe.mitre.org/data/definitions/1391.html" target="_blank" rel="noopener">CWE-1391</a>). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: JavaScript-based cryptocurrency library can fall back to the insecure Math.random() function instead of reporting a failure (CWE-392), thus reducing the entropy (CWE-332) and leading to generation of non-unique cryptographic keys for Bitcoin wallets (CWE-1391)</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-3011" target="_blank" rel="noopener">CVE-2021-3011</a></td>
+<td>가상화 제품의 가상 인터럽트 컨트롤러에서 레지스터에 특정 잘못된 값을 쓰면 오류 코드를 반환하지 않고 치명적 오류가 발생해 호스트가 비정상 종료될 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>virtual interrupt controller in a virtualization product allows crash of host by writing a certain invalid value to a register, which triggers a fatal error instead of returning an error code</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2008-4302" target="_blank" rel="noopener">CVE-2008-4302</a></td>
+<td>연쇄: 운영체제 커널이 함수 호출 실패를 제대로 처리하지 않아(CWE-755) 잠기지 않은 자원을 잠금 해제하고(<a href="https://cwe.mitre.org/data/definitions/832.html" target="_blank" rel="noopener">CWE-832</a>), 그 결과 비정상 종료가 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: OS kernel does not properly handle a failure of a function call (CWE-755), leading to an unlock of a resource that was not locked (CWE-832), with resultant crash.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>OpenSSF Secure Coding Guide for Python</td><td>pyscg-0015</td><td lang="en">Handle Error Conditions</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/755.html" target="_blank" rel="noopener">CWE-755</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../733/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-733 컴파일러 최적화에 의한 보안 코드 제거·변형">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-733 컴파일러 최적화에 의한 보안 코드 제거·변형
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../759/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-759 솔트 없이 일방향 해시 함수 사용">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-759 솔트 없이 일방향 해시 함수 사용
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

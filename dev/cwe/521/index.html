@@ -1,0 +1,2633 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/cwe/521/">
+      
+      
+        <link rel="prev" href="../502/">
+      
+      
+        <link rel="next" href="../536/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-521 취약한 비밀번호 허용 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-521-취약한-비밀번호-허용" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-521 취약한 비밀번호 허용
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-521 취약한 비밀번호 허용
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-521 취약한 비밀번호 허용
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-521-취약한-비밀번호-허용">CWE-521 취약한 비밀번호 허용<a class="headerlink" href="#cwe-521-취약한-비밀번호-허용" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Weak Password Requirements</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>기본(Base)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>초안(Draft)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>조건부 — 사용자 계정·비밀번호 사용</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어 무관 · 기술 무관</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/521.html" target="_blank" rel="noopener">MITRE CWE-521</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>사용자에게 강한 비밀번호를 쓰도록 요구하지 않는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 사용자에게 강한 비밀번호를 갖도록 요구하지 않는다.</p>
+<p><strong>배경(Background Details)</strong></p>
+<p>인증 메커니즘은 흔히 암기한 비밀(비밀번호)에 의존해 시스템 사용자의 신원을 주장한다. 따라서 이 비밀번호는 충분히 복잡하고 공격자가 추측하기 어려워야 한다. 비밀번호가 얼마나 복잡해야 하는지에 관한 구체적인 요구사항은 보호 대상 시스템의 종류에 따라 다르다. 올바른 비밀번호 요구사항을 정하고 구현으로 강제하는 것은 인증 메커니즘 전체의 성공에 매우 중요하다.</p>
+<details class="cwe-orig"><summary>원문(Description · Background Details)</summary><div lang="en"><p>The product does not require that users should have strong passwords.</p><p>Authentication mechanisms often rely on a memorized secret (also known as a password) to provide an assertion of identity for a user of a system. It is therefore important that this password be of sufficient complexity and impractical for an adversary to guess. The specific requirements around how complex a password needs to be depends on the type of system being protected. Selecting the correct password requirements and enforcing them through implementation are critical to the overall success of the authentication mechanism.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>설계</td>
+<td>작위(COMMISSION): 아키텍처 보안 전술과 관련된 잘못된 설계로 생기는 약점이다.</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>제품 설계에 명시된 비밀번호 정책을 강제하지 않으면 사용자가 필요한 보호 수준을 제공하지 못하는 비밀번호를 만들 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>접근 통제</td>
+<td>권한 획득 또는 신원 도용</td>
+<td>공격자가 사용자 비밀번호를 쉽게 추측해 사용자 계정에 접근할 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 4건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch3-requirements/#r-01">R-01</a> 보안 요구사항 정의</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>제품 설계는 적절한 비밀번호 정책을 따르도록 요구해야 한다. 구체적인 비밀번호 요구사항은 상황 요인에 크게 좌우되지만, 다음 속성을 갖추도록 권장한다.<br>· 최소·최대 길이 강제<br>· 비밀번호 재사용 제한<br>· 흔한 비밀번호 사용 제한<br>· 비밀번호에 상황 관련 문자열(예: 사용자 ID, 앱 이름) 사용 제한  위협 모델에 따라 비밀번호 정책에 다음 속성을 더할 수 있다.<br>· 문자 종류를 섞어야 하는 복잡한 비밀번호(영문자, 숫자, 특수문자, 대소문자 혼용): 문자 범위를 넓히면 비밀번호를 크래킹하기 어려워지며, 단일 요소 인증에 의존하는 시스템에 적합할 수 있다. 다만 복잡한 비밀번호는 외우기 어려워 사용자가 짧은 비밀번호를 고르거나 비밀번호를 잘못 관리(적어 두기)하게 될 수 있다. 사람들이 여러 기호를 예측 가능하게 쓰기 때문에 전체 비밀번호 복잡도가 크게 늘지 않는 경우가 많다는 단점도 있다.<br>· 큰 최소 길이(비밀번호 대신 패스프레이즈 사용 권장): 문자 수를 늘리면 비밀번호를 크래킹하기 어려워지며, 단일 요소 인증에 의존하는 시스템에 적합할 수 있다. 다만 좋은 패스프레이즈를 고르기는 쉽지 않고 약한 비밀번호가 여전히 만들어질 수 있다. 길고 예측하기 어려운 비밀번호를 쓰도록 어느 정도 안내가 필요할 수 있다.<br>· 무작위로 고른 비밀 값: 사용자 대신 비밀번호를 생성하면 길이와 복잡도 요구사항을 맞추는 데 도움이 되고 안전한 비밀번호가 쓰이게 할 수 있다. 다만 결과 비밀번호나 패스프레이즈가 외우기 너무 어려워 적어 두게 될 수 있다. 그러나 복잡도 요구사항이 제각각인 많은 비밀번호를 관리할 수 있는 비밀번호 관리자의 도입이 늘고 있다.  비밀번호 요구사항에 관한 더 자세한 내용은 NIST 800-63B [REF-1053]를 참고한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>A product&#x27;s design should require adherence to an appropriate password policy. Specific password requirements depend strongly on contextual factors, but it is recommended to contain the following attributes:</p><p>- Enforcement of a minimum and maximum length</p><p>- Restrictions against password reuse</p><p>- Restrictions against using common passwords</p><p>- Restrictions against using contextual string in the password (e.g., user id, app name)</p><p>Depending on the threat model, the password policy may include several additional attributes.</p><p>- Complex passwords requiring mixed character sets (alpha, numeric, special, mixed case) Increasing the range of characters makes the password harder to crack and may be appropriate for systems relying on single factor authentication. Unfortunately, a complex password may be difficult to memorize, encouraging a user to select a short password or to incorrectly manage the password (write it down). Another disadvantage of this approach is that it often does not result in a significant increase in overall password complexity due to people&#x27;s predictable usage of various symbols.</p><p>- Large Minimum Length (encouraging passphrases instead of passwords) Increasing the number of characters makes the password harder to crack and may be appropriate for systems relying on single factor authentication. A disadvantage of this approach is that selecting a good passphrase is not easy and poor passwords can still be generated. Some prompting may be needed to encourage long un-predictable passwords.</p><p>- Randomly Chosen Secrets Generating a password for the user can help make sure that length and complexity requirements are met, and can result in secure passwords being used. A disadvantage of this approach is that the resulting password or passphrase may be too difficult to memorize, encouraging them to be written down. However, there is growing adoption of password managers that allow users to manage many passwords with varying complexity requirements.</p><p>See NIST 800-63B [REF-1053] for further information on password requirements.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>비밀번호가 단일 실패 지점이 되지 않도록 비밀번호 외의 두 번째 인증 요소를 고려한다(<a href="https://cwe.mitre.org/data/definitions/308.html" target="_blank" rel="noopener">CWE-308</a> 참고). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Consider a second authentication factor beyond the password, which prevents the password from being a single point of failure. See CWE-308 for further information.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>사용자가 고른 비밀번호가 요구 속성을 충족하는지 알려 주는 비밀번호 복잡도 표시기를 구현하는 것을 고려한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Consider implementing a password complexity meter to inform users when a chosen password meets the required attributes.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>예전에는 약한 비밀번호의 위험을 줄이는 심층 방어로 '비밀번호 만료'(예: 90일마다 변경)가 널리 권장되어 흔한 관행이 되었다. 그러나 현재 위협 환경에서는 한계가 크고, 비밀번호 복잡도·계산 비용 같은 관련 보호 수단이 도입되고 정기 변경이 흔히 더 예측 가능한 비밀번호를 낳는다는 점이 알려지면서 효용이 줄었다. 그래서 이제는 특히 비밀번호 보호의 유일한 수단으로서는 권장하지 않는 관행(Discouraged Common Practice)이다 [REF-1488] [REF-1489]. 침해 증거가 있을 때 비밀번호 변경을 강제하는 것은 여전히 강하게 권장되며, 이는 임의 주기로 강제하는 '만료'와는 다르다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Previously, &quot;password expiration&quot; was widely advocated as a defense-in-depth approach to minimize the risk of weak passwords, and it has become a common practice. Password expiration requires a password to be changed within a fixed time window (such as every 90 days). However, this approach has significant limitations in the current threat landscape, and its utility has been reduced in light of the adoption of related protection mechanisms (such as password complexity and computational effort), along with the recognition that regular password changes often caused users to generate more predictable passwords. As a result, this is now a Discouraged Common Practice [REF-1488] [REF-1489], especially as the sole factor in protecting passwords. It is still strongly encouraged to force password changes in case of evidence of compromise, but this is not the same as a forced &quot;expiration&quot; on an arbitrary time frame.</p></div></details></td>
+<td>권장하지 않는 관행(Discouraged Common Practice)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 정비 콘솔·운용자 계정·정비 정보 시스템·임무 계획 도구의 관리자 계정에 새 비밀번호를 설정한다. 예시의 후보 가운데 앞의 것들은 짧거나, 계정 이름을 담거나, 흔히 쓰이는 약한 값이고 마지막 하나만 정책을 만족한다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stddef.h&gt;
+
+/* 정비 콘솔 계정의 새 비밀번호를 설정한다: 비어 있지만 않으면 받아들인다 */
+static int set_new_password(const char *account, const char *candidate)
+{
+    (void)account;
+    if (candidate == NULL || candidate[0] == '\0') {
+        return 0;
+    }
+    /* (저장 단계는 생략) */
+    return 1;
+}
+
+int main(void)
+{
+    const char *account = "maint";
+    const char *candidates[] = { "1234", "Maint#2026ops", "Password1234!", "EXAMPLE-Ridge-Falcon-42x" };
+    for (size_t i = 0; i &lt; sizeof candidates / sizeof candidates[0]; ++i) {
+        printf("%-24s -&gt; %s\n", candidates[i],
+               set_new_password(account, candidates[i]) ? "ACCEPTED" : "REJECTED");
+    }
+    return 0;
+}</code></pre>
+<p>빈 값만 막아 '1234'나 계정 이름을 담은 비밀번호도 그대로 받는다. 이런 값은 사전 대입으로 금방 맞힐 수 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;ctype.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;string.h&gt;
+
+#define MIN_LENGTH 12   /* 길이 기준은 사업 보안 요구사항에서 정한다 */
+
+static const char *const DENYLIST[] = { "password1234", "123456789012", "qwertyuiop12" };
+
+static int contains_nocase(const char *text, const char *word)
+{
+    size_t n = strlen(text), m = strlen(word);
+    for (size_t i = 0; m &gt; 0 &amp;&amp; i + m &lt;= n; ++i) {
+        size_t k = 0;
+        while (k &lt; m &amp;&amp; tolower((unsigned char)text[i + k]) == tolower((unsigned char)word[k])) ++k;
+        if (k == m) return 1;
+    }
+    return 0;
+}
+
+/* 정책을 통과하지 못한 이유를 돌려주고, 통과하면 NULL */
+static const char *policy_violation(const char *account, const char *pw)
+{
+    if (account == NULL || pw == NULL) return "missing input";
+    size_t len = strlen(pw);
+    int lower = 0, upper = 0, digit = 0, other = 0;
+    for (size_t i = 0; i &lt; len; ++i) {
+        unsigned char ch = (unsigned char)pw[i];
+        if (islower(ch)) lower = 1; else if (isupper(ch)) upper = 1;
+        else if (isdigit(ch)) digit = 1; else other = 1;
+    }
+    if (len &lt; MIN_LENGTH) return "too short";
+    if (lower + upper + digit + other &lt; 3) return "needs 3 character classes";
+    if (contains_nocase(pw, account)) return "contains account name";
+    for (size_t i = 0; i &lt; sizeof DENYLIST / sizeof DENYLIST[0]; ++i)
+        if (contains_nocase(pw, DENYLIST[i])) return "commonly used password";
+    return NULL;
+}
+
+int main(void)
+{
+    const char *account = "maint";
+    /* 예시 값이므로 실제 계정에 쓰지 않는다 */
+    const char *candidates[] = { "1234", "Maint#2026ops", "Password1234!", "EXAMPLE-Ridge-Falcon-42x" };
+    for (size_t i = 0; i &lt; sizeof candidates / sizeof candidates[0]; ++i) {
+        const char *why = policy_violation(account, candidates[i]);
+        /* 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다 */
+        printf("%-24s -&gt; %s%s\n", candidates[i], why ? "REJECTED: " : "ACCEPTED", why ? why : "");
+    }
+    return 0;
+}</code></pre>
+<p>최소 길이, 문자 종류 규칙(예: 3가지 이상, 사업 요구사항에 있을 때), 계정 이름 포함 금지, 흔한 비밀번호 금지 목록을 설정 시점에 검사하고 거부 사유를 알려 준다. 길이 같은 기준값은 사업 보안 요구사항에서 정한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>1234 -&gt; ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>1234 -&gt; REJECTED</code> 출력 확인 · 참고: MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+// 운용자 계정 등록 화면: 길이 4 이상이면 그대로 쓴다
+class AccountRegistry {
+public:
+    bool enroll(const std::string &amp;user, const std::string &amp;password) {
+        if (password.size() &lt; 4) {
+            return false;
+        }
+        users_.push_back(user);  // 비밀번호 저장(해시)은 생략
+        return true;
+    }
+
+private:
+    std::vector&lt;std::string&gt; users_;
+};
+
+int main() {
+    AccountRegistry reg;
+    for (const std::string pw : {"0000", "operatoroperator", "Console#OPR03-7", "EXAMPLE-Cobalt!Mesa-781"}) {
+        std::cout &lt;&lt; pw &lt;&lt; " -&gt; " &lt;&lt; (reg.enroll("Opr03", pw) ? "ACCEPTED" : "REJECTED") &lt;&lt; '\n';
+    }
+    return 0;
+}</code></pre>
+<p>길이 4 이상만 확인해 '0000'이나 계정 이름을 담은 값 같은 약한 비밀번호를 받아들인다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;algorithm&gt;
+#include &lt;array&gt;
+#include &lt;cctype&gt;
+#include &lt;iostream&gt;
+#include &lt;optional&gt;
+#include &lt;string&gt;
+#include &lt;string_view&gt;
+#include &lt;vector&gt;
+
+// 비밀번호 정책 검사: 위반 사유를 돌려주고, 통과하면 빈 값
+std::optional&lt;std::string_view&gt; weak_reason(std::string_view user, std::string_view pw) {
+    constexpr std::size_t kMinLen = 12;  // 사업 보안 요구사항의 값으로 바꾼다
+    static constexpr std::array&lt;std::string_view, 4&gt; kCommon{"0000", "password", "operator", "qwerty"};
+    auto has = [&amp;](auto pred) { return std::any_of(pw.begin(), pw.end(), [&amp;](char c) { return pred(static_cast&lt;unsigned char&gt;(c)); }); };
+    int classes = has([](int c) { return std::islower(c); }) + has([](int c) { return std::isupper(c); }) +
+                  has([](int c) { return std::isdigit(c); }) + has([](int c) { return std::ispunct(c); });
+    if (pw.size() &lt; kMinLen) return "too short";
+    if (classes &lt; 3) return "needs 3 character classes";
+    auto lower = [](std::string_view s) {  // 대소문자를 무시하고 비교: 비밀번호와 계정 이름 모두 소문자로
+        std::string r(s);
+        std::transform(r.begin(), r.end(), r.begin(), [](unsigned char c) { return static_cast&lt;char&gt;(std::tolower(c)); });
+        return r;
+    };
+    const std::string low = lower(pw);
+    if (low.find(lower(user)) != std::string::npos) return "contains account name";
+    for (auto w : kCommon) if (low.find(w) != std::string::npos) return "commonly used password";
+    return std::nullopt;
+}
+
+class AccountRegistry {
+public:
+    std::optional&lt;std::string_view&gt; enroll(const std::string &amp;user, const std::string &amp;password) {
+        if (auto why = weak_reason(user, password)) return why;  // 거부하고 사유를 화면에 알린다
+        users_.push_back(user);
+        return std::nullopt;
+    }
+private:
+    std::vector&lt;std::string&gt; users_;
+};
+
+int main() {
+    AccountRegistry reg;
+    // 예시 값이므로 실제 계정에 쓰지 않는다
+    for (const std::string pw : {"0000", "operatoroperator", "Console#OPR03-7", "EXAMPLE-Cobalt!Mesa-781"}) {
+        auto why = reg.enroll("Opr03", pw);
+        // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다
+        std::cout &lt;&lt; pw &lt;&lt; " -&gt; " &lt;&lt; (why ? "REJECTED: " + std::string(*why) : "ACCEPTED") &lt;&lt; '\n';
+    }
+    return 0;
+}</code></pre>
+<p>정책 검사 함수가 길이·문자 종류·계정 이름 포함(비밀번호와 계정 이름을 모두 소문자로 바꿔 비교)·흔한 값 여부를 확인해 위반 사유를 돌려주고, 등록은 이를 통과할 때만 한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>0000 -&gt; ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>0000 -&gt; REJECTED</code> 출력 확인 · 참고: MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">// 임무 계획 도구의 최초 관리자 비밀번호 설정: 입력 확인란과 같기만 하면 받는다
+static string SetAdminPassword(string pw, string confirm) =&gt;
+    pw == confirm ? "ACCEPTED" : "REJECTED: confirmation mismatch";
+
+foreach (string pw in new[] { "admin", "aaaaaaaaaaaa", "Planner#2026-x", "EXAMPLE-Basalt?Quill-907" })
+{
+    Console.WriteLine($"{pw} -&gt; {SetAdminPassword(pw, pw)}");
+}</code></pre>
+<p>확인란과 같기만 하면 받아 주어 'admin'이나 같은 글자를 반복한 값이 최초 관리자 비밀번호가 된다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">// 최초 관리자 비밀번호 설정: 확인란 일치 + 정책 검사를 모두 통과해야 받는다
+static string? Weakness(string pw)
+{
+    const int MinLength = 12;                                // 사업 보안 요구사항의 값
+    string[] common = ["admin", "password", "planner", "123456"];
+    int classes = (pw.Any(char.IsLower) ? 1 : 0) + (pw.Any(char.IsUpper) ? 1 : 0)
+                + (pw.Any(char.IsDigit) ? 1 : 0) + (pw.Any(c =&gt; !char.IsLetterOrDigit(c)) ? 1 : 0);
+    if (pw.Length &lt; MinLength) return "too short";
+    if (classes &lt; 3) return "needs 3 character classes";
+    if (pw.Distinct().Count() &lt; 5) return "too few distinct characters";
+    if (common.Any(w =&gt; pw.Contains(w, StringComparison.OrdinalIgnoreCase))) return "commonly used password";
+    return null;
+}
+
+static string SetAdminPassword(string pw, string confirm)
+{
+    if (pw != confirm) return "REJECTED: confirmation mismatch";
+    return Weakness(pw) is { } why ? $"REJECTED: {why}" : "ACCEPTED";
+}
+
+// 예시 값이므로 실제 계정에 쓰지 않는다
+foreach (string pw in new[] { "admin", "aaaaaaaaaaaa", "Planner#2026-x", "EXAMPLE-Basalt?Quill-907" })
+{
+    // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다
+    Console.WriteLine($"{pw} -&gt; {SetAdminPassword(pw, pw)}");
+}</code></pre>
+<p>확인란 일치와 함께 길이·문자 종류·서로 다른 글자 수·흔한 값 금지 목록을 검사한다. 기준값은 사업 보안 요구사항에서 정하고, 정책을 어긴 비밀번호 설정 시도를 시험 항목에 넣는다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>admin -&gt; ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>admin -&gt; REJECTED</code> 출력 확인 · 참고: MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.util.List;
+
+public class Example {
+    // 정비 정보 시스템의 비밀번호 변경: 이전 값과 다르기만 하면 바꾼다
+    static String changePassword(String user, String oldPw, String newPw) {
+        if (newPw.equals(oldPw)) {
+            return "REJECTED: same as old";
+        }
+        return "ACCEPTED";                       // 길이·조합·흔한 값 검사가 없다
+    }
+
+    public static void main(String[] args) {
+        for (String pw : List.of("abc", "Tech11-Station!", "Qwerty#Station9", "EXAMPLE-Harbor#Lantern-58")) {
+            System.out.println(pw + " -&gt; " + changePassword("tech11", "Start#2026-init", pw));
+        }
+    }
+}</code></pre>
+<p>이전 비밀번호와 다르기만 하면 바꾸어 주어 'abc'처럼 짧은 값이나 계정 이름을 담은 값도 받는다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
+
+public class Example {
+    static final int MIN_LENGTH = 12;                        // 사업 보안 요구사항에서 정한다
+    static final Set&lt;String&gt; COMMON = Set.of("11111111", "password", "qwerty", "letmein");
+
+    // 서버 쪽 정책 검사: 위반 사유를 돌려준다
+    static Optional&lt;String&gt; violation(String user, String pw) {
+        String lower = pw.toLowerCase(Locale.ROOT);
+        long classes = List.of("[a-z]", "[A-Z]", "[0-9]", "[^A-Za-z0-9]").stream()
+                .filter(re -&gt; pw.matches(".*" + re + ".*")).count();
+        if (pw.length() &lt; MIN_LENGTH) return Optional.of("too short");
+        if (classes &lt; 3) return Optional.of("needs 3 character classes");
+        if (lower.contains(user.toLowerCase(Locale.ROOT))) return Optional.of("contains account name");
+        if (COMMON.stream().anyMatch(lower::contains)) return Optional.of("commonly used password");
+        return Optional.empty();
+    }
+
+    static String changePassword(String user, String oldPw, String newPw) {
+        if (newPw.equals(oldPw)) {
+            return "REJECTED: same as old";
+        }
+        return violation(user, newPw).map(v -&gt; "REJECTED: " + v).orElse("ACCEPTED");
+    }
+
+    public static void main(String[] args) {
+        // 예시 값이므로 실제 계정에 쓰지 않는다
+        for (String pw : List.of("abc", "Tech11-Station!", "Qwerty#Station9", "EXAMPLE-Harbor#Lantern-58")) {
+            // 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다
+            System.out.println(pw + " -&gt; " + changePassword("tech11", "Start#2026-init", pw));
+        }
+    }
+}</code></pre>
+<p>서버 쪽에서 길이·문자 종류·계정 이름 포함·흔한 값 금지 목록을 검사하고 위반 사유를 돌려준다. 화면(클라이언트) 검사만으로는 우회되므로 서버에서 다시 검사한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>abc -&gt; ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>abc -&gt; REJECTED</code> 출력 확인 · 참고: MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-11 &#x27;취약한 패스워드 허용&#x27;(인쇄 155쪽) 참고 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 에러처리 4-4 &#x27;취약한 패스워드 요구조건&#x27;(인쇄 240쪽) 참고</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python"># 정비 정보 시스템의 관리자 계정에 새 비밀번호를 설정한다
+def set_password(account, new_password):
+    return len(new_password) &gt;= 4                 # 길이 4자 이상만 본다
+
+
+for candidate in ("admin", "1234", "maint2026", "EXAMPLE-Tq8%vLr2!xNw4#pe"):
+    print(f"{candidate} -&gt; {'ACCEPTED' if set_password('admin', candidate) else 'REJECTED'}")</code></pre>
+<p>길이 4자 이상이면 어떤 비밀번호든 받는다. 'admin'(계정 이름과 같음)·'1234'·'정비(maint)+연도' 꼴의 'maint2026'처럼 사전 공격에서 가장 먼저 시도하는 비밀번호가 관리자 계정에 설정된다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">MIN_LENGTH = 12
+# 실제로는 유출 비밀번호 목록·사전 단어·기관 이름·장비 이름을 담은 금지 목록 파일을 쓴다
+BLOCKED = ("admin", "password", "1234", "maint2026", "qwerty")
+
+
+# 정책 검사: 위반 사유만 돌려주고, 통과하면 None. 비밀번호 자체는 돌려주지 않는다
+def password_problem(account, new_password):
+    lowered = new_password.lower()
+    if len(new_password) &lt; MIN_LENGTH:
+        return f"shorter than {MIN_LENGTH}"
+    if account.lower() in lowered:
+        return "contains account name"
+    if any(word in lowered for word in BLOCKED):
+        return "commonly used password"
+    return None
+
+
+# 예시 값이므로 실제 계정에 쓰지 않는다
+for candidate in ("admin", "1234", "maint2026", "password1234", "EXAMPLE-Tq8%vLr2!xNw4#pe"):
+    problem = password_problem("admin", candidate)
+    # 시연용 출력: 실제 코드는 비밀번호를 화면·로그에 남기지 않는다
+    print(f"{candidate} -&gt; {'REJECTED: ' + problem if problem else 'ACCEPTED'}")</code></pre>
+<p>최소 길이(예: 12자)를 두고, 유출 비밀번호·사전 단어·계정 이름이 들어 있는지 금지 목록과 부분 일치로 대조한다. 문자 종류 규칙(대소문자·숫자·특수문자 강제)은 사업 요구사항에 있을 때 더한다. 기준값은 보안 요구사항에서 정한다(R-01). 검사 함수는 판정만 돌려주어 비밀번호가 로그로 새지 않게 한다. 관리자 계정은 비밀번호 외에 접속 위치 제한이나 2단계 인증을 함께 검토한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>admin -&gt; ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>admin -&gt; REJECTED</code> 출력 확인 · 참고: MITRE CWE-521 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-9 &#x27;취약한 패스워드 허용&#x27;(인쇄 95쪽) 참고</p>
+</details>
+<p>MITRE 원문(CWE 5.0)에는 이 항목의 예시(Demonstrative Examples)가 없다.</p>
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>흔히 SAST(Static Application Security Testing)라 부르는 자동 정적 분석(static analysis)은 소스코드(또는 바이너리·컴파일된 코드)를 실행하지 않고 분석해 이 약점의 일부 사례를 찾을 수 있으며, 대개 데이터 흐름·제어 흐름 모델을 만든 뒤 입력 출처('source')와 외부 구성요소나 운영체제 같은 하위 계층과 상호작용하는 목적지('sink')를 잇는 잠재적 취약 패턴을 찾는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect &quot;sources&quot; (origins of input) with &quot;sinks&quot; (destinations where the data interacts with external components, a lower layer such as the OS, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다.</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>비밀번호·PIN 설정·변경 함수의 검사 조건을 읽어 최소 길이, 같은 글자 반복, 계정 이름 포함, 흔한 값 목록 대조가 있는지 확인하고, 이 조건이 최초 설정·변경·초기화 경로와 모든 입력 인터페이스에 함께 적용되는지 본다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>[예시] CWE-521 예시(빈 값·길이·이전 값·확인란 일치만 검사) · [CWE] CWE-521 완화책(Architecture and Design: 비밀번호 정책)</td>
+</tr>
+<tr>
+<td>'1234'·'0000'·'admin'·계정 이름·짧은 값 같은 약한 값 목록을 설정 기능에 넣어 받아들여지는지 시험한다.</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a></td>
+<td>[예시] CWE-521 예시 검증(약한 값이 받아들여지는지 출력 ACCEPTED로 확인)</td>
+</tr>
+<tr>
+<td>요구사항·설계 산출물에 비밀번호·PIN 정책(길이, 금지 값, 키패드처럼 입력 장치가 제한된 장비의 대안)이 있고 <a href="../307/">CWE-307</a>의 시도 제한과 함께 설계됐는지 확인한다.</td>
+<td><a href="../../ch4-design/#d-09">D-09</a></td>
+<td>[CWE] CWE-521 완화책(Architecture and Design: 비밀번호 정책, 두 번째 인증 요소) · [보완]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>① 원문 탐지 방법은 자동 정적 분석뿐이다. 다른 정적 분석 도구·컴파일러 경고로 점검한다.</li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-521">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td><a href="../../ch3-requirements/#r-01">R-01</a> 보안 요구사항 정의</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>비밀번호 최소·최대 길이, 재사용 금지, 흔한 값과 계정 이름 같은 문맥 문자열 금지 정책과 필요 시 다중 인증을 설계에 정하고, 복잡도 규칙은 위협 모델에 따라 정한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>비밀번호 설정 시 정책 검증 함수를 적용하고, 기본 비밀번호 사용을 차단한다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>설정·변경 시 서버 측에서 정책 검증을 수행하고 금지 목록(흔한 비밀번호)을 대조한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>정책 위반 비밀번호 설정 시도 시험을 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>정책을 최신 지침(국정원·KISA 권고)에 맞게 주기적으로 검토한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>입력 장치가 제한적인 장비(키패드)는 PIN 최소 길이·시도 제한(<a href="../307/">CWE-307</a>)과 함께 설계한다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 1건</strong></p>
+<ul>
+<li><a href="../../ch3-requirements/#r-01">R-01</a> 보안 요구사항 정의 (요구사항 분석)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 3건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>운영체제/런타임 (1건)</td>
+<td><a href="../../appendix/c-environment-guides/#win-06">WIN-06</a> 자격증명 저장 처리</td>
+</tr>
+<tr>
+<td>개발·시험 망 환경 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#net-in-03">NET-IN-03</a> 접근통제와 직무분리, <a href="../../appendix/c-environment-guides/#net-cl-07">NET-CL-07</a> 계정·감사 통제</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="https://cwe.mitre.org/data/definitions/1391.html" target="_blank" rel="noopener">CWE-1391</a></li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 1건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-4574" target="_blank" rel="noopener">CVE-2020-4574</a></td>
+<td>키 서버 애플리케이션이 강한 비밀번호를 요구하지 않는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>key server application does not require strong passwords</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>OWASP Top Ten 2004</td><td>A3</td><td lang="en">Broken Authentication and Session Management</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/521.html" target="_blank" rel="noopener">CWE-521</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../502/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-502 신뢰할 수 없는 데이터의 역직렬화">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-502 신뢰할 수 없는 데이터의 역직렬화
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../536/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-536 서블릿 런타임 오류 메시지의 민감 정보 포함">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-536 서블릿 런타임 오류 메시지의 민감 정보 포함
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

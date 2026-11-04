@@ -1,0 +1,3612 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/appendix/g-worksheets/">
+      
+      
+        <link rel="prev" href="../f-glossary/">
+      
+      
+        <link rel="next" href="../../downloads/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>부록 G 선택 워크시트와 점검표 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#부록-g-선택-워크시트와-점검표" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              부록 G 선택 워크시트와 점검표
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cwe/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#g-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-1. 새 환경 특성 시트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-2. 축별 환경 선택표(기존 25종과 특성 기본값)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-3. 환경 프로파일·지침 선택 워크시트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4. CWE 적용성 판정 기록지
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="G-4. CWE 적용성 판정 기록지">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g-4-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4-1. 사용 기술 체크리스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-4-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4-2. 적용성 판정 기록 양식
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-5. 단계 자가점검표 통합본
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="G-5. 단계 자가점검표 통합본">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g-5-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        착수 때 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#g-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-1. 새 환경 특성 시트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-2. 축별 환경 선택표(기존 25종과 특성 기본값)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-3. 환경 프로파일·지침 선택 워크시트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4. CWE 적용성 판정 기록지
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="G-4. CWE 적용성 판정 기록지">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g-4-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4-1. 사용 기술 체크리스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-4-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-4-2. 적용성 판정 기록 양식
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#g-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G-5. 단계 자가점검표 통합본
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="G-5. 단계 자가점검표 통합본">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#g-5-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        착수 때 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-5-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 단계
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="부록-g-선택-워크시트와-점검표">부록 G. 선택 워크시트와 점검표<a class="headerlink" href="#부록-g-선택-워크시트와-점검표" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#g-1">G-1. 새 환경 특성 시트</a></li><li><a href="#g-2">G-2. 축별 환경 선택표(기존 25종과 특성 기본값)</a></li><li><a href="#g-3">G-3. 환경 프로파일·지침 선택 워크시트</a></li><li><a href="#g-4">G-4. CWE 적용성 판정 기록지</a><ul><li><a href="#g-4-1">G-4-1. 사용 기술 체크리스트</a></li><li><a href="#g-4-2">G-4-2. 적용성 판정 기록 양식</a></li></ul></li><li><a href="#g-5">G-5. 단계 자가점검표 통합본</a><ul><li><a href="#g-5-start">착수 때 확인</a></li><li><a href="#g-5-req">요구사항 분석 단계</a></li><li><a href="#g-5-design">설계 단계</a></li><li><a href="#g-5-impl">구현 단계</a></li><li><a href="#g-5-test">통합 및 시험 단계</a></li><li><a href="#g-5-maint">유지보수 단계</a></li></ul></li></ul></details>
+<blockquote>
+<p><strong>이 부록의 역할.</strong> <a href="./">부록 G</a>는 <a href="../../ch2-framework/#sec-2-5">2.5</a>의 지침 선택 절차를 종이나 문서로 기록하는 양식이다.</p>
+<p><strong>읽는 법.</strong> 칸 이름과 값은 <a href="../../ch2-framework/#sec-2-4">2.4</a> 특성 목록과 같다. 지침 선택 도구나 Excel을 쓰면 <a href="./#g-2">G-2</a>·<a href="./#g-3">G-3</a>의 계산은 도구가 하고, 판정과 사유만 이 양식에 옮겨 적는다. 적용성 판정의 승인과 예외 처리는 매뉴얼의 협의 절차를 따른다(2.5).</p>
+</blockquote>
+<h2 id="g-1">G-1. 새 환경 특성 시트<a class="headerlink" href="#g-1" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>목록에 없는 환경을 추가할 때 환경마다 한 장씩 쓴다. 담당 축의 특성은 반드시 적고, 나머지는 아는 값만 적는다. 값을 모르면 '모름'에 표시한다. '모름'인 특성을 조건으로 쓰는 지침은 모두 결과에 들어오고 '확인 필요'가 붙는다(<a href="../../ch2-framework/#sec-2-5">2.5</a>). 특성을 새로 만들지 않는다. 특성으로 표현할 수 없는 차이는 아래 '고유 사항'에 적는다(<a href="../../ch2-framework/#sec-2-4">2.4</a> 특성 관리).</p>
+<p><strong>머리 정보</strong></p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>기입</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>작성자 / 작성일</td>
+<td></td>
+</tr>
+<tr>
+<td>과제 / 실행 단위</td>
+<td>(H4 = 다중이면 실행 단위마다 한 장)</td>
+</tr>
+<tr>
+<td>축</td>
+<td>□ 탑재 환경 □ 운영체제/런타임 □ IDE/컴파일러 □ 기반 소프트웨어 □ 개발 언어 □ 개발·시험 망</td>
+</tr>
+<tr>
+<td>환경 이름·버전(판)</td>
+<td></td>
+</tr>
+<tr>
+<td>최근접 기존 환경(선택)</td>
+<td>(<a href="./#g-2">부록 G-2</a>의 환경 코드. 없으면 '없음'으로 적고 <a href="./#g-3">G-3</a> ④에 고유 공백을 기록한다)</td>
+</tr>
+<tr>
+<td>값의 근거 문서</td>
+<td>(벤더 문서 이름·판·쪽, 조회일)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>특성값</strong> (■ 표시는 그 축이 담당하는 특성으로, 해당 축의 환경이면 반드시 입력한다)</p>
+<table>
+<thead>
+<tr>
+<th>코드</th>
+<th>특성</th>
+<th>값(하나에 표시)</th>
+<th>담당 축</th>
+<th>근거(문서·쪽)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>MMU 유무</td>
+<td>□ 있음 □ 없음 □ 모름</td>
+<td>■ 탑재 환경</td>
+<td></td>
+</tr>
+<tr>
+<td>H3</td>
+<td>하드웨어 신뢰 기점</td>
+<td>□ 없음 □ 읽기보호·퓨즈 □ 보안 부팅·보안 키 저장 □ 모름</td>
+<td>■ 탑재 환경</td>
+<td></td>
+</tr>
+<tr>
+<td>H4</td>
+<td>이기종 다중 실행 단위</td>
+<td>□ 단일 □ 다중(코어·PL 공유 메모리) □ 모름</td>
+<td>■ 탑재 환경</td>
+<td></td>
+</tr>
+<tr>
+<td>H5</td>
+<td>자료형 모델</td>
+<td>□ 표준(char 8비트·int 32비트 이상) □ 비표준(int 16비트, char 16비트 등) □ 모름</td>
+<td>■ 탑재 환경 + 컴파일러</td>
+<td></td>
+</tr>
+<tr>
+<td>S1</td>
+<td>OS 유형</td>
+<td>□ 범용 OS □ RTOS □ 베어메탈 □ 모름</td>
+<td>■ 운영체제/런타임</td>
+<td></td>
+</tr>
+<tr>
+<td>S2</td>
+<td>실행 격리</td>
+<td>□ 프로세스·파티션 격리 □ 태스크 보호(MPU) □ 단일 주소공간 □ 모름</td>
+<td>■ 운영체제 + 과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>S3</td>
+<td>파일시스템</td>
+<td>□ 권한 있는 FS □ 단순 FS(권한 없음) □ 없음 □ 모름</td>
+<td>■ 운영체제 + 과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>S4</td>
+<td>외부 통신 스택</td>
+<td>□ IP 스택 □ 직렬·버스 링크만 □ 없음 □ 모름</td>
+<td>■ 운영체제 + 과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>S5</td>
+<td>동적 메모리 정책</td>
+<td>□ 허용 □ 초기화 단계 한정 □ 금지 □ 모름</td>
+<td>과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>L1</td>
+<td>언어 런타임</td>
+<td>□ 네이티브-비안전(C·C++) □ 네이티브-메모리 안전(Ada·Rust 등) □ 관리형(JVM·.NET) □ 인터프리터(Python 등) □ 모름</td>
+<td>■ 개발 언어</td>
+<td></td>
+</tr>
+<tr>
+<td>L2</td>
+<td>컴파일러 보호 기능 지원</td>
+<td>□ 완전 □ 부분 □ 없음 □ 모름</td>
+<td>■ IDE/컴파일러</td>
+<td></td>
+</tr>
+<tr>
+<td>L3</td>
+<td>타깃 외(호스트) 빌드</td>
+<td>□ 가능 □ 불가 □ 모름</td>
+<td>■ IDE/컴파일러 + 과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>M2</td>
+<td>디버그 인터페이스</td>
+<td>□ 있음(운용 시 노출·봉인 가능) □ 없음 □ 모름</td>
+<td>■ 탑재 환경 + 과제 결정</td>
+<td></td>
+</tr>
+<tr>
+<td>M3</td>
+<td>공급 수명</td>
+<td>□ 지원 중 □ 단종·레거시 □ 모름</td>
+<td>■ 운영체제/런타임·IDE/컴파일러·기반 소프트웨어</td>
+<td></td>
+</tr>
+<tr>
+<td>N1</td>
+<td>개발·시험 망</td>
+<td>□ 인터넷 연결 □ 내부망 □ 폐쇄망 □ 모름</td>
+<td>■ 개발·시험 망</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>고유 사항(특성으로 표현할 수 없는 차이)</strong></p>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>고유 위험·기능(예: 제품 고유 API, 고정소수점, DMA·캐시)</th>
+<th>대응 사용자 지침(<code>U-</code> 번호)</th>
+<th>근거([보완] 표시)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>작성 예는 <a href="../../ch8-environments/#sec-8-7">8.7</a>의 Zephyr RTOS 시트를 본다.</p>
+<h2 id="g-2">G-2. 축별 환경 선택표(기존 25종과 특성 기본값)<a class="headerlink" href="#g-2" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>축마다 해당 환경에 표시한다. 한 축에서 여럿을 골라도 된다(예: 한 빌드에 C와 C++, 지침 선택 도구에서는 '상세 설정'). 언어와 환경은 서로 맞게 고른다(<a href="../../ch2-framework/#sec-2-5">2.5</a> ②). 필수 3축(탑재 환경·운영체제/런타임·개발 언어)만 표시해도 지침이 나오며, 기반 소프트웨어는 사용 여부, 개발·시험 망은 N1 값 하나를 고르는 것과 같다(지침 선택 도구의 화면 구분, 2.5 ②).</p>
+<p>기본값의 "A/B"는 그 환경 안에서 제품·구성에 따라 갈리는 후보값이며, <a href="./#g-3">G-3</a>에서 하나로 정한다. '일반·고유'는 그 환경 지침의 범위별 건수다. 고유 지침은 그 환경을 고르거나 최근접 환경으로 지정했을 때만 들어온다. '사례 확인'은 오픈소스 근거가 '확인' 상태로 붙은 지침 수다(<a href="../e-oss-evidence/">부록 E</a>). [근거] 특성 기본값·지침 건수·사례 확인 수는 원천 데이터(문서 정보 참고)의 환경 기본값과 환경 지침 태깅(최종 갱신 2026. 11. 2.)·오픈소스 근거 목록, 환경 목록은 논문 표 7(SoC는 표 7 밖의 확장)</p>
+<table>
+<thead>
+<tr>
+<th>선택</th>
+<th>축</th>
+<th>환경(코드)</th>
+<th>지침(일반·고유)</th>
+<th>사례 확인</th>
+<th>특성 기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>□</td>
+<td>탑재 환경</td>
+<td>일반 컴퓨터(PC)</td>
+<td>8(8·0)</td>
+<td>8(부분 2)</td>
+<td>H1 있음, H3 없음/보안 부팅·보안 키 저장, H4 단일, H5 표준</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>보드형 컴퓨터(SBC)</td>
+<td>10(10·0)</td>
+<td>10(부분 1)</td>
+<td>H1 있음, H3 읽기보호·퓨즈/보안 부팅·보안 키 저장, H4 단일, H5 표준, M2 있음</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>마이크로컨트롤러(MCU)</td>
+<td>9(9·0)</td>
+<td>9(부분 1)</td>
+<td>H1 없음, H3 읽기보호·퓨즈/보안 부팅·보안 키 저장, H4 단일, H5 표준/비표준, M2 있음</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>디지털신호처리 프로세서(DSP)</td>
+<td>9(2·7)</td>
+<td>9(부분 1)</td>
+<td>H1 없음, H3 읽기보호·퓨즈, H4 단일, H5 비표준, M2 있음</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>SoC·FPGA SoC(SOC)</td>
+<td>8(7·1)</td>
+<td>7(부분 1)</td>
+<td>H1 있음, H3 보안 부팅·보안 키 저장, H4 다중, H5 표준, M2 있음</td>
+</tr>
+<tr>
+<td>□</td>
+<td>운영체제/런타임</td>
+<td>Windows(WIN)</td>
+<td>9(2·7)</td>
+<td>9</td>
+<td>S1 범용 OS, S2 프로세스·파티션 격리, S3 권한 있는 FS, S4 IP 스택, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Linux(LNX)</td>
+<td>9(0·9)</td>
+<td>9</td>
+<td>S1 범용 OS, S2 프로세스·파티션 격리, S3 권한 있는 FS, S4 IP 스택, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>VxWorks(VXW)</td>
+<td>9(1·8)</td>
+<td>9(부분 2)</td>
+<td>S1 RTOS, S2 프로세스·파티션 격리/단일 주소공간, S3 권한 있는 FS/단순 FS, S4 IP 스택, M3 지원 중/단종·레거시</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>pSOS 등 단종·레거시 RTOS(PSOS)</td>
+<td>9(7·2)</td>
+<td>9(부분 4)</td>
+<td>S1 RTOS, S2 단일 주소공간, S3 단순 FS/없음, S4 IP 스택/직렬·버스 링크만, M3 단종·레거시</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>FreeRTOS(FRT)</td>
+<td>9(0·9)</td>
+<td>9</td>
+<td>S1 RTOS, S2 태스크 보호/단일 주소공간, S3 없음, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>베어메탈(BM)</td>
+<td>10(10·0)</td>
+<td>10(부분 2)</td>
+<td>S1 베어메탈, S2 단일 주소공간, S3 없음, S4 직렬·버스 링크만/없음</td>
+</tr>
+<tr>
+<td>□</td>
+<td>IDE/컴파일러</td>
+<td>Wind River Workbench(WRW)</td>
+<td>10(0·10)</td>
+<td>10(부분 4)</td>
+<td>L2 부분, L3 가능, M3 지원 중/단종·레거시</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Code Composer Studio(CCS)</td>
+<td>10(0·10)</td>
+<td>10(부분 2)</td>
+<td>L2 없음/부분, L3 가능, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Visual Studio(MSVC)</td>
+<td>10(0·10)</td>
+<td>10(부분 1)</td>
+<td>L2 완전, L3 가능, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Atmel/Microchip Studio(AVR)</td>
+<td>10(2·8)</td>
+<td>10(부분 1)</td>
+<td>L2 없음, L3 가능, H5 비표준, M3 단종·레거시</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>GCC(GCC)</td>
+<td>10(0·10)</td>
+<td>10</td>
+<td>L2 완전/부분, L3 가능, M3 지원 중</td>
+</tr>
+<tr>
+<td>□</td>
+<td>기반 소프트웨어</td>
+<td>칩 제조사 BSP·HAL·드라이버(BSP)</td>
+<td>10(0·10)</td>
+<td>10(부분 3)</td>
+<td>기본값 없음(공급 수명은 제품별로 과제에서 정함)</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>서드파티·오픈소스 라이브러리(OSS)</td>
+<td>10(0·10)</td>
+<td>10</td>
+<td>기본값 없음(공급 수명은 제품별로 과제에서 정함)</td>
+</tr>
+<tr>
+<td>□</td>
+<td>개발 언어</td>
+<td>C(LC)</td>
+<td>10(9·1)</td>
+<td>10</td>
+<td>L1 네이티브-비안전</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>C++(LCPP)</td>
+<td>10(0·10)</td>
+<td>10</td>
+<td>L1 네이티브-비안전</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>C#(LCS, 보조)</td>
+<td>13(0·13)</td>
+<td>12</td>
+<td>L1 관리형</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Java(LJ)</td>
+<td>10(0·10)</td>
+<td>10(부분 1)</td>
+<td>L1 관리형</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>Python(LPY, 보조)</td>
+<td>13(0·13)</td>
+<td>13(부분 1)</td>
+<td>L1 인터프리터</td>
+</tr>
+<tr>
+<td>□</td>
+<td>개발·시험 망</td>
+<td>내부망(NET-IN)</td>
+<td>10(10·0)</td>
+<td>10(부분 2)</td>
+<td>N1 내부망</td>
+</tr>
+<tr>
+<td>□</td>
+<td></td>
+<td>폐쇄망(NET-CL)</td>
+<td>10(10·0)</td>
+<td>10(부분 5)</td>
+<td>N1 폐쇄망</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>합계</strong></td>
+<td><strong>245(87·158)</strong></td>
+<td><strong>243(부분 34)</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>동적 메모리 정책(S5)은 어느 축도 기본값을 주지 않는다. <a href="./#g-3">G-3</a>에서 과제가 정한다.</p>
+<h2 id="g-3">G-3. 환경 프로파일·지침 선택 워크시트<a class="headerlink" href="#g-3" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>실행 단위마다 한 벌씩 쓴다. ①·②는 착수 때, ③·④는 지침 목록을 받은 뒤 쓴다.</p>
+<p><strong>① 실행 단위 목록</strong></p>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>실행 단위(예: APU Linux, RPU FreeRTOS)</th>
+<th>탑재 환경</th>
+<th>운영체제/런타임</th>
+<th>IDE/컴파일러</th>
+<th>기반 소프트웨어</th>
+<th>언어</th>
+<th>망</th>
+<th>도구·버전</th>
+<th>새 환경(<a href="./#g-1">G-1</a> 첨부)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>□ 있음 □ 없음</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>□ 있음 □ 없음</td>
+</tr>
+</tbody>
+</table>
+<p>'도구·버전' 칸에는 OS·RTOS, IDE/컴파일러(최적화·보호 옵션 포함), BSP·SDK, 정적 분석 도구와 규칙 집합의 이름과 판을 적는다(예: 매뉴얼 예시의 CCS 5.0, 이 가이드가 인용한 GCC 14.2.0·cppcheck 2.22.0). 매뉴얼은 시험확인서의 소프트웨어 구성표에 소프트웨어마다 '개발환경'을 도구 이름과 판으로 적게 하고(예: "CCS 5.0", [표준] <a href="https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&amp;SelctgryId=6" target="_blank" rel="noopener">매뉴얼 제2024-6호</a> 부록 7, 인쇄 7-19쪽), 컴파일러·옵션·BSP가 바뀌면 보호 기능 지원과 정적시험 결과가 달라지므로 다시 시험한다(<a href="../../ch7-maintenance/#m-01">M-01</a>, <a href="../c-environment-guides/#lc-10">LC-10</a>). 버전 고정과 재현 가능한 빌드는 <a href="../../ch7-maintenance/#m-07">M-07</a>이 다룬다.</p>
+<p><strong>② 특성값 확정표</strong> (실행 단위 번호: ___ )</p>
+<table>
+<thead>
+<tr>
+<th>코드</th>
+<th>특성</th>
+<th>기본값(출처 환경)</th>
+<th>확정값</th>
+<th>덮어쓰기·결정 사유</th>
+<th>근거 문서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>MMU 유무</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>H3</td>
+<td>하드웨어 신뢰 기점</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>H4</td>
+<td>이기종 다중 실행 단위</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>H5</td>
+<td>자료형 모델</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>S1</td>
+<td>OS 유형</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>S2</td>
+<td>실행 격리</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>S3</td>
+<td>파일시스템</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>S4</td>
+<td>외부 통신 스택</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>S5</td>
+<td>동적 메모리 정책</td>
+<td>(과제 결정)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>L1</td>
+<td>언어 런타임</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>L2</td>
+<td>컴파일러 보호 기능 지원</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>L3</td>
+<td>타깃 외(호스트) 빌드</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>M2</td>
+<td>디버그 인터페이스</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>M3</td>
+<td>공급 수명</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>N1</td>
+<td>개발·시험 망</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>후보값이 둘 이상인 특성("A/B")은 하나로 정한다. 정하지 못하면 '모름'으로 두고 사유를 적는다. 그 특성을 조건으로 쓰는 지침에는 '확인 필요'가 붙는다.</p>
+<p><strong>③ 결과 지침 목록과 판정</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>단계</th>
+<th>제목</th>
+<th>포함 사유</th>
+<th>보정(→ 기준선)</th>
+<th>대체됨 기록</th>
+<th>상속 판정</th>
+<th>판정 사유</th>
+<th>담당</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(예) <a href="../c-environment-guides/#gcc-05">GCC-05</a></td>
+<td>구현</td>
+<td>베어메탈 스택 카나리와 trap UBSan</td>
+<td>선택 환경</td>
+<td>대체 → <a href="../../ch5-implementation/#i-08">I-08</a></td>
+<td><a href="../../ch5-implementation/#i-08">I-08</a> 기본 수단(<code>-fstack-protector-strong</code> 등 hosted 하드닝) 대체됨(→ <a href="../c-environment-guides/#gcc-05">GCC-05</a>)</td>
+<td>—</td>
+<td>S1 = RTOS</td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../c-environment-guides/#frt-04">FRT-04</a></td>
+<td>구현</td>
+<td>ISR API·인터럽트 우선순위</td>
+<td>상속: 최근접 FRT — 검토</td>
+<td>강화 → <a href="../../ch5-implementation/#i-07">I-07</a></td>
+<td>—</td>
+<td>□ 유지 ■ 수정 □ 제외</td>
+<td>FromISR API는 제품 고유. 대응 API를 벤더 문서로 확인해 <code>U-</code> 지침으로 적음</td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../c-environment-guides/#mcu-01">MCU-01</a></td>
+<td>설계</td>
+<td>정적 할당 원칙</td>
+<td 금지_="금지," 단계="단계" 초기화="초기화" 한정="한정">특성 일치: S5 ∈</td>
+<td>강화 → <a href="../../ch4-design/#d-07">D-07</a></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>□ 유지 □ 수정 □ 제외</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>포함 사유는 [기준선], [특성 일치: 조건], [선택 환경], [상속: 최근접 X — 검토], [확인 필요: 조건] 중 하나다.</li>
+<li>상속 지침은 판정 전 상태가 '검토 필요'다. '수정'이면 고친 내용을 사용자 지침(<code>U-</code>)으로 적는다.</li>
+<li>확인 필요 지침은 해당 특성값을 확정한 뒤 다시 계산하거나, 해당 여부를 판정해 사유를 적는다.</li>
+</ul>
+<p><strong>④ 고유 공백 기록</strong> (새 환경에 최근접 환경이 없거나 상속 '수정'·'제외'로 빈 곳)</p>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>빈 영역</th>
+<th>보완 내용(<code>U-</code> 지침)</th>
+<th>근거([보완])</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="g-4">G-4. CWE 적용성 판정 기록지<a class="headerlink" href="#g-4" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>적용성 판정(<a href="../../ch2-framework/#sec-2-5">2.5</a> ⑥)은 사용 기술 체크리스트(<a href="./#g-4-1">G-4-1</a>)에 답한 뒤 197개 보안약점마다 판정 기록(<a href="./#g-4-2">G-4-2</a>)을 남기는 순서로 한다. 출발점은 <a href="../a-weakness-list/">부록 A</a>·<a href="../b-language-views/">B</a>의 기본 판정이다. 기본 판정은 197개 중 '해당' 138개, '조건부' 59개다(보안약점 점검 목록 44개: 해당 31·조건부 13, 언어 뷰 153개: 해당 107·조건부 46). 조건부 59개는 아래 체크리스트의 답으로 '해당' 또는 '비해당'으로 확정한다.</p>
+<h3 id="g-4-1">G-4-1. 사용 기술 체크리스트<a class="headerlink" href="#g-4-1" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>항목에 '아니오'로 답하면 오른쪽 보안약점이 '비해당' 후보가 된다. 비해당으로 판정해도 목록에서 지우지 않고 <a href="./#g-4-2">G-4-2</a>에 사유와 함께 남긴다. 굵게 쓴 ID는 「보안약점 점검 목록(44개)」 항목이다. [근거] <a href="../a-weakness-list/">부록 A</a>·<a href="../b-language-views/">B</a> 적용성 규칙(사용 기술 조건·웹·엔터프라이즈 항목 규칙, 최종 갱신 2026. 11. 2.)</p>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>사용 기술</th>
+<th>질문</th>
+<th>답</th>
+<th>'아니오'면 비해당 후보</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td>DB</td>
+<td>데이터베이스에 질의를 보내는가</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/89/">CWE-89</a></strong> SQL 삽입</td>
+</tr>
+<tr>
+<td>②</td>
+<td>웹·서블릿·J2EE 프레임워크</td>
+<td>웹 서버·서블릿·J2EE·EJB·Struts·표현 언어(EL)를 쓰는가</td>
+<td>□ 예 □ 아니오</td>
+<td>30개: <a href="../../cwe/5/">CWE-5</a>·<a href="../../cwe/6/">6</a>·<a href="../../cwe/7/">7</a>·<a href="../../cwe/8/">8</a>·<a href="../../cwe/9/">9</a>(J2EE 설정 오류), <a href="../../cwe/102/">CWE-102</a>·<a href="../../cwe/103/">103</a>·<a href="../../cwe/104/">104</a>·<a href="../../cwe/105/">105</a>·<a href="../../cwe/106/">106</a>·<a href="../../cwe/107/">107</a>·<a href="../../cwe/108/">108</a>·<a href="../../cwe/109/">109</a>·<a href="../../cwe/110/">110</a>·<a href="../../cwe/608/">608</a>(Struts), <a href="../../cwe/245/">CWE-245</a>·<a href="../../cwe/246/">246</a>·<a href="../../cwe/382/">382</a>·<a href="../../cwe/383/">383</a>·<a href="../../cwe/579/">579</a>·<a href="../../cwe/594/">594</a>(J2EE 나쁜 관행·프레임워크), <a href="../../cwe/574/">CWE-574</a>·<a href="../../cwe/575/">575</a>·<a href="../../cwe/576/">576</a>·<a href="../../cwe/577/">577</a>·<a href="../../cwe/578/">578</a>(EJB 나쁜 관행), <a href="../../cwe/536/">CWE-536</a>·<a href="../../cwe/600/">600</a>(서블릿), <a href="../../cwe/555/">CWE-555</a>(J2EE 설정 파일 평문 비밀번호), <a href="../../cwe/917/">CWE-917</a>(EL 삽입)</td>
+</tr>
+<tr>
+<td>③</td>
+<td>OS 명령 실행</td>
+<td>외부 프로세스·셸 명령을 실행하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/78/">CWE-78</a></strong> 운영체제 명령어 삽입</td>
+</tr>
+<tr>
+<td>④</td>
+<td>사용자 계정·비밀번호</td>
+<td>사용자 계정이나 장비 간 연결을 비밀번호로 인증하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/259/">CWE-259</a></strong> 하드코드된 비밀번호, <strong><a href="../../cwe/307/">CWE-307</a></strong> 반복된 인증시도 제한 기능 부재, <strong><a href="../../cwe/521/">CWE-521</a></strong> 취약한 비밀번호 허용, <strong><a href="../../cwe/759/">CWE-759</a></strong> 솔트 없이 일방향 해시 함수 사용</td>
+</tr>
+<tr>
+<td>⑤</td>
+<td>직렬화</td>
+<td>외부에서 받은 데이터를 객체로 역직렬화하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/502/">CWE-502</a> 신뢰할 수 없는 데이터의 역직렬화</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td>암호 기능</td>
+<td>암호화·서명·해시·키를 쓰는가</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/321/">CWE-321</a></strong> 하드코드된 암호화 키, <strong><a href="../../cwe/327/">CWE-327</a></strong> 취약한 암호화 알고리즘 사용</td>
+</tr>
+<tr>
+<td>⑦</td>
+<td>템플릿 엔진</td>
+<td>템플릿 엔진으로 출력을 만드는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/1336/">CWE-1336</a> 템플릿 엔진 내 특수 요소 부적절 무력화</td>
+</tr>
+<tr>
+<td>⑧</td>
+<td>동적 코드 평가·리플렉션</td>
+<td><code>eval</code>·<code>exec</code> 등으로 문자열을 코드로 실행하거나, 외부 입력으로 클래스·메서드를 골라 리플렉션으로 부르는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/95/">CWE-95</a> Eval 삽입, <a href="../../cwe/470/">CWE-470</a> 외부 입력을 이용한 클래스·코드 선택(안전하지 않은 리플렉션)</td>
+</tr>
+<tr>
+<td>⑨</td>
+<td>시그널</td>
+<td>POSIX 시그널 핸들러를 쓰는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/364/">CWE-364</a> 시그널 핸들러 경쟁조건, <a href="../../cwe/479/">CWE-479</a> 시그널 핸들러의 비재진입 함수 사용, <a href="../../cwe/828/">CWE-828</a> 비동기 안전하지 않은 시그널 핸들러</td>
+</tr>
+<tr>
+<td>⑩</td>
+<td>파일시스템</td>
+<td>파일시스템을 쓰는가(특성 S3 ≠ 없음)</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/22/">CWE-22</a></strong> 경로 조작, <strong><a href="../../cwe/59/">CWE-59</a></strong> 링크 따라가기, <a href="../../cwe/785/">CWE-785</a> 최대 크기 버퍼 없이 경로 조작 함수 사용, <a href="../../cwe/689/">CWE-689</a> 자원 복사 중 권한 설정 경쟁조건</td>
+</tr>
+<tr>
+<td>⑪</td>
+<td>POSIX 파일 권한</td>
+<td><code>umask</code>·<code>chmod</code> 등 POSIX 권한 API를 쓰는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/560/">CWE-560</a> chmod 방식 인자를 사용한 umask() 호출</td>
+</tr>
+<tr>
+<td>⑫</td>
+<td>POSIX chroot</td>
+<td><code>chroot</code>로 격리 환경을 만드는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/243/">CWE-243</a> 작업 디렉터리 변경 없는 chroot 감옥 생성</td>
+</tr>
+<tr>
+<td>⑬</td>
+<td>POSIX 프로세스 생성</td>
+<td><code>fork</code>·<code>exec</code>로 자식 프로세스를 만드는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/403/">CWE-403</a> 비의도 제어 영역에 파일 디스크립터 노출</td>
+</tr>
+<tr>
+<td>⑭</td>
+<td>커널 드라이버</td>
+<td>Windows·Linux 커널 드라이버(IOCTL)를 개발하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/781/">CWE-781</a>(Windows, IOCTL 주소 검증)·782(Windows·Linux, IOCTL 접근 통제)</td>
+</tr>
+<tr>
+<td>⑮</td>
+<td>현장·원격 업데이트</td>
+<td>운용 중 소프트웨어를 원격이나 현장 매체·정비 포트로 업데이트하는가(공장 재프로그래밍만 하면 '아니오'로 답하고 <a href="../../ch7-maintenance/#m-04">M-04</a>를 비해당으로 기록)</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/494/">CWE-494</a></strong> 무결성 검사 없는 코드 다운로드</td>
+</tr>
+<tr>
+<td>⑯</td>
+<td>접근 범위가 있는 자료구조 노출</td>
+<td>공개·비공개 접근 범위가 있는 자료구조(클래스, 모듈 정적 배열)를 외부에 노출하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><strong><a href="../../cwe/495/">CWE-495</a></strong> Public 메서드부터 반환된 Private 배열, <strong><a href="../../cwe/496/">CWE-496</a></strong> Private 배열에 Public 데이터 할당</td>
+</tr>
+<tr>
+<td>⑰</td>
+<td>JNI</td>
+<td>Java에서 JNI로 네이티브 코드를 부르는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/111/">CWE-111</a> 안전하지 않은 JNI의 직접 사용</td>
+</tr>
+<tr>
+<td>⑱</td>
+<td>POSIX getlogin</td>
+<td><code>getlogin()</code>으로 사용자 이름을 얻는가(다중 스레드)</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/558/">CWE-558</a> 멀티스레드에서 getlogin() 사용</td>
+</tr>
+<tr>
+<td>⑲</td>
+<td>XML 파서(보조 항목)</td>
+<td>ICD 정의·임무 계획·설정 파일 등 XML을 해석하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/611/">CWE-611</a> 부적절한 XML 외부 개체 참조</td>
+</tr>
+<tr>
+<td>⑳</td>
+<td>TLS·인증서(보조 항목)</td>
+<td>TLS 등으로 인증서를 검증하는 통신을 하는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/295/">CWE-295</a> 부적절한 인증서 유효성 검증, <a href="../../cwe/299/">CWE-299</a> 부적절한 인증서 폐기 확인</td>
+</tr>
+<tr>
+<td>㉑</td>
+<td>비밀번호 저장(보조 항목)</td>
+<td>비밀번호를 해시로 저장하거나 비밀번호에서 키를 만드는가</td>
+<td>□ 예 □ 아니오</td>
+<td><a href="../../cwe/916/">CWE-916</a> 계산 노력이 부족한 비밀번호 해시 사용</td>
+</tr>
+<tr>
+<td>㉒</td>
+<td>외부 입력 해석(기준선 조건)</td>
+<td>외부 파일·메시지·명령 입력을 해석하거나 외부 입력으로 자원 식별자를 정하는가</td>
+<td>□ 예 □ 아니오</td>
+<td>비해당 후보 보안약점 없음. 기준선 활동 <a href="../../ch5-implementation/#i-04">I-04</a>·<a href="../../ch6-integration-test/#t-04">T-04</a>의 적용 조건을 기록한다</td>
+</tr>
+</tbody>
+</table>
+<p>①~⑥·⑮는 <a href="../../ch2-framework/#sec-2-4">2.4</a>의 사용 기술 체크리스트이고, ⑦~⑨는 같은 성격의 사용 기술을 더한 것이다. ⑩은 특성(S3)으로 정해지지만 판정 편의를 위해 함께 묻는다. ⑪~⑭·⑯~⑱은 <a href="../a-weakness-list/">부록 A</a>·<a href="../b-language-views/">B</a> 적용성 규칙의 나머지 조건이다. 체크리스트 18개 항목이 다루는 보안약점은 59개로, 부록 A·B의 조건부 59개와 같다. ⑲~㉑은 197개와 따로 세는 보조 항목 4개(<a href="../../cwe/611/">CWE-611</a>·<a href="../../cwe/295/">295</a>·<a href="../../cwe/299/">299</a>·<a href="../../cwe/916/">916</a>, <a href="../a-weakness-list/#a-3">부록 A-3</a>)의 조건이며, 위 18개 항목·59개 집계에는 넣지 않는다. 보조 항목 4개의 기본 판정은 모두 '조건부'다. ㉒는 보안약점이 아니라 기준선 활동의 조건을 기록하는 항목이므로 집계에 넣지 않는다. 사업 도중 기능·구성·사용 기술이 바뀌면 이 체크리스트에 다시 답한다(<a href="../../ch7-maintenance/#m-01">M-01</a>).</p>
+<p><strong>판정 규칙(부모·자식).</strong> 부모·자식 관계(전체 약점 계층 뷰 <a href="https://cwe.mitre.org/data/definitions/1000.html" target="_blank" rel="noopener">CWE-1000</a>의 ChildOf, <a href="../../ch2-framework/#cwe-hierarchy">2.8</a>)인 보안약점이 함께 목록에 있으면 다음 규칙을 따른다.</p>
+<ul>
+<li>부모와 자식이 모두 목록에 있으면 따로 판정한다.</li>
+<li>자식이 '해당'이면 부모도 '해당'으로 본다.</li>
+<li>부모를 '비해당'으로 판정해도 자식은 각자 사용 기술 체크리스트(<a href="./#g-4-1">G-4-1</a>)로 판정한다.</li>
+<li>보안약점 점검 목록 44개 안의 부모·자식 쌍은 <a href="../../cwe/755/">CWE-755</a>(부적절한 예외 처리)와 그 자식 <a href="../../cwe/390/">CWE-390</a>(오류 상황 대응 부재)·<a href="../../cwe/209/">CWE-209</a>(오류 메시지 정보노출), <a href="../../cwe/285/">CWE-285</a>(부적절한 인가)와 그 자식 <a href="../../cwe/732/">CWE-732</a>(중요한 자원에 대한 잘못된 권한 설정)다. 197개 전체의 관계는 규칙별 해설의 관련 규칙에서 확인한다.</li>
+</ul>
+<h3 id="g-4-2">G-4-2. 적용성 판정 기록 양식<a class="headerlink" href="#g-4-2" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>CWE</th>
+<th>이름</th>
+<th>구분(보안약점 점검 목록 / 언어 뷰 / 보조 항목)</th>
+<th>기본 판정(<a href="../a-weakness-list/">부록 A</a>·<a href="../b-language-views/">B</a>, 보조 항목은 <a href="../a-weakness-list/#a-3">A-3</a>)</th>
+<th>확정 판정(해당·조건부·비해당)</th>
+<th>판정 근거(특성값 또는 <a href="./#g-4-1">G-4-1</a> 번호)</th>
+<th>해당 범위(조건부일 때)</th>
+<th>정적시험 도구 지원</th>
+<th>미지원 시 대안과 사유</th>
+<th>판정자·일자</th>
+<th>협의 결과</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(예) <a href="../../cwe/119/">CWE-119</a></td>
+<td>메모리 버퍼 오버플로우</td>
+<td>보안약점 점검 목록</td>
+<td>해당</td>
+<td>해당</td>
+<td>L1 = 네이티브-비안전</td>
+<td>—</td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../../cwe/89/">CWE-89</a></td>
+<td>SQL 삽입</td>
+<td>보안약점 점검 목록</td>
+<td>조건부</td>
+<td>비해당</td>
+<td><a href="./#g-4-1">G-4-1</a> ① 아니오(DB 미사용)</td>
+<td>—</td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../../cwe/22/">CWE-22</a></td>
+<td>경로 조작</td>
+<td>보안약점 점검 목록</td>
+<td>조건부</td>
+<td>비해당</td>
+<td>S3 = 없음(<a href="./#g-4-1">G-4-1</a> ⑩ 아니오)</td>
+<td>—</td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../../cwe/134/">CWE-134</a></td>
+<td>포맷 스트링 삽입</td>
+<td>보안약점 점검 목록</td>
+<td>해당</td>
+<td>조건부</td>
+<td>정비 포트 명령 해석기만 외부 문자열을 받음</td>
+<td>정비 포트 명령 해석 모듈</td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(예) <a href="../../cwe/110/">CWE-110</a></td>
+<td>Struts: 폼 필드 없는 검증기</td>
+<td>언어 뷰</td>
+<td>조건부</td>
+<td>비해당</td>
+<td><a href="./#g-4-1">G-4-1</a> ② 아니오(웹·J2EE 미사용)</td>
+<td>—</td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>□ 지원 □ 미지원</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>집계</strong> — 해당 ___ / 조건부 ___ / 비해당 ___ (합계 197). 쓰지 않는 언어의 언어 뷰 항목은 '언어 미사용'을 사유로 묶어 비해당으로 적고 수만 합계에 더해도 된다. 보조 항목은 따로 센다: 해당 ___ / 조건부 ___ / 비해당 ___ (합계 4). 이 중 정적시험 도구 미지원 ___ 개는 대안과 사유를 적어 매뉴얼의 협의 절차에 낸다([표준] <a href="https://www.dapa.go.kr/dapa/rlm/rllawd/RlmNttList.do?menuSeq=3088&amp;SelctgryId=6" target="_blank" rel="noopener">매뉴얼 제2024-6호</a> 부록 7, 인쇄 7-10쪽).</p>
+<h2 id="g-5">G-5. 단계 자가점검표 통합본<a class="headerlink" href="#g-5" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제3~7장의 단계 자가점검표를 여기에 모으고(각 장에는 안내만 둔다), 착수 때 확인할 선택 항목(0-1~0-5)을 앞에 붙였다. 표는 단계마다 나누었고, 항목 번호의 앞 숫자는 장 번호(0은 착수)다. 자가 점검용이며 합격 기준이 아니다. 해당하지 않는 항목은 '비해당'에 표시하고 사유를 적는다.</p>
+<h3 id="g-5-start">착수 때 확인<a class="headerlink" href="#g-5-start" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-1</td>
+<td>실행 단위를 나누고 단위마다 축별 환경을 골랐는가(H4 = 다중이면 단위별)</td>
+<td><a href="../../ch2-framework/#sec-2-5">2.5</a> ①②, <a href="./#g-3">G-3</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>0-2</td>
+<td>목록에 없는 환경의 특성 시트를 쓰고 값의 근거 문서를 적었는가</td>
+<td><a href="../../ch2-framework/#sec-2-5">2.5</a> ③, <a href="./#g-1">G-1</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>0-3</td>
+<td>후보값·과제 결정 특성(S5)을 확정하고 덮어쓰기 사유를 적었는가</td>
+<td><a href="../../ch2-framework/#sec-2-5">2.5</a> ④, <a href="./#g-3">G-3</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>0-4</td>
+<td>결과 지침의 확인 필요 항목을 해소하고 상속 지침을 모두 판정했는가</td>
+<td><a href="../../ch2-framework/#sec-2-5">2.5</a> ⑤, <a href="./#g-3">G-3</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>0-5</td>
+<td>쓸 수 없는 일반 완화책마다 대체 활동과 "대체됨" 기록이 있는가</td>
+<td><a href="../../ch8-environments/#sec-8-1">8.1</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-5-req">요구사항 분석 단계<a class="headerlink" href="#g-5-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3-1</td>
+<td>외부 입력마다 범위·길이·자료형·단위가 SRS(외부 인터페이스 요구사항)에 있는가</td>
+<td><a href="../../ch3-requirements/#r-01">R-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-2</td>
+<td>인증·인가가 필요한 중요 기능 목록과 기능별 보호 요구가 있는가</td>
+<td><a href="../../ch3-requirements/#r-01">R-01</a>, <a href="../../ch4-design/#d-04">D-04</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-3</td>
+<td>SRS의 소프트웨어 품질특성에 보안성 요구사항(보안성시험 요구사항 포함)과 기밀정보 보호 요구사항이 있는가</td>
+<td><a href="../../ch3-requirements/#r-01">R-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-4</td>
+<td>보안기능 14개 중 비해당 항목의 판정 사유가 <a href="./#g-4">G-4</a>에 있는가</td>
+<td><a href="../../ch3-requirements/#sec-3-3">3.3</a>, <a href="../../ch4-design/#sec-4-3">4.3</a>, <a href="../../ch2-framework/#sec-2-5">2.5</a> ⑥</td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-5</td>
+<td>Java 웹·J2EE 항목 30개의 판정 결과와 사유가 <a href="./#g-4">G-4</a>에 있는가</td>
+<td><a href="../c-environment-guides/#lj-01">LJ-01</a>, <a href="../../ch2-framework/#sec-2-5">2.5</a> ⑥</td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-6</td>
+<td>C# 점검 기준표(보안약점 점검 목록 44개·<a href="https://cwe.mitre.org/data/definitions/658.html" target="_blank" rel="noopener">CWE-658</a>/<a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">660</a> 매핑)를 협의 절차로 확정했는가</td>
+<td><a href="../c-environment-guides/#lcs-01">LCS-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>3-7</td>
+<td>Python의 신뢰성시험 범위 포함 여부(선택 사항), 다른 시험 제도 검토 결과, 보안 점검 범위가 정해지고, 판정용 스크립트가 형상관리되는가</td>
+<td><a href="../c-environment-guides/#lpy-01">LPY-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-5-design">설계 단계<a class="headerlink" href="#g-5-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4-1</td>
+<td>모든 입력 경로에 신뢰 경계와 단일 검증 지점이 표시되고, ICD 필드 범위표가 <a href="../../ch3-requirements/#r-01">R-01</a> 요구사항과 맞는가</td>
+<td><a href="../../ch3-requirements/#r-01">R-01</a>, <a href="../../ch4-design/#d-02">D-02</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-2</td>
+<td>외부 구성요소가 버전·출처·해시·라이선스와 함께 SBOM 초안에 있는가</td>
+<td><a href="../../ch4-design/#d-03">D-03</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-3</td>
+<td>권한 매트릭스와 실행 단위 분리 수단이 실행 격리 특성에 맞게 정해졌는가</td>
+<td><a href="../../ch4-design/#d-04">D-04</a>, <a href="../../ch4-design/#sec-4-4">4.4</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-4</td>
+<td>승인 알고리즘 목록과 키 전 주기(생성·주입·저장·교체·폐기)가 정해졌는가</td>
+<td><a href="../../ch4-design/#d-05">D-05</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-5</td>
+<td>서명 검증 체인, 검증 실패 동작, 롤백 방지, 공개키 주입 절차가 있는가(또는 대체 사유가 있는가)</td>
+<td><a href="../../ch4-design/#d-06">D-06</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-6</td>
+<td>메모리·스택·CPU 시간·큐 길이 상한과 동적 메모리 정책이 정해졌는가</td>
+<td><a href="../../ch4-design/#d-07">D-07</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-7</td>
+<td>오류 알림 방식이 하나로 정해지고 오류별 안전 상태가 정의되었는가</td>
+<td><a href="../../ch4-design/#d-08">D-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-8</td>
+<td>대체 지침이 들어온 기준선 수단에 "대체됨(→ ID)"과 사유가 남아 있는가</td>
+<td><a href="../../ch4-design/#sec-4-4">4.4</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>4-9</td>
+<td>설계 보안성 검토를 하고 지적·조치를 기록했는가</td>
+<td><a href="../../ch4-design/#d-09">D-09</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-5-impl">구현 단계<a class="headerlink" href="#g-5-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5-1</td>
+<td>언어별 사업 코딩 표준이 매뉴얼 부록 6 표준에서 선정되고 조정 사유가 기록되었는가</td>
+<td><a href="../../ch5-implementation/#i-01">I-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-2</td>
+<td>편차 대장과 정적 분석 도구의 억제 설정이 일치하는가</td>
+<td><a href="../../ch5-implementation/#i-01">I-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-3</td>
+<td>벤더 BSP·오픈소스의 제외 범위가 테일러링 문서에 있고, CWE 점검과 경고 점검은 유지되는가</td>
+<td><a href="../../ch5-implementation/#i-01">I-01</a>, <a href="../c-environment-guides/#bsp-08">BSP-08</a>, <a href="../c-environment-guides/#oss-08">OSS-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-4</td>
+<td>금지 함수가 빌드에서 차단되는가(경고 억제 없이)</td>
+<td><a href="../../ch5-implementation/#i-02">I-02</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-5</td>
+<td>신뢰 경계 입력이 <a href="../../ch4-design/#d-02">D-02</a>의 검증 지점 한 곳을 거쳐서만 내부로 들어가는가</td>
+<td><a href="../../ch5-implementation/#i-03">I-03</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>외부 명령·질의·경로가 인자 배열·매개변수화·정규화로 처리되는가(해당 시)</td>
+<td><a href="../../ch5-implementation/#i-04">I-04</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-7</td>
+<td>크기·인덱스 계산 전 오버플로 검사가 있고, 자료형 모델이 비표준이면 강화 지침을 적용했는가</td>
+<td><a href="../../ch5-implementation/#i-05">I-05</a>, <a href="../../ch5-implementation/#sec-5-3">5.3</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-8</td>
+<td>오류 정보를 돌려주는 함수의 반환값을 모두 검사하는가</td>
+<td><a href="../../ch5-implementation/#i-06">I-06</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-9</td>
+<td>공유 자원 목록과 보호 수단, ISR 공유변수 처리가 문서와 코드에 일치하는가</td>
+<td><a href="../../ch5-implementation/#i-07">I-07</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-10</td>
+<td>경고 0건이 빌드 통과 조건이고, 하드닝 플래그의 지원 여부를 빌드에서 검사하는가</td>
+<td><a href="../../ch5-implementation/#i-08">I-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-11</td>
+<td>쓸 수 없는 하드닝 수단에 대체 통제와 "대체됨" 기록이 있는가</td>
+<td><a href="../../ch5-implementation/#i-08">I-08</a>, <a href="../../ch8-environments/#sec-8-1">8.1</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-12</td>
+<td>커밋·빌드마다 정적 분석을 돌리고, 도구가 제외한 규칙을 코드 리뷰로 보완하는가</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-13</td>
+<td>C++ 코드에 C 지침(<a href="../../ch5-implementation/#sec-5-3">5.3</a>)과 C 뷰 전용 14개를 함께 적용했는가</td>
+<td><a href="../../ch5-implementation/#sec-5-3">5.3</a>, <a href="../../ch5-implementation/#sec-5-4">5.4</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-14</td>
+<td>C# <code>unsafe</code>·P/Invoke 범위에 C/C++ 지침을 적용했는가</td>
+<td><a href="../c-environment-guides/#lcs-02">LCS-02</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>5-15</td>
+<td>호스트 빌드가 가능하면 새니타이저 시험을 CI에서 돌리는가</td>
+<td><a href="../../ch5-implementation/#i-10">I-10</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-5-test">통합 및 시험 단계<a class="headerlink" href="#g-5-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6-1</td>
+<td>정적 분석 도구의 규칙 집합이 사업 코딩 표준(<a href="../../ch5-implementation/#i-01">I-01</a>)과 같은가</td>
+<td><a href="../../ch6-integration-test/#t-01">T-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-2</td>
+<td>도구의 CWE 지원표를 197개 목록과 대조하고, 미지원 항목마다 대안과 사유를 적었는가</td>
+<td><a href="../../ch6-integration-test/#t-01">T-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-3</td>
+<td>도구에 타깃 자료형과 컴파일러 확장을 설정했는가</td>
+<td><a href="../../ch6-integration-test/#t-01">T-01</a>, <a href="../c-environment-guides/#dsp-08">DSP-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-4</td>
+<td>오탐·편차 판정마다 근거와 판정자를 기록했는가</td>
+<td><a href="../../ch6-integration-test/#t-01">T-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-5</td>
+<td>소스코드 메트릭 제한값을 사업에서 정한 값으로 설정했는가(다른 사업·이전 판 수치를 쓰지 않았는가)</td>
+<td><a href="../../ch6-integration-test/#t-01">T-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-6</td>
+<td>시험종류(문장·분기·MC/DC)를 위험 평가로 정하고, 실제 타깃에서 코드 실행률을 쟀는가</td>
+<td><a href="../../ch6-integration-test/#t-02">T-02</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-7</td>
+<td>호스트에서 시험한 부분은 타깃과의 차이를 분석해 STD에 반영했는가</td>
+<td><a href="../../ch6-integration-test/#t-02">T-02</a>, <a href="../../ch5-implementation/#i-10">I-10</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-8</td>
+<td>외부 입력 해석기가 퍼징 대상에 모두 들어 있고, 비정상 종료를 일으킨 입력이 회귀 케이스로 보존되는가</td>
+<td><a href="../../ch6-integration-test/#t-04">T-04</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-9</td>
+<td>정수 경계·0·NULL·할당 실패·주변장치 오류 주입 케이스가 있는가</td>
+<td><a href="../../ch6-integration-test/#t-05">T-05</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-10</td>
+<td>최악 스택 사용량과 최악 실행 시간을 실측해 설계 예산과 비교했는가</td>
+<td><a href="../../ch6-integration-test/#t-07">T-07</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-11</td>
+<td>보안 기능마다 부정 시험이 있는가(해당 시)</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-12</td>
+<td>운용 빌드 바이너리에서 하드닝 적용·디버그 잔존·비밀 문자열을 확인했는가</td>
+<td><a href="../../ch6-integration-test/#t-08">T-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-13</td>
+<td>시험 결과에 도구·규칙 집합 버전과 데이터 기준일이 적혀 있는가</td>
+<td><a href="../c-environment-guides/#net-in-08">NET-IN-08</a>, <a href="../c-environment-guides/#net-cl-08">NET-CL-08</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>6-14</td>
+<td>라이선스 등으로 빠진 시험이 '미수행'으로 기록되었는가</td>
+<td><a href="../c-environment-guides/#net-in-07">NET-IN-07</a>, <a href="../c-environment-guides/#net-cl-05">NET-CL-05</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="g-5-maint">유지보수 단계<a class="headerlink" href="#g-5-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>점검 항목</th>
+<th>관련 ID</th>
+<th>예</th>
+<th>아니오</th>
+<th>비해당</th>
+<th>사유·증적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7-1</td>
+<td>변경마다 영향 범위의 정적 분석·퍼징을 다시 했는가</td>
+<td><a href="../../ch7-maintenance/#m-01">M-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-2</td>
+<td>컴파일러·최적화 옵션·BSP 변경 때 전체 정적시험과 타깃 회귀시험을 다시 했는가</td>
+<td><a href="../../ch7-maintenance/#m-01">M-01</a>, <a href="../c-environment-guides/#lc-10">LC-10</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-3</td>
+<td>기능·구성·사용 기술이 바뀐 경우 적용성 판정(<a href="./#g-4">G-4</a>)을 다시 했는가</td>
+<td><a href="../../ch7-maintenance/#m-01">M-01</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-4</td>
+<td>운용 빌드 구성(디버그 제거·하드닝·퓨즈 설정)이 기준선으로 형상관리되는가</td>
+<td><a href="../../ch7-maintenance/#m-02">M-02</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-5</td>
+<td>설치 이미지의 권한·계정·서비스·포트가 기준선과 같은가(해당 시)</td>
+<td><a href="../../ch7-maintenance/#m-03">M-03</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-6</td>
+<td>업데이트가 서명 검증을 거치고, 출고·정비 때 공개키 주입과 무서명 이미지 거부를 확인했는가(해당 시)</td>
+<td><a href="../../ch7-maintenance/#m-04">M-04</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-7</td>
+<td>SBOM이 현재 빌드와 일치하고, CVE 대조 결과에 데이터 기준일이 적혀 있는가</td>
+<td><a href="../../ch7-maintenance/#m-05">M-05</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-8</td>
+<td>운용 장비의 디버그 포트·콘솔이 닫혀 있고, 다시 여는 절차가 통제되는가</td>
+<td><a href="../../ch7-maintenance/#m-06">M-06</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-9</td>
+<td>구성요소·툴체인 버전이 해시와 함께 고정되고, 재현 가능한 빌드가 유지되는가</td>
+<td><a href="../../ch7-maintenance/#m-07">M-07</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-10</td>
+<td>구성요소마다 지원 종료일이 기록되고, 이미 지난 항목(예: FreeRTOS 202406 LTS)의 이전 계획이 있는가</td>
+<td><a href="../../ch7-maintenance/#m-07">M-07</a>, <a href="../c-environment-guides/#frt-09">FRT-09</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-11</td>
+<td>단종 구성요소에 보상통제와 "대체됨" 기록이 있는가</td>
+<td><a href="../../ch7-maintenance/#m-05">M-05</a>, <a href="../c-environment-guides/#psos-09">PSOS-09</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+<tr>
+<td>7-12</td>
+<td>폐쇄망 반입 번들에 매니페스트·해시·서명이 있고 이전 번들이 보관되는가(해당 시)</td>
+<td><a href="../c-environment-guides/#net-cl-03">NET-CL-03</a></td>
+<td>□</td>
+<td>□</td>
+<td>□</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../f-glossary/" class="md-footer__link md-footer__link--prev" aria-label="이전: 부록 F 용어 대조표">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                부록 F 용어 대조표
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../downloads/" class="md-footer__link md-footer__link--next" aria-label="다음: 내려받기">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                내려받기
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

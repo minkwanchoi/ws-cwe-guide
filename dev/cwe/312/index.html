@@ -1,0 +1,2733 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/cwe/312/">
+      
+      
+        <link rel="prev" href="../307/">
+      
+      
+        <link rel="next" href="../319/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-312 중요정보 평문 저장 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-312-중요정보-평문-저장" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-312 중요정보 평문 저장
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-312 중요정보 평문 저장
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-312 중요정보 평문 저장
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-312-중요정보-평문-저장">CWE-312 중요정보 평문 저장<a class="headerlink" href="#cwe-312-중요정보-평문-저장" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Cleartext Storage of Sensitive Information</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>기본(Base)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>초안(Draft)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>해당</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어: 언어 무관, Go · 기술: 클라우드 컴퓨팅(Cloud Computing), 산업제어시스템·운영기술(ICS/OT), 모바일(Mobile)</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/312.html" target="_blank" rel="noopener">MITRE CWE-312</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">이름 표기</p>
+<p>「소프트웨어 개발보안 가이드」(2021. 11.)의 구현단계 기준은 CWE-312·<a href="../319/">319</a>를 '암호화되지 않은 중요정보'(인쇄 227쪽) 하나로 묶는다. 이 가이드는 둘을 따로 다루므로 같은 가이드 분석·설계단계 사례의 그림 제목 '중요정보 평문저장'(그림 3-32, 인쇄 119쪽)을 띄어 써서 이름으로 쓴다.</p>
+</div>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>다른 제어 영역에서 접근할 수도 있는 자원에 중요정보를 평문으로 저장하는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 다른 제어 영역(control sphere)에서 접근할 수도 있는 자원 안에 중요정보를 평문으로 저장하는 약점이다.</p>
+<details class="cwe-orig"><summary>원문(Description)</summary><div lang="en"><p>The product stores sensitive information in cleartext within a resource that might be accessible to another control sphere.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>설계</td>
+<td>누락(OMISSION): 아키텍처·설계 단계에서 보안 전술을 빠뜨려 생기는 약점이다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기밀성</td>
+<td>애플리케이션 데이터 읽기</td>
+<td>시스템에 접근할 수 있는 공격자는 평문(암호화되지 않은 상태)으로 저장된 중요정보를 읽을 수 있으며, 사람이 읽을 수 없게 인코딩되어 있더라도 특정 기법으로 어떤 인코딩이 쓰였는지 알아내 정보를 디코딩할 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 2건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch4-design/#d-05">D-05</a> 암호·키·비밀 관리 설계</p>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation) / 시스템 구성(System Configuration) / 운용(Operation)</td>
+<td>—</td>
+<td>클라우드(예: S3 버킷, Azure blob, Google Cloud Storage 등)에 데이터를 저장할 때는 제공자의 통제 기능으로 저장 데이터를 암호화한다 [REF-1297] [REF-1299] [REF-1301]. <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When storing data in the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), use the provider&#x27;s controls to encrypt the data at rest. [REF-1297] [REF-1299] [REF-1301]</p></div></details></td>
+</tr>
+<tr>
+<td>구현(Implementation) / 시스템 구성(System Configuration) / 운용(Operation)</td>
+<td>—</td>
+<td>클라우드 같은 일부 시스템·환경에서는 소프트웨어 계층과 하드웨어 계층 모두에 '이중 암호화'가 요구될 수 있고, 개발자가 더 넓은 시스템·환경의 관리자와 책임을 나누지 않고 두 계층을 모두 단독으로 책임질 수도 있다. <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>In some systems/environments such as cloud, the use of &quot;double encryption&quot; (at both the software and hardware layer) might be required, and the developer might be solely responsible for both layers, instead of shared responsibility with the administrator of the broader system/environment.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>이 단계를 함께 가리키는 원문 완화책은 <a href="#mit-impl">구현</a> 단계에 2건 실었다('유지보수 단계에도 해당' 표시).</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 임무 계획 단말이 다음 임무의 경로와 데이터링크 접속 비밀값을 로컬 파일에 저장한다. 저장 매체(SD 카드·이동식 디스크·정비 노트북)가 분실·탈취되거나 정비 반출되면 파일 내용을 그대로 읽을 수 있다. 예시는 저장한 파일에서 비밀값 문자열이 보이는지 직접 찾아 본다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#define _GNU_SOURCE
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+/* 임무 계획 레코드를 그대로 파일에 쓴다 */
+static int store_plan(const char *path, const char *record)
+{
+    FILE *fp = fopen(path, "w");
+    if (fp == NULL) {
+        return -1;
+    }
+    fputs(record, fp);
+    fclose(fp);
+    return 0;
+}
+
+/* 매체를 손에 넣은 사람이 하는 일: 파일에서 비밀값을 찾는다 */
+static int medium_reveals(const char *path, const char *needle)
+{
+    unsigned char raw[512];
+    FILE *fp = fopen(path, "rb");
+    if (fp == NULL) {
+        return 0;
+    }
+    size_t got = fread(raw, 1, sizeof raw, fp);
+    fclose(fp);
+    return memmem(raw, got, needle, strlen(needle)) != NULL;
+}
+
+int main(void)
+{
+    const char *secret = "EXAMPLE-ONLY-LINK-SECRET";
+    char record[160];
+    snprintf(record, sizeof record, "route=WP1&gt;WP2&gt;WP3\nlink_secret=%s\n", secret);
+    if (store_plan("plan.dat", record) != 0) {
+        puts("save failed");
+        return 1;
+    }
+    puts(medium_reveals("plan.dat", secret) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    return 0;
+}</code></pre>
+<p>임무 경로와 링크 비밀값을 평문 그대로 파일에 쓴다. 매체를 손에 넣은 사람은 strings 같은 도구로 비밀값을 바로 읽는다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#define _GNU_SOURCE
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;openssl/crypto.h&gt;
+#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/rand.h&gt;
+
+/* 시험용 대체 구현: 실제 장비는 보안요소·eFuse에 주입된 저장용 키를 쓴다 */
+static int keystore_storage_key(unsigned char key[32])
+{
+    return RAND_bytes(key, 32) == 1 ? 0 : -1;
+}
+
+/* 검증된 암호 라이브러리의 AES-256-GCM으로 암호화해 [IV|태그|암호문]으로 쓴다 */
+static int store_plan(const char *path, const unsigned char key[32], const char *record)
+{
+    unsigned char iv[12], tag[16], body[256];
+    int n = (int)strlen(record), out = 0, tail = 0, ok = 0;
+    if (n &gt; (int)sizeof body || RAND_bytes(iv, sizeof iv) != 1) return -1;
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    ok = ctx != NULL &amp;&amp; EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, key, iv) == 1
+         &amp;&amp; EVP_EncryptUpdate(ctx, body, &amp;out, (const unsigned char *)record, n) == 1
+         &amp;&amp; EVP_EncryptFinal_ex(ctx, body + out, &amp;tail) == 1
+         &amp;&amp; EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, sizeof tag, tag) == 1;
+    EVP_CIPHER_CTX_free(ctx);
+    FILE *fp = ok ? fopen(path, "wb") : NULL;
+    if (fp == NULL) return -1;
+    fwrite(iv, 1, sizeof iv, fp);
+    fwrite(tag, 1, sizeof tag, fp);
+    fwrite(body, 1, (size_t)(out + tail), fp);
+    return fclose(fp) == 0 ? 0 : -1;
+}
+
+int main(void)
+{
+    const char *secret = "EXAMPLE-ONLY-LINK-SECRET";
+    unsigned char key[32], raw[512];
+    char record[160];
+    snprintf(record, sizeof record, "route=WP1&gt;WP2&gt;WP3\nlink_secret=%s\n", secret);
+    if (keystore_storage_key(key) != 0 || store_plan("plan.dat", key, record) != 0) {
+        puts("save refused");
+        return 1;
+    }
+    OPENSSL_cleanse(key, sizeof key);
+    OPENSSL_cleanse(record, sizeof record);   /* 평문 버퍼 소거 */
+    FILE *fp = fopen("plan.dat", "rb");       /* 매체를 손에 넣은 사람처럼 저장 파일을 훑어본다 */
+    size_t got = fp ? fread(raw, 1, sizeof raw, fp) : 0;
+    if (fp) fclose(fp);
+    puts(memmem(raw, got, secret, strlen(secret)) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    return 0;
+}</code></pre>
+<p>검증된 암호 라이브러리(OpenSSL)의 AES-256-GCM으로 암호화해 [IV|태그|암호문]으로 저장하고, 저장용 키는 보안요소·eFuse에서 받는 인터페이스로 분리한다(예시의 키 함수는 시험용 대체). 저장 뒤 평문 버퍼와 키는 OPENSSL_cleanse로 지운다(D-05).</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>PLAINTEXT FOUND ON MEDIUM</code> 검출, 좋은 예에서 미검출·<code>medium holds ciphertext only</code> 출력 확인 · 참고: MITRE CWE-312 Demonstrative Example 4(설정·속성 파일에 평문으로 둔 자격 증명) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;fstream&gt;
+#include &lt;iterator&gt;
+#include &lt;string&gt;
+
+// 운용자 콘솔이 다음 임무의 경로와 링크 비밀값을 설정 파일에 그대로 저장한다
+static void save_plan(const char *path, const std::string &amp;record) {
+    std::ofstream out(path, std::ios::binary);
+    out &lt;&lt; record;
+}
+
+// 디스크를 손에 넣은 사람이 하는 일: 파일 내용에서 비밀값을 찾는다
+static bool disk_reveals(const char *path, const std::string &amp;needle) {
+    std::ifstream in(path, std::ios::binary);
+    const std::string data((std::istreambuf_iterator&lt;char&gt;(in)), std::istreambuf_iterator&lt;char&gt;());
+    return data.find(needle) != std::string::npos;
+}
+
+int main() {
+    const std::string secret = "EXAMPLE-ONLY-LINK-SECRET";
+    save_plan("plan.cfg", "route=WP1&gt;WP2&gt;WP3\nlink_secret=" + secret + "\n");
+    std::puts(disk_reveals("plan.cfg", secret) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    return 0;
+}</code></pre>
+<p>Windows 운용자 콘솔이 경로와 링크 비밀값을 설정 파일에 그대로 쓴다. 디스크나 백업을 읽을 수 있는 사람은 누구나 비밀값을 얻는다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;windows.h&gt;
+#include &lt;wincrypt.h&gt;
+#include &lt;cstdio&gt;
+#include &lt;fstream&gt;
+#include &lt;iterator&gt;
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+// Windows DPAPI: 운영체제가 로그온 사용자 자격에 묶인 키로 암호화하므로 응용이 키를 직접 들고 있지 않다
+static bool seal(const std::string &amp;plain, std::vector&lt;unsigned char&gt; &amp;sealed) {
+    DATA_BLOB in{static_cast&lt;DWORD&gt;(plain.size()),
+                 reinterpret_cast&lt;BYTE *&gt;(const_cast&lt;char *&gt;(plain.data()))};
+    DATA_BLOB out{};
+    if (!CryptProtectData(&amp;in, L"mission-plan", nullptr, nullptr, nullptr, CRYPTPROTECT_UI_FORBIDDEN, &amp;out)) {
+        return false;
+    }
+    sealed.assign(out.pbData, out.pbData + out.cbData);
+    LocalFree(out.pbData);
+    return true;
+}
+
+static void save_plan(const char *path, const std::string &amp;record) {
+    std::vector&lt;unsigned char&gt; sealed;
+    if (!seal(record, sealed)) {
+        throw std::runtime_error("seal failed: plan not saved");   // 평문으로 대신 저장하지 않는다
+    }
+    std::ofstream out(path, std::ios::binary);
+    out.write(reinterpret_cast&lt;const char *&gt;(sealed.data()), static_cast&lt;std::streamsize&gt;(sealed.size()));
+}
+
+static bool disk_reveals(const char *path, const std::string &amp;needle) {
+    std::ifstream in(path, std::ios::binary);
+    const std::string data((std::istreambuf_iterator&lt;char&gt;(in)), std::istreambuf_iterator&lt;char&gt;());
+    return data.find(needle) != std::string::npos;
+}
+
+int main() {
+    const std::string secret = "EXAMPLE-ONLY-LINK-SECRET";
+    std::string record = "route=WP1&gt;WP2&gt;WP3\nlink_secret=" + secret + "\n";
+    save_plan("plan.cfg", record);
+    SecureZeroMemory(record.data(), record.size());   // 메모리의 평문도 지운다
+    std::puts(disk_reveals("plan.cfg", secret) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    return 0;
+}</code></pre>
+<p>Windows DPAPI(CryptProtectData)로 로그온 사용자 자격에 묶인 키로 암호화해 저장하고, 암호화에 실패하면 평문으로 대신 저장하지 않고 예외로 멈춘다. 메모리의 평문은 SecureZeroMemory로 지운다(WIN-06). 예시의 secret 문자열과 이어 붙일 때 생긴 임시 문자열까지 지우지는 못하므로, 실제로는 비밀값의 사본을 줄이고 남은 사본도 지운다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>PLAINTEXT FOUND ON MEDIUM</code> 검출, 좋은 예에서 미검출·<code>medium holds ciphertext only</code> 출력 확인 · 참고: MITRE CWE-312 Demonstrative Example 4(설정·속성 파일에 평문으로 둔 자격 증명) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Text;
+
+const string Secret = "EXAMPLE-ONLY-LINK-SECRET";
+string planFile = Path.Combine(Environment.CurrentDirectory, "plan.txt");
+
+// 임무 계획 단말이 경로와 링크 비밀값을 텍스트 파일에 그대로 저장한다
+File.WriteAllText(planFile, $"route=WP1&gt;WP2&gt;WP3\nlink_secret={Secret}\n");
+
+// 매체를 손에 넣은 사람이 하는 일: 파일 내용에서 비밀값을 찾는다
+string raw = Encoding.Latin1.GetString(File.ReadAllBytes(planFile));
+Console.WriteLine(raw.Contains(Secret, StringComparison.Ordinal)
+    ? "PLAINTEXT FOUND ON MEDIUM"
+    : "medium holds ciphertext only");</code></pre>
+<p>File.WriteAllText로 링크 비밀값을 텍스트 파일에 그대로 저장한다. 파일을 읽을 수 있는 사람은 누구나 비밀값을 얻는다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Security.Cryptography;
+using System.Text;
+
+const string Secret = "EXAMPLE-ONLY-LINK-SECRET";
+string planFile = Path.Combine(Environment.CurrentDirectory, "plan.bin");
+
+// 시험용 대체 구현: 실제로는 키 저장소(HSM·보안요소·OS 키 저장소)에서 저장용 키를 받는다
+byte[] storageKey = RandomNumberGenerator.GetBytes(32);
+byte[] record = Encoding.UTF8.GetBytes($"route=WP1&gt;WP2&gt;WP3\nlink_secret={Secret}\n");
+
+// AES-GCM으로 암호화해 [논스|태그|암호문]으로 저장한다
+byte[] nonce = RandomNumberGenerator.GetBytes(AesGcm.NonceByteSizes.MaxSize);
+byte[] tag = new byte[AesGcm.TagByteSizes.MaxSize];
+byte[] body = new byte[record.Length];
+using (var gcm = new AesGcm(storageKey, tag.Length))
+{
+    gcm.Encrypt(nonce, record, body, tag);
+}
+File.WriteAllBytes(planFile, [.. nonce, .. tag, .. body]);
+CryptographicOperations.ZeroMemory(record);      // 평문 버퍼 소거
+CryptographicOperations.ZeroMemory(storageKey);
+
+string raw = Encoding.Latin1.GetString(File.ReadAllBytes(planFile));
+Console.WriteLine(raw.Contains(Secret, StringComparison.Ordinal)
+    ? "PLAINTEXT FOUND ON MEDIUM"
+    : "medium holds ciphertext only");</code></pre>
+<p>AesGcm으로 암호화해 [논스|태그|암호문]으로 저장하고, 저장 뒤 평문과 키를 CryptographicOperations.ZeroMemory로 지운다. 키는 HSM·보안요소·OS 키 저장소에서 받는 자리로 둔다(예시의 키는 시험용 난수, D-05).</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>PLAINTEXT FOUND ON MEDIUM</code> 검출, 좋은 예에서 미검출·<code>medium holds ciphertext only</code> 출력 확인 · 참고: MITRE CWE-312 Demonstrative Example 4(설정 파일의 평문 자격 증명) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
+
+public class Example {
+    // 임무 계획 단말이 경로와 링크 비밀값을 속성 파일에 그대로 저장한다
+    static void savePlan(Path file, String route, String linkSecret) throws IOException {
+        Properties plan = new Properties();
+        plan.setProperty("route", route);
+        plan.setProperty("link.secret", linkSecret);
+        try (OutputStream out = Files.newOutputStream(file)) {
+            plan.store(out, "mission plan");
+        }
+    }
+
+    // 매체를 손에 넣은 사람이 하는 일: 파일 내용에서 비밀값을 찾는다
+    static boolean mediumReveals(Path file, String needle) throws IOException {
+        String raw = new String(Files.readAllBytes(file), StandardCharsets.ISO_8859_1);
+        return raw.contains(needle);
+    }
+
+    public static void main(String[] args) throws IOException {
+        String secret = "EXAMPLE-ONLY-LINK-SECRET";
+        Path file = Path.of("plan.properties");
+        savePlan(file, "WP1&gt;WP2&gt;WP3", secret);
+        System.out.println(mediumReveals(file, secret) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    }
+}</code></pre>
+<p>Properties 파일에 링크 비밀값을 평문으로 저장한다. 속성 파일은 사람이 읽는 텍스트라 매체만 있으면 그대로 드러난다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+
+public class Example {
+    static final SecureRandom RNG = new SecureRandom();
+
+    // 시험용 대체 구현: 실제로는 KeyStore·HSM(PKCS#11)에 둔 저장용 키를 꺼낸다
+    static SecretKey storageKey() throws GeneralSecurityException {
+        KeyGenerator kg = KeyGenerator.getInstance("AES");
+        kg.init(256, RNG);
+        return kg.generateKey();
+    }
+
+    // AES-GCM으로 암호화해 [IV|암호문+태그]로 저장한다
+    static void savePlan(Path file, SecretKey key, byte[] record) throws IOException, GeneralSecurityException {
+        byte[] iv = new byte[12];
+        RNG.nextBytes(iv);
+        Cipher gcm = Cipher.getInstance("AES/GCM/NoPadding");
+        gcm.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(128, iv));
+        byte[] sealed = gcm.doFinal(record);
+        Files.write(file, ByteBuffer.allocate(iv.length + sealed.length).put(iv).put(sealed).array());
+    }
+
+    static boolean mediumReveals(Path file, String needle) throws IOException {
+        String raw = new String(Files.readAllBytes(file), StandardCharsets.ISO_8859_1);
+        return raw.contains(needle);
+    }
+
+    public static void main(String[] args) throws IOException, GeneralSecurityException {
+        String secret = "EXAMPLE-ONLY-LINK-SECRET";
+        byte[] record = ("route=WP1&gt;WP2&gt;WP3\nlink.secret=" + secret + "\n").getBytes(StandardCharsets.UTF_8);
+        Path file = Path.of("plan.bin");
+        savePlan(file, storageKey(), record);
+        java.util.Arrays.fill(record, (byte) 0);   // 평문 버퍼 소거
+        System.out.println(mediumReveals(file, secret) ? "PLAINTEXT FOUND ON MEDIUM" : "medium holds ciphertext only");
+    }
+}</code></pre>
+<p>AES/GCM/NoPadding으로 암호화해 [IV|암호문+태그]로 저장하고, 키는 KeyStore·HSM에서 꺼내는 자리로 분리한다(예시의 키 생성은 시험용 대체). 평문 바이트 배열은 저장 뒤 0으로 채운다(D-05). String은 지울 수 없어 예시의 secret 문자열 사본은 메모리에 남으므로, 실제로는 비밀값을 처음부터 byte[]·char[]로 다룬다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>PLAINTEXT FOUND ON MEDIUM</code> 검출, 좋은 예에서 미검출·<code>medium holds ciphertext only</code> 출력 확인 · 참고: MITRE CWE-312 Demonstrative Example 4(속성 파일의 평문 자격 증명) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-5 &#x27;사용자 중요정보 평문 저장(또는 전송)&#x27;(인쇄 133쪽) 참고 — 이 항목의 표 1 대응 CWE는 <a href="https://cwe.mitre.org/data/definitions/311.html" target="_blank" rel="noopener">CWE-311</a>이고, 참고문헌에 CWE-312가 함께 실려 있다</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import json
+
+LINK_PSK = "DL-PSK-61a9c0"            # 데이터링크 접속 비밀값(예시용 가짜 값)
+
+
+# 임무 계획 단말이 다음 임무 묶음을 이동식 매체에 저장한다
+def save_mission(path, route):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump({"route": route, "link_psk": LINK_PSK}, f)   # 비밀값을 평문 그대로 기록
+
+
+save_mission("mission-0412.json", ["WP1", "WP2", "WP3"])
+raw = open("mission-0412.json", "rb").read()
+print("PLAINTEXT FOUND ON MEDIUM" if LINK_PSK.encode() in raw else "no plaintext on medium")</code></pre>
+<p>데이터링크 접속 비밀값을 임무 묶음 파일에 평문으로 쓴다. SD 카드·이동식 디스크를 잃어버리거나 정비 장비에 꽂으면 파일을 열어 보는 것만으로 비밀값이 드러난다. 예시는 저장한 파일에 비밀값 글자가 그대로 있는지 확인한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import json
+import os
+
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+LINK_PSK = "DL-PSK-61a9c0"            # 데이터링크 접속 비밀값(예시용 가짜 값)
+MEDIUM_KEY = AESGCM.generate_key(bit_length=256)   # 실제로는 키 적재 장비가 넣고 매체에는 두지 않는 키
+
+
+def save_mission(path, route):
+    plain = json.dumps({"route": route, "link_psk": LINK_PSK}).encode()
+    nonce = os.urandom(12)
+    # 인증 암호화(AES-256-GCM): 내용을 감추고 바꿔치기도 복호화 단계에서 드러난다
+    sealed = AESGCM(MEDIUM_KEY).encrypt(nonce, plain, b"mission-0412")
+    with open(path, "wb") as f:
+        f.write(nonce + sealed)
+
+
+save_mission("mission-0412.bin", ["WP1", "WP2", "WP3"])
+raw = open("mission-0412.bin", "rb").read()
+print("PLAINTEXT FOUND ON MEDIUM" if LINK_PSK.encode() in raw else "no plaintext on medium")</code></pre>
+<p>중요정보는 인증 암호화(AES-256-GCM, cryptography 패키지의 AESGCM)로 암호화해 저장한다(D-05). 키는 매체에 함께 두지 않고 키 적재 장비·운영체제 키 저장소처럼 따로 관리하는 곳에서 받는다. 논스는 저장할 때마다 새로 만든다. 꼭 필요하지 않은 비밀값은 아예 저장하지 않는 것이 먼저다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>PLAINTEXT FOUND ON MEDIUM</code> 검출, 좋은 예에서 미검출·<code>no plaintext on medium</code> 출력 확인 · 참고: MITRE CWE-312 설명·완화책(Potential Mitigations) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-5 &#x27;암호화되지 않은 중요정보&#x27;(인쇄 82쪽) 참고</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 7건)</summary><div lang="en"><p><b>Example 1.</b> The following code excerpt stores a plaintext user account ID in a browser cookie.</p><p><i>Bad / Java</i></p><pre><code>response.addCookie( new Cookie(&quot;userAccountID&quot;, acctID);</code></pre><p>Because the account ID is in plaintext, the user&#x27;s account information is exposed if their computer is compromised by an attacker.</p><p><b>Example 2.</b> This code writes a user&#x27;s login information to a cookie so the user does not have to login again later.</p><p><i>Bad / PHP</i></p><pre><code>function persistLogin($username, $password){
+  $data = array(&quot;username&quot; =&gt; $username, &quot;password&quot;=&gt; $password);
+  setcookie (&quot;userdata&quot;, $data);
+}</code></pre><p>The code stores the user&#x27;s username and password in plaintext in a cookie on the user&#x27;s machine. This exposes the user&#x27;s login information if their computer is compromised by an attacker. Even if the user&#x27;s machine is not compromised, this weakness combined with cross-site scripting (CWE-79) could allow an attacker to remotely copy the cookie.</p><p>Also note this example code also exhibits Plaintext Storage in a Cookie (CWE-315).</p><p><b>Example 3.</b> The following code attempts to establish a connection, read in a password, then store it to a buffer.</p><p><i>Bad / C</i></p><pre><code>server.sin_family = AF_INET; hp = gethostbyname(argv[1]);
+if (hp==NULL) error(&quot;Unknown host&quot;);
+memcpy( (char *)&amp;server.sin_addr,(char *)hp-&gt;h_addr,hp-&gt;h_length);
+if (argc &lt; 3) port = 80;
+else port = (unsigned short)atoi(argv[3]);
+server.sin_port = htons(port);
+if (connect(sock, (struct sockaddr *)&amp;server, sizeof server) &lt; 0) error(&quot;Connecting&quot;);
+...
+while ((n=read(sock,buffer,BUFSIZE-1))!=-1) {
+
+  write(dfd,password_buffer,n);
+  ...</code></pre><p>While successful, the program does not encrypt the data before writing it to a buffer, possibly exposing it to unauthorized actors.</p><p><b>Example 4.</b> The following examples show a portion of properties and configuration files for Java and ASP.NET applications. The files include username and password information but they are stored in cleartext.</p><p>This Java example shows a properties file with a cleartext username / password pair.</p><p><i>Bad / Java</i></p><pre><code>                     # Java Web App ResourceBundle properties file
+
+...
+webapp.ldap.username=secretUsername
+webapp.ldap.password=secretPassword
+...</code></pre><p>The following example shows a portion of a configuration file for an ASP.Net application. This configuration file includes username and password information for a connection to a database but the pair is stored in cleartext.</p><p><i>Bad / ASP.NET</i></p><pre><code>...
+&lt;connectionStrings&gt;
+  &lt;add name=&quot;ud_DEV&quot; connectionString=&quot;connectDB=uDB; uid=db2admin; pwd=password; dbalias=uDB;&quot; providerName=&quot;System.Data.Odbc&quot; /&gt;
+&lt;/connectionStrings&gt;
+...</code></pre><p>Username and password information should not be included in a configuration file or a properties file in cleartext as this will allow anyone who can read the file access to the resource. If possible, encrypt this information.</p><p><b>Example 5.</b> In 2022, the OT:ICEFALL study examined products by 10 different Operational Technology (OT) vendors. The researchers reported 56 vulnerabilities and said that the products were &quot;insecure by design&quot; [REF-1283]. If exploited, these vulnerabilities often allowed adversaries to change how the products operated, ranging from denial of service to changing the code that the products executed. Since these products were often used in industries such as power, electrical, water, and others, there could even be safety implications.</p><p>At least one OT product stored a password in plaintext.</p><p><b>Example 6.</b> In 2021, a web site operated by PeopleGIS stored data of US municipalities in Amazon Web Service (AWS) Simple Storage Service (S3) buckets.</p><p><i>Bad / Other</i></p><pre><code>A security researcher found 86 S3 buckets that could be accessed without authentication (CWE-306) and stored data unencrypted (CWE-312). These buckets exposed over 1000 GB of data and 1.6 million files including physical addresses, phone numbers, tax documents, pictures of driver&#x27;s license IDs, etc. [REF-1296] [REF-1295]</code></pre><p>While it was not publicly disclosed how the data was protected after discovery, multiple options could have been considered.</p><p><i>Good / Other</i></p><pre><code>The sensitive information could have been protected by ensuring that the buckets did not have public read access, e.g., by enabling the s3-account-level-public-access-blocks-periodic rule to Block Public Access. In addition, the data could have been encrypted at rest using the appropriate S3 settings, e.g., by enabling server-side encryption using the s3-bucket-server-side-encryption-enabled setting. Other settings are available to further prevent bucket data from being leaked. [REF-1297]</code></pre><p><b>Example 7.</b> Consider the following PowerShell command examples for encryption scopes of Azure storage objects. In the first example, an encryption scope is set for the storage account.</p><p><i>Bad / Shell</i></p><pre><code>New-AzStorageEncryptionScope -ResourceGroupName &quot;MyResourceGroup&quot; -AccountName &quot;MyStorageAccount&quot; -EncryptionScopeName testscope -StorageEncryption</code></pre><p>The result (edited and formatted for readability) might be:</p><p><i>Bad / Other</i></p><pre><code>ResourceGroupName: MyResourceGroup, StorageAccountName: MyStorageAccount
+
+                        Name
+                        State
+                        Source
+                        RequireInfrastructureEncryption
+
+                        testscope
+                        Enabled
+                        Microsoft.Storage</code></pre><p>However, the empty string under RequireInfrastructureEncryption indicates this service was not enabled at the time of creation, because the -RequireInfrastructureEncryption argument was not specified in the command.</p><p>Including the -RequireInfrastructureEncryption argument addresses the issue:</p><p><i>Good / Shell</i></p><pre><code>New-AzStorageEncryptionScope -ResourceGroupName &quot;MyResourceGroup&quot; -AccountName &quot;MyStorageAccount&quot; -EncryptionScopeName testscope -StorageEncryption -RequireInfrastructureEncryption</code></pre><p>This produces the report:</p><p><i>Result / Other</i></p><pre><code>ResourceGroupName: MyResourceGroup, StorageAccountName: MyStorageAccount
+
+                       Name
+                       State
+                       Source
+                       RequireInfrastructureEncryption
+
+                       testscope
+                       Enabled
+                       Microsoft.Keyvault
+                       True</code></pre><p>In a scenario where both software and hardware layer encryption is required (&quot;double encryption&quot;), Azure&#x27;s infrastructure encryption setting can be enabled via the CLI or Portal. An important note is that infrastructure hardware encryption cannot be enabled or disabled after a blob is created. Furthermore, the default value for infrastructure encryption is disabled in blob creations.</p></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>흔히 SAST(Static Application Security Testing)라 부르는 자동 정적 분석(static analysis)은 소스코드(또는 바이너리·컴파일된 코드)를 실행하지 않고 분석해 이 약점의 일부 사례를 찾을 수 있으며, 대개 데이터 흐름·제어 흐름 모델을 만든 뒤 입력 출처('source')와 외부 구성요소나 운영체제 같은 하위 계층과 상호작용하는 목적지('sink')를 잇는 잠재적 취약 패턴을 찾는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect &quot;sources&quot; (origins of input) with &quot;sinks&quot; (destinations where the data interacts with external components, a lower layer such as the OS, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다.</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시험용 비밀값을 고유한 표지 문자열로 정해 기능을 실행한 뒤, 저장 매체(파일, 플래시 덤프, SD 카드, DB, 백업)를 그 표지 문자열로 검색해 평문으로 남는지 확인한다.</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a>·<a href="../../ch6-integration-test/#t-02">T-02</a></td>
+<td>[예시] CWE-312 예시 검증(저장 파일에서 비밀값 검색)</td>
+</tr>
+<tr>
+<td>비밀번호·키·임무 계획 같은 중요정보를 담는 변수에서 출발해, 그 값이 파일 쓰기, 설정 저장(Properties.store 등), 로그 함수에 암호화를 거치지 않고 닿는 경로를 찾는다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>[예시] CWE-312 예시(비밀값을 파일·속성 파일에 그대로 기록) · [보완]</td>
+</tr>
+<tr>
+<td>로그, 고장 기록, 메모리 덤프, 임시 파일에도 같은 표지 문자열 검색을 적용한다.</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a>·<a href="../../ch6-integration-test/#t-08">T-08</a></td>
+<td>[보완]</td>
+</tr>
+<tr>
+<td>설계 산출물의 저장 자료 목록에서 중요정보 항목마다 저장 위치와 보호 방식(암호화, 접근 통제, 제로화)이 정해져 있는지 확인한다.</td>
+<td><a href="../../ch4-design/#d-09">D-09</a></td>
+<td>[보완]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>① 원문 탐지 방법은 자동 정적 분석뿐이다. 다른 정적 분석 도구·컴파일러 경고로 점검한다.</li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-312">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>저장 데이터 중 중요정보(키, 인증정보, 임무·좌표 데이터)를 식별·분류하고 암호화 저장 요구사항과 키 관리 방안을 정의한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>검증필 암호모듈(KCMVP 등)로 암호화하여 저장하고, 평문 버퍼는 사용 직후 explicit_bzero/memset_s로 소거한다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>javax.crypto(AES-GCM 등)로 암호화하고, 키는 KeyStore에 저장한다. 직렬화·로그에 중요정보가 포함되지 않게 한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>저장 매체(플래시·파일·DB) 덤프에서 평문을 찾는 시험과 정적 분석의 중요정보 저장 탐지를 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>폐기·정비 반출 시 저장매체 소거 절차를 수행하고 암호 키를 주기적으로 갱신한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>외부 SPI 플래시·SD 카드는 탈취 시 쉽게 읽히므로 SoC 내장 암호엔진·OTP 키를 활용하고, 제로화(zeroization) 기능을 구현한다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 1건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-05">D-05</a> 암호·키·비밀 관리 설계 (설계)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 6건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>탑재 환경 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#pc-03">PC-03</a> 저장·전송 데이터 보호, <a href="../../appendix/c-environment-guides/#soc-04">SOC-04</a> 키 저장 위치</td>
+</tr>
+<tr>
+<td>운영체제/런타임 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#win-06">WIN-06</a> 자격증명 저장 처리, <a href="../../appendix/c-environment-guides/#lnx-06">LNX-06</a> 난수·암호 모듈 사용</td>
+</tr>
+<tr>
+<td>개발·시험 망 환경 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#net-cl-06">NET-CL-06</a> 이동식 매체 보호, <a href="../../appendix/c-environment-guides/#net-cl-10">NET-CL-10</a> 백업·복구·폐기 관리</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="https://cwe.mitre.org/data/definitions/311.html" target="_blank" rel="noopener">CWE-311</a>, <a href="https://cwe.mitre.org/data/definitions/922.html" target="_blank" rel="noopener">CWE-922</a></li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 21건 중 앞의 8건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2022-26390" target="_blank" rel="noopener">CVE-2022-26390</a></td>
+<td>무선 배터리 제품이 자격 증명과 개인 건강 정보(PHI)를 암호화하지 않고 저장한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>wireless battery product stores credentials and Personal Health Information (PHI) without encryption</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2022-30275" target="_blank" rel="noopener">CVE-2022-30275</a></td>
+<td>원격 단말 장치(RTU)가 평문으로 저장된 비밀번호에 의존하는 드라이버를 사용한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Remote Terminal Unit (RTU) uses a driver that relies on a password stored in plaintext.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-2272" target="_blank" rel="noopener">CVE-2009-2272</a></td>
+<td>비밀번호와 사용자 이름이 쿠키에 평문으로 저장된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>password and username stored in cleartext in a cookie</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-1466" target="_blank" rel="noopener">CVE-2009-1466</a></td>
+<td>비밀번호가 권한 설정이 안전하지 않은 파일에 평문으로 저장된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>password stored in cleartext in a file with insecure permissions</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-0152" target="_blank" rel="noopener">CVE-2009-0152</a></td>
+<td>채팅 프로그램이 사용자가 SSL을 쓰라고 지정해도 일부 상황에서 SSL을 끈다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>chat program disables SSL in some circumstances even when the user says to use SSL.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-1603" target="_blank" rel="noopener">CVE-2009-1603</a></td>
+<td>연쇄: 제품이 RSA 키를 생성할 때 잘못된 공개 지수를 사용해 사실상 암호화가 꺼진다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: product uses an incorrect public exponent when generating an RSA key, which effectively disables the encryption</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-0964" target="_blank" rel="noopener">CVE-2009-0964</a></td>
+<td>암호화되지 않은 비밀번호가 데이터베이스에 저장된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>storage of unencrypted passwords in a database</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2008-6157" target="_blank" rel="noopener">CVE-2008-6157</a></td>
+<td>암호화되지 않은 비밀번호가 데이터베이스에 저장된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>storage of unencrypted passwords in a database</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>PLOVER</td><td></td><td lang="en">Plaintext Storage of Sensitive Information</td></tr>
+<tr><td>Software Fault Patterns</td><td>SFP23</td><td lang="en">Exposed Data</td></tr>
+<tr><td>ISA/IEC 62443</td><td>Part 4-2</td><td lang="en">Req CR 4.1 a)</td></tr>
+<tr><td>ISA/IEC 62443</td><td>Part 3-3</td><td lang="en">Req SR 4.1</td></tr>
+<tr><td>OWASP Golang Secure Coding Practices Guide</td><td></td><td lang="en">Data Protection</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/312.html" target="_blank" rel="noopener">CWE-312</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../307/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-307 반복된 인증시도 제한 기능 부재">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-307 반복된 인증시도 제한 기능 부재
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../319/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-319 중요정보 평문 전송">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-319 중요정보 평문 전송
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

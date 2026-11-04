@@ -1,0 +1,2177 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/K9p2JtEqCycL2fSbEonMakkteWpAHv57x2wndLqMNo=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/dev/selection-tool/">
+      
+      
+        <link rel="prev" href="../ch8-environments/">
+      
+      
+        <link rel="next" href="../cwe-versions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>지침 선택 도구 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../assets/external/fonts.googleapis.com/css.5bc8a19e.css">
+        <style>:root{--md-text-font:"IBM Plex Sans KR";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#지침-선택-도구" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              지침 선택 도구
+            
+          </span><a class="site-ver" href="../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#쓰는-법" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        쓰는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#질문과-답의-규칙" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        질문과 답의 규칙
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        조합 안내 기준
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../cwe/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cwe/view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#쓰는-법" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        쓰는 법
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#질문과-답의-규칙" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        질문과 답의 규칙
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        조합 안내 기준
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="지침-선택-도구">지침 선택 도구<a class="headerlink" href="#지침-선택-도구" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#쓰는-법">쓰는 법</a></li><li><a href="#질문과-답의-규칙">질문과 답의 규칙</a></li><li><a href="#combos">조합 안내 기준</a></li></ul></details>
+<p>개발 언어, 운용 환경(하드웨어·운영체제), 사용하는 기능(데이터베이스·파일시스템·외부 입력·인증·암호 등), 개발 환경(개발·시험 망·컴파일러)에 답하면 필요한 지침이 수명주기 단계별로 모인다. 결과는 기준선 활동 33개와 환경 지침 245건에서 고르며, 이 가이드 본문·<a href="../appendix/c-environment-guides/">부록 C</a>와 같은 ID와 제목을 쓴다(기준선 활동의 지침 문구는 요약).</p>
+<p><a class="md-button md-button--primary" href="../tools/selection-tool.html">지침 선택 도구 열기</a></p>
+<h2 id="쓰는-법">쓰는 법<a class="headerlink" href="#쓰는-법" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ol>
+<li><strong>질문에 답하기</strong>: 네 가지 질문에 답한다. 개발 언어, 하드웨어, 운영체제, 개발·시험 망, 컴파일러는 하나씩 고르고, 사용하는 기능만 여럿을 고른다. 처음 화면은 예시(ATmega 제어기)를 고른 상태이며 '모두 지우기'로 비운다.</li>
+<li><strong>단계별 지침 보기</strong>: 결과는 단계마다 지침 ID와 제목만 한 줄씩 보인다. 지침을 누르면 내용·포함 사유·대상 CWE·근거가 펼쳐지고, ID를 누르면 본문 설명으로 간다. 답하지 않은 질문이나 정하지 않은 특성에 따라 들어갈 수 있는 지침은 단계마다 '확인 필요'로 접어 둔다. '특성 일치'로 표시한 지침은 다른 환경을 위해 쓴 것이지만 특성이 같아서 들어온 것이다. 펼치면 원래 환경과 일치한 조건이 보인다. 망 질문에 어떻게 답해도 <a href="../appendix/c-environment-guides/#net-in-04">NET-IN-04</a>·<a href="../appendix/c-environment-guides/#net-in-06">06</a>·<a href="../appendix/c-environment-guides/#net-in-09">09</a>와 <a href="../appendix/c-environment-guides/#net-cl-09">NET-CL-09</a>는 나온다(<a href="../ch8-environments/#sec-8-6">8.6</a>).</li>
+<li><strong>사용하는 기능에 답하기</strong>: 기능을 하나라도 고르거나 '위 기능을 하나도 쓰지 않음'을 고르면 답한 것으로 보고, 고르지 않은 기능에만 해당하는 기준선 활동과 보안약점을 거른다.</li>
+<li><strong>해당 보안약점(CWE) 보기</strong>: 지침 아래 접힌 목록에 이 과제에 해당하는 보안약점이 해당·확인 필요·비해당으로 나뉘어 보인다. 범위는 보안약점 점검 목록 44개, 고른 언어의 CWE 언어 뷰(C·C++·Java), 보조 항목 4개이고, 언어 뷰가 없는 C#·Python은 언어 뷰 항목 가운데 MITRE가 그 언어를 적용 언어로 적은 항목(C# 19개, Python 16개)을 더한다. 조건부 항목은 <a href="../appendix/g-worksheets/#g-4-1">부록 G-4-1</a> 사용 기술 체크리스트와 같은 규칙으로 가른다. 판정 결과와 사유는 <a href="../appendix/g-worksheets/#g-4">부록 G-4</a>에 기록한다.</li>
+<li><strong>결과 활용</strong>: '결과를 표로 복사'로 과제 문서에 붙여 넣는다.</li>
+</ol>
+<p><strong>상세 설정.</strong> 화면 아래 '상세 설정'을 펼치면 축마다 환경을 직접 고르고, 특성 프로파일(15개)을 확인·덮어쓰고, 목록에 없는 환경을 특성 시트로 추가할 수 있다. 위 질문의 답은 상세 설정에 그대로 반영되고, 상세 설정에서 바꾼 값도 질문과 결과에 반영된다. 도구는 지침 선택 절차(<a href="../ch2-framework/#sec-2-5">2.5</a> ①~⑦) 가운데 ②~⑤를 계산하며, 실행 단위(빌드 환경)가 여럿이면(①) 실행 단위마다 한 번씩 쓴다.</p>
+<p>도구 밖에서 하는 일은 ⑥ 보안약점 적용성 판정의 기록(<a href="../appendix/g-worksheets/#g-4">부록 G-4</a>, 도구의 해당 보안약점 목록을 옮겨 적고 사유를 단다. 목록에 없는 항목은 고르지 않은 언어의 언어 뷰 항목이므로 G-4의 규칙대로 묶어 적는다)과 ⑦ 단계 자가점검표(<a href="../appendix/g-worksheets/#g-5">부록 G-5</a>)다. 선택 규칙(특성 목록·조건식·상속)은 <a href="../ch2-framework/">2.4~2.5</a>와 <a href="../appendix/g-worksheets/">부록 G</a>에 있다. 같은 데이터는 <a href="../downloads/">내려받기</a>의 Excel에도 있다.</p>
+<h2 id="질문과-답의-규칙">질문과 답의 규칙<a class="headerlink" href="#질문과-답의-규칙" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong>하나씩 고르는 까닭.</strong> 시험과 점검 기준은 실행 단위(빌드 환경) 하나를 기준으로 정한다. 한 빌드에 C와 C++를 함께 쓰는 것처럼 한 축에서 여럿을 골라야 하면 '상세 설정'에서 고른다. 외부 통신을 '모름(환경 기본값)'으로 두면 고른 환경의 기본값을 따른다.</p>
+<p><strong>맞지 않는 조합 안내.</strong> 언어와 환경이 맞지 않으면 그 질문 바로 아래에 알린다. 어느 쪽도 선택을 막지는 않으며, 판정 기준과 근거는 아래 <a href="#combos">조합 안내 기준</a>에 있다.</p>
+<table>
+<thead>
+<tr>
+<th>안내</th>
+<th>뜻</th>
+<th>예</th>
+<th>도구의 처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>맞지 않는 조합(붉은색)</td>
+<td>성립하지 않는다. 컴파일러가 고른 언어를 컴파일하지 않거나 하드웨어·운영체제와 맞지 않는다.</td>
+<td>MCU와 Windows, Windows와 Wind River Workbench</td>
+<td>질문에서는 맞지 않는 컴파일러를 보이지 않고, 상세 설정에서 고르면 그 항목에 표시한다.</td>
+</tr>
+<tr>
+<td>드문 조합(주황색)</td>
+<td>성립할 수 있지만 확인이 필요하다. 공식 사례가 있지만 흔하지 않다.</td>
+<td>Java·C#·Python과 마이크로컨트롤러·DSP나 운영체제 없음·RTOS, MCU와 Linux(MMU 없는 Linux), Windows와 GCC(MinGW-w64)</td>
+<td>그 환경용 언어 런타임(예: C#의 .NET nanoFramework, Python의 MicroPython)이 있어야 하므로, 안내의 단추로 상세 설정의 '목록에 없는 환경 추가'를 열어 런타임을 등록한다(<a href="../ch2-framework/#sec-2-5">2.5</a> ②).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>사용하는 기능 목록.</strong> CWE 적용 플랫폼과 행정안전부·KISA 「소프트웨어 개발보안 가이드」 항목이 전제하는 기술을 거꾸로 점검해 정했다(데이터베이스, 파일시스템, OS 명령, 외부 입력, 웹 서버·HTTP, XML, 객체 직렬화, 동적 코드 실행·적재, 인증, 암호·TLS, 현장·원격 업데이트, 오픈소스, 칩 제조사 BSP). 현장·원격 업데이트는 원격과 현장 매체·정비 포트를 함께 묻고(지침·보안약점 판정이 같다), 공장 재프로그래밍만 하면 고르지 않는다. C·C++의 자체 직렬화 형식 해석은 '외부 파일·메시지 입력 해석'에 해당한다.</p>
+<p><strong>언어·환경에 따라 보이는 기능.</strong> 언어나 환경 때문에 성립하지 않는 항목은 보이지 않는다.</p>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>보이는 조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시그널 핸들러</td>
+<td>C·C++</td>
+</tr>
+<tr>
+<td>네이티브 코드 호출</td>
+<td>Java·C#·Python</td>
+</tr>
+<tr>
+<td>POSIX 기능(파일 권한·chroot·프로세스 생성·getlogin)</td>
+<td>C·C++와 Linux·VxWorks</td>
+</tr>
+<tr>
+<td>커널 드라이버(IOCTL)</td>
+<td>C·C++와 Windows·Linux</td>
+</tr>
+<tr>
+<td>OS 명령 실행</td>
+<td>운영체제가 있을 때(베어메탈에서는 숨김)</td>
+</tr>
+<tr>
+<td>객체 직렬화, 동적 코드 실행·적재</td>
+<td>C·C++가 아닐 때(<a href="../cwe/502/">CWE-502</a>·<a href="../cwe/95/">95</a>·<a href="../cwe/1336/">1336</a>·<a href="../cwe/470/">470</a>의 적용 언어에 C·C++가 없다)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기능 답에 따른 기준선 활동.</strong></p>
+<table>
+<thead>
+<tr>
+<th>기준선 활동</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../ch5-implementation/#i-04">I-04</a></td>
+<td>데이터베이스·OS 명령·파일시스템·외부 입력을 하나도 쓰지 않으면 빠진다(외부 입력은 자원 식별자를 정할 수 있어서 함께 본다).</td>
+</tr>
+<tr>
+<td><a href="../ch6-integration-test/#t-04">T-04</a></td>
+<td>외부 입력·외부 통신이 없으면 빠진다.</td>
+</tr>
+<tr>
+<td><a href="../ch6-integration-test/#t-06">T-06</a></td>
+<td>인증·암호를 쓰지 않고 외부 통신이 없으며 현장·원격 업데이트도 하지 않으면 빠진다. 인증이 없는 것 자체가 약점일 수 있으므로 외부 통신이 있으면 남는다.</td>
+</tr>
+<tr>
+<td><a href="../ch7-maintenance/#m-03">M-03</a></td>
+<td>파일시스템이 없으면(S3 = 없음) 빠진다.</td>
+</tr>
+<tr>
+<td><a href="../ch7-maintenance/#m-04">M-04</a></td>
+<td>항상 남는다. 업데이트 경로가 없으면 적용성 판정에 비해당으로 기록한다.</td>
+</tr>
+<tr>
+<td><a href="../ch4-design/#d-06">D-06</a></td>
+<td>항상 남는다. 하드웨어 신뢰 기점이 없고(H3 = 없음) 공장 재프로그래밍만 하면 [보완] 해시 검증으로 대체하고 <a href="../appendix/g-worksheets/#g-3">G-3</a>에 적는다(<a href="../ch2-framework/#sec-2-3">2.3</a>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="combos">조합 안내 기준<a class="headerlink" href="#combos" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>질문 1·2·4의 답끼리 맞지 않거나 드문 조합이면 도구가 그 질문 아래에 아래 안내를 띄운다. 짝은 하드웨어–운영체제, 하드웨어–컴파일러, 운영체제–컴파일러, 언어–하드웨어, 언어–운영체제이고, 언어–컴파일러는 '언어를 컴파일하는 도구만 보인다'로 처리한다. 판정은 환경 데이터의 특성·제약과 벤더·프로젝트 공식 원문으로 했고, 공식 근거를 찾지 못한 짝(단종·레거시 RTOS가 든 짝 등)은 안내하지 않는다. 언어를 특정 환경에 한정하지 않으므로 '드문 조합'은 성립하는 공식 사례가 있는 경우만 적었다(2026. 10. 24. 점검).</p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>짝</th>
+<th>조합</th>
+<th>화면 안내 문구</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–운영체제</td>
+<td>마이크로컨트롤러(MCU) + Windows</td>
+<td>Windows는 최소 1 GHz 2코어·메모리 2 GB 이상·UEFI/BIOS가 필요해 MCU에서 돌지 않습니다. 운용 하드웨어가 PC·SBC인지, Windows가 개발 호스트인지 확인하세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/system_requirements" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–운영체제</td>
+<td>디지털신호처리 프로세서(DSP) + Linux</td>
+<td>TI C6000·C2000·ADI SHARC는 현행 Linux 메인라인이 지원하지 않습니다. Linux는 같은 칩의 응용 코어(Arm)에서 도는지 확인하고, 그렇다면 하드웨어를 SoC로 고르세요.</td>
+<td><a href="https://github.com/torvalds/linux/tree/v6.12/arch" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–운영체제</td>
+<td>디지털신호처리 프로세서(DSP) + Windows</td>
+<td>Windows는 AMD·Intel·Qualcomm·NXP 응용 프로세서에서만 돕니다. DSP 코드는 베어메탈이나 RTOS로 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements" target="_blank" rel="noopener">원문1</a>, <a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/system_requirements" target="_blank" rel="noopener">원문2</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–운영체제</td>
+<td>일반 컴퓨터(PC·워크스테이션) + 베어메탈</td>
+<td>가이드의 PC·워크스테이션 환경은 범용 OS 위에서 도는 소프트웨어를 뜻합니다. 운영체제 없이 도는 코드라면 하드웨어를 SBC·MCU 등으로 고르세요.</td>
+<td>환경 데이터</td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>마이크로컨트롤러(MCU) + Visual Studio (C# 밖)</td>
+<td>Visual Studio 컴파일러(MSVC)는 Windows용 코드만 만듭니다. MCU 펌웨어는 GCC·벤더 컴파일러로 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>디지털신호처리 프로세서(DSP) + Visual Studio</td>
+<td>Visual Studio 컴파일러는 DSP 코드를 만들지 않습니다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>디지털신호처리 프로세서(DSP) + Atmel/Microchip Studio</td>
+<td>Atmel·Microchip Studio는 AVR·Arm 마이크로컨트롤러용입니다.</td>
+<td><a href="https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>일반 컴퓨터(PC·워크스테이션) + Code Composer Studio</td>
+<td>CCS는 TI 칩용 IDE로 PC 응용을 빌드하지 않습니다.</td>
+<td><a href="https://www.ti.com/tool/CCSTUDIO" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>일반 컴퓨터(PC·워크스테이션) + Atmel/Microchip Studio</td>
+<td>Atmel·Microchip Studio는 PC에서 돌지만 PC용 코드를 만들지 않습니다(대상은 AVR·Arm MCU).</td>
+<td><a href="https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>베어메탈 + Visual Studio (C# 밖)</td>
+<td>MSVC는 Windows용 코드만 만듭니다. 베어메탈 펌웨어는 GCC·벤더 컴파일러를 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>FreeRTOS + Visual Studio (C# 밖)</td>
+<td>MSVC로 빌드하는 FreeRTOS는 Windows 시뮬레이터(실시간 아님)입니다. 타깃 빌드 컴파일러를 고르세요.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS/blob/202411.00/FreeRTOS/Demo/WIN32-MSVC/main.c#L39-L40" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>VxWorks + Visual Studio</td>
+<td>VxWorks 이미지는 Wind River 도구로 빌드합니다. MSVC는 Windows용입니다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>VxWorks + Code Composer Studio</td>
+<td>VxWorks 이미지는 Wind River Workbench로 빌드합니다.</td>
+<td><a href="https://www.ti.com/tool/CCSTUDIO" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>VxWorks + Atmel/Microchip Studio</td>
+<td>VxWorks 이미지는 Wind River Workbench로 빌드합니다.</td>
+<td><a href="https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>pSOS 등 단종·레거시 RTOS + Visual Studio</td>
+<td>MSVC는 Windows용 코드만 만듭니다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Linux + Atmel/Microchip Studio</td>
+<td>Linux는 8비트 AVR에서 돌지 않습니다(커널 arch/에 AVR 없음).</td>
+<td><a href="https://github.com/torvalds/linux/tree/v6.12/arch" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Windows + Code Composer Studio</td>
+<td>CCS는 TI 칩용 IDE로 Windows 프로그램을 빌드하지 않습니다.</td>
+<td><a href="https://www.ti.com/tool/CCSTUDIO" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Windows + Atmel/Microchip Studio</td>
+<td>Atmel·Microchip Studio는 Windows에서 돌지만 대상은 AVR·Arm MCU입니다.</td>
+<td><a href="https://onlinedocs.microchip.com/oxy/GUID-ECD8A826-B1DA-44FC-BE0B-5A53418A47BD-en-US-12/GUID-CF06CCAD-AFA8-473B-A020-91318167E617.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>맞지 않는 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Windows + Wind River Workbench</td>
+<td>Wind River Workbench는 VxWorks 이미지를 빌드하는 도구입니다.</td>
+<td>환경 데이터</td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>마이크로컨트롤러(MCU) + Linux</td>
+<td>MMU 없는 Linux(nommu)입니다. Linux 지침 가운데 프로세스 격리·주소공간 보호(<a href="../appendix/c-environment-guides/#lnx-02">LNX-02</a> 등)는 성립하지 않으니 MPU·정적 할당 지침을 따르세요.</td>
+<td><a href="https://github.com/torvalds/linux/blob/v6.12/Documentation/arch/arm/stm32/stm32f746-overview.rst" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>SoC·FPGA SoC + Windows</td>
+<td>Windows IoT Enterprise는 지원 목록에 오른 SoC(NXP i.MX 93 등)에서만 돕니다. Zynq·MPSoC라면 목록에 없으니 확인하세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/supported/winiot_nxp_processors_2024" target="_blank" rel="noopener">원문1</a>, <a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements" target="_blank" rel="noopener">원문2</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>보드형 컴퓨터(SBC) + FreeRTOS</td>
+<td>FreeRTOS는 주로 MCU용입니다. Cortex-A SBC에서 쓰면 MMU를 쓰지 않는 단일 주소공간이 되므로 SBC 격리 지침(<a href="../appendix/c-environment-guides/#sbc-02">SBC-02</a>)을 확인하세요.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS/blob/202411.00/FreeRTOS/Demo/CORTEX_A9_Zynq_ZC702/RTOSDemo/src/main.c#L29" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>보드형 컴퓨터(SBC) + Windows</td>
+<td>x86(AMD·Intel)·지원 목록의 Arm SBC에서만 Windows IoT Enterprise가 돕니다. 보드 프로세서를 확인하세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>일반 컴퓨터(PC·워크스테이션) + FreeRTOS</td>
+<td>FreeRTOS는 x86 포트가 있으나 주로 MCU용이고, 가이드의 PC·워크스테이션 환경은 범용 OS를 전제로 합니다. x86 보드에서 FreeRTOS를 쓰면 하드웨어를 SBC로 고르는 편이 맞는지 확인하세요. Windows에서 도는 FreeRTOS는 시험용 시뮬레이터(실시간 아님)입니다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/tree/V11.1.0/portable/GCC/IA32_flat" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–운영체제</td>
+<td>일반 컴퓨터(PC·워크스테이션) + VxWorks</td>
+<td>x86 산업용 컴퓨터에 VxWorks를 올린 경우입니다. 가이드의 PC 지침은 범용 OS를 전제로 하므로 SBC로 고르는 편이 맞는지 확인하세요.</td>
+<td><a href="https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>마이크로컨트롤러(MCU) + Visual Studio (언어 C#일 때)</td>
+<td>C# MCU 개발(.NET nanoFramework)은 Visual Studio를 IDE로 씁니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>디지털신호처리 프로세서(DSP) + GCC</td>
+<td>GCC는 TI C6000 계열만 지원합니다. C2000·SHARC는 벤더 컴파일러(CCS·CrossCore 등)를 확인하세요.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/C6X-Options.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>SoC·FPGA SoC + Visual Studio</td>
+<td>SoC에 Windows IoT Enterprise를 올린 경우에만 MSVC를 씁니다(NXP i.MX 93 등). Zynq·MPSoC는 GCC를 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/supported/winiot_nxp_processors_2024" target="_blank" rel="noopener">원문1</a>, <a href="https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-arm-processors-visual-cpp" target="_blank" rel="noopener">원문2</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>SoC·FPGA SoC + Code Composer Studio</td>
+<td>CCS는 TI 칩 전용입니다. TI 다중 코어 SoC가 아니면(Zynq·MPSoC 등) GCC·벤더 도구를 고르세요.</td>
+<td><a href="https://www.ti.com/tool/CCSTUDIO" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>보드형 컴퓨터(SBC) + Visual Studio</td>
+<td>SBC에 Windows를 올린 경우에만 MSVC를 씁니다. Linux SBC는 GCC를 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/hardware/processor_requirements" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>보드형 컴퓨터(SBC) + Code Composer Studio</td>
+<td>CCS는 TI 프로세서 기반 보드에서만 씁니다.</td>
+<td><a href="https://www.ti.com/tool/CCSTUDIO" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>하드웨어–컴파일러</td>
+<td>일반 컴퓨터(PC·워크스테이션) + Wind River Workbench</td>
+<td>x86 하드웨어에 VxWorks를 올린 경우에만 씁니다.</td>
+<td><a href="https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>운영체제–컴파일러</td>
+<td>베어메탈 + Visual Studio (언어 C#일 때)</td>
+<td>C# MCU 개발(.NET nanoFramework)은 Visual Studio를 IDE로 씁니다.</td>
+<td><a href="https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>운영체제–컴파일러</td>
+<td>VxWorks + GCC</td>
+<td>VxWorks 빌드에 쓰는 GCC는 Wind River Workbench(또는 VxWorks SDK) 묶음입니다. 컴파일러를 Wind River Workbench로 고르면 VxWorks 빌드 지침(<a href="../appendix/c-environment-guides/#wrw-01">WRW-01</a>~10)이 함께 나옵니다.</td>
+<td>환경 데이터</td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Linux + Visual Studio (C# 밖)</td>
+<td>Visual Studio로 Linux 프로그램을 개발하면 실제 컴파일러는 원격 Linux의 GCC·Clang입니다. 컴파일러를 GCC로 고르세요.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/linux/download-install-and-setup-the-linux-development-workload" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>운영체제–컴파일러</td>
+<td>Windows + GCC</td>
+<td>Windows용 GCC(MinGW-w64)는 glibc가 아니므로 <a href="../appendix/c-environment-guides/#gcc-03">GCC-03</a>의 _FORTIFY_SOURCE 등 hosted Linux 전제 하드닝은 해당하지 않습니다.</td>
+<td><a href="https://www.mingw-w64.org/" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–하드웨어</td>
+<td>Java + 마이크로컨트롤러(MCU)</td>
+<td>MCU에서는 Java ME Embedded(Cortex-M7, RTX) 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://www.oracle.com/java/technologies/javame-embedded/javame-embedded-getstarted.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–하드웨어</td>
+<td>C# + 마이크로컨트롤러(MCU)</td>
+<td>MCU에서는 .NET nanoFramework 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–하드웨어</td>
+<td>Python + 마이크로컨트롤러(MCU)</td>
+<td>MCU에서는 MicroPython 같은 전용 런타임이 있어야 합니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/micropython/micropython/blob/v1.29.0/README.md#L124-L128" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–운영체제</td>
+<td>C# + 베어메탈</td>
+<td>C#은 .NET nanoFramework 같은 런타임이 있어야 하며, 그 런타임은 내부에 RTOS를 씁니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/nanoframework/Home/blob/6235f8d444df34dfe3dbe6c2cbfa3bb912b99325/README.md#L17-L25" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–운영체제</td>
+<td>Python + 베어메탈</td>
+<td>운영체제 없는 환경에서는 MicroPython 같은 전용 인터프리터가 있어야 합니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/micropython/micropython/blob/v1.29.0/README.md#L124-L128" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–운영체제</td>
+<td>Python + FreeRTOS</td>
+<td>FreeRTOS 위 MicroPython(예: ESP32 포트)입니다. 런타임을 새 환경으로 추가하세요.</td>
+<td><a href="https://github.com/micropython/micropython/blob/v1.29.0/ports/esp32/README.md#L4-L6" target="_blank" rel="noopener">원문</a></td>
+</tr>
+<tr>
+<td>드문 조합</td>
+<td>언어–운영체제</td>
+<td>Python + VxWorks</td>
+<td>VxWorks 7 SDK에 Python이 들어 있습니다. 런타임 판·지원 범위를 확인하세요.</td>
+<td><a href="https://labs.windriver.com/downloads/wrsdk-vxworks7-docs/2103/README_up2.html" target="_blank" rel="noopener">원문</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../ch8-environments/" class="md-footer__link md-footer__link--prev" aria-label="이전: 제8장 개발환경별 고려사항">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                제8장 개발환경별 고려사항
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cwe-versions/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE 버전 비교">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE 버전 비교
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>
