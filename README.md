@@ -69,15 +69,15 @@ Windows에서는 privacy 플러그인이 심볼릭 링크를 만들지 못해 �
 
 1. GitHub 계정 `minkwanchoi`에 공개 저장소 `ws-cwe-guide`를 만들고 이 폴더를 올린다.
 2. 다른 계정(또는 조직)에 올리면 `mkdocs.yml`의 `site_url`, `extra.social`의 저장소 링크와 이 문서의 주소에서 `minkwanchoi`를 그 이름으로 바꾼다.
-3. 첫 푸시 후 **Actions → publish** 워크플로가 `gh-pages` 브랜치를 만들 때까지 기다린다.
+3. `v1.0.0` 태그를 올리고 **Actions → publish** 워크플로가 `gh-pages` 브랜치를 만들 때까지 기다린다. `main` 푸시만으로는 사이트에 올라가지 않는다.
 4. **Settings → Pages → Build and deployment → Source: Deploy from a branch**, 브랜치 `gh-pages` / `(root)`를 고른다.
-5. `https://minkwanchoi.github.io/ws-cwe-guide/`에서 사이트가 열린다. `main`에 올린 내용은 `dev` 판으로 게시된다. `v*` 태그를 올리기 전에는 기본 판이 없어 첫 주소가 비어 있으므로, 첫 공개 때는 `v1.0.0` 태그를 함께 올리거나 `…/dev/`로 들어간다.
+5. `https://minkwanchoi.github.io/ws-cwe-guide/`에서 사이트가 열린다. 사이트에는 `v*` 태그로 발행한 판만 게시된다.
 
 ## 판 관리와 배포
 
 | 하는 일 | 방법 | 결과 |
 |---|---|---|
-| 작업 중인 내용 공개 | `main`에 푸시 | `dev` 판 갱신, 폐쇄망판 zip 2개는 워크플로 산출물(offline-dev)로 보관 |
+| 작업 중인 내용 점검 | `main`에 푸시 | 사이트에는 올리지 않는다. 빌드·점검을 돌리고 폐쇄망판 zip 2개를 워크플로 산출물(offline)로 보관 |
 | 정식 판 발행 | `VERSION`과 `CHANGELOG.md`를 고치고 커밋한 뒤 `git tag v1.0.0 && git push origin v1.0.0` | `1.0` 판 생성, `latest` 별칭이 그 판을 가리키고 기본 판이 된다. GitHub 릴리스에 Excel 2종과 폐쇄망판 zip 2개·SHA256SUMS.txt 첨부 |
 | 수정 판(오탈자·링크) | `v1.0.1` 태그 | 같은 `1.0` 판을 덮어쓴다 |
 | 이전 판 보기 | 사이트 위쪽 판 선택 메뉴 | 판별 사이트가 `gh-pages`에 그대로 남는다 |
@@ -97,7 +97,7 @@ zip 안의 읽어보기 파일(`읽어보기(폐쇄망판).txt`, `읽어보기(�
 ## 자동 점검
 
 - **check / build**(끌어오기 요청마다): 온라인판·폐쇄망판(사이트·단일 문서) 생성과 `mkdocs build --strict`, 내부 링크 점검(`check_internal_links.py`), 외부 자원 점검(`check_offline.py`), 받아 온 자원의 해시 대조(`check_assets.py`)
-- **publish**(main·태그): 읽기 권한만 가진 작업에서 빌드·점검·폐쇄망판 묶음을 만들고, gh-pages 게시와 릴리스 첨부만 쓰기 권한으로 한다. 태그 릴리스의 zip·Excel에는 출처 증명을 붙인다
+- **publish**(main·태그): 읽기 권한만 가진 작업에서 빌드·점검·폐쇄망판 묶음을 만들고, 태그일 때만 gh-pages 게시와 릴리스 첨부를 쓰기 권한으로 한다. 태그 릴리스의 zip·Excel에는 출처 증명을 붙인다
 - 모든 작업은 해시를 고정한 `requirements-lock.txt`로 패키지를 설치하고, 워크플로 액션은 커밋 해시로 고정한다. 보안 문제 신고는 [SECURITY.md](SECURITY.md)
 - **check / links**(매주 월요일): 근거 링크(CWE·CERT·매뉴얼·오픈소스 원문 등)를 접속해 보고서를 남기고, 404·410이 있으면 실패로 표시
 

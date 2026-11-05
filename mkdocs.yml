@@ -52,7 +52,7 @@ extra:
     cwe: CWE 5.0
     manual: 매뉴얼 제2024-6호
   version:
-    provider: mike      # 판별 문서(v1.0, v1.1 …)와 latest·dev 별칭
+    provider: mike      # 판별 문서(v1.0, v1.1 …)와 latest 별칭
     default: latest
 
 extra_css:
