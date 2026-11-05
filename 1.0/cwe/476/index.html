@@ -1,0 +1,2686 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/cwe/476/">
+      
+      
+        <link rel="prev" href="../474/">
+      
+      
+        <link rel="next" href="../478/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-476 널 포인터(NULL pointer) 역참조 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-476-널-포인터null-pointer-역참조" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-476 널 포인터(NULL pointer) 역참조
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-476 널 포인터(NULL pointer) 역참조
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-476 널 포인터(NULL pointer) 역참조
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-476-널-포인터null-pointer-역참조">CWE-476 널 포인터(NULL pointer) 역참조<a class="headerlink" href="#cwe-476-널-포인터null-pointer-역참조" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">NULL Pointer Dereference</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>기본(Base)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>안정(Stable)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개) · 언어 뷰 C·C++·Java(<a href="https://cwe.mitre.org/data/definitions/658.html" target="_blank" rel="noopener">CWE-658</a>·<a href="https://cwe.mitre.org/data/definitions/659.html" target="_blank" rel="noopener">659</a>·<a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">660</a>)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>해당</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어: C, C++, Java, C#, Go, Python</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/476.html" target="_blank" rel="noopener">MITRE CWE-476</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">이름 표기</p>
+<p>「소프트웨어 개발보안 가이드」(2021. 11.)의 항목명은 'Null Pointer 역참조'(인쇄 296쪽)이다. 이 가이드는 같은 항목 본문이 쓰는 한글 표기 '널 포인터(Null Pointer) 역참조'를 이름으로 삼고, 영문은 C 상수 표기대로 NULL로 병기한다.</p>
+</div>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>유효하리라 기대한 포인터가 실제로는 NULL인데 이를 역참조하는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 유효하다고 기대한 포인터를 역참조하지만, 그 포인터가 NULL이다.</p>
+<details class="cwe-orig"><summary>원문(Description · Dimensions)</summary><div lang="en"><p>The product dereferences a pointer that it expects to be valid but is NULL.</p><p>Dimensions: Behavior-Type = Dereferenc; Resource-Type = Pointer; Resource-Property = NULL</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>가용성</td>
+<td>서비스 거부: 비정상 종료·재시작</td>
+<td>널 포인터 역참조는 (일부 플랫폼에서) 예외 처리를 쓸 수 있고 실제로 구현해 둔 경우가 아니면 대개 프로세스 실패로 이어지며, 예외 처리를 쓰더라도 소프트웨어를 안전한 동작 상태로 되돌리기는 여전히 매우 어려울 수 있다.</td>
+</tr>
+<tr>
+<td>무결성 / 기밀성</td>
+<td>허가되지 않은 코드·명령 실행 / 메모리 읽기 / 메모리 수정</td>
+<td>드물게 NULL이 0x0 메모리 주소와 같고 특권 코드가 그 주소에 접근할 수 있으면 메모리 읽기·쓰기가 가능해져 코드 실행으로 이어질 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 5건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항(Requirements)</td>
+<td>—</td>
+<td>이런 문제에 취약하지 않은 프로그래밍 언어를 선택한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Select a programming language that is not susceptible to these issues.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>외부에서 정보를 받는 모든 변수·데이터 저장소를 식별하고 입력값 검증을 적용해 예상한 값으로만 초기화되게 한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Identify all variables and data stores that receive information from external sources, and apply input validation to make sure that they are only initialized to expected values.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>수정되었을 수 있거나 NULL을 반환할 수 있는 함수에서 받은 포인터는 사용 전에 NULL인지 검사하고, 멀티스레드나 비동기 환경에서는 검사 전에 적절한 잠금 API로 잠그고 끝나면 해제한다 [REF-1484]. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>For any pointers that could have been modified or provided from a function that can return NULL, check the pointer for NULL before use. When working with a multithreaded or otherwise asynchronous environment, ensure that proper locking APIs are used to lock before the check, and unlock when it has finished [REF-1484].</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>값을 반환하는 모든 함수의 결과를 확인하고, 그 값을 사용하기 전에 NULL이 아닌지 검증한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Check the results of all functions that return a value and verify that the value is non-null before acting upon it.</p></div></details></td>
+<td>보통(Moderate) — 함수 반환값 확인으로 대개 충분하지만 동시성 환경에서는 경쟁조건(<a href="../362/">CWE-362</a>)에 주의해야 하며, 이 방법은 잘못 초기화된 변수 사용(<a href="https://cwe.mitre.org/data/definitions/665.html" target="_blank" rel="noopener">CWE-665</a>)은 다루지 못한다.</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>모든 변수와 데이터 저장소를 선언 시점이나 처음 사용 직전에 명시적으로 초기화한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Explicitly initialize all variables and other data stores, either during declaration or just before the first usage.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch6-integration-test/#t-05">T-05</a> 경계값·오류 주입 시험</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 장비 구성 표에서 채널 번호로 장치 설정을 찾는다. 등록되지 않은 채널이면 찾기 함수가 '없음'을 돌려준다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stddef.h&gt;
+
+typedef struct { int channel; int gain; } DeviceCfg;
+
+static DeviceCfg table[] = {{1, 10}, {2, 20}};
+
+static DeviceCfg *find_cfg(int channel)
+{
+    for (size_t i = 0; i &lt; sizeof table / sizeof table[0]; ++i) {
+        if (table[i].channel == channel) {
+            return &amp;table[i];
+        }
+    }
+    return NULL;
+}
+
+int main(void)
+{
+    DeviceCfg *cfg = find_cfg(7);            /* 등록되지 않은 채널 */
+    printf("gain %d\n", cfg-&gt;gain);          /* NULL 검사 없이 역참조 */
+    return 0;
+}</code></pre>
+<p>찾기 함수가 NULL을 돌려줄 수 있는데 검사하지 않고 역참조한다. MMU가 없는 MCU에서는 0번지 근처를 읽거나 써서 오동작이 바로 드러나지 않을 수도 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stddef.h&gt;
+
+typedef struct { int channel; int gain; } DeviceCfg;
+
+static DeviceCfg table[] = {{1, 10}, {2, 20}};
+
+static const DeviceCfg *find_cfg(int channel)
+{
+    for (size_t i = 0; i &lt; sizeof table / sizeof table[0]; ++i) {
+        if (table[i].channel == channel) {
+            return &amp;table[i];
+        }
+    }
+    return NULL;
+}
+
+int main(void)
+{
+    const DeviceCfg *cfg = find_cfg(7);
+    if (cfg == NULL) {
+        puts("channel not configured: safe default");
+        return 0;                            /* 안전 상태로 전환(D-08) */
+    }
+    printf("gain %d\n", cfg-&gt;gain);
+    return 0;
+}</code></pre>
+<p>반환값을 쓰기 전에 NULL인지 검사하고, 없으면 설계에서 정한 안전 상태로 처리한다(I-06·D-08).</p>
+<p class="ex-meta">검증: AddressSanitizer(clang) — 나쁜 예에서 <code>AddressSanitizer: (SEGV|access-violation)</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-476 Demonstrative Example 1(조회 함수가 돌려준 NULL을 검사 없이 사용) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 코드오류 5-1 &#x27;널(Null)포인터 역참조&#x27;(인쇄 162쪽) 참고</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+struct Link { int baud; };
+
+std::map&lt;std::string, Link*&gt; links;
+
+Link *lookup(const std::string &amp;name) {
+    auto it = links.find(name);
+    return it == links.end() ? nullptr : it-&gt;second;
+}
+
+int main() {
+    static Link uart0{115200};
+    links["uart0"] = &amp;uart0;
+    Link *l = lookup("uart3");               // 없는 링크
+    std::printf("%d\n", l-&gt;baud);             // nullptr 역참조
+    return 0;
+}</code></pre>
+<p>없는 이름이면 nullptr을 돌려주는 함수의 결과를 검사 없이 역참조한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;map&gt;
+#include &lt;optional&gt;
+#include &lt;string&gt;
+
+struct Link { int baud; };
+
+std::map&lt;std::string, Link&gt; links;
+
+std::optional&lt;Link&gt; lookup(const std::string &amp;name) {
+    auto it = links.find(name);
+    if (it == links.end()) {
+        return std::nullopt;                 // '없음'을 형으로 표현
+    }
+    return it-&gt;second;
+}
+
+int main() {
+    links["uart0"] = Link{115200};
+    if (auto l = lookup("uart3")) {
+        std::printf("%d\n", l-&gt;baud);
+    } else {
+        std::puts("link not configured");
+    }
+    return 0;
+}</code></pre>
+<p>'없을 수 있음'을 반환형(std::optional)에 드러내 호출자가 검사를 빠뜨리기 어렵게 한다. 값은 if (auto l = …)처럼 확인한 뒤에만 꺼낸다(검사 없이 -&gt;·*를 쓰면 여전히 미정의 동작).</p>
+<p class="ex-meta">검증: AddressSanitizer(clang) — 나쁜 예에서 <code>AddressSanitizer: (SEGV|access-violation)</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-476 Demonstrative Example 1(조회 함수가 돌려준 NULL을 검사 없이 사용) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">var sensors = new Dictionary&lt;string, string?&gt; { ["imu"] = "IMU-A", ["gps"] = null };
+string? model = sensors["gps"];          // 값이 null일 수 있다
+Console.WriteLine(model.Length);           // CS8602: null일 수 있는 참조를 역참조</code></pre>
+<p>null 허용 참조를 검사 없이 역참조한다. Nullable 분석을 켜면 컴파일 경고(CS8602)로 잡힌다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">var sensors = new Dictionary&lt;string, string?&gt; { ["imu"] = "IMU-A", ["gps"] = null };
+if (sensors.TryGetValue("gps", out string? model) &amp;&amp; model is not null)
+{
+    Console.WriteLine(model.Length);
+}
+else
+{
+    Console.WriteLine("sensor model missing");
+}</code></pre>
+<p>TryGetValue와 null 검사로 두 경우(키 없음, 값이 null)를 모두 처리한다. Nullable 경고는 오류로 올린다(LCS-08).</p>
+<p class="ex-meta">검증: .NET 컴파일러·분석기 — 나쁜 예에서 <code>CS8602</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-476 Demonstrative Example 2(없을 수 있는 속성 값을 검사 없이 사용) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+
+public class Example {
+    record Profile(String unit, int maxRate) {}
+
+    static final Map&lt;String, Profile&gt; PROFILES = new HashMap&lt;&gt;();
+
+    public static void main(String[] args) {
+        PROFILES.put("imu", new Profile("deg/s", 400));
+        Profile p = PROFILES.get("gps");     // 없는 키면 null
+        System.out.println(p.maxRate());     // NullPointerException
+    }
+}</code></pre>
+<p>Map.get은 키가 없으면 null을 돌려준다. 검사 없이 메서드를 부르면 NullPointerException으로 처리 스레드가 멈춘다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class Example {
+    record Profile(String unit, int maxRate) {}
+
+    static final Map&lt;String, Profile&gt; PROFILES = new HashMap&lt;&gt;();
+
+    public static void main(String[] args) {
+        PROFILES.put("imu", new Profile("deg/s", 400));
+        Optional&lt;Profile&gt; p = Optional.ofNullable(PROFILES.get("gps"));
+        System.out.println(p.map(Profile::maxRate)
+                            .map(String::valueOf)
+                            .orElse("profile missing: using safe default"));
+    }
+}</code></pre>
+<p>없을 수 있는 값을 Optional로 감싸 기본값 처리를 코드에 드러낸다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>NullPointerException</code> 검출, 좋은 예에서 미검출·<code>using safe default</code> 출력 확인 · 참고: MITRE CWE-476 Demonstrative Example 2·3(없을 수 있는 속성·인텐트 값을 검사 없이 사용) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 코드오류 5-1 &#x27;널(Null)포인터 역참조&#x27;(인쇄 247쪽) 참고</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class ChannelConfig:
+    device: str
+    rate_hz: int
+
+
+CONFIG = {1: ChannelConfig("imu", 200), 2: ChannelConfig("baro", 50)}
+
+
+# 장비 구성 표에서 채널 번호로 설정을 찾아 표본 주기를 정한다
+def sample_period_ms(channel):
+    cfg = CONFIG.get(channel)            # 등록되지 않은 채널이면 None
+    return 1000 // cfg.rate_hz           # None을 확인하지 않고 속성을 읽는다
+
+
+print("ch1 period:", sample_period_ms(1), "ms")
+print("ch7 period:", sample_period_ms(7), "ms")</code></pre>
+<p>dict.get()은 키가 없으면 None을 돌려주는데, 확인 없이 속성을 읽는다. 등록되지 않은 채널 번호가 들어오면 AttributeError('NoneType' object has no attribute)로 처리기가 비정상 종료한다. re.match()·찾기 함수처럼 '없음'을 None으로 돌려주는 API에서 흔하다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class ChannelConfig:
+    device: str
+    rate_hz: int
+
+
+CONFIG = {1: ChannelConfig("imu", 200), 2: ChannelConfig("baro", 50)}
+
+
+def sample_period_ms(channel) -&gt; Optional[int]:
+    cfg = CONFIG.get(channel)
+    if cfg is None:                      # '없음'을 먼저 처리한다
+        return None
+    return 1000 // cfg.rate_hz
+
+
+for ch in (1, 7):
+    period = sample_period_ms(ch)
+    print(f"ch{ch} period:", "unregistered channel" if period is None else f"{period} ms")</code></pre>
+<p>'없음'을 돌려줄 수 있는 함수는 반환형에 Optional을 적고, 쓰는 쪽에서 is None으로 먼저 처리한다(I-06). mypy·pyright로 타입 검사를 하면 Optional 값을 확인 없이 쓰는 곳을 찾을 수 있다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>AttributeError: 'NoneType' object has no attribute</code> 검출, 좋은 예에서 미검출·<code>ch7 period: unregistered channel</code> 출력 확인 · 참고: MITRE CWE-476 Demonstrative Example 2(속성이 늘 있다고 가정하고 반환값을 씀) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 코드오류 5-1 &#x27;Null Pointer 역참조&#x27;(인쇄 135쪽) 참고</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 4건)</summary><div lang="en"><p><b>Example 1.</b> This example takes an IP address from a user, verifies that it is well formed and then looks up the hostname and copies it into a buffer.</p><p><i>Bad / C</i></p><pre><code>void host_lookup(char *user_supplied_addr){
+
+  struct hostent *hp;
+  in_addr_t *addr;
+  char hostname[64];
+  in_addr_t inet_addr(const char *cp);
+
+                             /*routine that ensures user_supplied_addr is in the right format for conversion */
+
+  validate_addr_form(user_supplied_addr);
+  addr = inet_addr(user_supplied_addr);
+  hp = gethostbyaddr( addr, sizeof(struct in_addr), AF_INET);
+  strcpy(hostname, hp-&gt;h_name);
+
+}</code></pre><p>If an attacker provides an address that appears to be well-formed, but the address does not resolve to a hostname, then the call to gethostbyaddr() will return NULL. Since the code does not check the return value from gethostbyaddr (CWE-252), a NULL pointer dereference (CWE-476) would then occur in the call to strcpy().</p><p>Note that this code is also vulnerable to a buffer overflow (CWE-119).</p><p><b>Example 2.</b> In the following code, the programmer assumes that the system always has a property named &quot;cmd&quot; defined. If an attacker can control the program&#x27;s environment so that &quot;cmd&quot; is not defined, the program throws a NULL pointer exception when it attempts to call the trim() method.</p><p><i>Bad / Java</i></p><pre><code>String cmd = System.getProperty(&quot;cmd&quot;);
+cmd = cmd.trim();</code></pre><p><b>Example 3.</b> This Android application has registered to handle a URL when sent an intent:</p><p><i>Bad / Java</i></p><pre><code>                     ...
+
+IntentFilter filter = new IntentFilter(&quot;com.example.URLHandler.openURL&quot;);
+MyReceiver receiver = new MyReceiver();
+registerReceiver(receiver, filter);
+
+                     ...
+
+public class UrlHandlerReceiver extends BroadcastReceiver {
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+
+    if(&quot;com.example.URLHandler.openURL&quot;.equals(intent.getAction())) {
+      String URL = intent.getStringExtra(&quot;URLToOpen&quot;);
+      int length = URL.length();
+
+                                     ...
+
+    }
+
+  }
+
+}</code></pre><p>The application assumes the URL will always be included in the intent. When the URL is not present, the call to getStringExtra() will return null, thus causing a null pointer exception when length() is called.</p><p><b>Example 4.</b> Consider the following example of a typical client server exchange. The HandleRequest function is intended to perform a request and use a defer to close the connection whenever the function returns.</p><p><i>Bad / Go</i></p><pre><code>func HandleRequest(client http.Client, request *http.Request) (*http.Response, error) {
+
+                          response, err := client.Do(request)
+
+                          defer response.Body.Close()
+
+                          if err != nil {
+
+                                  return nil, err
+
+                          }
+  ...
+
+                     }</code></pre><p>If a user supplies a malformed request or violates the client policy, the Do method can return a nil response and a non-nil err.</p><p>This HandleRequest Function evaluates the close before checking the error. A deferred call&#x27;s arguments are evaluated immediately, so the defer statement panics due to a nil response.</p></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 동적 분석</td>
+<td>퍼징(fuzzing)·강건성 시험·오류 주입처럼 다양한 입력의 대규모 시험 모음으로 소프트웨어와 상호작용하는 동적 도구·기법으로 이 약점을 탐지할 수 있으며, 이때 동작이 느려질 수는 있어도 불안정해지거나 비정상 종료되거나 잘못된 결과를 내서는 안 된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>This weakness can be detected using dynamic tools and techniques that interact with the software using large test suites with many diverse inputs, such as fuzz testing (fuzzing), robustness testing, and fault injection. The software&#x27;s operation may slow down, but it should not become unstable, crash, or generate incorrect results.</p></div></details></td>
+<td>보통(Moderate)</td>
+</tr>
+<tr>
+<td>수동 동적 분석</td>
+<td>메모리 부족, 권한 부족, 트랜잭션 완료 전 중단, DNS 같은 기본 네트워크 서비스 차단처럼 정상 사용에서 잘 일어나지 않는 오류 조건을 일부러 일으켜 예상치 못한 동작을 감시하며, 애플리케이션이 처리하지 않아 실행 환경이 대신 잡은 예외도 애플리케이션 자체가 처리하지 못한 예상 밖 조건을 뜻할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Identify error conditions that are not likely to occur during normal usage and trigger them. For example, run the program under low memory conditions, run with insufficient privileges or permissions, interrupt a transaction before it is completed, or disable connectivity to basic network services such as DNS. Monitor the software for any unexpected behavior. If you trigger an unhandled exception or similar error that was discovered and handled by the application&#x27;s environment, it may still indicate unexpected conditions that were not handled by the application itself.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>자동 정적 분석</td>
+<td>흔히 SAST(Static Application Security Testing)라 부르는 자동 정적 분석(static analysis)은 소스코드(또는 바이너리·컴파일된 코드)를 실행하지 않고 분석해 이 약점의 일부 사례를 찾을 수 있으며, 대개 데이터 흐름·제어 흐름 모델을 만든 뒤 입력 출처('source')와 외부 구성요소나 운영체제 같은 하위 계층과 상호작용하는 목적지('sink')를 잇는 잠재적 취약 패턴을 찾는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect &quot;sources&quot; (origins of input) with &quot;sinks&quot; (destinations where the data interacts with external components, a lower layer such as the OS, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>자동 동적 분석</td>
+<td>C/C++용 AddressSanitizer(ASan) [REF-1518]처럼 컴파일 시 통합되어 메모리 안전성 오류에 대한 실행 시 오류 검사 장치를 넣는 도구를 쓴다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Use tools that are integrated during compilation to insert runtime error-checking mechanisms related to memory safety errors, such as AddressSanitizer (ASan) for C/C++ [REF-1518].</p></div></details></td>
+<td>보통(Moderate) — 오류가 있는 코드에 도달하려면 퍼징 도구가 생성하는 것과 같은 조작된 입력이 필요하고, 이런 도구는 성능을 떨어뜨릴 수 있으며 오류 상태만 보고할 뿐 오류를 낳은 원래 실수는 알려 주지 않는다.</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다.</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NULL·nullptr·null을 돌려줄 수 있는 함수(찾기, 할당, Map.get, FirstOrDefault)의 반환값이 검사 없이 역참조되는 곳을 찾는다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a>·<a href="../../ch5-implementation/#i-06">I-06</a></td>
+<td>[예시] CWE-476 예시(찾기 함수의 NULL 반환 미검사) · [CWE] CWE-476 완화책(Implementation: 반환값 null 검사) · [표준] SEI CERT EXP34-C</td>
+</tr>
+<tr>
+<td>없는 키·이름, 할당 실패를 일으키는 시험 사례로 함수가 NULL을 돌려주게 하고, 호스트 빌드는 AddressSanitizer의 SEGV 보고를, Java는 NullPointerException과 처리 스레드 중단을 확인한다.</td>
+<td><a href="../../ch6-integration-test/#t-05">T-05</a>·<a href="../../ch5-implementation/#i-10">I-10</a></td>
+<td>[예시] CWE-476 예시 검증(AddressSanitizer SEGV, NullPointerException) · [CWE] CWE-476 탐지 방법(수동 동적 분석: 메모리 부족 등 드문 오류 유발)</td>
+</tr>
+<tr>
+<td>(C#) Nullable 참조 형식 분석을 켜고 CS8602 경고를 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-08">I-08</a></td>
+<td>[예시] CWE-476 C# 예시 검증(CS8602)</td>
+</tr>
+<tr>
+<td>(C·C++) MMU가 없는 MCU에서는 0번지 접근이 비정상 종료 없이 지나갈 수 있으므로, MPU로 0번지 영역을 막은 빌드에서 같은 시험을 해 고장이 기록되는지 확인한다.</td>
+<td><a href="../../ch6-integration-test/#t-02">T-02</a></td>
+<td>[예시] CWE-476 C 예시 설명(MMU가 없는 MCU에서 오동작이 바로 드러나지 않음) · [보완]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>① 원문 탐지 방법(원문 효과성별): 보통: 자동 동적 분석 / 효과 등급 없음: 수동 동적 분석. 각 방법의 시험 활동은 6.2의 대응표를 따른다.</li>
+<li>③ SEI CERT 대응 규칙: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp34-c" target="_blank" rel="noopener">EXP34-C</a></li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-476">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (통합 및 시험 행의 호스트 새니타이저·단위시험은 이 가이드의 활동 구분으로는 구현 단계 I-10에 해당한다. 요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>원문 완화책(요구사항) 1건 → <a href="#mit-req">완화책</a></td>
+</tr>
+<tr>
+<td>설계</td>
+<td>NULL 반환 가능 API와 NULL 허용 여부를 인터페이스 명세에 명시한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>NULL을 반환할 수 있는 함수 결과와 포인터 인자를 사용 전 검사하고, 다중 태스크·비동기 환경에서는 검사 전에 잠근다. C++은 참조자·std::optional·gsl::not_null을 활용한다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>Optional과 Objects.requireNonNull()을 사용하고 @Nullable/@NonNull 어노테이션으로 정적 분석(static analysis)을 보조한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>정적 분석(SpotBugs, clang static analyzer), 오류 경로 주입 시험, -fsanitize=null을 켠 동적 분석을 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>API 반환 규약 변경 시 호출부 전체를 영향분석한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>MMU(메모리 관리 장치)가 없는 MCU에서 주소 0은 유효 메모리(벡터 테이블 등)일 수 있어 비정상 종료 없이 오동작하므로 MPU(메모리 보호 장치)로 0번지 영역 접근을 차단하고 역참조 전에 NULL을 검사한다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 4건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-08">D-08</a> 오류 처리·안전 상태 설계 (설계)</li>
+<li><a href="../../ch5-implementation/#i-05">I-05</a> 정수·포인터·메모리 안전 코딩 (구현 · 조건: 언어 런타임(L1)이 '네이티브-비안전')</li>
+<li><a href="../../ch5-implementation/#i-06">I-06</a> 오류·반환값·예외 처리 (구현)</li>
+<li><a href="../../ch6-integration-test/#t-05">T-05</a> 경계값·오류 주입 시험 (통합 및 시험)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 15건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>탑재 환경 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#pc-06">PC-06</a> 동적 분석 상시 수행, <a href="../../appendix/c-environment-guides/#mcu-06">MCU-06</a> 주소 0·레지스터 접근 관리</td>
+</tr>
+<tr>
+<td>운영체제/런타임 (4건)</td>
+<td><a href="../../appendix/c-environment-guides/#win-07">WIN-07</a> Windows 동적 결함 검출, <a href="../../appendix/c-environment-guides/#lnx-07">LNX-07</a> 타깃 동적 분석, <a href="../../appendix/c-environment-guides/#vxw-06">VXW-06</a> 동적 할당 규율, <a href="../../appendix/c-environment-guides/#frt-03">FRT-03</a> 오버플로·할당 실패 훅</td>
+</tr>
+<tr>
+<td>IDE/컴파일러 (5건)</td>
+<td><a href="../../appendix/c-environment-guides/#msvc-05">MSVC-05</a> C# 프로젝트 보안 설정, <a href="../../appendix/c-environment-guides/#msvc-07">MSVC-07</a> MISRA·코드 분석 병행, <a href="../../appendix/c-environment-guides/#gcc-02">GCC-02</a> 기본 경고 집합, <a href="../../appendix/c-environment-guides/#gcc-06">GCC-06</a> 정적 분석 한계 인지, <a href="../../appendix/c-environment-guides/#gcc-07">GCC-07</a> 미정의 동작 완화 옵션 관리</td>
+</tr>
+<tr>
+<td>기반 소프트웨어 (1건)</td>
+<td><a href="../../appendix/c-environment-guides/#bsp-04">BSP-04</a> 래퍼에서 검증·반환값 확인</td>
+</tr>
+<tr>
+<td>개발 언어 (3건)</td>
+<td><a href="../../appendix/c-environment-guides/#lc-06">LC-06</a> 포맷 스트링·반환값 처리, <a href="../../appendix/c-environment-guides/#lcpp-09">LCPP-09</a> 호스트 새니타이저와 타깃 코드 실행률, <a href="../../appendix/c-environment-guides/#lcs-08">LCS-08</a> 예외와 null 안전</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>SEI CERT 규칙</strong>: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/expressions-exp/exp34-c" target="_blank" rel="noopener">EXP34-C</a></li>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="https://cwe.mitre.org/data/definitions/710.html" target="_blank" rel="noopener">CWE-710</a>, <a href="https://cwe.mitre.org/data/definitions/754.html" target="_blank" rel="noopener">CWE-754</a></li>
+<li><strong>연관 항목</strong>: 앞설 수 있음(CanFollow) <a href="../1325/">CWE-1325</a>, <a href="https://cwe.mitre.org/data/definitions/252.html" target="_blank" rel="noopener">CWE-252</a>, <a href="../362/">CWE-362</a>, <a href="../789/">CWE-789</a></li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 24건 중 앞의 8건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2024-41130" target="_blank" rel="noopener">CVE-2024-41130</a></td>
+<td>LLM 추론용 C++ 라이브러리에서 읽기 연산이 실패하면 널 포인터 역참조가 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>C++ library for LLM inference has NULL pointer dereference if a read operation fails</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2005-3274" target="_blank" rel="noopener">CVE-2005-3274</a></td>
+<td>테이블을 수정하는 중에 타이머가 동작하면 경쟁조건으로 테이블이 손상되어 결과적으로 널 포인터 역참조가 일어나며, 잠금 문제도 관련된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>race condition causes a table to be corrupted if a timer activates while it is being modified, leading to resultant NULL dereference; also involves locking.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2002-1912" target="_blank" rel="noopener">CVE-2002-1912</a></td>
+<td>대량의 패킷으로 널 포인터 역참조가 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>large number of packets leads to NULL dereference</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2005-0772" target="_blank" rel="noopener">CVE-2005-0772</a></td>
+<td>잘못된 오류 상태 값을 담은 패킷이 널 포인터 역참조를 일으킨다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>packet with invalid error status value triggers NULL dereference</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-4895" target="_blank" rel="noopener">CVE-2009-4895</a></td>
+<td>연쇄: 인자 값에 대한 경쟁조건으로 널 포인터 역참조가 일어날 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: race condition for an argument value, possibly resulting in NULL dereference</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-29652" target="_blank" rel="noopener">CVE-2020-29652</a></td>
+<td>Go용 ssh 컴포넌트에서 클라이언트가 SSH 서버에 서비스 거부(nil 포인터 역참조)를 일으킬 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>ssh component for Go allows clients to cause a denial of service (nil pointer dereference) against SSH servers.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-2692" target="_blank" rel="noopener">CVE-2009-2692</a></td>
+<td>연쇄: 초기화되지 않은 핸들러 함수를 가리키는 미구현 네트워크 소켓 연산을 사용하면(<a href="https://cwe.mitre.org/data/definitions/456.html" target="_blank" rel="noopener">CWE-456</a>) 널 포인터 역참조(CWE-476)로 비정상 종료가 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: Use of an unimplemented network socket operation pointing to an uninitialized handler function (CWE-456) causes a crash because of a null pointer dereference (CWE-476).</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3547" target="_blank" rel="noopener">CVE-2009-3547</a></td>
+<td>연쇄: 경쟁조건(<a href="../362/">CWE-362</a>)으로 자원에 대한 연산 전에 자원이 해제될 수 있고, 그 결과 널 포인터 역참조(CWE-476)가 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: race condition (CWE-362) might allow resource to be released before operating on it, leading to NULL dereference (CWE-476)</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>7 Pernicious Kingdoms</td><td></td><td lang="en">Null Dereference</td></tr>
+<tr><td>CLASP</td><td></td><td lang="en">Null-pointer dereference</td></tr>
+<tr><td>PLOVER</td><td></td><td lang="en">Null Dereference (Null Pointer Dereference)</td></tr>
+<tr><td>OWASP Top Ten 2004</td><td>A9</td><td lang="en">Denial of Service</td></tr>
+<tr><td>Software Fault Patterns</td><td>SFP7</td><td lang="en">Faulty Pointer Use</td></tr>
+<tr><td>OpenSSF Secure Coding Guide for Python</td><td>pyscg-0034</td><td lang="en">Check for None Values</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/476.html" target="_blank" rel="noopener">CWE-476</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../474/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-474 일관성 없는 구현을 가진 함수 사용">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-474 일관성 없는 구현을 가진 함수 사용
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../478/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-478 다중 조건식의 default 누락">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-478 다중 조건식의 default 누락
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

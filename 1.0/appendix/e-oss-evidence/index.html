@@ -1,0 +1,4208 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/appendix/e-oss-evidence/">
+      
+      
+        <link rel="prev" href="../d-security-rules/">
+      
+      
+        <link rel="next" href="../f-glossary/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>부록 E 참조 오픈소스 프로젝트와 근거 목록 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#부록-e-참조-오픈소스-프로젝트와-근거-목록" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              부록 E 참조 오픈소스 프로젝트와 근거 목록
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cwe/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe/view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#e-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E-1. 환경별 참조 프로젝트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E-2. 지침별 대표 근거
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#e-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E-1. 환경별 참조 프로젝트
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E-2. 지침별 대표 근거
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="부록-e-참조-오픈소스-프로젝트와-근거-목록">부록 E. 참조 오픈소스 프로젝트와 근거 목록<a class="headerlink" href="#부록-e-참조-오픈소스-프로젝트와-근거-목록" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#e-1">E-1. 환경별 참조 프로젝트</a></li><li><a href="#e-2">E-2. 지침별 대표 근거</a></li></ul></details>
+<blockquote>
+<p><strong>이 부록의 역할.</strong> 실제 무기체계 과제는 공개할 수 없어 성격이 가까운 공개 프로젝트(무인기·우주 비행 소프트웨어, RTOS, 칩 제조사 SDK 등)를 참조 프로젝트로 삼았다.</p>
+<p><strong>읽는 법.</strong> GitHub 근거는 태그로 고정한 원문을, 벤더 문서·CVE 기록 같은 웹 문서는 조회일을 적은 원문을, 논문은 원문 파일을 글자 그대로 대조했다. 확인일은 항목에 적힌 조회일을 따르고, 따로 적지 않은 항목은 2026. 10. 15.~2026. 10. 16.이다. GitHub 근거의 링크는 같은 태그의 원문이다. 이 사례는 지침이 실제 임베디드 코드에 쓰인 예다. 무기체계 적합성을 입증하지 않는다. 근거 원문의 문장은 저작권을 고려해 싣지 않으며, 공식 링크와 위치로 대조한다. 각 자료의 조건은 <a href="../../notices/">출처와 이용 조건</a>에 있다.</p>
+</blockquote>
+<h2 id="e-1">E-1. 환경별 참조 프로젝트<a class="headerlink" href="#e-1" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>환경</th>
+<th>프로젝트</th>
+<th>고정 판(태그)</th>
+<th>고른 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PC</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol" target="_blank" rel="noopener">QGroundControl</a></td>
+<td>v5.1.5</td>
+<td>MAVLink 기반 C++/Qt 지상통제 소프트웨어로, 무인기 지상통제 워크스테이션 응용과 같은 PC·워크스테이션 환경(Windows·Linux·macOS)의 데이터링크 수신·로그·빌드 보호 기능을 보여 준다.</td>
+</tr>
+<tr>
+<td>PC</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>무인기 비행 소프트웨어로, 호스트 PC에서 도는 SITL·단위시험·퍼징 시험 구조와 MAVLink 입력 처리 결함(CVE) 사례를 제공한다.</td>
+</tr>
+<tr>
+<td>PC</td>
+<td><a href="https://github.com/yamcs/yamcs" target="_blank" rel="noopener">Yamcs</a></td>
+<td>yamcs-5.13.6</td>
+<td>위성·임무 관제 서버로 역할별 권한을 설정 파일로 정의해 운용자 권한 모델과 구조가 닮았다.</td>
+</tr>
+<tr>
+<td>PC</td>
+<td><a href="https://github.com/microsoft/AttackSurfaceAnalyzer" target="_blank" rel="noopener">Attack Surface Analyzer</a></td>
+<td>v2.3.331</td>
+<td>설치 전후 운영체제 보안 구성을 비교하는 Microsoft 도구로 운용 구성 점검의 수단을 보여 준다.</td>
+</tr>
+<tr>
+<td>PC</td>
+<td><a href="https://doi.org/10.6028/NIST.SP.800-40r4" target="_blank" rel="noopener">NIST SP 800-40 Rev. 4</a></td>
+<td>2022. 4.</td>
+<td>기업 패치 관리 계획의 공식 지침이다.</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td><a href="https://github.com/nasa/cFE" target="_blank" rel="noopener">NASA cFE/OSAL (cFS)</a></td>
+<td>v7.0.1 (OSAL v7.0.1)</td>
+<td>우주 비행 소프트웨어 프레임워크로 Linux·VxWorks·RTEMS 위에서 소프트웨어 버스·태스크 우선순위·세마포어를 쓰는 임무 소프트웨어 구조가 무기체계 임베디드 컴퓨터와 유사하다.</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>Linux 보드(POSIX 타깃)와 NuttX 타깃을 함께 지원하는 무인기 소프트웨어로, 호스트 새니타이저 시험과 직렬(CRSF)·MAVLink 입력 결함 사례가 있다.</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td><a href="https://github.com/u-boot/u-boot" target="_blank" rel="noopener">U-Boot</a></td>
+<td>v2026.07</td>
+<td>임베디드 리눅스 SBC의 사실상 표준 부트로더로, 서명 부팅(verified boot)과 부트로더 콘솔 설정·결함 사례를 보여 준다.</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td><a href="https://docs.yoctoproject.org/5.2.4/" target="_blank" rel="noopener">Yocto Project (Poky)</a></td>
+<td>5.2.4</td>
+<td>임베디드 리눅스 이미지 빌드 체계로, 읽기 전용 루트 파일시스템·SBOM·CVE 점검 기능이 SBC 이미지 최소화·취약점 추적 지침과 대응한다. LNX 행은 같은 프로젝트의 poky 저장소를 yocto-5.0.4 태그로 고정했다. 문서 근거와 저장소 근거의 고정 판이 달라 두 판을 함께 쓴다.</td>
+</tr>
+<tr>
+<td>SBC</td>
+<td><a href="https://www.osadl.org/qa" target="_blank" rel="noopener">OSADL QA Farm</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>산업용 임베디드 Linux 보드의 장기 안정성과 메모리 누수를 감시하는 공개 시험 시설이다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/ArduPilot/ardupilot" target="_blank" rel="noopener">ArduPilot</a></td>
+<td>Copter-4.7.1</td>
+<td>STM32 + ChibiOS 기반 무인기 비행 제어 펌웨어로, 워치독 복귀·서명 부트로더·호스트 새니타이저 시험 등 MCU 안전·보호 기능이 무기체계 MCU 환경과 유사하다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>NuttX 위의 STM32 비행 제어 펌웨어로 failsafe 구성과 호스트 GTest 단위시험 구조를 제공한다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr" target="_blank" rel="noopener">ArduinoCore-avr / avr-libc</a></td>
+<td>1.8.7 (avr-libc 사용자 매뉴얼)</td>
+<td>8비트 AVR(ATmega) 대상 코어와 C 라이브러리로, 16비트 int·ISR 공유변수 보호·퓨즈/락 비트 설정이 지침의 AVR 항목과 직접 대응한다. 같은 코어를 BM·AVR 행에서는 1.8.6으로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/apache/nuttx" target="_blank" rel="noopener">Apache NuttX</a></td>
+<td>nuttx-13.1.0</td>
+<td>PX4가 쓰는 MCU용 RTOS로 스택 페인팅(NuttX 옵션명 stack coloration) 같은 스택 사용량 감시 옵션을 정의한다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/nasa/fprime" target="_blank" rel="noopener">F Prime (F´)</a></td>
+<td>v4.4.1</td>
+<td>NASA 비행 소프트웨어 프레임워크로 초기화 때 메모리를 확보하는 설계를 문서화한다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://www.freertos.org/" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>MCU용 RTOS로 정적 할당의 장단점을 공식 문서로 설명한다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/STMicroelectronics/cmsis_device_f4" target="_blank" rel="noopener">STM32CubeF4 CMSIS Device</a></td>
+<td>v2.6.9</td>
+<td>MCU 벤더 헤더가 고정 주소 레지스터를 정의하는 방식을 보여 준다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver" target="_blank" rel="noopener">stm32f4xx_hal_driver</a></td>
+<td>v1.8.3</td>
+<td>MCU 벤더 HAL의 인자 검사를 보여 준다.</td>
+</tr>
+<tr>
+<td>MCU</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Plus-TCP" target="_blank" rel="noopener">FreeRTOS-Plus-TCP</a></td>
+<td>V4.4.1</td>
+<td>MISRA 편차를 규칙별로 기록하는 형식을 공개한다.</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk" target="_blank" rel="noopener">C2000Ware (TI C28x)</a></td>
+<td>REL_C2000Ware_v6.00.01.00</td>
+<td>CHAR_BIT=16인 TI C2000 DSP 계열 SDK로 지침의 C2000 자료형·DMA·링커 영역·컴파일러 고정 항목을 직접 보여 준다.</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td><a href="https://github.com/ARM-software/CMSIS-DSP" target="_blank" rel="noopener">CMSIS-DSP</a></td>
+<td>v1.17.0</td>
+<td>Q15/Q31 고정소수점 신호처리 라이브러리로 포화·0 나눗셈 처리와 기준 패턴 비교 시험 구조를 공개한다.</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td><a href="https://github.com/ARM-software/CMSIS_6" target="_blank" rel="noopener">CMSIS_6 (Arm CMSIS-Core)</a></td>
+<td>v6.4.0</td>
+<td>Cortex-M DSP 코어의 D-Cache 무효화·정리 함수를 제공해 DMA 캐시 일관성 지침과 대응한다.</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td><a href="https://github.com/danmar/cppcheck" target="_blank" rel="noopener">cppcheck</a></td>
+<td>2.22.0</td>
+<td>정적 분석 도구로 대상 플랫폼의 char_bit·자료형 크기를 플랫폼 파일로 설정하는 구조가 '정적 분석 타깃 설정' 지침과 대응한다.</td>
+</tr>
+<tr>
+<td>DSP</td>
+<td><a href="https://github.com/thesofproject/sof" target="_blank" rel="noopener">Sound Open Firmware</a></td>
+<td>v2.15.1</td>
+<td>오디오 DSP 펌웨어로 주기당 처리 예산과 과부하 처리를 데이터 구조에 둔다.</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td><a href="https://github.com/Xilinx/embeddedsw" target="_blank" rel="noopener">Xilinx embeddedsw (ZynqMP FSBL, xilskey)</a></td>
+<td>xilinx_v2026.1</td>
+<td>Zynq UltraScale+ MPSoC(ARM + FPGA)의 FSBL·키 프로그래밍 라이브러리로, XMPU/XPPU 보호·eFUSE/BBRAM 키·비트스트림 인증 등 SoC 신뢰 기점 지침을 직접 보여 준다.</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td><a href="https://github.com/u-boot/u-boot" target="_blank" rel="noopener">U-Boot</a></td>
+<td>v2026.07</td>
+<td>SoC 보드의 2단계 부트로더로 서명된 FIT 부팅 체인을 구현한다.</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td><a href="https://github.com/torvalds/linux" target="_blank" rel="noopener">Linux kernel</a></td>
+<td>v6.6</td>
+<td>이기종 코어 메시지 전달(rpmsg) 드라이버가 수신 길이를 검증한다.</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td><a href="https://github.com/TrustedFirmware-A/tf-a-tests" target="_blank" rel="noopener">TF-A Tests</a></td>
+<td>v2.15.0</td>
+<td>Arm 보안 펌웨어 시험 묶음으로 DMA 격리 부정 시험을 담는다.</td>
+</tr>
+<tr>
+<td>SOC</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>메모리 보호 경계 위반을 기대 결과로 삼는 시험을 공개한다.</td>
+</tr>
+<tr>
+<td>WIN</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/" target="_blank" rel="noopener">Microsoft Learn (Win32·MSVC 공식 문서)</a></td>
+<td>2026. 10. 15. 조회</td>
+<td>Windows 지휘통제·정비용 PC 소프트웨어의 DLL 검색 순서, 서비스 계정, 컴파일러 보안 옵션을 정의하는 1차 벤더 문서다.</td>
+</tr>
+<tr>
+<td>WIN</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol" target="_blank" rel="noopener">QGroundControl</a></td>
+<td>v5.1.5</td>
+<td>무인기 지상통제 소프트웨어로 Windows(MSVC) 빌드를 공식 제공하며 cmake/modules/Hardening.cmake에 MSVC 보안 링크 옵션을 적용해 지휘통제 PC 소프트웨어와 성격이 가깝다.</td>
+</tr>
+<tr>
+<td>LNX</td>
+<td><a href="https://github.com/yoctoproject/poky" target="_blank" rel="noopener">Yocto Project poky</a></td>
+<td>yocto-5.0.4</td>
+<td>임베디드 Linux SBC 이미지를 빌드하는 참조 배포판으로 security_flags.inc, create-spdx, cve-check 등 하드닝·SBOM·CVE 추적 설정이 모두 공개돼 있다. SBC 행은 같은 프로젝트의 문서를 5.2.4 판으로 고정했다. 문서 근거와 저장소 근거의 고정 판이 달라 두 판을 함께 쓴다.</td>
+</tr>
+<tr>
+<td>LNX</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol" target="_blank" rel="noopener">QGroundControl</a></td>
+<td>v5.1.5</td>
+<td>무인기 지상국 소프트웨어로 Linux 빌드에 ASan/UBSan 옵션을 CMake로 제공한다.</td>
+</tr>
+<tr>
+<td>LNX</td>
+<td><a href="https://github.com/torvalds/linux" target="_blank" rel="noopener">Linux kernel (Kconfig)</a></td>
+<td>v6.6</td>
+<td>임베디드 Linux 커널 하드닝 설정(STRICT_DEVMEM)의 정의 원문이다.</td>
+</tr>
+<tr>
+<td>VXW</td>
+<td><a href="https://github.com/nasa/osal" target="_blank" rel="noopener">NASA OSAL (cFS)</a></td>
+<td>v7.0.1</td>
+<td>우주 비행 소프트웨어 프레임워크로 VxWorks 커널(src/os/vxworks)과 RTP(src/os/vxworks-rtp) 구현을 함께 공개한다.</td>
+</tr>
+<tr>
+<td>VXW</td>
+<td><a href="https://www.windriver.com/security/announcements/tcp-ip-network-stack-ipnet-urgent11" target="_blank" rel="noopener">Wind River VxWorks 보안 공지·CVE</a></td>
+<td>2026. 10. 15. 조회</td>
+<td>VxWorks 6.x/7 IPnet(Urgent/11), WDB, 하드코드된 계정 등 지침이 막으려는 결함이 실제 CVE로 공개된 사례다.</td>
+</tr>
+<tr>
+<td>VXW</td>
+<td><a href="https://github.com/DLR-FT/a653rs-linux" target="_blank" rel="noopener">a653rs-linux</a></td>
+<td>0.2.0</td>
+<td>DLR-FT가 공개한 ARINC 653 하이퍼바이저로 파티션 시간 구성과 샘플링 채널 구성을 보여 준다. VxWorks 653 자료는 아니다.</td>
+</tr>
+<tr>
+<td>VXW</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>타깃 코드 실행률 측정의 메모리 제약을 문서로 밝힌다. VxWorks 자료는 아니다.</td>
+</tr>
+<tr>
+<td>VXW</td>
+<td><a href="https://www.rapitasystems.com/" target="_blank" rel="noopener">Rapita Systems</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>임베디드 코드 실행률 도구 벤더로 계측 오버헤드 측정 사례를 공개한다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://github.com/nasa/osal" target="_blank" rel="noopener">NASA OSAL (cFS)</a></td>
+<td>v7.0.1</td>
+<td>RTOS를 얇은 추상화 계층 뒤로 격리하는 공개 사례다(pSOS 포트는 없으며 설계 패턴 근거로만 인용).</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel MISRA.md / SEI CERT C</a></td>
+<td>V11.1.0</td>
+<td>pSOS 자체의 공개 기술 문서가 없어 서비스콜 반환값·포인터 무효화 같은 일반 C 규칙의 공개 근거만 보조로 쓴다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://github.com/cisagov/CSAF" target="_blank" rel="noopener">CISA ICSA-19-211-01</a></td>
+<td>커밋 3c2594d</td>
+<td>제어 장치의 네트워크 노출을 줄이는 공식 권고다. pSOS 자료는 아니다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://github.com/cppcheck-opensource/cppcheck" target="_blank" rel="noopener">cppcheck</a></td>
+<td>2.22.0</td>
+<td>임베디드 비표준 문법을 다루는 정적 분석 도구 문서다. pSOS 자료는 아니다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>실제 보드 회귀 자동화 사례다. pSOS 자료는 아니다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://docs.yoctoproject.org/" target="_blank" rel="noopener">Yocto Project</a></td>
+<td>5.0.4</td>
+<td>빌드 소스 보존 수단을 문서화한다. pSOS 자료는 아니다.</td>
+</tr>
+<tr>
+<td>PSOS</td>
+<td><a href="https://developer.hashicorp.com/packer" target="_blank" rel="noopener">Packer</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>VM 이미지 체크섬 생성 수단을 문서화한다.</td>
+</tr>
+<tr>
+<td>FRT</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>V11.1.0</td>
+<td>MCU용 소형 커널로 지침의 MPU 포트, heap_x, 스택 오버플로 검출, FromISR API가 모두 소스에 정의돼 있다(FreeRTOS 202406-LTS 포함 버전).</td>
+</tr>
+<tr>
+<td>FRT</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Plus-TCP" target="_blank" rel="noopener">FreeRTOS-Plus-TCP</a></td>
+<td>V4.4.1</td>
+<td><a href="../c-environment-guides/#frt-06">FRT-06</a>이 다루는 TCP/IP 스택이며 ISN 난수 함수와 ping 응답 설정이 소스에 정의돼 있다.</td>
+</tr>
+<tr>
+<td>FRT</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-LTS" target="_blank" rel="noopener">FreeRTOS-LTS</a></td>
+<td>202604.01-LTS</td>
+<td>LTS 라이브러리 구성과 지원 기간을 공개한다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr" target="_blank" rel="noopener">arduino/ArduinoCore-avr</a></td>
+<td>1.8.6</td>
+<td>OS 없이 ISR과 메인 루프만으로 동작하는 8비트 MCU 펌웨어 코어로 ISR 공유 변수와 인터럽트 임계구역 처리가 공개돼 있다. MCU 행은 같은 코어를 1.8.7(avr-libc 사용자 매뉴얼)로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/" target="_blank" rel="noopener">avr-libc 사용자 매뉴얼</a></td>
+<td>2026. 10. 15. 조회</td>
+<td>베어메탈 AVR의 volatile, util/atomic.h, 힙·스택 충돌 및 미사용 인터럽트 벡터 동작을 설명하는 공식 문서다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/ARM-software/CMSIS_5" target="_blank" rel="noopener">ARM-software/CMSIS_5</a></td>
+<td>5.9.0</td>
+<td>Cortex-M 베어메탈의 스타트업 코드, 기본 핸들러, 링커 스크립트(스택·힙 점검) 참조 구현이다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver" target="_blank" rel="noopener">STMicroelectronics/stm32f4xx_hal_driver</a></td>
+<td>v1.8.3</td>
+<td>MCU 벤더 HAL로 플래시 읽기보호(RDP) 레벨 설정을 정의한다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/mcu-tools/mcuboot" target="_blank" rel="noopener">mcu-tools/mcuboot</a></td>
+<td>v2.1.0</td>
+<td>MCU 부트로더로 보안 카운터 기반 롤백 방지 인터페이스를 정의한다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>V11.1.0</td>
+<td>스택 페인팅과 여유 계산 구현을 공개한다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/" target="_blank" rel="noopener">GCC 매뉴얼</a></td>
+<td>14.2.0</td>
+<td>정적 스택 사용량 출력 옵션의 공식 문서다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>스택 침범·워치독 시험과 모듈 형상 고정 사례를 공개한다.</td>
+</tr>
+<tr>
+<td>BM</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>고장 주입 기능을 문서화한다.</td>
+</tr>
+<tr>
+<td>WRW</td>
+<td><a href="https://github.com/nasa/osal" target="_blank" rel="noopener">nasa/osal</a></td>
+<td>v7.0.1</td>
+<td>NASA 비행 소프트웨어 추상화 계층으로 VxWorks 커널용 BSP(generic-vxworks)와 RTP 전용 BSP(generic-vxworks-rtp)를 모두 두어 무기체계 VxWorks 과제의 커널/RTP 구성과 닮았다.</td>
+</tr>
+<tr>
+<td>WRW</td>
+<td><a href="https://www.windriver.com/resource/vxworks-datasheet" target="_blank" rel="noopener">Wind River VxWorks 데이터시트</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>현행 VxWorks 보호 기능 목록의 공식 공개 자료다.</td>
+</tr>
+<tr>
+<td>WRW</td>
+<td><a href="https://github.com/torvalds/linux" target="_blank" rel="noopener">Linux kernel</a></td>
+<td>v6.6</td>
+<td>아키텍처·컴파일러 지원을 확인한 뒤 카나리를 켜는 구성 사례다. VxWorks 자료는 아니다.</td>
+</tr>
+<tr>
+<td>WRW</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>ISR에서 쓸 수 있는 API 제한과 스택 실측 사례다. VxWorks 자료는 아니다.</td>
+</tr>
+<tr>
+<td>WRW</td>
+<td><a href="https://www.rapitasystems.com/" target="_blank" rel="noopener">Rapita Systems</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>계측 오버헤드 측정 사례를 공개한 벤더다.</td>
+</tr>
+<tr>
+<td>CCS</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk" target="_blank" rel="noopener">TexasInstruments/c2000ware-core-sdk</a></td>
+<td>REL_C2000Ware_v26.02.00.00.LTS</td>
+<td>C28x 기반 모터·전력 제어 MCU용 TI 공식 SDK로 링커 명령 파일, DCSM 코드 보안, EALLOW/volatile 레지스터 접근이 실제로 구현되어 있다.</td>
+</tr>
+<tr>
+<td>CCS</td>
+<td><a href="https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf" target="_blank" rel="noopener">TI 컴파일러 사용자 가이드 (SPRU514AA C28x v25.11.0.LTS, SPNU151W ARM v20.2.0.LTS, tiarmclang 5.1.0.LTS)</a></td>
+<td>SPRU514AA 2026-03</td>
+<td>CCS가 쓰는 cl2000·armcl·tiarmclang의 옵션과 16비트 char 처리를 벤더 문서로 직접 확인한다.</td>
+</tr>
+<tr>
+<td>CCS</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>V11.1.0</td>
+<td>TI MCU에서도 쓰는 RTOS로 configCHECK_FOR_STACK_OVERFLOW 정의가 지침의 RTOS 스택 오버플로 감지 항목과 직접 대응한다.</td>
+</tr>
+<tr>
+<td>CCS</td>
+<td><a href="https://software-dl.ti.com/ccs/esd/documents/users_guide/ccs_project-management.html" target="_blank" rel="noopener">TI Code Composer Studio</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>빌드 도구 버전 지정의 공식 문서다.</td>
+</tr>
+<tr>
+<td>MSVC</td>
+<td><a href="https://learn.microsoft.com/" target="_blank" rel="noopener">Microsoft Learn (MSVC·.NET·Visual Studio 공식 문서)</a></td>
+<td>조회일 2026. 10. 15.</td>
+<td>ArduPilot/MissionPlanner(Windows C#/.NET 지상국)를 후보로 봤으나 csproj가 XML이라 fv 원문 대조(태그 제거)로 근거 줄을 확정할 수 없어 쓰지 못했고, 옵션별 공식 문서를 근거로 삼았다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/" target="_blank" rel="noopener">avr-libc</a></td>
+<td>2.1.0 (조회일 2026. 10. 15.)</td>
+<td>Atmel/Microchip Studio가 번들하는 avr-gcc의 표준 C 라이브러리로 malloc·PROGMEM·atomic 문서가 지침과 일대일 대응한다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr" target="_blank" rel="noopener">arduino/ArduinoCore-avr</a></td>
+<td>1.8.6</td>
+<td>avr-gcc로 ATmega를 빌드하는 대표 오픈소스 코어로 실제 컴파일 플래그(경고 기본 -w)를 보여준다. MCU 행은 같은 코어를 1.8.7(avr-libc 사용자 매뉴얼)로 고정했다. 근거 행마다 원장에서 고정한 판이 달라 두 판을 함께 쓴다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf" target="_blank" rel="noopener">Microchip ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트</a></td>
+<td>DS40002061A</td>
+<td>락 비트·퓨즈·debugWIRE 정책의 벤더 원문이다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://onlinedocs.microchip.com/" target="_blank" rel="noopener">Microchip MPLAB X IDE 문서</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>코드 실행률 기능의 공식 문서다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio" target="_blank" rel="noopener">Microchip Studio 공식 페이지·릴리스 노트</a></td>
+<td>조회일 2026. 11. 2., DS50002917C</td>
+<td>IDE 이름 변경과 신규 설계 비권장 안내의 공식 자료다.</td>
+</tr>
+<tr>
+<td>AVR</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>작은 타깃의 코드 실행률 측정 제약을 문서로 밝힌다. AVR 자료는 아니다.</td>
+</tr>
+<tr>
+<td>GCC</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/" target="_blank" rel="noopener">GCC 매뉴얼</a></td>
+<td>14.2.0 (일부 9.1.0·12.1.0·14.1.0)</td>
+<td>옵션별 정의와 도입 버전을 벤더(프로젝트) 원문으로 확인한다.</td>
+</tr>
+<tr>
+<td>GCC</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4/PX4-Autopilot</a></td>
+<td>v1.16.1</td>
+<td>무인기 비행 소프트웨어로 GCC 경고 -Wall -Wextra -Werror 정책을 CMake에 고정해 두었다.</td>
+</tr>
+<tr>
+<td>GCC</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">zephyrproject-rtos/zephyr</a></td>
+<td>v4.2.0</td>
+<td>베어메탈급 임베디드 RTOS가 스택 카나리 심볼(__stack_chk_guard)을 직접 구현하고 libc별 FORTIFY 지원을 구분하는 실제 사례다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver" target="_blank" rel="noopener">STMicroelectronics/stm32f4xx_hal_driver</a></td>
+<td>v1.8.5</td>
+<td>칩 제조사 HAL의 대표 사례로 HAL_StatusTypeDef, assert_param/USE_FULL_ASSERT, RDP 등 지침이 지목한 요소가 모두 들어 있다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/ArduPilot/ardupilot" target="_blank" rel="noopener">ArduPilot/ardupilot</a></td>
+<td>Copter-4.5.7</td>
+<td>무인기 비행 소프트웨어가 AP_HAL 추상화 계층으로 하드웨어 접근을 분리한 사례다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk" target="_blank" rel="noopener">TexasInstruments/c2000ware-core-sdk</a></td>
+<td>REL_C2000Ware_v26.02.00.00.LTS</td>
+<td>지침이 예로 든 C2000Ware 자체이며 DCSM 보안 설정을 포함한다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/mcu-tools/mcuboot" target="_blank" rel="noopener">MCUboot</a></td>
+<td>v2.1.0</td>
+<td>개발용 키를 양산에 쓰지 말라고 안내한다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr" target="_blank" rel="noopener">Zephyr</a></td>
+<td>v4.2.0</td>
+<td>드라이버 오류 주입 API를 공개한다.</td>
+</tr>
+<tr>
+<td>BSP</td>
+<td><a href="https://github.com/torvalds/linux" target="_blank" rel="noopener">Linux kernel</a></td>
+<td>v6.6</td>
+<td>드라이버 계층 오류 주입 기능을 문서화한다.</td>
+</tr>
+<tr>
+<td>OSS</td>
+<td><a href="https://docs.zephyrproject.org/4.2.0/develop/west/zephyr-cmds.html" target="_blank" rel="noopener">zephyrproject-rtos/zephyr 문서 · Yocto Project 문서</a></td>
+<td>Zephyr 4.2.0 · Yocto 5.0.4</td>
+<td>임베디드 OSS 배포판이 SPDX SBOM(west spdx, create-spdx)과 CVE 점검(cve-check)을 공식 기능으로 제공한다.</td>
+</tr>
+<tr>
+<td>OSS</td>
+<td><a href="https://github.com/Mbed-TLS/mbedtls" target="_blank" rel="noopener">Mbed-TLS/mbedtls · openssl/openssl</a></td>
+<td>v3.6.7 · openssl-3.6.5</td>
+<td>지침이 예로 든 OpenSSL과 임베디드 TLS 라이브러리의 기능 제거 옵션(config.h, no-*)을 확인한다.</td>
+</tr>
+<tr>
+<td>OSS</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>V11.1.0</td>
+<td>지침이 예로 든 FreeRTOS가 MISRA 편차를 문서화한 사례다(MISRA.md).</td>
+</tr>
+<tr>
+<td>LC</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel" target="_blank" rel="noopener">FreeRTOS-Kernel</a></td>
+<td>V11.3.1</td>
+<td>MCU용 RTOS 커널로 MISRA C:2012 준수와 규칙 편차(deviation)를 MISRA.md·Coverity 설정에 공개해, 무기체계 C 코드의 MISRA 편차 관리와 같은 구조를 보여 준다.</td>
+</tr>
+<tr>
+<td>LC</td>
+<td><a href="https://github.com/nasa/cFS" target="_blank" rel="noopener">NASA cFE/OSAL (cFS)</a></td>
+<td>v7.0.1 (cFE v7.0.1, osal v7.0.1)</td>
+<td>비행 소프트웨어 프레임워크로 C99, -Werror, CodeQL JPL/MISRA 규칙, 호스트 ASan 옵션을 CI에 두어 무기체계 탑재 소프트웨어의 코딩규칙·정적 분석 운영과 성격이 가깝다.</td>
+</tr>
+<tr>
+<td>LC</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>무인기 비행 제어 소프트웨어로 외부(MAVLink) 입력 처리에서 생긴 버퍼 오버플로 CVE가 공개되어 있다(C/C++ 혼합 코드).</td>
+</tr>
+<tr>
+<td>LCPP</td>
+<td><a href="https://github.com/nasa/fprime" target="_blank" rel="noopener">F Prime (F´)</a></td>
+<td>v4.4.1</td>
+<td>NASA JPL의 비행 소프트웨어 프레임워크로 C++14, 런타임 동적 할당 금지, 새니타이저 빌드 옵션을 문서·빌드 스크립트로 공개해 임베디드 C++ 지침의 실제 구현을 보여 준다.</td>
+</tr>
+<tr>
+<td>LCPP</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot" target="_blank" rel="noopener">PX4-Autopilot</a></td>
+<td>v1.17.0</td>
+<td>무인기 비행 제어 소프트웨어로 임베디드(NuttX) 빌드에서 -fno-exceptions/-fno-rtti를 쓰고 C++14 표준을 고정한다.</td>
+</tr>
+<tr>
+<td>LCPP</td>
+<td><a href="https://github.com/github/codeql-coding-standards" target="_blank" rel="noopener">CodeQL Coding Standards</a></td>
+<td>v2.63.0</td>
+<td>AUTOSAR C++14·MISRA C++:2023 도구의 지원 규칙표와 지원 표준·컴파일러 표를 공개한다.</td>
+</tr>
+<tr>
+<td>LCS</td>
+<td><a href="https://github.com/ArduPilot/MissionPlanner" target="_blank" rel="noopener">ArduPilot Mission Planner</a></td>
+<td>MissionPlanner1.3.83</td>
+<td>무인기 지상통제 C# 소프트웨어로 BinaryFormatter·unsafe·P/Invoke 등 지침의 대상 패턴이 실제 코드에 나타난다.</td>
+</tr>
+<tr>
+<td>LCS</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/" target="_blank" rel="noopener">Microsoft Learn (.NET 공식 문서)</a></td>
+<td>조회일 2026. 10. 15.</td>
+<td>C#/.NET 언어·분석기 규칙(CA 규칙)의 벤더 1차 문서다.</td>
+</tr>
+<tr>
+<td>LCS</td>
+<td><a href="https://github.com/coverlet-coverage/coverlet" target="_blank" rel="noopener">coverlet</a></td>
+<td>v10.1.0</td>
+<td>.NET 오픈소스 코드 실행률 도구로, README가 밝힌 측정 기준(라인·분기·메서드)을 매뉴얼 동적시험의 시험종류와 대조할 수 있다.</td>
+</tr>
+<tr>
+<td>LCS</td>
+<td><a href="https://github.com/Metalnem/sharpfuzz" target="_blank" rel="noopener">SharpFuzz</a></td>
+<td>v2.2.0</td>
+<td>AFL·libFuzzer를 .NET 어셈블리에 연결하는 퍼징 도구로, 실행 요구사항(플랫폼·.NET 버전)이 README에 공개되어 있다.</td>
+</tr>
+<tr>
+<td>LCS</td>
+<td><a href="https://codeql.github.com/codeql-query-help/csharp-cwe/" target="_blank" rel="noopener">CodeQL 문서</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>C# 쿼리와 CWE의 대응 표를 공개한다.</td>
+</tr>
+<tr>
+<td>LJ</td>
+<td><a href="https://github.com/yamcs/yamcs" target="_blank" rel="noopener">Yamcs</a></td>
+<td>yamcs-5.13.6</td>
+<td>위성·무인기 임무 통제 Java 프레임워크로 직렬화 객체 읽기, Math.addExact 사용, 코드 삽입 CVE가 공개되어 있다.</td>
+</tr>
+<tr>
+<td>LJ</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/" target="_blank" rel="noopener">SEI CERT Oracle Coding Standard for Java</a></td>
+<td>조회일 2026. 11. 1.</td>
+<td>지침이 인용하는 Java 규칙(SER12-J, OBJ01-J 등)의 1차 원문이다.</td>
+</tr>
+<tr>
+<td>LJ</td>
+<td><a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">MITRE CWE</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td><a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">CWE-660</a> 뷰 정의와 구성원 표의 원천이다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/ArduPilot/MAVProxy" target="_blank" rel="noopener">MAVProxy</a></td>
+<td>v1.8.75</td>
+<td>무인기 지상국 Python 도구로 pickle.load·eval 사용이 실제 코드에 나타나 Python 지침(<a href="../c-environment-guides/#lpy-03">LPY-03</a>·<a href="../c-environment-guides/#lpy-04">04</a>)의 대상 패턴을 보여 준다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/ArduPilot/pymavlink" target="_blank" rel="noopener">pymavlink</a></td>
+<td>v2.4.50</td>
+<td>MAVLink Python 라이브러리로 임시 파일 생성 방식을 보여 준다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://bandit.readthedocs.io/en/1.9.4/" target="_blank" rel="noopener">Bandit / Python 공식 문서</a></td>
+<td>Bandit 1.9.4, Python 3.13 문서</td>
+<td>지침이 인용하는 Bandit 규칙과 표준 라이브러리 경고의 1차 문서다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://www.kisa.or.kr/2060204/form?postSeq=13" target="_blank" rel="noopener">KISA 「Python 시큐어코딩 가이드」</a></td>
+<td>2023. 12.(판권면), 첨부 'Python_시큐어코딩_가이드(2023년_개정본).pdf'(게시판 등록일 2022. 12. 29.)</td>
+<td>한국인터넷진흥원이 낸 Python 시큐어코딩 1차 문서로, 디버그 코드 제거와 SBOM 기반 사후 관리를 다룬다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/google/atheris" target="_blank" rel="noopener">Atheris</a></td>
+<td>3.0.0</td>
+<td>Google의 libFuzzer 기반 Python 퍼징 엔진으로, 지원 플랫폼과 Python 버전이 README에 공개되어 있다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/pyinstaller/pyinstaller" target="_blank" rel="noopener">PyInstaller</a></td>
+<td>v6.22.3</td>
+<td>Python 도구를 실행 파일로 묶는 대표 도구로, 묶음 배포본에 .pyc가 들어간다는 사실을 문서로 밝힌다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://docs.astral.sh/ruff/rules/" target="_blank" rel="noopener">Ruff 문서</a></td>
+<td>조회일 2026. 10. 16.</td>
+<td>Python 린터 규칙(T100 등)의 1차 문서다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/pypa/pip-audit" target="_blank" rel="noopener">pip-audit</a></td>
+<td>v2.10.1</td>
+<td>PyPA의 Python 의존성 취약점 감사 도구로, 감사 결과를 CycloneDX SBOM으로 출력하는 기능이 README에 공개되어 있다.</td>
+</tr>
+<tr>
+<td>LPY</td>
+<td><a href="https://github.com/ArduPilot/ardupilot" target="_blank" rel="noopener">ArduPilot</a></td>
+<td>Copter-4.5.7</td>
+<td>Python 자동 시험 도구를 소스와 함께 형상관리한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://docs.yoctoproject.org/" target="_blank" rel="noopener">Yocto Project / BitBake</a></td>
+<td>Yocto 5.0, BitBake 2.8 문서</td>
+<td>임베디드 Linux 빌드 시스템으로 사내 소스 미러(PREMIRRORS)와 네트워크 차단 빌드를 공식 지원한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://www.jenkins.io/doc/book/security/" target="_blank" rel="noopener">Jenkins</a></td>
+<td>조회일 2026. 10. 15.</td>
+<td>내부망 CI 서버의 대표 제품으로 접근통제 문서를 제공한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://reproducible-builds.org/docs/" target="_blank" rel="noopener">Reproducible Builds</a></td>
+<td>조회일 2026. 10. 15.</td>
+<td>재현 가능한 빌드 정의와 SOURCE_DATE_EPOCH 사양의 1차 문서다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://github.com/qemu/qemu" target="_blank" rel="noopener">QEMU</a></td>
+<td>v9.2.0</td>
+<td>기준 이미지와 차이 이미지를 나누는 형식을 문서화한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://developer.hashicorp.com/packer" target="_blank" rel="noopener">Packer</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>VM 이미지 체크섬 생성 수단을 문서화한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://github.com/anchore/grype" target="_blank" rel="noopener">Grype</a></td>
+<td>v0.121.0</td>
+<td>취약점 DB의 해시 검증 설정을 공개한다.</td>
+</tr>
+<tr>
+<td>NET-IN</td>
+<td><a href="https://github.com/usnistgov/oscal-content" target="_blank" rel="noopener">NIST SP 800-53 Rev. 5</a></td>
+<td>OSCAL 카탈로그 v1.3.0</td>
+<td>보안 통제 항목의 공식 규격이다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://docs.yoctoproject.org/" target="_blank" rel="noopener">Yocto Project / BitBake</a></td>
+<td>Yocto 5.0, BitBake 2.8 문서</td>
+<td>외부 접속 없는 소스 미러 빌드를 위한 BB_NO_NETWORK 옵션을 제공한다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://github.com/nasa/fprime" target="_blank" rel="noopener">F Prime (F´)</a></td>
+<td>v4.4.1</td>
+<td>비행 소프트웨어 프레임워크가 빌드 시스템에서 SBOM 생성과 취약점 스캔 절차를 문서화한다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://reproducible-builds.org/docs/" target="_blank" rel="noopener">Reproducible Builds</a></td>
+<td>조회일 2026. 10. 15.</td>
+<td>독립 빌드 간 산출물 일치로 재현성을 정의한다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://github.com/aquasecurity/trivy" target="_blank" rel="noopener">Trivy</a></td>
+<td>v0.76.1</td>
+<td>격리망 구성의 공식 문서를 공개한다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://github.com/theupdateframework/specification" target="_blank" rel="noopener">The Update Framework</a></td>
+<td>v1.0.37</td>
+<td>서명·해시 메타데이터 구조의 규격이다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://docs.revenera.com/fnp/2022r3/LicAdmin_Guide/" target="_blank" rel="noopener">FlexNet Publisher 문서</a></td>
+<td>2022 R3, 조회일 2026. 11. 2.</td>
+<td>라이선스 서버 현황 조회 도구의 공식 문서다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://github.com/usnistgov/oscal-content" target="_blank" rel="noopener">NIST SP 800-53 Rev. 5</a></td>
+<td>OSCAL 카탈로그 v1.3.0</td>
+<td>보안 통제 항목의 공식 규격이다.</td>
+</tr>
+<tr>
+<td>NET-CL</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/shell/autoplay-reg" target="_blank" rel="noopener">Microsoft Learn</a></td>
+<td>조회일 2026. 11. 2.</td>
+<td>AutoRun 차단 방법의 공식 문서다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="e-2">E-2. 지침별 대표 근거<a class="headerlink" href="#e-2" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong>(부분)</strong> 표시는 근거가 지침의 일부만 뒷받침한다는 뜻이다(기준은 <a href="../../ch2-framework/#sec-2-7">2.7</a>).</p>
+<p>지침마다 '확인' 근거 가운데 대표 1건(출처 등급이 가장 높은 것, 같으면 근거 목록 순서)을 싣는다. 나머지 근거와 출처 등급·검토 필요 항목은 <a href="../../downloads/">Excel 내려받기</a>의 '오픈소스근거' 시트에 있다.</p>
+<div class="tbl-e2">
+<table>
+<thead>
+<tr>
+<th>지침</th>
+<th>프로젝트</th>
+<th>근거 내용</th>
+<th>원문</th>
+<th>확인 근거 수</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../c-environment-guides/#pc-01">PC-01</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl v5.1.5는 Linux·FreeBSD에서 root 권한 실행을 확인하면 오류 안내를 띄우고 실행을 끝내 관리자 권한 없이 동작하도록 강제한다. <strong>(부분)</strong> 권한 매트릭스 부분은 Yamcs 근거를 함께 본다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/src/Utilities/Platform/Platform.cc" target="_blank" rel="noopener">src/Utilities/Platform/Platform.cc L249, L255-257</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-02">PC-02</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 Autopilot 1.17.0-rc2 이하 버전은 MAVLink 로그 요청을 처리하는 MavlinkLogHandler에서 스택 기반 버퍼 오버플로가 발생하는 결함이 있었다(CVE-2026-32743).</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-32743" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-03">PC-03</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl은 MAVLink 메시지를 로그 파일에 기록할 때 비밀키를 담은 SETUP_SIGNING 메시지를 기록에서 제외한다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/src/Comms/MAVLinkProtocol.cc" target="_blank" rel="noopener">src/Comms/MAVLinkProtocol.cc L227 (MAVLinkProtocol::_logData)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-04">PC-04</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl의 Hardening.cmake는 QGC_ENABLE_HARDENING이 켜진 비디버그 빌드에, 컴파일러·링커의 지원 여부를 검사한 뒤 MSVC에서는 /guard:cf·/DYNAMICBASE·/NXCOMPAT를, GCC 계열에서는 -D_FORTIFY_SOURCE=3·-fstack-protector-strong·-Wl,-z,relro·-Wl,-z,now를 적용한다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/cmake/modules/Hardening.cmake" target="_blank" rel="noopener">cmake/modules/Hardening.cmake L5(옵션 정의), qgc_apply_global_hardening()</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-05">PC-05</a></td>
+<td>Qt (QGroundControl 기반 프레임워크)</td>
+<td>Qt 6.8 QProcess 문서는 QProcess::start가 실행할 프로그램과 인자를 QStringList의 개별 문자열로 분리해 받도록 정의하고 있다.</td>
+<td><a href="https://doc.qt.io/qt-6.8/qprocess.html" target="_blank" rel="noopener">QProcess 문서, Public Functions</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-06">PC-06</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl의 Sanitizers.cmake는 CMake 옵션 QGC_ENABLE_ASAN·QGC_ENABLE_UBSAN으로 AddressSanitizer(-fsanitize=address)와 UBSan(-fsanitize=undefined) 빌드를 켤 수 있게 한다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/cmake/modules/Sanitizers.cmake" target="_blank" rel="noopener">cmake/modules/Sanitizers.cmake (QGC_ENABLE_ASAN 블록)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-07">PC-07</a></td>
+<td>Attack Surface Analyzer</td>
+<td>Microsoft Attack Surface Analyzer v2.3.331은 소프트웨어 설치 전후의 운영체제 보안 구성을 비교해 파일 시스템, 사용자 계정, 서비스, 네트워크 포트, 레지스트리 변화를 보고한다.</td>
+<td><a href="https://github.com/microsoft/AttackSurfaceAnalyzer/blob/v2.3.331/README.md" target="_blank" rel="noopener">README.md L36-45</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#pc-08">PC-08</a></td>
+<td>NIST SP 800-40 Rev. 4</td>
+<td>NIST SP 800-40 Rev. 4는 패치를 이동식 매체로 받을 수도 있다고 보고, 시험·설치 전에 패치의 진위와 무결성을 확인하며 운영 투입 전에 문제를 찾도록 시험할 수 있다고 설명한다. <strong>(부분)</strong> 반입 주기는 과제가 정한다.</td>
+<td><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-40r4.pdf" target="_blank" rel="noopener">2.3.1절(PDF 12쪽)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-01">SBC-01</a></td>
+<td>U-Boot</td>
+<td>Das U-Boot 2020.01까지는 조작된 FIT 이미지를 기본 구성으로 부팅하는 시스템에서 verified boot 제한을 우회해 임의 이미지를 부팅할 수 있는 결함이 있었다(CVE-2020-10648).</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-10648" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-02">SBC-02</a></td>
+<td>NASA cFE</td>
+<td>cFE 응용 개발 안내서는 Software Bus 메시지의 목적지를 파이프(큐)로 부르며 파이프 하나는 하나의 응용만 읽을 수 있다고 설명한다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md" target="_blank" rel="noopener">docs/cFE Application Developers Guide.md L1628 (6.1.2 Pipes)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-03">SBC-03</a></td>
+<td>NASA cFE</td>
+<td>cFE 응용 개발 안내서는 응답이 느린 응용 하나 때문에 다른 응용의 메시지 전달이 밀리지 않게 하는 장치로 파이프 깊이와 메시지 ID별 메시지 한도를 설명한다. 한도를 넘는 메시지는 거부된다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md" target="_blank" rel="noopener">docs/cFE Application Developers Guide.md L1640 (6.1.2.1)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-04">SBC-04</a></td>
+<td>Yocto Project</td>
+<td>Yocto Project 참조 매뉴얼은 read-only-rootfs 이미지 기능을 루트 파일시스템이 읽기 전용인 이미지를 만드는 기능으로 정의한다.</td>
+<td><a href="https://docs.yoctoproject.org/5.2.4/ref-manual/features.html" target="_blank" rel="noopener">ref-manual/features.html, Image Features 절</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-05">SBC-05</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 1.17.0-rc2 이전 버전의 crsf_rc 파서는 길이가 가변인 패킷이 지나치게 커도 경계 검사 없이 64바이트 고정 전역 버퍼로 복사했고, CRSF 시리얼 포트가 켜진 구성에서 인접 또는 시리얼 접근 공격자가 메모리 손상과 PX4 비정상 종료를 일으킬 수 있었다(CVE-2026-32706).</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-32706" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-06">SBC-06</a></td>
+<td>NASA cFE</td>
+<td>cFE 응용 개발 안내서는 하드웨어 서비스 응용의 ISR 함수가 인터럽트 시 ISR 컨텍스트에서 실행되고, 끝나면 cFE가 등록 때 만든 장치 처리 태스크에 인터럽트 발생을 알려 후속 콜백이 태스크 컨텍스트에서 실행되게 한다고 설명한다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/docs/cFE%20Application%20Developers%20Guide.md" target="_blank" rel="noopener">docs/cFE Application Developers Guide.md L568-569</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-07">SBC-07</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 시뮬레이션 디버깅 문서는 호스트에서 PX4_ASAN=1 make px4_sitl jmavsim으로 Clang AddressSanitizer 빌드를 하여 정렬 오류와 세그먼트 오류 같은 메모리 결함을 찾는 방법을 제시한다.</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot/blob/v1.17.0/docs/en/debug/simulation_debugging.md" target="_blank" rel="noopener">docs/en/debug/simulation_debugging.md L7</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-08">SBC-08</a></td>
+<td>OSADL QA Farm</td>
+<td>OSADL QA Farm 안내는 산업용 임베디드 시스템을 대상으로 메모리 누수 등을 찾는 감시형 부하 시험을 수행하고, 장기 안정성 측정이 끊기지 않도록 시스템 가용성을 감시한다고 설명한다. <strong>(부분)</strong> Linux 커널 품질 활동의 사례다. 핸들·큐 사용량 증가 확인은 이 문서로 뒷받침하지 않는다.</td>
+<td><a href="https://www.osadl.org/qa" target="_blank" rel="noopener">OSADL QA Farm, About, Networking monitoring(조회일 2026. 11. 2.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-09">SBC-09</a></td>
+<td>U-Boot</td>
+<td>Das U-Boot 2022.07-rc5까지는 부트로더 콘솔 명령 i2c md에서 정수 부호 오류로 인한 스택 버퍼 오버플로가 있어 do_i2c_md 함수의 복귀 주소 포인터가 손상될 수 있었다(CVE-2022-34835).</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2022-34835" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#sbc-10">SBC-10</a></td>
+<td>Yocto Project</td>
+<td>Yocto Project 개발 매뉴얼은 create-spdx 클래스를 상속하면 소프트웨어 자재 명세(SBOM)가 SPDX 표준 형식으로 생성된다고 설명한다.</td>
+<td><a href="https://docs.yoctoproject.org/5.2.4/dev-manual/sbom.html" target="_blank" rel="noopener">dev-manual/sbom.html 도입부</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-01">MCU-01</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1 메모리 관리 문서는 비행 소프트웨어 코딩 표준이 운용 중 동적 할당을 대체로 금지한다고 적고, 메모리 블록을 시스템 초기화 때 할당해 운용 중에 쓰는 방식을 설명한다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/docs/user-manual/framework/memory-management/index.md" target="_blank" rel="noopener">docs/user-manual/framework/memory-management/index.md L7, L11</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-02">MCU-02</a></td>
+<td>ArduPilot</td>
+<td>ArduPilot HAL의 Util 클래스는 워치독 리셋 여부를 알려 주고, 워치독 리셋으로 부팅했을 때 리셋 직전에 시동(arm) 상태였는지를 persistent_data로 질의하는 was_watchdog_armed()를 제공한다.</td>
+<td><a href="https://github.com/ArduPilot/ardupilot/blob/Copter-4.7.1/libraries/AP_HAL/Util.h" target="_blank" rel="noopener">libraries/AP_HAL/Util.h L24-33, was_watchdog_armed()</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-03">MCU-03</a></td>
+<td>ArduPilot</td>
+<td>ArduPilot의 AP_CheckFirmware는 부트로더에 내장된 공개키가 모두 0이면 서명 검증 없이 통과시키고, 그렇지 않으면 서명 길이·버전·공개키 일치를 검사해 실패 시 FAIL_REASON_BAD_FIRMWARE_SIGNATURE 또는 FAIL_REASON_VERIFICATION을 반환한다.</td>
+<td><a href="https://github.com/ArduPilot/ardupilot/blob/Copter-4.7.1/libraries/AP_CheckFirmware/AP_CheckFirmware.cpp" target="_blank" rel="noopener">libraries/AP_CheckFirmware/AP_CheckFirmware.cpp L44-46, check_firmware_signature()</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-04">MCU-04</a></td>
+<td>avr-libc</td>
+<td>avr-libc의 &lt;stdint.h&gt; 문서는 int16_t를 signed int로, uint16_t를 unsigned int로 정의한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/group__avr__stdint.html" target="_blank" rel="noopener">avr-libc &lt;stdint.h&gt; 문서, Typedefs</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-05">MCU-05</a></td>
+<td>ArduinoCore-avr</td>
+<td>ArduinoCore-avr의 millis()는 SREG를 저장하고 cli()로 인터럽트를 끈 채 timer0_millis를 읽는데, 주석은 쓰기 도중에 읽으면 불일치 값(inconsistent value)이 나올 수 있기 때문이라고 설명하며, timer0_millis는 volatile unsigned long으로 선언돼 있다.</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr/blob/1.8.7/cores/arduino/wiring.c" target="_blank" rel="noopener">cores/arduino/wiring.c L39(timer0_millis 선언), millis()</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-06">MCU-06</a></td>
+<td>STM32CubeF4 CMSIS Device</td>
+<td>ST cmsis_device_f4 v2.6.9의 stm32f407xx.h는 주변장치 고정 주소를 벤더 헤더 안에서 구조체 포인터 매크로로 정의한다. <strong>(부분)</strong></td>
+<td><a href="https://github.com/STMicroelectronics/cmsis_device_f4/blob/v2.6.9/Include/stm32f407xx.h" target="_blank" rel="noopener">Include/stm32f407xx.h L981, L1102</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-07">MCU-07</a></td>
+<td>GCC</td>
+<td>GCC 13.2 문서는 -fstack-usage 옵션이 컴파일러가 프로그램의 함수별 스택 사용 정보를 출력하게 한다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Developer-Options.html" target="_blank" rel="noopener">GCC 13.2.0 Developer Options, -fstack-usage</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-08">MCU-08</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 단위시험 문서는 최소한의 내부 의존성만 가진 시험을 GoogleTest로 작성해 make tests로 실행하게 하고, 전체 SITL이 필요한 시험은 느리고 디버깅이 어려우므로 가능하면 GTest를 쓰라고 권고한다.</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot/blob/v1.17.0/docs/en/test_and_ci/unit_tests.md" target="_blank" rel="noopener">docs/en/test_and_ci/unit_tests.md L7</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#mcu-09">MCU-09</a></td>
+<td>ArduinoCore-avr</td>
+<td>ArduinoCore-avr의 boards.txt는 Uno 부트로더 기록 설정으로 low_fuses=0xFF, high_fuses=0xDE, extended_fuses=0xFD, unlock_bits=0x3F, lock_bits=0x0F를 명시한다.</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr/blob/1.8.7/boards.txt" target="_blank" rel="noopener">boards.txt L95 이하(uno.bootloader.*)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-01">DSP-01</a></td>
+<td>CMSIS-DSP</td>
+<td>CMSIS-DSP의 arm_add_q15 소스 주석은 이 함수가 포화 연산을 쓰며 Q15 허용 범위 [0x8000 0x7FFF]를 벗어난 결과는 포화된다고 문서화한다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS-DSP/blob/v1.17.0/Source/BasicMathFunctions/arm_add_q15.c" target="_blank" rel="noopener">Source/BasicMathFunctions/arm_add_q15.c L51</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-02">DSP-02</a></td>
+<td>C2000Ware</td>
+<td>C2000Ware의 DMA 예제 dma_ex1_gsram_transfer.c는 #pragma DATA_SECTION으로 송신 버퍼 sData를 ramgs0 섹션에, 수신 버퍼 rData를 ramgs1 섹션에 배치한다.</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk/blob/REL_C2000Ware_v6.00.01.00/driverlib/f28004x/examples/dma/dma_ex1_gsram_transfer.c" target="_blank" rel="noopener">driverlib/f28004x/examples/dma/dma_ex1_gsram_transfer.c L72 이하(sData·rData 선언)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-03">DSP-03</a></td>
+<td>Sound Open Firmware</td>
+<td>Sound Open Firmware v2.15.1의 파이프라인 정의는 실행 주기, 주기당 최악 명령 수, xrun 보고 한도를 필드로 두고, 초과·미달 때 스트림 정지, 0 전송, 데이터 버림 같은 동작을 고르게 한다. <strong>(부분)</strong> 오디오 DSP 펌웨어 사례다. 입력 최대 크기 정의는 이 위치에서 확인하지 않았다.</td>
+<td><a href="https://github.com/thesofproject/sof/blob/v2.15.1/src/include/ipc/topology.h" target="_blank" rel="noopener">src/include/ipc/topology.h L56-59, L295-299</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-04">DSP-04</a></td>
+<td>CMSIS-DSP</td>
+<td>CMSIS-DSP의 arm_divide_q15 소스 주석은 0으로 나누면 오류 ARM_MATH_NANINF를 반환하고 몫을 포화된 음수 또는 양수 값으로 강제한다고 밝힌다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS-DSP/blob/v1.17.0/Source/FastMathFunctions/arm_divide_q15.c" target="_blank" rel="noopener">Source/FastMathFunctions/arm_divide_q15.c L63-64</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-05">DSP-05</a></td>
+<td>TI C2000 컴파일러</td>
+<td>TI TMS320C28x 컴파일러 사용 설명서(SPRU514Q)는 8비트 단위 접근 수단으로 __byte() 내장 함수를 들고, 그 배경으로 C28x의 바이트가 char와 같은 16비트이며 sizeof(int)의 값이 1이라는 점을 적는다.</td>
+<td><a href="https://downloads.ti.com/docs/esd/SPRU514Q/data-types-stdz0555922.html" target="_blank" rel="noopener">SPRU514Q, Data Types 절 NOTE 'TMS320C28x Byte is 16 Bits'</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-06">DSP-06</a></td>
+<td>CMSIS_6</td>
+<td>Arm CMSIS_6의 Cortex-M 캐시 헤더는 D-Cache를 주소 범위 단위로 무효화하는 SCB_InvalidateDCache_by_Addr와 정리(clean)하는 SCB_CleanDCache_by_Addr 함수를 제공한다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS_6/blob/v6.4.0/CMSIS/Core/Include/m-profile/armv7m_cachel1.h" target="_blank" rel="noopener">CMSIS/Core/Include/m-profile/armv7m_cachel1.h L355</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-07">DSP-07</a></td>
+<td>CMSIS-DSP</td>
+<td>CMSIS-DSP 시험 프레임워크(Test Framework) 문서는 시험이 입력 패턴, 기준(reference) 패턴과 출력을 요구하며 출력을 기준과 비교한다고 설명한다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS-DSP/blob/v1.17.0/Testing/README.md" target="_blank" rel="noopener">Testing/README.md L199</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-08">DSP-08</a></td>
+<td>cppcheck</td>
+<td>cppcheck 소스 저장소의 platforms/avr8.xml은 대상 플랫폼의 char_bit를 8, int 크기를 2바이트로 지정하는 플랫폼 정의 파일이다.</td>
+<td><a href="https://github.com/danmar/cppcheck/blob/2.22.0/platforms/avr8.xml" target="_blank" rel="noopener">platforms/avr8.xml L3</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#dsp-09">DSP-09</a></td>
+<td>C2000Ware</td>
+<td>C2000Ware F28004x 예제의 CCS 프로젝트 사양(adc_ex1_soc_epwm.projectspec)은 TI 컴파일러(CGT) 버전을 cgtVersion="22.6.2.LTS"로 지정한다.</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk/blob/REL_C2000Ware_v6.00.01.00/device_support/f28004x/examples/adc/CCS/adc_ex1_soc_epwm.projectspec" target="_blank" rel="noopener">device_support/f28004x/examples/adc/CCS/adc_ex1_soc_epwm.projectspec L5</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-01">SOC-01</a></td>
+<td>Xilinx embeddedsw</td>
+<td>Xilinx ZynqMP FSBL의 XFsbl_ProtectionConfig는 XFSBL_PROT_BYPASS가 정의되지 않은 경우 psu_protection()으로 보호 구성을 적용한 뒤 psu_protection_lock()으로 XMPU/XPPU를 잠그며, 주석은 FSBL이 XPPU와 FPD XMPU 구성을 기본으로 우회한다고 밝힌다.</td>
+<td><a href="https://github.com/Xilinx/embeddedsw/blob/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_handoff.c" target="_blank" rel="noopener">lib/sw_apps/zynqmp_fsbl/src/xfsbl_handoff.c L1183</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-02">SOC-02</a></td>
+<td>Xilinx embeddedsw</td>
+<td>Xilinx ZynqMP FSBL의 xfsbl_authentication.c는 eFUSE RSA 인증이 켜진 경우의 PPK 해시와 SPK ID 검증을 포함하며, XFsbl_SpkVer는 EFUSE_SEC_CTRL 레지스터를 읽어 eFUSE RSA 인증 활성 여부를 확인한다.</td>
+<td><a href="https://github.com/Xilinx/embeddedsw/blob/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_authentication.c" target="_blank" rel="noopener">lib/sw_apps/zynqmp_fsbl/src/xfsbl_authentication.c L21(변경 이력), XFsbl_SpkVer()</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-03">SOC-03</a></td>
+<td>Linux kernel</td>
+<td>Linux v6.6 rpmsg virtio 드라이버는 원격 프로세서가 보낸 메시지의 길이를 받은 버퍼 크기·헤더 크기와 비교해 초과하면 메시지를 거부한다. <strong>(부분)</strong> 길이 검증 사례다. 순서번호 검증은 이 위치에 없다.</td>
+<td><a href="https://github.com/torvalds/linux/blob/v6.6/drivers/rpmsg/virtio_rpmsg_bus.c" target="_blank" rel="noopener">drivers/rpmsg/virtio_rpmsg_bus.c L727-735</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-04">SOC-04</a></td>
+<td>Xilinx embeddedsw</td>
+<td>Xilinx xilskey 라이브러리는 ZynqMP BBRAM에 AES 키를 기록하는 XilSKey_ZynqMp_Bbram_Program(const u32 *AesKey)와 BBRAM 키를 소거하는 XilSKey_ZynqMp_Bbram_Zeroise()를 제공한다.</td>
+<td><a href="https://github.com/Xilinx/embeddedsw/blob/xilinx_v2026.1/lib/sw_services/xilskey/src/xilskey_bbramps_zynqmp.c" target="_blank" rel="noopener">lib/sw_services/xilskey/src/xilskey_bbramps_zynqmp.c L80, XilSKey_ZynqMp_Bbram_Zeroise()</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-05">SOC-05</a></td>
+<td>TF-A Tests</td>
+<td>TF-A Tests v2.15.0의 test_smmu_spm_invalid_access는 보안 영역 DMA로 Realm 영역에 접근을 시도하고, SMMU 검사에서 실패하는 것을 기대 결과로 삼는 부정 시험이다.</td>
+<td><a href="https://github.com/TrustedFirmware-A/tf-a-tests/blob/v2.15.0/tftf/tests/runtime_services/secure_service/test_spm_smmu.c" target="_blank" rel="noopener">tftf/tests/runtime_services/secure_service/test_spm_smmu.c L120-127</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-07">SOC-07</a></td>
+<td>Xilinx embeddedsw</td>
+<td>Xilinx xilskey의 ZynqMP eFUSE 보안 제어 비트 정의에는 JTAG 비활성화 비트 XSK_ZYNQMP_EFUSEPS_SEC_JTAG_DIS와 이를 담는 JtagDisable 필드가 있다.</td>
+<td><a href="https://github.com/Xilinx/embeddedsw/blob/xilinx_v2026.1/lib/sw_services/xilskey/src/include/xilskey_eps_zynqmp.h" target="_blank" rel="noopener">lib/sw_services/xilskey/src/include/xilskey_eps_zynqmp.h L214</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#soc-08">SOC-08</a></td>
+<td>Xilinx embeddedsw</td>
+<td>Xilinx ZynqMP FSBL의 파티션 적재 코드는 PL(비트스트림) 대상 파티션에 대해서도 인증 여부(IsAuthenticated)와 암호화 여부(IsEncrypted)를 적재 파라미터에 설정한다.</td>
+<td><a href="https://github.com/Xilinx/embeddedsw/blob/xilinx_v2026.1/lib/sw_apps/zynqmp_fsbl/src/xfsbl_partition_load.c" target="_blank" rel="noopener">lib/sw_apps/zynqmp_fsbl/src/xfsbl_partition_load.c L1411</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-01">WIN-01</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 UAC 문서는 관리자 계정도 기본적으로 표준 사용자 보안 컨텍스트에서 자원에 접근하고 앱을 실행한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works" target="_blank" rel="noopener">How User Account Control works 본문</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-02">WIN-02</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 AutoRun 문서는 NoDriveAutoRun과 NoDriveTypeAutoRun 레지스트리 값으로 AutoRun을 지속적으로 비활성화할 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/shell/autoplay-reg" target="_blank" rel="noopener">Using the Registry to Disable AutoRun</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-03">WIN-03</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 DLL 보안 문서는 DLL 선로딩 공격을 막으려면 LoadLibrary, LoadLibraryEx, CreateProcess, ShellExecute에 가능한 한 전체 경로를 지정하라고 권고한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-security" target="_blank" rel="noopener">Dynamic-Link Library Security, 지침 첫 항목</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-04">WIN-04</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 /guard 문서는 /guard:cf가 기본값에서 꺼져 있어 명시적으로 켜야 한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/reference/guard-enable-control-flow-guard" target="_blank" rel="noopener">/guard (Enable Control Flow Guard) Remarks</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-05">WIN-05</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 파일 이름 문서는 CON, PRN, AUX, NUL 등 예약 장치명을 파일 이름으로 쓰지 말고 확장자가 붙은 형태도 피하라고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file" target="_blank" rel="noopener">Naming Files, Paths, and Namespaces, 예약 이름 항목</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-06">WIN-06</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 CryptProtectData 문서는 일반적으로 암호화한 사용자와 같은 로그온 자격 증명을 가진 사용자만 복호화할 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata" target="_blank" rel="noopener">CryptProtectData 함수 도입부</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-07">WIN-07</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 GFlags·PageHeap 문서는 전체 페이지 힙 검증이 할당 끝에 접근 불가 페이지를 두어 할당 범위를 넘는 접근 시 프로그램을 즉시 멈추게 하되 널리 쓰면 메모리 부족을 일으킬 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/gflags-and-pageheap" target="_blank" rel="noopener">GFlags and PageHeap 도입부</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-08">WIN-08</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 icacls 문서는 icacls가 지정한 파일의 DACL을 표시하거나 수정한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls" target="_blank" rel="noopener">icacls 문서 도입부</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#win-09">WIN-09</a></td>
+<td>Microsoft Learn</td>
+<td>Microsoft Learn의 수명주기 문서는 Windows 10이 2025. 10. 14.에 지원 종료되며 기존 LTSC 릴리스는 각자의 수명주기에 따라 그 이후에도 업데이트를 받는다고 밝힌다.</td>
+<td><a href="https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro" target="_blank" rel="noopener">Windows 10 Home and Pro 수명주기 Important 박스(조회일 2026. 10. 15.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-01">LNX-01</a></td>
+<td>Yocto Project poky</td>
+<td>poky 배포 설정 poky.conf는 create-spdx 클래스를 전역으로 상속해 이미지의 SPDX SBOM을 생성한다.</td>
+<td><a href="https://github.com/yoctoproject/poky/blob/yocto-5.0.4/meta-poky/conf/distro/poky.conf" target="_blank" rel="noopener">meta-poky/conf/distro/poky.conf 59행 부근</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-02">LNX-02</a></td>
+<td>systemd</td>
+<td>systemd.exec 매뉴얼에 따르면 NoNewPrivileges=를 참으로 두면 서비스 프로세스와 그 자식은 execve()로 권한을 더 얻을 수 없다. 기본값은 거짓이고, 일부 다른 설정을 쓰면 이 값은 무시된다.</td>
+<td><a href="https://www.freedesktop.org/software/systemd/man/254/systemd.exec.html" target="_blank" rel="noopener">systemd.exec(5) NoNewPrivileges= (systemd 254)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-03">LNX-03</a></td>
+<td>U-Boot</td>
+<td>U-Boot 검증 부팅 문서는 U-Boot를 읽기 전용 메모리에서 읽고, 서명된 커널을 적재한 뒤, 커널의 dm-verity 드라이버로 서명된 루트 파일시스템을 마운트하는 구성을 예로 들 수 있다고 설명한다.</td>
+<td><a href="https://docs.u-boot.org/en/v2024.04/usage/fit/verified-boot.html" target="_blank" rel="noopener">U-Boot Verified Boot 도입부 (v2024.04 문서)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-04">LNX-04</a></td>
+<td>Yocto Project poky</td>
+<td>poky의 security_flags.inc는 -fstack-protector-strong, -Wl,-z,relro,-z,now, -D_FORTIFY_SOURCE=2, -Wformat-security 계열 옵션을 기본값으로 정의하고 _FORTIFY_SOURCE는 -O1 이상을 요구해 -O0 빌드에서는 끈다.</td>
+<td><a href="https://github.com/yoctoproject/poky/blob/yocto-5.0.4/meta/conf/distro/include/security_flags.inc" target="_blank" rel="noopener">meta/conf/distro/include/security_flags.inc 11~31행</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-05">LNX-05</a></td>
+<td>SEI CERT C</td>
+<td>SEI CERT ENV33-C는 system()을 execve()로 바꾸는 준수 예시에서 exec 계열 함수가 전체 셸 해석기를 쓰지 않아 명령 주입에 취약하지 않다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/environment-env/env33-c" target="_blank" rel="noopener">ENV33-C 준수 코드 예시 설명</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-06">LNX-06</a></td>
+<td>Linux man-pages</td>
+<td>getrandom(2) 매뉴얼은 getrandom()이 기본적으로 /dev/urandom과 같은 urandom 원천에서 엔트로피를 가져온다고 설명한다.</td>
+<td><a href="https://man7.org/linux/man-pages/man2/getrandom.2.html" target="_blank" rel="noopener">getrandom(2) DESCRIPTION</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-07">LNX-07</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl v5.1.5의 Sanitizers.cmake는 QGC_ENABLE_ASAN, QGC_ENABLE_UBSAN 옵션으로 AddressSanitizer와 UndefinedBehaviorSanitizer 빌드를 켜고 ASan과 TSan은 함께 쓸 수 없다고 안내한다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/cmake/modules/Sanitizers.cmake" target="_blank" rel="noopener">cmake/modules/Sanitizers.cmake 머리 주석 8~22행</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-08">LNX-08</a></td>
+<td>Linux kernel (Kconfig)</td>
+<td>Linux v6.6의 STRICT_DEVMEM 설명은 이 옵션이 꺼져 있으면 사용자 공간(root)이 커널 메모리를 포함한 모든 메모리에 접근할 수 있다고 하며 기본값 y는 PPC, X86, ARM64에 한정된다.</td>
+<td><a href="https://github.com/torvalds/linux/blob/v6.6/lib/Kconfig.debug" target="_blank" rel="noopener">lib/Kconfig.debug config STRICT_DEVMEM</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lnx-09">LNX-09</a></td>
+<td>Yocto Project poky</td>
+<td>Yocto 개발 매뉴얼은 cve-check가 컴파일되는 소프트웨어 구성요소마다 CVE를 매핑해 Patched, Unpatched, Ignored 상태를 담은 보고서를 만든다고 설명한다.</td>
+<td><a href="https://docs.yoctoproject.org/5.0.4/dev-manual/vulnerabilities.html" target="_blank" rel="noopener">dev-manual/vulnerabilities 36.2 Vulnerability check at build time</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-01">VXW-01</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL v7.0.1은 VxWorks 커널용 구현(src/os/vxworks)과 별도로 RTP용 구현(src/os/vxworks-rtp)을 두고 파일·파일시스템 구현을 RTP 전용으로 분리한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/os/vxworks-rtp/CMakeLists.txt" target="_blank" rel="noopener">src/os/vxworks-rtp/CMakeLists.txt</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-02">VXW-02</a></td>
+<td>a653rs-linux</td>
+<td>a653rs-linux 0.2.0 README는 메이저 프레임과 파티션별 주기·실행 시간·오프셋을 구성 파일로 정적으로 정하고, 파티션 간 데이터를 ARINC 653 샘플링 채널로 주고받는 예를 보인다. <strong>(부분)</strong> 일반 원칙 근거이며 VxWorks 653 고유 자료가 아니다. 공개 원문에서 VxWorks 653 구성 파일을 확인하지 못했다. 큐잉 포트와 헬스 모니터 정책은 이 위치로 뒷받침하지 않는다.</td>
+<td><a href="https://github.com/DLR-FT/a653rs-linux/blob/0.2.0/README.md" target="_blank" rel="noopener">README.md L11-35</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-03">VXW-03</a></td>
+<td>Wind River VxWorks CVE</td>
+<td>CVE-2010-2965는 VxWorks 6.x·5.x 이하의 WDB 타깃 에이전트 디버그 서비스가 UDP 포트 17185 요청으로 원격 공격자의 임의 메모리 읽기·쓰기와 함수 호출을 허용한다고 기술한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2010-2965" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-04">VXW-04</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL v7.0.1의 VxWorks 태스크 구현은 태스크 생성 요청의 stack_size를 받아 taskInit()으로 스택을 직접 구성한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/os/vxworks/src/os-impl-tasks.c" target="_blank" rel="noopener">src/os/vxworks/src/os-impl-tasks.c OS_TaskCreate_Impl 주석</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-05">VXW-05</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL v7.0.1의 VxWorks 뮤텍스 구현은 semMInitialize()에 SEM_Q_PRIORITY | SEM_INVERSION_SAFE 옵션을 지정한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/os/vxworks/src/os-impl-mutex.c" target="_blank" rel="noopener">src/os/vxworks/src/os-impl-mutex.c OS_MutSemCreate_Impl</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-06">VXW-06</a></td>
+<td>Wind River VxWorks CVE</td>
+<td>CVE-2020-35198은 VxWorks 7 메모리 할당기가 calloc()에서 블록 크기를 계산할 때 정수 오버플로가 생겨 요청보다 작은 메모리가 할당된다고 기술한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-35198" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-07">VXW-07</a></td>
+<td>Zephyr</td>
+<td>Zephyr v4.2.0 코드 실행률 문서는 gcov가 실행 중 RAM에 데이터를 모으므로 사용 가능한 RAM의 제약을 받으며, 작은 장치에서는 복잡한 시험이 코드 실행률 측정을 켠 상태로 비정상 종료할 수 있다고 적는다. <strong>(부분)</strong> 일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 계측이 메모리에 주는 영향의 사례다.</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/doc/develop/test/coverage.rst" target="_blank" rel="noopener">doc/develop/test/coverage.rst L25-37</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-08">VXW-08</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL v7.0.1의 VxWorks 힙 정보 구현은 memPartInfoGet()으로 시스템 파티션의 여유 바이트, 여유 블록 수, 가장 큰 여유 블록을 조회한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/os/vxworks/src/os-impl-heap.c" target="_blank" rel="noopener">src/os/vxworks/src/os-impl-heap.c OS_HeapGetInfo_Impl</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#vxw-09">VXW-09</a></td>
+<td>Wind River VxWorks CVE</td>
+<td>CVE-2019-12256은 VxWorks 6.9와 vx7의 IPv4 구성요소에서 IP 옵션 파싱 중 스택 오버플로가 발생하는 IPNET 취약점이라고 기술한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2019-12256" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-01">PSOS-01</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL 소개 문서는 필요한 OS 추상화 계층 구현이 있으면 같은 임베디드 소프트웨어가 우주선 컴퓨터에서 데스크톱 PC까지 여러 플랫폼에서 컴파일·실행되도록 하는 것이 목표라고 밝힌다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/docs/src/osal_frontpage.dox" target="_blank" rel="noopener">docs/src/osal_frontpage.dox osalIntro</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-02">PSOS-02</a></td>
+<td>CISA ICSA-19-211-01</td>
+<td>CISA 권고 ICSA-19-211-01(VxWorks IPnet)은 제어 장치의 네트워크 노출을 줄이고 인터넷에서 접근할 수 없게 하며 방화벽 뒤에 두고 업무망과 분리하도록 권고한다. <strong>(부분)</strong> 일반 원칙 근거이며 pSOS 고유 자료가 아니다. 구형 TCP/IP 스택 노출 최소화 원칙의 근거다. 응용에서 하는 중복 검증은 이 권고에 없다.</td>
+<td><a href="https://github.com/cisagov/CSAF/blob/3c2594d3dfa2ae5e36146f934b5e231ffbdb3d06/csaf_files/OT/white/2019/icsa-19-211-01.json" target="_blank" rel="noopener">icsa-19-211-01.json L61-66</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-03">PSOS-03</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel의 MISRA.md는 MISRA C:2012 Dir 4.7 절에서 함수가 반환한 오류 정보의 검사를 다룬다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/MISRA.md" target="_blank" rel="noopener">MISRA.md Dir 4.7 절</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-04">PSOS-04</a></td>
+<td>SEI CERT C</td>
+<td>SEI CERT MEM01-C는 해제 직후 포인터를 NULL이나 다른 유효 객체로 바꾸면 댕글링 포인터로 인한 이중 해제와 해제 메모리 접근을 막을 수 있다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/memory-management-mem/mem01-c" target="_blank" rel="noopener">MEM01-C 도입부</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-05">PSOS-05</a></td>
+<td>NASA OSAL</td>
+<td>NASA OSAL 소개 문서는 대부분의 API가 ISR에서 호출되면 안 되며 ISR에서 이진 세마포어를 give하는 것 같은 소수의 예외가 있다고 밝힌다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/docs/src/osal_frontpage.dox" target="_blank" rel="noopener">docs/src/osal_frontpage.dox osalIntro</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-06">PSOS-06</a></td>
+<td>cppcheck</td>
+<td>cppcheck 2.22.0 설명서는 임베디드 프로젝트에 흔한 비표준 문법과 컴파일러 확장도 검사 대상으로 삼고 -D로 이름 정의를 알려 주는 방법을 설명하며, 라이브러리 설정 gnu.cfg는 컴파일러 내장 함수를 매크로로 정의한다. <strong>(부분)</strong> 일반 원칙 근거이며 pSOS 고유 자료가 아니다. 수동 코드 리뷰로 대체하는 절차와 편차 기록은 이 문서에 없다. 내장 함수 매크로 예는 cfg/gnu.cfg L40.</td>
+<td><a href="https://github.com/cppcheck-opensource/cppcheck/blob/2.22.0/man/manual.md" target="_blank" rel="noopener">man/manual.md L14-18, L399-400</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-07">PSOS-07</a></td>
+<td>Zephyr</td>
+<td>Zephyr v4.2.0 Twister 문서는 시험 묶음을 --device-testing으로 실제 보드에서 자동 실행하는 방법을 설명한다. <strong>(부분)</strong> 일반 원칙 근거이며 pSOS 고유 자료가 아니다. 실제 타깃 회귀 자동화 사례다. 장시간 부하·메모리 고갈 시험은 이 위치로 뒷받침하지 않는다.</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/doc/develop/test/twister.rst" target="_blank" rel="noopener">doc/develop/test/twister.rst L1212</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-08">PSOS-08</a></td>
+<td>Yocto Project</td>
+<td>Yocto Project 5.0.4 문서는 라이선스 준수 절에서 archiver 클래스로 빌드에 쓴 소스를 묶어 내는 방법을 설명한다. <strong>(부분)</strong> 일반 원칙 근거이며 pSOS 고유 자료가 아니다. 소스 보존 수단의 사례다. 라이선스 만료·인력 퇴직 대비 절차는 이 문서에 없다.</td>
+<td><a href="https://docs.yoctoproject.org/5.0.4/dev-manual/licenses.html" target="_blank" rel="noopener">Maintaining Open Source License Compliance During Your Product's Lifecycle, archiver 설명</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#psos-09">PSOS-09</a></td>
+<td>Wind River 연례 보고서(SEC 10-K, 2002. 4. 30. 제출)</td>
+<td>Wind River의 2002. 4. 30. 제출 10-K(회계연도 2002. 1. 31. 종료)는 임베디드 운영체제 목록에 pSOSystem 제품군을 적었다.</td>
+<td><a href="https://www.sec.gov/Archives/edgar/data/833829/000091205702017396/a2075843z10-k.htm" target="_blank" rel="noopener">Form 10-K Part I, Item 1. Business(제품 소개)</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-01">FRT-01</a></td>
+<td>FreeRTOS CVE</td>
+<td>CVE-2021-43997은 FreeRTOS 10.2.0~10.4.5가 비커널 코드의 xPortRaisePrivilege 호출을 막지 못해 MPU 포트에서 권한 상승이 가능했고 V10.5.0과 V10.4.3-LTS Patch 3에서 고쳐졌다고 기술한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-43997" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-02">FRT-02</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel task.h는 xTaskCreateStatic()으로 만들면 응용이 메모리를 제공하므로 동적 메모리 할당 없이 태스크를 만들 수 있다고 설명한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/include/task.h" target="_blank" rel="noopener">include/task.h xTaskCreateStatic 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-03">FRT-03</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel stack_macros.h는 configCHECK_FOR_STACK_OVERFLOW가 1보다 크면 스택 끝 몇 바이트도 검사하지만 이 두 번째 검사가 넘친 스택을 항상 인식함을 보장하지는 않는다고 주석한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/include/stack_macros.h" target="_blank" rel="noopener">include/stack_macros.h 머리 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-04">FRT-04</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel의 Cortex-M4F 포트(port.c)는 ISR 안전 API를 configMAX_SYSCALL_INTERRUPT_PRIORITY 이하 우선순위로 배정된 인터럽트에서만 호출해야 하며 위반 시 assert가 실패한다고 주석한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/portable/GCC/ARM_CM4F/port.c" target="_blank" rel="noopener">portable/GCC/ARM_CM4F/port.c vPortValidateInterruptPriority 주석</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-05">FRT-05</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel semphr.h는 xSemaphoreCreateMutex() 뮤텍스가 우선순위 상속을 쓰고 ISR 안에서는 쓸 수 없다고 설명한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/include/semphr.h" target="_blank" rel="noopener">include/semphr.h xSemaphoreCreateMutex 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-06">FRT-06</a></td>
+<td>FreeRTOS CVE</td>
+<td>CVE-2018-16601은 FreeRTOS V10.0.1 이하의 FreeRTOS+TCP에서 조작된 IP 헤더가 prvProcessIPPacket의 전체 메모리 복사를 일으켜 서비스 거부와 원격 코드 실행으로 이어질 수 있다고 기술한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2018-16601" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-07">FRT-07</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel task.h는 uxTaskGetStackHighWaterMark()가 태스크 시작 이후의 최소 여유 스택 공간을 워드 단위로 반환하며 값이 작을수록 오버플로에 가까웠다고 설명한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/include/task.h" target="_blank" rel="noopener">include/task.h uxTaskGetStackHighWaterMark 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-08">FRT-08</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel의 Cortex-M4 MPU 포트(port.c)는 MPU를 켜기 전에 메모리 관리 폴트 예외를 활성화한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/portable/GCC/ARM_CM4_MPU/port.c" target="_blank" rel="noopener">portable/GCC/ARM_CM4_MPU/port.c vPortSetupMPU 부근</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#frt-09">FRT-09</a></td>
+<td>FreeRTOS-LTS</td>
+<td>FreeRTOS-LTS 202604.01 README는 LTS 라이브러리가 FreeRTOS 커널 등에 대한 보안 업데이트와 중요 버그 수정을 두 해 동안 제공하고 연장 유지보수 계획(EMP)으로 추가 10년까지 제공하며 커널 11.3.0과 FreeRTOS-Plus-TCP 4.4.1의 LTS 기한을 2028. 4. 30.으로 적는다고 설명한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-LTS/blob/202604.01-LTS/README.md" target="_blank" rel="noopener">FreeRTOS-LTS 202604.01-LTS README.md 도입부와 LTS 표</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-01">BM-01</a></td>
+<td>ARM CMSIS</td>
+<td>CMSIS_5의 gcc_arm.ld 링커 스크립트는 스택·힙 크기를 심볼로 정의하고 스택 한계가 힙 한계 아래로 내려가면 링크 시 ASSERT로 RAM 초과를 알린다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS_5/blob/5.9.0/Device/ARM/ARMCM4/Source/GCC/gcc_arm.ld" target="_blank" rel="noopener">Device/ARM/ARMCM4/Source/GCC/gcc_arm.ld 46행, 마지막 ASSERT</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-02">BM-02</a></td>
+<td>avr-libc</td>
+<td>avr-libc FAQ는 ISR에서 갱신한 변수를 메인 루프가 검사하는 예에서 최적화가 접근을 제거하므로 해당 변수를 volatile로 선언해야 한다고 설명한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/FAQ.html" target="_blank" rel="noopener">avr-libc FAQ, My program doesn't recognize a variable updated within an interrupt routine</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-03">BM-03</a></td>
+<td>mcu-tools/mcuboot</td>
+<td>MCUboot v2.1.0의 security_cnt.h는 보안 카운터 값을 새 값이 더 클 때만 갱신하는 인터페이스를 정의하고 정전에도 안전하게 구현하거나 하드웨어 카운터를 쓰라고 요구한다.</td>
+<td><a href="https://github.com/mcu-tools/mcuboot/blob/v2.1.0/boot/bootutil/include/bootutil/security_cnt.h" target="_blank" rel="noopener">boot/bootutil/include/bootutil/security_cnt.h</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-04">BM-04</a></td>
+<td>ArduinoCore-avr</td>
+<td>ArduinoCore-avr의 millis()는 timer0_millis를 읽는 동안 인터럽트를 끄고 이전 SREG 값을 복원하며 주석은 쓰기 도중 읽으면 일관되지 않은 값이 나올 수 있다고 설명한다.</td>
+<td><a href="https://github.com/arduino/ArduinoCore-avr/blob/1.8.6/cores/arduino/wiring.c" target="_blank" rel="noopener">cores/arduino/wiring.c millis()</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-05">BM-05</a></td>
+<td>SEI CERT C</td>
+<td>SEI CERT INT32-C는 부호 있는 정수 오버플로가 정의되지 않은 동작이며 특히 오염된 출처에서 온 부호 있는 정수 값에 대한 연산이 중요하다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/rules/integers-int/int32-c" target="_blank" rel="noopener">INT32-C 도입부</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-06">BM-06</a></td>
+<td>ARM CMSIS</td>
+<td>CMSIS_5의 startup_ARMCM4.S는 기본 핸들러를 약한 심볼의 무한 루프로 정의하며 실제 핸들러로 덮어쓸 수 있다고 주석한다.</td>
+<td><a href="https://github.com/ARM-software/CMSIS_5/blob/5.9.0/Device/ARM/ARMCM4/Source/GCC/startup_ARMCM4.S" target="_blank" rel="noopener">Device/ARM/ARMCM4/Source/GCC/startup_ARMCM4.S Default_Handler 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-07">BM-07</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel V11.1.0은 태스크 생성 때 스택을 고정 값으로 채우고, 그 값이 남아 있는 길이를 세어 스택 여유를 계산한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/tasks.c" target="_blank" rel="noopener">tasks.c L120, L1824, L6311</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-08">BM-08</a></td>
+<td>GCC</td>
+<td>GCC 매뉴얼은 자원이 제한된 임베디드 freestanding 타깃에서 계측된 애플리케이션이 타깃에서 실행되고 분석은 호스트에서 하는 코드 실행률(coverage) 측정 절차를 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Freestanding-Environments.html" target="_blank" rel="noopener">GCC 13.2 매뉴얼 10.6</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-09">BM-09</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 v1.17.0 문서는 센서·시스템 고장을 명령으로 주입하는 기능을 설명한다. 다만 개발 중이어서 고장 종류와 환경에 따라 지원이 다르다고 적는다. <strong>(부분)</strong> 인터럽트 폭주, 전원 순단, WCET 실측은 이 문서로 뒷받침하지 않는다.</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot/blob/v1.17.0/docs/en/debug/failure_injection.md" target="_blank" rel="noopener">docs/en/debug/failure_injection.md L3, L9-15</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bm-10">BM-10</a></td>
+<td>Zephyr</td>
+<td>Zephyr v4.2.0의 west.yml은 HAL 등 외부 모듈마다 revision을 지정해 형상을 고정한다. <strong>(부분)</strong></td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/west.yml" target="_blank" rel="noopener">west.yml L247-248(hal_stm32 예)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-01">WRW-01</a></td>
+<td>nasa/osal</td>
+<td>NASA OSAL v7.0.1 저장소는 RTP 전용 BSP(generic-vxworks-rtp)를 별도로 두고, 이 BSP가 vxworks-rtp OS 계층하고만 동작한다고 CMake 파일에 명시한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/bsp/generic-vxworks-rtp/CMakeLists.txt" target="_blank" rel="noopener">src/bsp/generic-vxworks-rtp/CMakeLists.txt</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-02">WRW-02</a></td>
+<td>Wind River VxWorks (공개 CVE)</td>
+<td>CVE-2010-2965는 VxWorks 6.x·5.x 이하의 WDB 타깃 에이전트 디버그 서비스가 UDP 포트 17185 요청으로 원격 공격자에게 임의 메모리 읽기·수정과 함수 호출을 허용했다고 기록한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2010-2965" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-03">WRW-03</a></td>
+<td>VxWorks (AdaCore GNAT 문서)</td>
+<td>AdaCore의 VxWorks용 GNAT 문서에 따르면 커널 모듈과 커널 응용의 스택 검사는 INCLUDE_PROTECT_TASK_STACK을 켠 커널을 전제로 하고, VxWorks 7부터 -fstack-check는 스택 프로빙 방식으로 동작한다.</td>
+<td><a href="https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx/vxworks_topics.html" target="_blank" rel="noopener">GNAT UG Supplement for Cross Platforms 28.0w, VxWorks Topics</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-04">WRW-04</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 v1.16.1의 공통 컴파일러 플래그는 -Wall -Wextra -Werror를 기본으로 두고 -Wformat-security, -Wshadow, -Wcast-align 등을 추가하며 일부 경고만 -Wno-로 명시적으로 끈다.</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot/blob/v1.16.1/cmake/px4_add_common_flags.cmake" target="_blank" rel="noopener">cmake/px4_add_common_flags.cmake, add_compile_options 블록 (Warnings / disabled warnings)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-05">WRW-05</a></td>
+<td>Wind River VxWorks 데이터시트</td>
+<td>Wind River 공개 데이터시트는 VxWorks 기능으로 스택 가드 페이지와 스택 스매싱 보호를 든다. <strong>(부분)</strong> 판별·CPU별 지원과 Diab 옵션은 공개 원문으로 확인하지 못했으므로 설치본 문서로 확정한다.</td>
+<td><a href="https://www.windriver.com/resource/vxworks-datasheet" target="_blank" rel="noopener">VxWorks Datasheet, 기능 목록(조회일 2026. 11. 2.)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-06">WRW-06</a></td>
+<td>Zephyr</td>
+<td>Zephyr v4.2.0 인터럽트 문서는 많은 커널 API를 스레드에서만 쓸 수 있고 ISR에서는 쓸 수 없다고 설명한다. <strong>(부분)</strong> 일반 원칙 근거이며 VxWorks 고유 자료가 아니다. memPartLib·checkStack 이름은 공개 공식 원문에서 확인하지 못했다.</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/doc/kernel/services/interrupts.rst" target="_blank" rel="noopener">doc/kernel/services/interrupts.rst L54</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-07">WRW-07</a></td>
+<td>nasa/osal</td>
+<td>NASA OSAL의 generic-vxworks BSP는 접근용 뮤텍스를 semMInitialize로 만들 때 SEM_Q_PRIORITY, SEM_INVERSION_SAFE, SEM_DELETE_SAFE 옵션을 함께 지정한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/bsp/generic-vxworks/src/bsp_start.c" target="_blank" rel="noopener">src/bsp/generic-vxworks/src/bsp_start.c, OS_BSPMain()</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-08">WRW-08</a></td>
+<td>Rapita Systems</td>
+<td>Rapita Systems는 임베디드 소프트웨어의 코드 실행률 측정이 계측 코드를 쓰며, 계측판과 비계측판의 실행 시간을 비교한 사례에서 일반 계측이 49% 느렸다고 보고한다. <strong>(부분)</strong> 일반 원칙 근거이며 VxWorks 고유 자료가 아니다. 벤더 블로그의 라즈베리 파이 측정값이다. 계측이 타이밍을 바꾼다는 부분의 근거이며, 시뮬레이터 결과로 갈음하지 않는다는 부분은 매뉴얼 기준이다.</td>
+<td><a href="https://www.rapitasystems.com/blog/what-are-overheads-code-coverage-using-doom-example" target="_blank" rel="noopener">What are the overheads of code coverage? 본문</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-09">WRW-09</a></td>
+<td>Wind River VxWorks 데이터시트</td>
+<td>Wind River 공개 데이터시트는 VxWorks 기능으로 ASAN과 KASAN을 든다. <strong>(부분)</strong> INCLUDE_MEM_EDR과 Workbench 메모리 분석 도구는 공개 공식 원문으로 확인하지 못했다.</td>
+<td><a href="https://www.windriver.com/resource/vxworks-datasheet" target="_blank" rel="noopener">VxWorks Datasheet, 기능 목록(조회일 2026. 11. 2.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#wrw-10">WRW-10</a></td>
+<td>Wind River VxWorks (공개 CVE)</td>
+<td>CVE-2019-12256은 VxWorks 6.9와 vx7의 IPv4 컴포넌트(IPNET)에서 IP 옵션 파싱 중 스택 오버플로가 발생한다고 기록한다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2019-12256" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-01">CCS-01</a></td>
+<td>TI C28x 컴파일러 SPRU514AA</td>
+<td>TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)에 따르면 C28x의 바이트는 char와 같은 16비트이고, 그래서 sizeof(int)의 값은 2가 아니라 1이다.</td>
+<td><a href="https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf" target="_blank" rel="noopener">SPRU514AA (v25.11.0.LTS, 2026-03) C/C++ Language 장, sizeof 설명</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-02">CCS-02</a></td>
+<td>c2000ware-core-sdk</td>
+<td>C2000Ware driverlib dcsm.h는 DCSM_unlockZone1CSM이 사용자 OTP의 네 패스워드 값 중 0xFFFFFFFF와 다른 값이 있을 때 입력한 패스워드를 CSM 키 레지스터에 써서 잠금을 푼다고 설명한다.</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk/blob/REL_C2000Ware_v26.02.00.00.LTS/driverlib/f28002x/driverlib/dcsm.h" target="_blank" rel="noopener">driverlib/f28002x/driverlib/dcsm.h, DCSM_unlockZone1CSM() 주석</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-03">CCS-03</a></td>
+<td>TI C28x 컴파일러 SPRU514AA</td>
+<td>TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)는 스택 크기를 링크 시 --stack_size 옵션으로, 힙 크기를 링커의 --heap_size 옵션으로 지정한다고 설명한다.</td>
+<td><a href="https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf" target="_blank" rel="noopener">SPRU514AA, Run-Time Environment 장 (Stack / Dynamic Memory Allocation 절)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-04">CCS-04</a></td>
+<td>TI C28x 컴파일러 SPRU514AA</td>
+<td>TI의 TMS320C28x 컴파일러 사용자 가이드(v25.11.0.LTS)는 --emit_warnings_as_errors를 모든 경고를 오류로 처리하는 옵션으로, --issue_remarks를 기본으로 억제된 리마크를 출력하는 옵션으로 설명한다.</td>
+<td><a href="https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf" target="_blank" rel="noopener">SPRU514AA, 2.7.1 Controlling Diagnostic Messages (Table 2-10 Diagnostic Message Options)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-05">CCS-05</a></td>
+<td>TI Arm Clang 컴파일러</td>
+<td>TI Arm Clang(tiarmclang) 컴파일러 사용자 가이드는 -fstack-protector, -fstack-protector-strong, -fstack-protector-all 옵션을 제공하며 사용자가 __stack_chk_fail()과 __stack_chk_guard를 직접 정의해야 한다고 설명한다.</td>
+<td><a href="https://software-dl.ti.com/codegen/docs/tiarmclang/compiler_tools_user_guide/compiler_manual/compiler_security/stack_smashing_detection.html" target="_blank" rel="noopener">TI Arm Clang Compiler Tools User's Guide 5.1.0.LTS, 15.2 Stack Smashing Detection</a></td>
+<td>4(외 3건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-06">CCS-06</a></td>
+<td>TI ARM 컴파일러 SPNU151W</td>
+<td>TI ARM 컴파일러 사용자 가이드(v20.2.0.LTS)의 --check_misra 옵션은 표 2-21 'MISRA-C 2004 Options'에 속하며 MISRA-C:2004 규칙 검사를 켠다.</td>
+<td><a href="https://www.ti.com/lit/ug/spnu151w/spnu151w.pdf" target="_blank" rel="noopener">SPNU151W (v20.2.0.LTS, 2023-03), 2.3 옵션 요약 표 2-21</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-07">CCS-07</a></td>
+<td>c2000ware-core-sdk</td>
+<td>C2000Ware F28002x 헤더(f28002x_cputimer.h)는 CPU 타이머 레지스터를 extern volatile struct CPUTIMER_REGS 형태의 volatile 구조체 변수로 선언한다.</td>
+<td><a href="https://github.com/TexasInstruments/c2000ware-core-sdk/blob/REL_C2000Ware_v26.02.00.00.LTS/device_support/f28002x/headers/include/f28002x_cputimer.h" target="_blank" rel="noopener">device_support/f28002x/headers/include/f28002x_cputimer.h</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-08">CCS-08</a></td>
+<td>TI SYS/BIOS</td>
+<td>TI SYS/BIOS Task 모듈 문서는 Task.checkStackFlag의 기본값이 true이고, 전체 스택 검사를 켜려면 이 플래그와 ti.sysbios.hal.Hwi.checkStackFlag를 모두 설정해야 한다고 설명한다.</td>
+<td><a href="https://software-dl.ti.com/dsps/dsps_public_sw/sdo_sb/targetcontent/sysbios/6_53_02_00/exports/bios_6_53_02_00/docs/cdoc/ti/sysbios/knl/Task.html" target="_blank" rel="noopener">SYS/BIOS 6.53.02.00 cdoc, ti.sysbios.knl.Task, config Task.checkStackFlag</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-09">CCS-09</a></td>
+<td>TI C28x 컴파일러 SPRU514AA</td>
+<td>TI C28x 컴파일러 사용자 가이드(v25.11.0.LTS)에 따르면 코드 실행률 측정은 --gen_profile_info로 계측 코드와 카운터 메모리를 더한 프로그램을 타깃에서 실행해 자료를 모은다. <strong>(부분)</strong> 시뮬레이터 결과를 참고용으로 둔다는 문장은 이 절에 없다.</td>
+<td><a href="https://www.ti.com/lit/ug/spru514aa/spru514aa.pdf" target="_blank" rel="noopener">SPRU514AA 3.8.1절(PDF 68쪽)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#ccs-10">CCS-10</a></td>
+<td>TI Code Composer Studio</td>
+<td>TI CCS 사용자 가이드는 빌드 구성마다 빌드 도구 버전을 지정할 수 있고, 프로젝트가 빌드에 쓴 빌드 도구 버전을 담는다고 설명한다. <strong>(부분)</strong> 회귀시험과 설치 파일 해시 검증은 이 문서에 없다.</td>
+<td><a href="https://software-dl.ti.com/ccs/esd/documents/users_guide/ccs_project-management.html" target="_blank" rel="noopener">CCS User's Guide, Project Management(조회일 2026. 11. 2.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-01">MSVC-01</a></td>
+<td>Microsoft Learn (.NET)</td>
+<td>Microsoft Learn에 따르면 unsafe 컨텍스트가 있는 C# 코드는 AllowUnsafeBlocks 컴파일러 옵션을 추가해야 컴파일되며, 이런 코드에는 보안·안정성 위험이 따른다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code" target="_blank" rel="noopener">Unsafe code, pointer types, and function pointers 문서 서두</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-02">MSVC-02</a></td>
+<td>Microsoft Learn (Win32)</td>
+<td>Microsoft Learn의 SetDefaultDllDirectories 문서는 이 함수가 LOAD_LIBRARY_SEARCH 플래그 없이 LoadLibraryEx를 호출할 때 쓰는 DLL 검색 디렉터리 집합을 지정한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-setdefaultdlldirectories" target="_blank" rel="noopener">SetDefaultDllDirectories function (libloaderapi.h) 서두</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-03">MSVC-03</a></td>
+<td>Microsoft Learn (MSVC)</td>
+<td>Microsoft Learn은 /sdl이 /GS가 제공하는 기준 보안 검사의 상위 집합을 켜고 /GS-를 덮어쓴다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/build/reference/sdl-enable-additional-security-checks" target="_blank" rel="noopener">/sdl (Enable Additional Security Checks), Remarks</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-04">MSVC-04</a></td>
+<td>Microsoft Learn (MSVC)</td>
+<td>Microsoft Learn의 C4996 문서에 따르면 CRT 폐기 경고를 끄는 매크로는 _CRT_SECURE_NO_WARNINGS이다. 폐기 대상 함수는 대부분 버퍼 경계를 검사하지 않아 잘못 쓰면 보안 문제로 이어진다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-3-c4996" target="_blank" rel="noopener">Compiler Warning (level 3) C4996, Unsafe CRT Library functions</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-05">MSVC-05</a></td>
+<td>Microsoft Learn (C#)</td>
+<td>Microsoft Learn은 CheckForOverflowUnderflow가 true이면 기본 컨텍스트가 checked 컨텍스트가 되어 정수 연산 오버플로 검사가 켜지고 기본값은 false라고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language" target="_blank" rel="noopener">Compiler Options - language feature rules, CheckForOverflowUnderflow</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-06">MSVC-06</a></td>
+<td>Microsoft Learn (.NET)</td>
+<td>Microsoft Learn의 XmlReaderSettings.DtdProcessing 문서는 DTD 처리 설정의 기본값이 Prohibit라고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmlreadersettings.dtdprocessing" target="_blank" rel="noopener">XmlReaderSettings.DtdProcessing Property, Property Value</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-07">MSVC-07</a></td>
+<td>Microsoft Learn (MSVC)</td>
+<td>Microsoft Learn의 C/C++ 코드 분석 개요는 SAL 주석이 함수 매개변수와 반환형의 사전·사후 조건 정보를 제공해 코드 분석의 정확도를 높인다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/code-quality/code-analysis-for-c-cpp-overview" target="_blank" rel="noopener">Code analysis for C/C++ overview, Annotation support</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-08">MSVC-08</a></td>
+<td>Microsoft Learn (MSVC)</td>
+<td>Microsoft Learn은 MSVC의 AddressSanitizer 지원이 Visual Studio 2019 16.9부터이고 Windows 10 이상의 x86·x64로 한정되며, 향후 요청 대상으로 /fsanitize=undefined를 언급한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/cpp/sanitizers/asan" target="_blank" rel="noopener">AddressSanitizer 개요 / Note</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-09">MSVC-09</a></td>
+<td>Microsoft Learn (MSVC·.NET·Visual Studio 공식 문서)</td>
+<td>Microsoft Learn에 따르면 Visual Studio 코드 실행률 기능은 판에 따라 쓸 수 있는 에디션이 다르고 결과는 블록과 줄 단위로 보여 준다. <strong>(부분)</strong></td>
+<td><a href="https://learn.microsoft.com/en-us/visualstudio/test/using-code-coverage-to-determine-how-much-code-is-being-tested" target="_blank" rel="noopener">Use code coverage to determine how much code is being tested, Report in blocks or lines</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#msvc-10">MSVC-10</a></td>
+<td>Microsoft Learn (Visual Studio)</td>
+<td>Microsoft Learn은 부트스트래퍼의 --layout 옵션으로 Visual Studio 로컬(오프라인) 레이아웃을 만들 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/visualstudio/install/create-an-offline-installation-of-visual-studio" target="_blank" rel="noopener">Create an offline installation of Visual Studio, Step 2</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-01">AVR-01</a></td>
+<td>avr-libc 2.1.0</td>
+<td>avr-libc 문서는 AVR에 하드웨어 메모리 관리가 없고 큰 동적 메모리나 스택 요구가 있으면 힙과 스택이 충돌할 수 있다고 설명한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/malloc.html" target="_blank" rel="noopener">avr-libc 2.1.0 User Manual, Memory Areas and Using malloc(), Introduction</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-02">AVR-02</a></td>
+<td>ATmega328P 데이터시트</td>
+<td>ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트는 락 비트 모드 3(LB1·LB2 모두 프로그래밍)에서 병렬·직렬 프로그래밍으로의 추가 프로그래밍이 금지되고 부트 락 비트와 퓨즈 비트가 잠기며, 퓨즈와 부트 락 비트를 먼저 프로그래밍한 뒤 LB1·LB2를 프로그래밍하라고 설명한다.</td>
+<td><a href="https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf" target="_blank" rel="noopener">DS40002061A, 28.1 Program And Data Memory Lock Bits, Table 28-2</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-03">AVR-03</a></td>
+<td>avr-libc 2.1.0</td>
+<td>avr-libc FAQ는 표준 C의 비트 연산이 피연산자를 int로 승격하며 avr-gcc에서 int는 기본 16비트이므로 8비트 연산이 16비트 연산으로 컴파일될 수 있다고 설명한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/FAQ.html" target="_blank" rel="noopener">avr-libc 2.1.0 FAQ, Why does the compiler compile an 8-bit operation that uses bitwise operators into a 16-bit operation in assembly?</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-04">AVR-04</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -Wstack-usage=byte-size가 함수의 스택 사용량이 지정 바이트를 넘을 수 있으면 경고하며 alloca·가변 길이 배열 공간도 포함해 보수적으로 계산한다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Warning-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Warning Options, -Wstack-usage=</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-05">AVR-05</a></td>
+<td>GCC 14.2.0 소스</td>
+<td>GCC 14.2.0의 최상위 configure.ac는 avr 타깃에서 target-libssp(스택 보호 런타임 라이브러리) 빌드를 제외하며 그 사유로 호스티드 I/O 지원이 없다고 주석에 적는다.</td>
+<td><a href="https://gcc.gnu.org/git/?p=gcc.git;a=blob_plain;f=configure.ac;hb=refs/tags/releases/gcc-14.2.0" target="_blank" rel="noopener">configure.ac (tag releases/gcc-14.2.0), 'Disable libssp for some systems.' 블록</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-06">AVR-06</a></td>
+<td>avr-libc 2.1.0</td>
+<td>avr-libc 문서는 AVR이 플래시와 RAM의 주소공간이 분리된 하버드 구조라고 설명하고, PROGMEM 매크로로 데이터를 프로그램 메모리에 두고 avr/pgmspace.h의 매크로로 읽도록 한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/pgmspace.html" target="_blank" rel="noopener">avr-libc 2.1.0 User Manual, Data in Program Space</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-07">AVR-07</a></td>
+<td>avr-libc 2.1.0</td>
+<td>avr-libc의 util/atomic.h 문서는 메인과 ISR이 공유하는 16비트 이상 변수에 volatile을 선언해도 컴파일러 최적화 제거만 막을 뿐 원자적 접근은 보장하지 않는다고 설명한다.</td>
+<td><a href="https://www.nongnu.org/avr-libc/user-manual/group__util__atomic.html" target="_blank" rel="noopener">avr-libc 2.1.0, util/atomic.h Detailed Description</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-08">AVR-08</a></td>
+<td>Microchip MPLAB X IDE 문서</td>
+<td>Microchip MPLAB X 문서에 따르면 코드 실행률은 프로젝트 속성에서 켜고 시험 코드를 디버그 실행한 뒤 확인하며, 지원 XC 컴파일러가 있어야 한다. <strong>(부분)</strong> Microchip Studio가 아니라 후속 도구 기준이다. 시뮬레이터를 보조로 둔다는 문장은 없다.</td>
+<td><a href="https://onlinedocs.microchip.com/oxy/GUID-D79ACEBE-41BD-43EF-8E1B-9462847AE13E-en-US-12/GUID-FCF7FCE3-9E08-4DB6-95C3-BEDFB80F1A93.html" target="_blank" rel="noopener">MPLAB X IDE User's Guide 10.3.1 Code Coverage Overview</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-09">AVR-09</a></td>
+<td>ATmega328P 데이터시트</td>
+<td>ATmega48A/PA/88A/PA/168A/PA/328/P 데이터시트는 debugWIRE 시스템이 DWEN 퓨즈가 프로그래밍되고 락 비트가 프로그래밍되지 않은 상태에서 활성화된다고 설명한다.</td>
+<td><a href="https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf" target="_blank" rel="noopener">DS40002061A, 25.3 Physical Interface (debugWIRE)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#avr-10">AVR-10</a></td>
+<td>Microchip Studio 공식 페이지</td>
+<td>Microchip 공식 페이지는 Microchip Studio를 새 설계에 권장하지 않고 새 제품도 지원하지 않는다고 안내하며, 최신 기능과 지원은 MPLAB for VS Code를 쓰라고 안내한다.</td>
+<td><a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio" target="_blank" rel="noopener">Microchip Studio for AVR and SAM Devices, 페이지 머리 안내(조회일 2026. 11. 2.)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-01">GCC-01</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 보안 강화 플래그 묶음인 -fhardened가 현재 GNU/Linux 타깃에서만 지원되고 일부 하위 옵션(-fcf-protection=full)은 x86 GNU/Linux에만 적용된다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Instrumentation Options, -fhardened</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-02">GCC-02</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -Wformat=2가 현재 -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k와 같다고, -w가 모든 경고 메시지를 억제한다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Warning-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Warning Options, -Wformat=2 / -w</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-03">GCC-03</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -fhardened가 -D_FORTIFY_SOURCE=3, -ftrivial-auto-var-init=zero, -fPIE -pie -Wl,-z,relro,-z,now, -fstack-protector-strong, -fstack-clash-protection 등을 켜고 glibc가 2.35보다 오래되면 -D_FORTIFY_SOURCE=2를 쓴다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Instrumentation Options, -fhardened</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-04">GCC-04</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -fcf-protection=의 full 값이 branch와 return을 함께 지정하는 것과 같다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Instrumentation Options, -fcf-protection=</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-05">GCC-05</a></td>
+<td>zephyrproject-rtos/zephyr</td>
+<td>Zephyr v4.2.0 커널은 kernel/compiler_stack_protect.c에서 컴파일러가 참조하는 전역 __stack_chk_guard를 직접 정의한다.</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/kernel/compiler_stack_protect.c" target="_blank" rel="noopener">kernel/compiler_stack_protect.c</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-06">GCC-06</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서의 정적 분석 옵션 절은 -fanalyzer가 이 릴리스에서 C 코드에만 적합하다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Static-Analyzer-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Static Analyzer Options, -fanalyzer</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-07">GCC-07</a></td>
+<td>GCC 12.1.0 문서</td>
+<td>GCC 12.1.0 문서의 Optimize Options에는 -ftrivial-auto-var-init=가 수록되어 있으며 자동 변수를 패턴 또는 0으로 초기화해 미초기화 메모리 노출을 막는다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-12.1.0/gcc/Optimize-Options.html" target="_blank" rel="noopener">GCC 12.1.0 Manual, Optimize Options, -ftrivial-auto-var-init=</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-08">GCC-08</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -fsanitize=address가 메모리 접근 명령을 계측해 범위 밖 접근과 해제 후 사용을 탐지한다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Instrumentation Options, -fsanitize=address</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-09">GCC-09</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -fprofile-info-section이 생성자·파괴자나 C 라이브러리 파일 I/O를 지원하지 않는 자원이 제한된 freestanding 환경(예: 임베디드)을 대상으로 하며 호스티드 환경용이 아니라고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Instrumentation-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Instrumentation Options, -fprofile-info-section</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#gcc-10">GCC-10</a></td>
+<td>GCC 14.2.0 문서</td>
+<td>GCC 14.2.0 문서는 -ffile-prefix-map=old=new가 컴파일 결과에 기록되는 경로를 바꿔 위치와 무관한 재현 가능한 빌드를 만드는 데 쓸 수 있다고 설명한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/Overall-Options.html" target="_blank" rel="noopener">GCC 14.2.0 Manual, Overall Options, -ffile-prefix-map</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-01">BSP-01</a></td>
+<td>ArduPilot</td>
+<td>ArduPilot Copter-4.5.7의 AP_HAL.h는 UARTDriver, GPIO, Scheduler 등 하드웨어 접근 클래스를 모두 순수 가상인 HAL 모듈 클래스로 포함한다.</td>
+<td><a href="https://github.com/ArduPilot/ardupilot/blob/Copter-4.5.7/libraries/AP_HAL/AP_HAL.h" target="_blank" rel="noopener">libraries/AP_HAL/AP_HAL.h</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-02">BSP-02</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL v1.8.5의 flash_ex 소스는 읽기 보호 레벨(OB_RDP_LEVEL_0·1·2)을 옵션 바이트로 설정하며 레벨 2를 켜면 레벨 1이나 0으로 되돌릴 수 없다고 경고한다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Src/stm32f4xx_hal_flash_ex.c" target="_blank" rel="noopener">Src/stm32f4xx_hal_flash_ex.c, FLASH_OB_RDP_LevelConfig() 주석</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-03">BSP-03</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL v1.8.5의 HAL_MPU_ConfigRegion은 MPU 영역 구조체의 DisableExec(명령어 실행 금지) 값을 설정에 사용하고 매개변수 검사에 IS_MPU_INSTRUCTION_ACCESS(MPU_Init-&gt;DisableExec)를 쓴다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Src/stm32f4xx_hal_cortex.c" target="_blank" rel="noopener">Src/stm32f4xx_hal_cortex.c, HAL_MPU_ConfigRegion()</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-04">BSP-04</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL v1.8.5의 hal_conf 템플릿은 USE_FULL_ASSERT 정의를 주석 처리한 채 제공하고, 정의되지 않으면 assert_param(expr)을 ((void)0U)로 치환해 매개변수 검사를 없앤다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Inc/stm32f4xx_hal_conf_template.h" target="_blank" rel="noopener">Inc/stm32f4xx_hal_conf_template.h, USE_FULL_ASSERT / assert_param</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-05">BSP-05</a></td>
+<td>ArduPilot</td>
+<td>ArduPilot Copter-4.5.7의 bouncebuffer.c는 DMA 버퍼 정렬을 확인하고 읽기 전 캐시 무효화와 쓰기 전 캐시 플러시를 명시한다. <strong>(부분)</strong> 수신 길이 상한과 ISR 공유 자원은 이 파일로 뒷받침하지 않는다.</td>
+<td><a href="https://github.com/ArduPilot/ardupilot/blob/Copter-4.5.7/libraries/AP_HAL_ChibiOS/hwdef/common/bouncebuffer.c" target="_blank" rel="noopener">libraries/AP_HAL_ChibiOS/hwdef/common/bouncebuffer.c L56, L78-79, L110, L131-132</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-06">BSP-06</a></td>
+<td>MCUboot</td>
+<td>MCUboot v2.1.0 imgtool 문서는 저장소에 함께 배포되는 개발용 키는 널리 퍼져 있으므로 양산에 쓰지 말고 생성한 양산 키로 공개키를 바꾸라고 안내한다. <strong>(부분)</strong> 시험용 키 사례다. 디버그 출력과 semihosting 제거는 이 문서에 없다.</td>
+<td><a href="https://github.com/mcu-tools/mcuboot/blob/v2.1.0/docs/imgtool.md" target="_blank" rel="noopener">docs/imgtool.md L32-35</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-07">BSP-07</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL v1.8.5의 HAL_RNG_GenerateRandomNumber는 데이터 유효 플래그를 기다리다 시간이 초과되면 오류 코드 HAL_RNG_ERROR_TIMEOUT을 기록하고 HAL_ERROR를 반환한다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Src/stm32f4xx_hal_rng.c" target="_blank" rel="noopener">Src/stm32f4xx_hal_rng.c, HAL_RNG_GenerateRandomNumber()</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-08">BSP-08</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL v1.8.5 소스는 MISRA C:2012 규칙 11.5 편차를 코드 주석 'Derogation MISRAC2012-Rule-11.5'로 표시한다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Src/stm32f4xx_hal_sram.c" target="_blank" rel="noopener">Src/stm32f4xx_hal_sram.c</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-09">BSP-09</a></td>
+<td>Zephyr</td>
+<td>Zephyr v4.2.0 UART 에뮬레이터 API는 드라이버 오류를 설정해 오류 경로를 시험할 수 있게 한다. <strong>(부분)</strong> 에뮬레이터 사례다. 실보드 측정 기준은 매뉴얼을 따른다.</td>
+<td><a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.2.0/include/zephyr/drivers/serial/uart_emul.h" target="_blank" rel="noopener">include/zephyr/drivers/serial/uart_emul.h L87-92</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#bsp-10">BSP-10</a></td>
+<td>STM32F4 HAL Driver</td>
+<td>STM32F4 HAL 저장소의 릴리스 노트는 버전별 수정 내역을 기록하며, v1.8.4에는 RTC 레지스터 쓰기 시 상위 비트 덮어쓰기를 막는 수정이 포함되어 있다.</td>
+<td><a href="https://github.com/STMicroelectronics/stm32f4xx_hal_driver/blob/v1.8.5/Release_Notes.html" target="_blank" rel="noopener">Release_Notes.html, V1.8.4 HAL RTC</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-01">OSS-01</a></td>
+<td>Zephyr</td>
+<td>Zephyr 4.2.0 문서의 west spdx 명령은 소스 파일과 생성된 빌드 파일 사이의 관계를 담은 SPDX 2.2 또는 2.3 문서를 생성한다.</td>
+<td><a href="https://docs.zephyrproject.org/4.2.0/develop/west/zephyr-cmds.html" target="_blank" rel="noopener">Zephyr 4.2.0 docs, Additional Zephyr extension commands, Software bill of materials: west spdx</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-02">OSS-02</a></td>
+<td>GNU GPL v3</td>
+<td>GPL-3.0 본문은 사용자 제품(User Product)에서 수정본을 설치·실행하는 데 필요한 방법·절차·인증 키 등을 '설치 정보(Installation Information)'로 정의한다.</td>
+<td><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GNU GPL v3, Section 6</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-03">OSS-03</a></td>
+<td>Mbed TLS</td>
+<td>Mbed TLS v3.6.7의 mbedtls_config.h는 이 컴파일 타임 옵션 집합으로 기능을 선택적으로 켜고 끄고 전체 메모리 사용량을 줄일 수 있다고 설명한다.</td>
+<td><a href="https://github.com/Mbed-TLS/mbedtls/blob/v3.6.7/include/mbedtls/mbedtls_config.h" target="_blank" rel="noopener">include/mbedtls/mbedtls_config.h, 파일 머리 주석</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-04">OSS-04</a></td>
+<td>KISA</td>
+<td>KISA 암호모듈검증(KCMVP) 개요 페이지는 이 제도를 국가·공공망에 도입되는 암호모듈이 안전하고 올바르게 구현되었는지 확인하는 검증 제도로 소개한다.</td>
+<td><a href="https://seed.kisa.or.kr/kisa/kcmvp/EgovSummary.do" target="_blank" rel="noopener">KISA 암호이용활성화 &gt; 암호모듈검증 &gt; 개요, 목적</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-05">OSS-05</a></td>
+<td>zlib</td>
+<td>zlib 공식 사이트는 배포 소스 압축 파일마다 SHA-256 해시와 GPG 서명을 함께 제공한다.</td>
+<td><a href="https://zlib.net/" target="_blank" rel="noopener">zlib.net 홈, The current release is publicly available here (조회일 2026. 10. 15.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-06">OSS-06</a></td>
+<td>pip</td>
+<td>pip 문서는 원격 변조 방지 수단으로 --require-hashes 해시 검사 모드를 들며, 이 모드에서는 요구사항을 ==로 고정하고 해시를 requirements 파일에 적어 두어야 한다고 설명한다.</td>
+<td><a href="https://pip.pypa.io/en/stable/topics/secure-installs/" target="_blank" rel="noopener">pip documentation, Secure installs, Hash-checking Mode</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-07">OSS-07</a></td>
+<td>Yocto Project</td>
+<td>Yocto Project 5.0.4 레시피 스타일 가이드는 각 패치에 Upstream-Status 태그를 달아 상위 반영 상태(Pending, Submitted 등)를 기록하라고 설명한다.</td>
+<td><a href="https://docs.yoctoproject.org/5.0.4/contributor-guide/recipe-style-guide.html" target="_blank" rel="noopener">Yocto 5.0.4 Contributor Guide, Recipe Style Guide, Patch upstream status</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-08">OSS-08</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel V11.1.0의 MISRA.md는 MISRA C:2012 준수를 표방하되 일부 규칙에서 벗어나며 구체적 편차를 인라인으로 억제하고 목록으로 문서화한다고 밝힌다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.1.0/MISRA.md" target="_blank" rel="noopener">MISRA.md, MISRA Compliance 서두</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-09">OSS-09</a></td>
+<td>OWASP Dependency-Check</td>
+<td>Dependency-Check CLI 문서는 -n/--noupdate 옵션이 NVD-CVE, hosted-suppressions, RetireJS 데이터의 자동 갱신을 끈다고 설명한다.</td>
+<td><a href="https://jeremylong.github.io/DependencyCheck/dependency-check-cli/arguments.html" target="_blank" rel="noopener">dependency-check-cli, Command Line Arguments, --noupdate</a></td>
+<td>4(외 3건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#oss-10">OSS-10</a></td>
+<td>zlib (공개 CVE)</td>
+<td>CVE-2022-37434는 zlib 1.2.12 이하의 inflate 힙 버퍼 오버리드·오버플로를 기록하며 영향을 받는 zlib 소스를 번들한 일반 응용이 있다고 덧붙인다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2022-37434" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-01">LC-01</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel V11.3.1의 MISRA.md는 힙 구현(heap_*.c)의 MISRA C-2012 Rule 21.3 편차 근거를 Directive 4.12 항목에 두고, MISRA 준수 응용에는 정적 할당을 권장한다고 적는다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.3.1/MISRA.md" target="_blank" rel="noopener">MISRA.md:217; MISRA.md; MISRA.md:198</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-02">LC-02</a></td>
+<td>NASA cFE/OSAL</td>
+<td>cFE v7.0.1의 CFE_ES_VerifyCmdLength는 수신한 명령 패킷의 실제 길이가 기대 길이와 다르면 오류 이벤트를 발생시키고 false를 반환한다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/modules/es/fsw/src/cfe_es_dispatch.c" target="_blank" rel="noopener">modules/es/fsw/src/cfe_es_dispatch.c:56; modules/es/fsw/src/cfe_es_dispatch.c:61; modules/es/fsw/src/cfe_es_dispatch.c:68</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-03">LC-03</a></td>
+<td>NASA cFE/OSAL</td>
+<td>OSAL v7.0.1의 common_types.h는 uint32 등을 stdint.h의 고정폭 타입(uint32_t)에 대응시키고 CompileTimeAssert로 sizeof(uint32)가 4바이트임을 컴파일 시점에 확인한다.</td>
+<td><a href="https://github.com/nasa/osal/blob/v7.0.1/src/os/inc/common_types.h" target="_blank" rel="noopener">src/os/inc/common_types.h:85; src/os/inc/common_types.h:157</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-04">LC-04</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 1.17.0-rc2 이하에서 MavlinkLogHandler가 sscanf를 너비 지정자 없이 사용해 60바이트 LogEntry.filepath 버퍼를 넘치게 하는 스택 버퍼 오버플로(CVE-2026-32743, <a href="../../cwe/121/">CWE-121</a>)가 보고되었다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-32743" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-05">LC-05</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>AWS FreeRTOS 10.4.3 이전 커널의 queue.c 큐 생성 코드에 정수 오버플로(CVE-2021-31571)가 있었다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-31571" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-06">LC-06</a></td>
+<td>GCC</td>
+<td>GCC 13.2 매뉴얼에 따르면 현재 -Wformat-security는 포맷 문자열이 문자열 리터럴이 아니고 포맷 인자도 없는 printf·scanf 호출을 경고한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/Warning-Options.html" target="_blank" rel="noopener">Warning Options, -Wformat-security</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-07">LC-07</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>AWS FreeRTOS 1.3.1 이하의 SOCKETS_SetSockOpt에 초기화되지 않은 포인터를 해제하는 결함(CVE-2018-16522)이 보고되었다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2018-16522" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-08">LC-08</a></td>
+<td>NASA cFE/OSAL</td>
+<td>cFE v7.0.1의 샘플 빌드 설정(arch_build_custom.cmake)은 -std=c99 -pedantic -Wall -Werror를 적용하고, -Werror 옆 주석에 코드에 경고가 없어야 한다는 취지를 적는다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/cmake/sample_defs/arch_build_custom.cmake" target="_blank" rel="noopener">cmake/sample_defs/arch_build_custom.cmake:29; cmake/sample_defs/arch_build_custom.cmake:30; cmake/sample_defs/arch_build_custom.cmake:31; cmake/sample_defs/arch_build_custom.cmake:32</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-09">LC-09</a></td>
+<td>NASA cFE/OSAL</td>
+<td>cFE v7.0.1의 global_build_options.cmake는 ENABLE_ASAN 옵션이 켜지면 -fsanitize=address를 컴파일·링크 옵션에 추가한다.</td>
+<td><a href="https://github.com/nasa/cFE/blob/v7.0.1/cmake/sample_defs/global_build_options.cmake" target="_blank" rel="noopener">cmake/sample_defs/global_build_options.cmake:34; cmake/sample_defs/global_build_options.cmake:35</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lc-10">LC-10</a></td>
+<td>FreeRTOS-Kernel</td>
+<td>FreeRTOS-Kernel V11.3.1의 MISRA.md는 MISRA 준수 점검에 쓴 정적 분석 도구와 버전(Coverity 2023.6.1)을 명시한다.</td>
+<td><a href="https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/V11.3.1/MISRA.md" target="_blank" rel="noopener">MISRA.md</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-01">LCPP-01</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1 문서는 비행 소프트웨어 코딩 표준이 시스템 초기화 이후의 동적 메모리 할당을 금지한다고 적고, 운영 중 메모리 관리는 버퍼 풀 문서를 참조하라고 안내한다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/docs/user-manual/framework/memory-management/memory-allocation.md" target="_blank" rel="noopener">docs/user-manual/framework/memory-management/memory-allocation.md:27</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-02">LCPP-02</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 v1.17.0의 NuttX 플랫폼 빌드 설정은 C++ 컴파일 플래그에 -fno-exceptions와 -fno-rtti를 포함한다.</td>
+<td><a href="https://github.com/PX4/PX4-Autopilot/blob/v1.17.0/platforms/nuttx/cmake/px4_impl_os.cmake" target="_blank" rel="noopener">platforms/nuttx/cmake/px4_impl_os.cmake:86; platforms/nuttx/cmake/px4_impl_os.cmake:87</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-03">LCPP-03</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1의 Fw::ObjBase는 가상 소멸자를 선언한다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/Fw/Obj/ObjBase.hpp" target="_blank" rel="noopener">Fw/Obj/ObjBase.hpp:99</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-04">LCPP-04</a></td>
+<td>PX4-Autopilot</td>
+<td>PX4 1.17.0-rc2 이하에서 길이 60의 고정 크기 배열(LogEntry.filepath)에 경로를 너비 제한 없이 읽어 오버플로가 발생한 사례(CVE-2026-32743)가 있다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-32743" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-05">LCPP-05</a></td>
+<td>GCC</td>
+<td>GCC 13.2 매뉴얼에 따르면 -Wold-style-cast는 C++ 프로그램에서 void가 아닌 형으로의 C 스타일 캐스트 사용을 경고한다.</td>
+<td><a href="https://gcc.gnu.org/onlinedocs/gcc-13.2.0/gcc/C_002b_002b-Dialect-Options.html" target="_blank" rel="noopener">C++ Dialect Options, -Wold-style-cast</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-06">LCPP-06</a></td>
+<td>QGroundControl</td>
+<td>QGroundControl v5.1.5의 하드웨어 버퍼 가져오기 캐시는 find()가 돌려준 포인터가 다음 insert()/eraseIf()/clear() 호출에서 무효가 되므로 그 호출을 넘어 보관하지 말라고 주석으로 정하고, eraseIf()는 erase가 돌려준 반복자로 순회를 잇는다.</td>
+<td><a href="https://github.com/mavlink/qgroundcontrol/blob/v5.1.5/src/VideoManager/VideoReceiver/GStreamer/HwBuffers/common/GstHwImportCache.h" target="_blank" rel="noopener">src/VideoManager/VideoReceiver/GStreamer/HwBuffers/common/GstHwImportCache.h:26-27; 62-74</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-07">LCPP-07</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1의 Os::ScopeLock은 생성 시 뮤텍스를 잠그고 객체가 범위를 벗어나 소멸할 때 풀리게 하는 범위 잠금 클래스로 문서화되어 있다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/Os/MutexInterface.hpp" target="_blank" rel="noopener">Os/MutexInterface.hpp:84; Os/MutexInterface.hpp:85</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-08">LCPP-08</a></td>
+<td>CodeQL Coding Standards</td>
+<td>CodeQL Coding Standards v2.63.0 설명서는 규칙별로 지원 여부를 판단해 릴리스마다 지원 규칙표를 내고, 정적 분석에 맞지 않는 규칙이 있음을 밝히며, 분석 대상 C++ 표준과 컴파일러 구성을 표로 한정한다.</td>
+<td><a href="https://github.com/github/codeql-coding-standards/blob/v2.63.0/docs/user_manual.md" target="_blank" rel="noopener">docs/user_manual.md L76, L86, L119-125</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-09">LCPP-09</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1의 cmake/options.cmake는 ENABLE_SANITIZER_ADDRESS의 기본값을 BUILD_TESTING 값으로 정해 시험 빌드에서 AddressSanitizer가 기본으로 켜지게 한다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/cmake/options.cmake" target="_blank" rel="noopener">cmake/options.cmake:255; cmake/options.cmake:259</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcpp-10">LCPP-10</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1의 cmake/settings.cmake는 CMAKE_CXX_STANDARD가 정의되지 않았으면 C++14를 필수(REQUIRED)로 설정하고 컴파일러 확장은 끈다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/cmake/settings.cmake" target="_blank" rel="noopener">cmake/settings.cmake:18; cmake/settings.cmake:19; cmake/settings.cmake:20</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-02">LCS-02</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn은 AllowUnsafeBlocks 컴파일러 옵션의 기본값이 false이며 이때 unsafe 코드가 허용되지 않는다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/language" target="_blank" rel="noopener">C# compiler options - Language, AllowUnsafeBlocks</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-03">LCS-03</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn은 BinaryFormatter.Deserialize가 신뢰할 수 없는 입력에는 결코 안전하지 않다고 경고하며, .NET 9부터 내장 BinaryFormatter 구현이 사용 시 예외를 던진다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide" target="_blank" rel="noopener">BinaryFormatter security guide, Warning/Note</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-04">LCS-04</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn CA2101은 P/Invoke 문자열 인자의 마샬링을 명시하지 않으면 유니코드→ANSI 변환의 best-fit 매핑이 선택하는 문자를 통제할 수 없어 보안 취약점이 될 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2101" target="_blank" rel="noopener">CA2101 Rule description</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-05">LCS-05</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn은 검사 컨텍스트를 지정하지 않으면 CheckForOverflowUnderflow 옵션이 미설정이 기본이라 정수 연산·변환이 unchecked 컨텍스트로 실행된다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/checked-and-unchecked" target="_blank" rel="noopener">checked and unchecked statements, CheckForOverflowUnderflow</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-06">LCS-06</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn CA2000은 IDisposable 지역 객체를 명시적으로 해제하지 않으면 가비지 수집기가 종료자를 실행하는 불확정 시점에 해제되므로 명시적으로 해제해야 한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2000" target="_blank" rel="noopener">CA2000 Rule description</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-07">LCS-07</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn CA5351은 MD5 해시가 충돌 공격에 취약하고 DES는 키가 작아 하루 안에 무차별 대입이 가능하다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca5351" target="_blank" rel="noopener">CA5351 Rule description</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-08">LCS-08</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn CA1031은 System.Exception 같은 일반 예외를 catch하면 경고하며 일반 예외는 잡지 말아야 한다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1031" target="_blank" rel="noopener">CA1031 Rule description</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-09">LCS-09</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn은 기본 분석 모드(Default)에서는 소수의 규칙만 빌드 경고로 활성화되며, 프로젝트 파일의 AnalysisMode 속성으로 분석 모드를 바꿀 수 있다고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview" target="_blank" rel="noopener">Code analysis overview, Analysis mode</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-10">LCS-10</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn에 따르면 RestorePackagesWithLockFile 속성을 켜면 NuGet 복원이 프로젝트 루트에 의존성 전체를 나열한 packages.lock.json을 생성한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files" target="_blank" rel="noopener">Locking dependencies</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-11">LCS-11</a></td>
+<td>coverlet</td>
+<td>coverlet v10.1.0 README는 coverlet을 라인·분기·메서드 코드 실행률을 지원하는 .NET용 크로스 플랫폼 코드 실행률 프레임워크로 소개한다.</td>
+<td><a href="https://github.com/coverlet-coverage/coverlet/blob/v10.1.0/README.md" target="_blank" rel="noopener">README 개요</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-12">LCS-12</a></td>
+<td>SharpFuzz</td>
+<td>SharpFuzz v2.2.0 README의 요구사항은 AFL이 Linux·macOS에서 동작하고 Windows 기본 지원에는 AFL 대신 libFuzzer를 쓸 수 있으며, .NET 어셈블리 계측에는 .NET 8.0 이상이 필요하다고 적는다.</td>
+<td><a href="https://github.com/Metalnem/sharpfuzz/blob/v2.2.0/README.md" target="_blank" rel="noopener">README Requirements</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lcs-13">LCS-13</a></td>
+<td>Microsoft Learn (.NET 공식 문서)</td>
+<td>Microsoft Learn은 .NET 릴리스마다 코드 분석 규칙 집합이 있고, .NET 8에서 9로 올려도 기본 규칙 집합이 바뀌지 않게 하려면 AnalysisLevel을 8로 지정하라고 하며, .NET 5 이상을 대상으로 하면 기본값이 latest라고 설명한다.</td>
+<td><a href="https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props" target="_blank" rel="noopener">MSBuild properties, AnalysisLevel</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-01">LJ-01</a></td>
+<td>MITRE CWE</td>
+<td>MITRE <a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">CWE-660</a> 뷰는 Java 프로그램에서 나타나는 약점을 모은 뷰이고 구성원에 J2EE 설정 항목(<a href="../../cwe/5/">CWE-5</a> 등)이 포함되어 있다. <strong>(부분)</strong> J2EE·웹 항목의 비적용 판정이 필요한 이유의 근거다. 조회 시점 표시 판은 CWE 5.0이다.</td>
+<td><a href="https://cwe.mitre.org/data/definitions/660.html" target="_blank" rel="noopener">CWE VIEW: Weaknesses in Software Written in Java, 구성원 표(조회일 2026. 11. 2., 표시 판 CWE 5.0)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-02">LJ-02</a></td>
+<td>OpenJDK JEP 290</td>
+<td>OpenJDK JEP 290은 ObjectInputStream이 받는 직렬화 데이터를 필터링할 수 있게 하며, 필터가 클래스를 수용·거부·미결정으로 판정하는 인터페이스를 정의한다.</td>
+<td><a href="https://openjdk.org/jeps/290" target="_blank" rel="noopener">JEP 290 Summary / Description</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-03">LJ-03</a></td>
+<td>SEI CERT Oracle Coding Standard for Java</td>
+<td>SEI CERT OBJ01-J는 공개 비final 필드와 가변 객체를 참조하는 final 필드에는 불변식을 강제할 수 없으므로 필드를 private 또는 package-private으로 선언해야 한다고 규정한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/object-orientation-obj/obj01-j" target="_blank" rel="noopener">OBJ01-J 첫 문단</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-04">LJ-04</a></td>
+<td>Yamcs</td>
+<td>Yamcs 5.12.8 및 5.13.2 이전에는 REST로 받은 templateArgs를 YAML 문맥 이스케이프 없이 YAML에 삽입해 org.yamcs.ProcessRunner 서비스 항목을 주입할 수 있었다(CVE-2026-55559, <a href="https://cwe.mitre.org/data/definitions/94.html" target="_blank" rel="noopener">CWE-94</a>). SQL·셸 명령이 아니라 설정 YAML이지만 외부 입력을 해석기에 그대로 넘긴 같은 계열의 삽입 사례다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-55559" target="_blank" rel="noopener">CVE 기록 설명(description)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-05">LJ-05</a></td>
+<td>SEI CERT Oracle Coding Standard for Java</td>
+<td>SEI CERT ERR00-J는 프로그래머가 빈 catch 블록이나 사소한 catch 블록으로 검사 예외를 억제하는 일이 흔하다고 지적한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/exceptional-behavior-err/err00-j" target="_blank" rel="noopener">ERR00-J 첫 문단</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-06">LJ-06</a></td>
+<td>SEI CERT Oracle Coding Standard for Java</td>
+<td>SEI CERT ERR54-J는 try-with-resources가 일반 try-catch-finally로 자원을 닫을 때 생기는 문제(다른 자원을 닫다 예외가 나서 닫지 못함, 중요한 예외를 가림)를 피하게 해 준다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/recommendations/exceptional-behavior-err/err54-j" target="_blank" rel="noopener">ERR54-J 둘째 문단</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-07">LJ-07</a></td>
+<td>SEI CERT Oracle Coding Standard for Java</td>
+<td>SEI CERT NUM00-J는 Java 8부터 Math 클래스의 addExact() 등 메서드가 수학적으로 올바른 값을 반환하거나 ArithmeticException을 던진다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/numeric-types-and-operations-num/num00-j" target="_blank" rel="noopener">NUM00-J, Java 8 Math 메서드 절</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-08">LJ-08</a></td>
+<td>SEI CERT Oracle Coding Standard for Java</td>
+<td>SEI CERT JNI00-J는 네이티브 메서드에 래퍼 메서드를 정의하면 보안 관리자 검사 설치, 네이티브 코드로 전달하는 인자 검증, 반환값 검증, 가변 입력의 방어적 복사, 신뢰할 수 없는 데이터 정화가 쉬워진다고 설명한다.</td>
+<td><a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/java-native-interface-jni/jni00-j/" target="_blank" rel="noopener">JNI00-J 둘째 문단</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-09">LJ-09</a></td>
+<td>Find Security Bugs</td>
+<td>Find Security Bugs 공식 사이트는 이 도구를 Java 웹 애플리케이션 보안 감사용 SpotBugs 플러그인으로 소개하며 각 버그 패턴에 OWASP Top 10과 CWE 참조가 있다고 밝힌다.</td>
+<td><a href="https://find-sec-bugs.github.io/" target="_blank" rel="noopener">홈페이지 소개</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lj-10">LJ-10</a></td>
+<td>Apache Log4j2 (CVE-2021-44228)</td>
+<td>CVE-2021-44228(Log4Shell)은 Apache Log4j2 2.0-beta9~2.15.0(보안 릴리스 2.12.2·2.12.3·2.3.1 제외)의 JNDI 기능이 공격자 제어 LDAP 등 JNDI 끝점을 막지 못해 임의 코드 실행이 가능한 취약점이며 <a href="../../cwe/502/">CWE-502</a>로 분류된다.</td>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-44228" target="_blank" rel="noopener">CVE 기록 설명(description)과 문제 유형(problemTypes)</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-01">LPY-01</a></td>
+<td>KISA 「Python 시큐어코딩 가이드」</td>
+<td>과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.)는 파이썬 개발의 보안 위협을 줄이는 것을 목적으로 두고 구현단계 보안약점 제거 기준 49개 중 46개를 다룬다. <strong>(부분)</strong> 보안 점검 범위를 정할 때의 근거다. 시험 제도 포함 여부는 이 가이드로 정하지 않는다.</td>
+<td><a href="https://www.kisa.or.kr/2060204/form?postSeq=13" target="_blank" rel="noopener">첨부 PDF 인쇄 4쪽, 제1장 제2절</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-02">LPY-02</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>pip 공식 문서는 원격 변조 방지 수단으로 --require-hashes 해시 검사 모드를 안내한다. 대조할 해시는 requirements.txt에 적어 두며, 이 모드를 켜지 않으면 pip은 변조 여부를 검사하지 않는다.</td>
+<td><a href="https://pip.pypa.io/en/stable/topics/secure-installs/" target="_blank" rel="noopener">Secure installs, Hash-checking Mode</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-03">LPY-03</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Python 3.13 pickle 문서는 pickle 모듈이 안전하지 않으며 신뢰하는 데이터만 unpickle해야 한다고 경고한다.</td>
+<td><a href="https://docs.python.org/3.13/library/pickle.html" target="_blank" rel="noopener">pickle 문서 상단 Warning</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-04">LPY-04</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Bandit 1.9.4 문서의 B307은 eval 사용을 잠재적으로 안전하지 않다고 보고 더 안전한 ast.literal_eval 사용을 권한다.</td>
+<td><a href="https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html" target="_blank" rel="noopener">blacklist_calls, B307</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-05">LPY-05</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Bandit 1.9.4 문서의 B602는 shell=True 인자로 명령 셸을 이용하는 서브프로세스 생성을 셸 삽입(shell injection)에 취약한 호출로 식별한다.</td>
+<td><a href="https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html" target="_blank" rel="noopener">B602</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-06">LPY-06</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Python 3.13 tarfile 문서는 신뢰할 수 없는 출처의 아카이브를 사전 검사 없이 풀지 말라고 경고하며 filter='data'로 가장 위험한 보안 문제를 막을 것을 권한다.</td>
+<td><a href="https://docs.python.org/3.13/library/tarfile.html" target="_blank" rel="noopener">TarFile.extractall Warning</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-07">LPY-07</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Bandit 1.9.4 문서의 B311은 표준 의사난수 생성기가 보안·암호 용도에 적합하지 않다며 secrets 모듈 사용을 권한다.</td>
+<td><a href="https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html" target="_blank" rel="noopener">blacklist_calls, B311</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-08">LPY-08</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Bandit 1.9.4 문서의 B110은 예외를 잡고 조용히 무시하는 try-except-pass를 점검 대상으로 삼는다. 문서는 이 패턴이 보안 문제로도 이어질 수 있다고 보고 오류 기록을 최소 조치로 든다.</td>
+<td><a href="https://bandit.readthedocs.io/en/1.9.4/plugins/b110_try_except_pass.html" target="_blank" rel="noopener">B110</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-09">LPY-09</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>pip-audit v2.10.1 README는 이 도구가 로컬 환경과 requirements 형식 파일을 감사하며 취약점 서비스로 PyPI와 OSV를 지원한다고 소개한다.</td>
+<td><a href="https://github.com/pypa/pip-audit/blob/v2.10.1/README.md" target="_blank" rel="noopener">README Features</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-10">LPY-10</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>PEP 602는 Python 릴리스를 연 1회 주기로 하고 각 버전에 2년의 전체 지원과 3년의 보안 수정을 둔다고 규정한다.</td>
+<td><a href="https://peps.python.org/pep-0602/" target="_blank" rel="noopener">PEP 602</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-11">LPY-11</a></td>
+<td>Atheris</td>
+<td>Atheris 3.0.0 README는 Atheris를 libFuzzer 기반의 실행 경로 피드백 기반 Python 퍼징 엔진으로 소개하고, Linux(32·64비트)와 Mac OS X, Python 3.11~3.13을 지원한다고 적는다.</td>
+<td><a href="https://github.com/google/atheris/blob/3.0.0/README.md" target="_blank" rel="noopener">README 머리말, Installation Instructions</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-12">LPY-12</a></td>
+<td>KISA 「Python 시큐어코딩 가이드」</td>
+<td>과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 제2장 제6절 2 '제거되지 않고 남은 디버그 코드'(인쇄 147쪽)는 디버그 코드를 배포 전에 찾아 지우도록 안내한다.</td>
+<td><a href="https://www.kisa.or.kr/2060204/form?postSeq=13" target="_blank" rel="noopener">첨부 PDF 153쪽(인쇄 147쪽), 제2장 제6절 2. 나. 안전한 코딩기법</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#lpy-13">LPY-13</a></td>
+<td>KISA 「Python 시큐어코딩 가이드」</td>
+<td>과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) '사후 관리'(인쇄 160~161쪽)는 오픈소스를 쓴 제품에 SBOM 적용을 요구하고, 신규 취약점 인지 → SBOM 목록 탐색 → 취약점 대응 → SBOM 목록 최신화의 대응 절차 예시를 든다.</td>
+<td><a href="https://www.kisa.or.kr/2060204/form?postSeq=13" target="_blank" rel="noopener">첨부 PDF 166~167쪽(인쇄 160~161쪽), 제2장 제7절 2. 다. 사후 관리</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-01">NET-IN-01</a></td>
+<td>논문(소프트웨어공학 소사이어티 논문지 28(1), 2019. 6.)</td>
+<td>논문 4.3절은 하나의 서버에서 폐쇄망·내부망 사용자에게 동시에 서비스할 때 생길 수 있는 보안 이슈에 대응하려면 보안 취약점 관련 추가 시험과 사용자별 접근 권한의 엄격한 관리가 필요하다고 판단한다.</td>
+<td>§4.3 마지막 문단(논문 12쪽) — 최민관·박다운·국승학, 「무기체계 소프트웨어 신뢰성 시험을 위한 효율적 시험 환경 구축 방안」, 소프트웨어공학 소사이어티 논문지 제28권 제1호, 2019.6, 7~12쪽(오프라인 자료)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-02">NET-IN-02</a></td>
+<td>QEMU</td>
+<td>QEMU v9.2.0 qemu-img 문서에 따르면 backing file을 지정한 이미지는 차이만 기록하고 commit을 쓰지 않는 한 backing file을 바꾸지 않아, 기준 이미지와 프로젝트 이미지를 나누는 데 쓸 수 있다. <strong>(부분)</strong> 개발자의 임의 변경을 막는 권한 설정은 이 문서에 없다.</td>
+<td><a href="https://github.com/qemu/qemu/blob/v9.2.0/docs/tools/qemu-img.rst" target="_blank" rel="noopener">docs/tools/qemu-img.rst L476-479</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-03">NET-IN-03</a></td>
+<td>Jenkins</td>
+<td>Jenkins 공식 문서는 인증(security realm)과 권한 부여(authorization strategy)를 구분하며, "anyone can do anything" 전략은 익명 사용자도 Jenkins를 관리할 수 있게 하므로 거의 좋은 선택이 아니라고 설명한다.</td>
+<td><a href="https://www.jenkins.io/doc/book/security/access-control/" target="_blank" rel="noopener">Access Control, Common Configuration Mistakes</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-04">NET-IN-04</a></td>
+<td>Gitleaks</td>
+<td>Gitleaks v8.30.0 README는 이 도구를 git 저장소와 파일에서 비밀번호·API 키·토큰 같은 비밀을 탐지하는 도구로 소개한다.</td>
+<td><a href="https://github.com/gitleaks/gitleaks/blob/v8.30.0/README.md" target="_blank" rel="noopener">README 첫 문단</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-05">NET-IN-05</a></td>
+<td>Yocto Project / BitBake</td>
+<td>BitBake 2.8 문서는 BB_ALLOWED_NETWORKS에 없는 네트워크 접근을 실패로 처리하며, 이를 PREMIRRORS와 함께 쓰면 소스를 허용된 위치에서 가져와 SRC_URI에 허용되지 않은 호스트가 있어도 오류를 피한다고 설명한다. 소스 검색 순서는 로컬 다운로드 디렉터리, PREMIRRORS, 업스트림 소스, MIRRORS 순이다.</td>
+<td><a href="https://docs.yoctoproject.org/bitbake/2.8/bitbake-user-manual/bitbake-user-manual-ref-variables.html" target="_blank" rel="noopener">Variables Glossary, PREMIRRORS / BB_ALLOWED_NETWORKS</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-06">NET-IN-06</a></td>
+<td>Reproducible Builds</td>
+<td>Reproducible Builds 문서는 SOURCE_DATE_EPOCH를 배포판이 중앙에서 설정하고 빌드 도구가 읽어 재현 가능한 출력을 만들게 하는 표준화된 환경 변수로 설명한다.</td>
+<td><a href="https://reproducible-builds.org/docs/source-date-epoch/" target="_blank" rel="noopener">SOURCE_DATE_EPOCH 첫 문단</a></td>
+<td>3(외 2건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-07">NET-IN-07</a></td>
+<td>논문(소프트웨어공학 소사이어티 논문지 28(1), 2019. 6.)</td>
+<td>논문 4.3절은 통합 환경의 CI가 내부망·폐쇄망 사용자가 신뢰성 시험 도구를 쓰는 데 필요한 스케줄링 정책 정보(시험 일시, 시험 우선순위, 도구 간 우선순위 등)를 저장하고 그 조건에 따라 도구 사용 우선순위를 부여해 시험을 자동 수행한다고 설명한다.</td>
+<td>§4.3 둘째 문단(논문 11쪽) — 최민관·박다운·국승학, 「무기체계 소프트웨어 신뢰성 시험을 위한 효율적 시험 환경 구축 방안」, 소프트웨어공학 소사이어티 논문지 제28권 제1호, 2019.6, 7~12쪽(오프라인 자료)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-08">NET-IN-08</a></td>
+<td>Bandit / Python 공식 문서</td>
+<td>Bandit 1.9.4의 기능 시험은 예제 파일마다 분석 결과를 알려진 기댓값과 비교해 검출 회귀를 확인한다. <strong>(부분)</strong> 결함 샘플 회귀 방식의 사례다. 시험 서버·운영 서버 승격 절차는 과제가 정한다.</td>
+<td><a href="https://github.com/PyCQA/bandit/blob/1.9.4/tests/functional/test_functional.py" target="_blank" rel="noopener">tests/functional/test_functional.py L18-23, L62-66</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-09">NET-IN-09</a></td>
+<td>SLSA</td>
+<td>SLSA v1.0 provenance 사양은 산출물이 어떻게 생성되었는지를 기술해 소비자가 기대대로 빌드되었는지 검증하고 다른 이가 재빌드할 수 있게 하는 것을 목적으로 한다.</td>
+<td><a href="https://slsa.dev/spec/v1.0/provenance" target="_blank" rel="noopener">Provenance, Purpose</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-in-10">NET-IN-10</a></td>
+<td>NIST SP 800-53 Rev. 5</td>
+<td>NIST SP 800-53 Rev. 5는 감사 기록을 주기적으로 검토·분석하고(AU-6), 개발사 지원이 끝난 구성요소는 교체하거나 대체 지원 수단을 마련하도록(SA-22) 정한다.</td>
+<td><a href="https://github.com/usnistgov/oscal-content/blob/v1.3.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json" target="_blank" rel="noopener">AU-6, SA-22</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-01">NET-CL-01</a></td>
+<td>MITRE CWE</td>
+<td>MITRE <a href="../../cwe/494/">CWE-494</a>의 완화책은 다운로드하는 코드(예: 자동 업데이트)에 암호 서명을 쓰고 다운로드 클라이언트가 서명을 검증하도록 고치라고 한다.</td>
+<td><a href="https://cwe.mitre.org/data/definitions/494.html" target="_blank" rel="noopener">CWE-494, Potential Mitigations (Architecture and Design)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-02">NET-CL-02</a></td>
+<td>논문(소프트웨어공학 소사이어티 논문지 28(1), 2019. 6.)</td>
+<td>논문 4.3절은 폐쇄망 환경 수요가 적지 않아 내부망과 폐쇄망을 모두 지원하는 통합 시험 환경 구축이 필요하다고 보고, 통합 환경에서 하나의 서버가 두 망 사용자에게 서비스하는 구성을 제안한다.</td>
+<td>§4.3(논문 11~12쪽) — 최민관·박다운·국승학, 「무기체계 소프트웨어 신뢰성 시험을 위한 효율적 시험 환경 구축 방안」, 소프트웨어공학 소사이어티 논문지 제28권 제1호, 2019.6, 7~12쪽(오프라인 자료)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-03">NET-CL-03</a></td>
+<td>Trivy</td>
+<td>Trivy v0.76.1 문서는 완전 격리망에서 쓰는 구성을 설명하고, 취약점 DB와 점검 묶음이 OCI 이미지로 패키징되어 자체 레지스트리에 둘 수 있다고 적는다. <strong>(부분)</strong> 번들 주기와 승인자는 과제가 정한다.</td>
+<td><a href="https://github.com/aquasecurity/trivy/blob/v0.76.1/docs/guide/advanced/air-gap.md" target="_blank" rel="noopener">docs/guide/advanced/air-gap.md L4, L24, L41</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-04">NET-CL-04</a></td>
+<td>Yocto Project / BitBake</td>
+<td>BitBake 2.8 문서에 따르면 BB_NO_NETWORK는 소스 미러 시험, 인터넷에 연결되지 않은 빌드, 방화벽 환경을 위한 변수이고, 켜면 페처가 네트워크에 접근하려 할 때 오류가 난다.</td>
+<td><a href="https://docs.yoctoproject.org/bitbake/2.8/bitbake-user-manual/bitbake-user-manual-ref-variables.html" target="_blank" rel="noopener">Variables Glossary, BB_NO_NETWORK</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-05">NET-CL-05</a></td>
+<td>FlexNet Publisher 문서</td>
+<td>Revenera FlexNet Publisher 2022 R3 문서에 따르면 lmstat는 기능별 발급 수와 사용 중인 수, 만료 정보를 보여 준다. 다만 서버를 거치지 않는 라이선스는 보고하지 않는다. <strong>(부분)</strong> 대장 관리·미수행 기록은 지침 고유 요구다.</td>
+<td><a href="https://docs.revenera.com/fnp/2022r3/LicAdmin_Guide/Content/helplibrary/lmstat.htm" target="_blank" rel="noopener">License Administration Guide, lmstat(조회일 2026. 11. 2.)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-06">NET-CL-06</a></td>
+<td>NIST SP 800-53 Rev. 5</td>
+<td>NIST SP 800-53 Rev. 5는 이동식 저장장치의 사용 제한과 소유자를 식별할 수 없는 장치의 금지(MP-7), 폐기·재사용 전 매체 소거(MP-6)를 정한다. <strong>(부분)</strong> 개인 매체 전면 금지는 지침이 더 엄격하게 정한 것이다.</td>
+<td><a href="https://github.com/usnistgov/oscal-content/blob/v1.3.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json" target="_blank" rel="noopener">MP-6, MP-7</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-07">NET-CL-07</a></td>
+<td>NIST SP 800-53 Rev. 5</td>
+<td>NIST SP 800-53 Rev. 5는 공유 계정 사용 시 개별 인증(IA-2(5)), 연속 로그인 실패 제한(AC-7), 최소 권한(AC-6), 감사 기록의 시각(AU-8)과 보존(AU-11)을 정한다. <strong>(부분)</strong> 800-53은 공유 계정을 조건부로 허용하므로 금지는 지침이 더 엄격하게 정한 것이다. 로그 반출 검토는 이 위치에 없다.</td>
+<td><a href="https://github.com/usnistgov/oscal-content/blob/v1.3.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json" target="_blank" rel="noopener">AC-6, AC-7, AU-8, AU-11, IA-2(5)</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-08">NET-CL-08</a></td>
+<td>F Prime (F´)</td>
+<td>F´ v4.4.1 문서는 빌드 시스템이 프로젝트의 SBOM(spdx-json)을 자동 생성하며 syft 설치가 필요하고, grype로 SBOM의 취약점을 스캔할 수 있으나 grype는 프로젝트의 취약점을 찾는 여러 도구 중 하나일 뿐이라고 밝힌다.</td>
+<td><a href="https://github.com/nasa/fprime/blob/v4.4.1/docs/user-manual/security/software-bill-of-materials.md" target="_blank" rel="noopener">software-bill-of-materials.md</a></td>
+<td>1</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-09">NET-CL-09</a></td>
+<td>Reproducible Builds</td>
+<td>Reproducible Builds 정의 문서는 같은 소스·빌드 환경·빌드 지침이 주어졌을 때 누구든 지정된 산출물과 비트 단위로 동일한 사본을 만들 수 있으면 재현 가능하며, 재현성은 보통 암호학적 해시를 이용한 비트 단위 비교로 검증한다고 설명한다.</td>
+<td><a href="https://reproducible-builds.org/docs/definition/" target="_blank" rel="noopener">Definitions</a></td>
+<td>2(외 1건은 Excel)</td>
+</tr>
+<tr>
+<td><a href="../c-environment-guides/#net-cl-10">NET-CL-10</a></td>
+<td>NIST SP 800-53 Rev. 5</td>
+<td>NIST SP 800-53 Rev. 5는 백업과 그 기밀성·무결성 보호(CP-9), 암호 보호(CP-9(8)), 비상 계획 시험(CP-4), 매체 소거(MP-6)를 정한다. <strong>(부분)</strong> 반입 이력 감사는 이 위치에 없다.</td>
+<td><a href="https://github.com/usnistgov/oscal-content/blob/v1.3.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json" target="_blank" rel="noopener">CP-4, CP-9, CP-9(8), MP-6</a></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>원문 대조 '확인' 근거는 모두 414건이고, 근거가 붙은 지침은 243건이다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../d-security-rules/" class="md-footer__link md-footer__link--prev" aria-label="이전: 부록 D C#·Python 보안 규칙 대응표">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                부록 D C#·Python 보안 규칙 대응표
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../f-glossary/" class="md-footer__link md-footer__link--next" aria-label="다음: 부록 F 용어 대조표">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                부록 F 용어 대조표
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

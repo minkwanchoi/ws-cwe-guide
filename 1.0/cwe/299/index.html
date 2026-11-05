@@ -1,0 +1,2929 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/cwe/299/">
+      
+      
+        <link rel="prev" href="../295/">
+      
+      
+        <link rel="next" href="../306/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-299 부적절한 인증서 폐기 확인 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-299-부적절한-인증서-폐기-확인" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-299 부적절한 인증서 폐기 확인
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-299 부적절한 인증서 폐기 확인
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-299 부적절한 인증서 폐기 확인
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-299-부적절한-인증서-폐기-확인">CWE-299 부적절한 인증서 폐기 확인<a class="headerlink" href="#cwe-299-부적절한-인증서-폐기-확인" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Improper Check for Certificate Revocation</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>기본(Base)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>초안(Draft)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>보조 항목(「보안약점 점검 목록」·언어 뷰 밖, 매뉴얼 7-10쪽 '추가 식별' 근거)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>조건부 — TLS·인증서 사용</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어 무관 · 기술: 기술 무관, 웹 기반(Web Based)</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/299.html" target="_blank" rel="noopener">MITRE CWE-299</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>인증서의 폐기 상태를 확인하지 않거나 잘못 확인하는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 인증서의 폐기(revocation) 상태를 확인하지 않거나 잘못 확인하는 약점이다.</p>
+<details class="cwe-orig"><summary>원문(Description)</summary><div lang="en"><p>The product does not check or incorrectly checks the revocation status of a certificate.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>제품이 인증서 고정(certificate pinning)을 쓸 때, 개발자가 인증서를 고정하기 전에 인증서의 관련 구성요소를 모두 제대로 검증하지 않을 수 있다. 이 때문에 고정을 마친 뒤에는 시험하기가 어렵거나 비용이 많이 들 수 있다.</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>실현(REALIZATION): 이 약점은 아키텍처 보안 전술을 구현하는 과정에서 생긴다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>접근 통제</td>
+<td>권한 획득 또는 신원 도용</td>
+<td>어떤 경로로든 인증서를 손에 넣은 신뢰할 수 없는 개체, 곧 자신이 주장하는 주체가 아닌 개체에 신뢰가 부여될 수 있다.</td>
+</tr>
+<tr>
+<td>무결성 / 기타</td>
+<td>기타</td>
+<td>신뢰할 수 없는(그리고 악의적일 수 있는) 출처의 데이터가 통합될 수 있다.</td>
+</tr>
+<tr>
+<td>기밀성</td>
+<td>애플리케이션 데이터 읽기</td>
+<td>인증서에 접근하게 된 신뢰할 수 없는 개체가 신뢰된 개체로 위장하면, 그 개체에 데이터가 공개되어 정보가 노출될 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 2건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>인증서의 폐기 상태를 확인한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Ensure that certificates are checked for revoked status.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>인증서 고정(certificate pinning)을 쓴다면, 인증서를 고정하기 전에 폐기 상태를 포함해 인증서의 관련 속성을 모두 완전히 검증한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>If certificate pinning is being used, ensure that all relevant properties of the certificate are fully validated before the certificate is pinned, including the revoked status.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음. 이 단계의 기준선 활동: <a href="../../ch6-integration-test/#t-06">T-06</a> 보안 기능 부정 시험</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 지상 키 관리 소프트웨어가 키 적재 장비의 장비 인증서를, 임무 계획 도구가 계획 파일에 서명한 운용자 인증서를, 정비 단말이 형상 서버 인증서를 확인한다. 장비 분실·키 유출·운용자 전출로 인증기관이 폐기한 인증서도 서명과 유효 기간은 그대로 맞으므로, 폐기 여부를 보지 않으면 계속 신뢰된다. 폐쇄망에서는 폐기 정보를 받을 경로가 없다는 이유로 확인을 빼기 쉽다. 예시는 인증기관이 폐기한 인증서를 받아들이는지 본다. C# 예시는 .NET 분석기 규칙으로 HttpClient의 폐기 확인 설정을 점검한다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/x509.h&gt;
+#include &lt;openssl/x509v3.h&gt;
+
+/* 지상 키 관리 소프트웨어가 접속한 키 적재 장비의 장비 인증서를 확인한다 */
+static int keyloader_trusted(X509 *device_cert, X509 *project_ca)
+{
+    X509_STORE *store = X509_STORE_new();
+    X509_STORE_CTX *vctx = X509_STORE_CTX_new();
+    int ok = 0;
+    if (store != NULL &amp;&amp; vctx != NULL &amp;&amp; X509_STORE_add_cert(store, project_ca) == 1
+        &amp;&amp; X509_STORE_CTX_init(vctx, store, device_cert, NULL) == 1) {
+        ok = X509_verify_cert(vctx) == 1;     /* 서명 사슬과 유효 기간만 본다. 폐쇄망이라 폐기 목록은 쓰지 않는다 */
+    }
+    X509_STORE_CTX_free(vctx);
+    X509_STORE_free(store);
+    return ok;
+}
+
+/* ---- 시험 준비: 사업 인증기관, 그 기관이 발급한 키 적재 장비 인증서, 그 인증서를 폐기한 CRL ---- */
+static X509 *issue(const char *cn, EVP_PKEY *subject, X509 *issuer, EVP_PKEY *signer, long serial)
+{
+    X509 *crt = X509_new();
+    X509_NAME *name = X509_get_subject_name(crt);
+    X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, (const unsigned char *)cn, -1, -1, 0);
+    ASN1_INTEGER_set(X509_get_serialNumber(crt), serial);
+    X509_gmtime_adj(X509_getm_notBefore(crt), -60);
+    X509_gmtime_adj(X509_getm_notAfter(crt), 30L * 86400);
+    X509_set_issuer_name(crt, issuer != NULL ? X509_get_subject_name(issuer) : name);
+    X509_set_pubkey(crt, subject);
+    X509_EXTENSION *bc = X509V3_EXT_conf_nid(NULL, NULL, NID_basic_constraints,
+                                             issuer == NULL ? "critical,CA:TRUE" : "critical,CA:FALSE");
+    X509_add_ext(crt, bc, -1);
+    X509_EXTENSION_free(bc);
+    X509_sign(crt, signer, EVP_sha256());
+    return crt;
+}
+
+static X509_CRL *revoke(X509 *ca, EVP_PKEY *ca_key, X509 *victim)
+{
+    X509_CRL *crl = X509_CRL_new();
+    ASN1_TIME *now = X509_gmtime_adj(NULL, 0), *next = X509_gmtime_adj(NULL, 7L * 86400);
+    X509_REVOKED *entry = X509_REVOKED_new();
+    X509_CRL_set_version(crl, X509_CRL_VERSION_2);
+    X509_CRL_set_issuer_name(crl, X509_get_subject_name(ca));
+    X509_CRL_set1_lastUpdate(crl, now);
+    X509_CRL_set1_nextUpdate(crl, next);
+    X509_REVOKED_set_serialNumber(entry, X509_get_serialNumber(victim));
+    X509_REVOKED_set_revocationDate(entry, now);
+    X509_CRL_add0_revoked(crl, entry);
+    X509_CRL_sort(crl);
+    X509_CRL_sign(crl, ca_key, EVP_sha256());
+    ASN1_TIME_free(now);
+    ASN1_TIME_free(next);
+    return crl;
+}
+
+int main(void)
+{
+    EVP_PKEY *ca_key = EVP_EC_gen("P-256"), *kl_key = EVP_EC_gen("P-256");
+    X509 *ca = issue("Project Key Management CA (example)", ca_key, NULL, ca_key, 1);
+    X509 *keyloader = issue("keyloader-07.example.invalid", kl_key, ca, ca_key, 0x1007);
+    X509_CRL *crl = revoke(ca, ca_key, keyloader);   /* 장비 분실로 인증기관이 이미 폐기했다 */
+
+    puts(keyloader_trusted(keyloader, ca) ? "REVOKED DEVICE ACCEPTED" : "revoked device refused");
+
+    X509_CRL_free(crl);
+    X509_free(keyloader); X509_free(ca);
+    EVP_PKEY_free(kl_key); EVP_PKEY_free(ca_key);
+    return 0;
+}</code></pre>
+<p>X509_verify_cert로 서명 사슬과 유효 기간만 확인한다. 인증기관이 장비 분실로 폐기한 키 적재 장비 인증서도 서명·기간은 맞으므로 그대로 신뢰되어, 분실 장비가 키를 적재받을 수 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/x509.h&gt;
+#include &lt;openssl/x509v3.h&gt;
+
+/* 지상 키 관리 소프트웨어가 접속한 키 적재 장비의 장비 인증서를 확인한다.
+ * CRL은 인증기관이 이동식 매체 등 정해진 경로로 배포한 최신본을 쓰고, 없거나 기한이 지나면 실패로 본다 */
+static int keyloader_trusted(X509 *device_cert, X509 *project_ca, X509_CRL *latest_crl)
+{
+    X509_STORE *store = X509_STORE_new();
+    X509_STORE_CTX *vctx = X509_STORE_CTX_new();
+    int ok = 0;
+    if (store != NULL &amp;&amp; vctx != NULL &amp;&amp; latest_crl != NULL
+        &amp;&amp; X509_STORE_add_cert(store, project_ca) == 1
+        &amp;&amp; X509_STORE_add_crl(store, latest_crl) == 1
+        &amp;&amp; X509_STORE_set_flags(store, X509_V_FLAG_CRL_CHECK | X509_V_FLAG_CRL_CHECK_ALL) == 1
+        &amp;&amp; X509_STORE_CTX_init(vctx, store, device_cert, NULL) == 1) {
+        ok = X509_verify_cert(vctx) == 1;     /* 사슬·기간에 더해 폐기 여부와 CRL 서명·기한을 본다 */
+        if (!ok) {
+            printf("reason: %s\n", X509_verify_cert_error_string(X509_STORE_CTX_get_error(vctx)));
+        }
+    }
+    X509_STORE_CTX_free(vctx);
+    X509_STORE_free(store);
+    return ok;
+}
+
+/* ---- 시험 준비: 사업 인증기관, 그 기관이 발급한 키 적재 장비 인증서, 그 인증서를 폐기한 CRL ---- */
+static X509 *issue(const char *cn, EVP_PKEY *subject, X509 *issuer, EVP_PKEY *signer, long serial)
+{
+    X509 *crt = X509_new();
+    X509_NAME *name = X509_get_subject_name(crt);
+    X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, (const unsigned char *)cn, -1, -1, 0);
+    ASN1_INTEGER_set(X509_get_serialNumber(crt), serial);
+    X509_gmtime_adj(X509_getm_notBefore(crt), -60);
+    X509_gmtime_adj(X509_getm_notAfter(crt), 30L * 86400);
+    X509_set_issuer_name(crt, issuer != NULL ? X509_get_subject_name(issuer) : name);
+    X509_set_pubkey(crt, subject);
+    X509_EXTENSION *bc = X509V3_EXT_conf_nid(NULL, NULL, NID_basic_constraints,
+                                             issuer == NULL ? "critical,CA:TRUE" : "critical,CA:FALSE");
+    X509_add_ext(crt, bc, -1);
+    X509_EXTENSION_free(bc);
+    X509_sign(crt, signer, EVP_sha256());
+    return crt;
+}
+
+static X509_CRL *revoke(X509 *ca, EVP_PKEY *ca_key, X509 *victim)
+{
+    X509_CRL *crl = X509_CRL_new();
+    ASN1_TIME *now = X509_gmtime_adj(NULL, 0), *next = X509_gmtime_adj(NULL, 7L * 86400);
+    X509_REVOKED *entry = X509_REVOKED_new();
+    X509_CRL_set_version(crl, X509_CRL_VERSION_2);
+    X509_CRL_set_issuer_name(crl, X509_get_subject_name(ca));
+    X509_CRL_set1_lastUpdate(crl, now);
+    X509_CRL_set1_nextUpdate(crl, next);
+    X509_REVOKED_set_serialNumber(entry, X509_get_serialNumber(victim));
+    X509_REVOKED_set_revocationDate(entry, now);
+    X509_CRL_add0_revoked(crl, entry);
+    X509_CRL_sort(crl);
+    X509_CRL_sign(crl, ca_key, EVP_sha256());
+    ASN1_TIME_free(now);
+    ASN1_TIME_free(next);
+    return crl;
+}
+
+int main(void)
+{
+    EVP_PKEY *ca_key = EVP_EC_gen("P-256"), *kl_key = EVP_EC_gen("P-256");
+    X509 *ca = issue("Project Key Management CA (example)", ca_key, NULL, ca_key, 1);
+    X509 *keyloader = issue("keyloader-07.example.invalid", kl_key, ca, ca_key, 0x1007);
+    X509_CRL *crl = revoke(ca, ca_key, keyloader);   /* 장비 분실로 인증기관이 이미 폐기했다 */
+
+    puts(keyloader_trusted(keyloader, ca, crl) ? "REVOKED DEVICE ACCEPTED" : "revoked device refused");
+
+    X509_CRL_free(crl);
+    X509_free(keyloader); X509_free(ca);
+    EVP_PKEY_free(kl_key); EVP_PKEY_free(ca_key);
+    return 0;
+}</code></pre>
+<p>인증기관이 배포한 최신 CRL을 저장소에 넣고 X509_V_FLAG_CRL_CHECK·X509_V_FLAG_CRL_CHECK_ALL을 켜 사슬의 인증서마다 폐기 여부를 확인한다. CRL이 없거나 서명이 맞지 않거나 다음 갱신일이 지나면 검증이 실패하므로, 낡은 폐기 정보로는 장비를 받아들이지 않는다(D-05·T-06). 폐쇄망에서는 CRL을 이동식 매체 등으로 들여오는 주기와 책임을 설계에서 정한다.</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>REVOKED DEVICE ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>revoked device refused</code> 출력 확인 · 참고: MITRE CWE-299 Demonstrative Example 1(인증서가 있는지만 보고 폐기 여부는 확인하지 않음) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/x509.h&gt;
+#include &lt;openssl/x509v3.h&gt;
+#include &lt;cstdio&gt;
+#include &lt;memory&gt;
+
+template &lt;class T, void (*F)(T *)&gt; struct Deleter { void operator()(T *p) const { F(p); } };
+using Key = std::unique_ptr&lt;EVP_PKEY, Deleter&lt;EVP_PKEY, EVP_PKEY_free&gt;&gt;;
+using Cert = std::unique_ptr&lt;X509, Deleter&lt;X509, X509_free&gt;&gt;;
+using Crl = std::unique_ptr&lt;X509_CRL, Deleter&lt;X509_CRL, X509_CRL_free&gt;&gt;;
+using Store = std::unique_ptr&lt;X509_STORE, Deleter&lt;X509_STORE, X509_STORE_free&gt;&gt;;
+using StoreCtx = std::unique_ptr&lt;X509_STORE_CTX, Deleter&lt;X509_STORE_CTX, X509_STORE_CTX_free&gt;&gt;;
+
+// 임무 계획 도구: 임무 계획 파일에 서명한 운용자 인증서를 확인한다
+class PlanSignerCheck {
+public:
+    PlanSignerCheck(X509 *project_ca, X509_CRL *latest_crl) : store_(X509_STORE_new()) {
+        X509_STORE_add_cert(store_.get(), project_ca);
+        X509_STORE_add_crl(store_.get(), latest_crl);   // 폐기 목록을 넣었지만 확인하라는 플래그는 켜지 않았다
+    }
+    bool trusted(X509 *signer) const {
+        StoreCtx ctx(X509_STORE_CTX_new());
+        return ctx &amp;&amp; X509_STORE_CTX_init(ctx.get(), store_.get(), signer, nullptr) == 1 &amp;&amp;
+               X509_verify_cert(ctx.get()) == 1;
+    }
+
+private:
+    Store store_;
+};
+
+// ---- 시험 준비: 사업 인증기관, 운용자 서명 인증서, 그 인증서를 폐기한 CRL ----
+static Cert issue(const char *cn, EVP_PKEY *subject, X509 *issuer, EVP_PKEY *signer, long serial) {
+    Cert crt(X509_new());
+    X509_NAME *name = X509_get_subject_name(crt.get());
+    X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, reinterpret_cast&lt;const unsigned char *&gt;(cn), -1, -1, 0);
+    ASN1_INTEGER_set(X509_get_serialNumber(crt.get()), serial);
+    X509_gmtime_adj(X509_getm_notBefore(crt.get()), -60);
+    X509_gmtime_adj(X509_getm_notAfter(crt.get()), 30L * 86400);
+    X509_set_issuer_name(crt.get(), issuer ? X509_get_subject_name(issuer) : name);
+    X509_set_pubkey(crt.get(), subject);
+    X509_EXTENSION *bc = X509V3_EXT_conf_nid(nullptr, nullptr, NID_basic_constraints,
+                                             issuer ? "critical,CA:FALSE" : "critical,CA:TRUE");
+    X509_add_ext(crt.get(), bc, -1);
+    X509_EXTENSION_free(bc);
+    X509_sign(crt.get(), signer, EVP_sha256());
+    return crt;
+}
+
+static Crl revoke(X509 *ca, EVP_PKEY *ca_key, X509 *victim) {
+    Crl crl(X509_CRL_new());
+    ASN1_TIME *now = X509_gmtime_adj(nullptr, 0), *next = X509_gmtime_adj(nullptr, 7L * 86400);
+    X509_REVOKED *entry = X509_REVOKED_new();
+    X509_CRL_set_version(crl.get(), X509_CRL_VERSION_2);
+    X509_CRL_set_issuer_name(crl.get(), X509_get_subject_name(ca));
+    X509_CRL_set1_lastUpdate(crl.get(), now);
+    X509_CRL_set1_nextUpdate(crl.get(), next);
+    X509_REVOKED_set_serialNumber(entry, X509_get_serialNumber(victim));
+    X509_REVOKED_set_revocationDate(entry, now);
+    X509_CRL_add0_revoked(crl.get(), entry);
+    X509_CRL_sort(crl.get());
+    X509_CRL_sign(crl.get(), ca_key, EVP_sha256());
+    ASN1_TIME_free(now);
+    ASN1_TIME_free(next);
+    return crl;
+}
+
+int main() {
+    Key ca_key(EVP_EC_gen("P-256")), op_key(EVP_EC_gen("P-256"));
+    Cert ca = issue("Project Mission Planning CA (example)", ca_key.get(), nullptr, ca_key.get(), 1);
+    Cert op = issue("planner-op-12 (example)", op_key.get(), ca.get(), ca_key.get(), 0x2012);
+    Crl crl = revoke(ca.get(), ca_key.get(), op.get());   // 운용자 전출로 인증기관이 이미 폐기했다
+
+    const PlanSignerCheck check(ca.get(), crl.get());
+    std::puts(check.trusted(op.get()) ? "REVOKED SIGNER ACCEPTED" : "revoked signer refused");
+    return 0;
+}</code></pre>
+<p>CRL을 X509_STORE에 넣기만 하고 X509_V_FLAG_CRL_CHECK를 켜지 않는다. OpenSSL은 이 플래그가 없으면 저장소의 CRL을 보지 않으므로, 전출로 폐기된 운용자의 서명 인증서가 그대로 통과한다. 폐기 목록을 넣었다는 사실만 보고 점검을 끝내기 쉬운 경우다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/x509.h&gt;
+#include &lt;openssl/x509v3.h&gt;
+#include &lt;cstdio&gt;
+#include &lt;memory&gt;
+
+template &lt;class T, void (*F)(T *)&gt; struct Deleter { void operator()(T *p) const { F(p); } };
+using Key = std::unique_ptr&lt;EVP_PKEY, Deleter&lt;EVP_PKEY, EVP_PKEY_free&gt;&gt;;
+using Cert = std::unique_ptr&lt;X509, Deleter&lt;X509, X509_free&gt;&gt;;
+using Crl = std::unique_ptr&lt;X509_CRL, Deleter&lt;X509_CRL, X509_CRL_free&gt;&gt;;
+using Store = std::unique_ptr&lt;X509_STORE, Deleter&lt;X509_STORE, X509_STORE_free&gt;&gt;;
+using StoreCtx = std::unique_ptr&lt;X509_STORE_CTX, Deleter&lt;X509_STORE_CTX, X509_STORE_CTX_free&gt;&gt;;
+
+// 임무 계획 도구: 임무 계획 파일에 서명한 운용자 인증서를 확인한다
+class PlanSignerCheck {
+public:
+    PlanSignerCheck(X509 *project_ca, X509_CRL *latest_crl) : store_(X509_STORE_new()) {
+        ready_ = store_ &amp;&amp; latest_crl &amp;&amp; X509_STORE_add_cert(store_.get(), project_ca) == 1 &amp;&amp;
+                 X509_STORE_add_crl(store_.get(), latest_crl) == 1 &amp;&amp;
+                 // 끝 인증서와 중간 인증기관 모두 폐기 여부를 확인한다. CRL이 없거나 기한이 지나면 검증 실패
+                 X509_STORE_set_flags(store_.get(), X509_V_FLAG_CRL_CHECK | X509_V_FLAG_CRL_CHECK_ALL) == 1;
+    }
+    bool trusted(X509 *signer) const {
+        StoreCtx ctx(X509_STORE_CTX_new());
+        if (!ready_ || !ctx || X509_STORE_CTX_init(ctx.get(), store_.get(), signer, nullptr) != 1) return false;
+        if (X509_verify_cert(ctx.get()) == 1) return true;
+        std::printf("reason: %s\n", X509_verify_cert_error_string(X509_STORE_CTX_get_error(ctx.get())));
+        return false;
+    }
+
+private:
+    Store store_;
+    bool ready_ = false;
+};
+
+// ---- 시험 준비: 사업 인증기관, 운용자 서명 인증서, 그 인증서를 폐기한 CRL ----
+static Cert issue(const char *cn, EVP_PKEY *subject, X509 *issuer, EVP_PKEY *signer, long serial) {
+    Cert crt(X509_new());
+    X509_NAME *name = X509_get_subject_name(crt.get());
+    X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, reinterpret_cast&lt;const unsigned char *&gt;(cn), -1, -1, 0);
+    ASN1_INTEGER_set(X509_get_serialNumber(crt.get()), serial);
+    X509_gmtime_adj(X509_getm_notBefore(crt.get()), -60);
+    X509_gmtime_adj(X509_getm_notAfter(crt.get()), 30L * 86400);
+    X509_set_issuer_name(crt.get(), issuer ? X509_get_subject_name(issuer) : name);
+    X509_set_pubkey(crt.get(), subject);
+    X509_EXTENSION *bc = X509V3_EXT_conf_nid(nullptr, nullptr, NID_basic_constraints,
+                                             issuer ? "critical,CA:FALSE" : "critical,CA:TRUE");
+    X509_add_ext(crt.get(), bc, -1);
+    X509_EXTENSION_free(bc);
+    X509_sign(crt.get(), signer, EVP_sha256());
+    return crt;
+}
+
+static Crl revoke(X509 *ca, EVP_PKEY *ca_key, X509 *victim) {
+    Crl crl(X509_CRL_new());
+    ASN1_TIME *now = X509_gmtime_adj(nullptr, 0), *next = X509_gmtime_adj(nullptr, 7L * 86400);
+    X509_REVOKED *entry = X509_REVOKED_new();
+    X509_CRL_set_version(crl.get(), X509_CRL_VERSION_2);
+    X509_CRL_set_issuer_name(crl.get(), X509_get_subject_name(ca));
+    X509_CRL_set1_lastUpdate(crl.get(), now);
+    X509_CRL_set1_nextUpdate(crl.get(), next);
+    X509_REVOKED_set_serialNumber(entry, X509_get_serialNumber(victim));
+    X509_REVOKED_set_revocationDate(entry, now);
+    X509_CRL_add0_revoked(crl.get(), entry);
+    X509_CRL_sort(crl.get());
+    X509_CRL_sign(crl.get(), ca_key, EVP_sha256());
+    ASN1_TIME_free(now);
+    ASN1_TIME_free(next);
+    return crl;
+}
+
+int main() {
+    Key ca_key(EVP_EC_gen("P-256")), op_key(EVP_EC_gen("P-256"));
+    Cert ca = issue("Project Mission Planning CA (example)", ca_key.get(), nullptr, ca_key.get(), 1);
+    Cert op = issue("planner-op-12 (example)", op_key.get(), ca.get(), ca_key.get(), 0x2012);
+    Crl crl = revoke(ca.get(), ca_key.get(), op.get());   // 운용자 전출로 인증기관이 이미 폐기했다
+
+    const PlanSignerCheck check(ca.get(), crl.get());
+    std::puts(check.trusted(op.get()) ? "REVOKED SIGNER ACCEPTED" : "revoked signer refused");
+    return 0;
+}</code></pre>
+<p>X509_STORE_set_flags로 X509_V_FLAG_CRL_CHECK·X509_V_FLAG_CRL_CHECK_ALL을 켜고, 설정이 하나라도 실패하면 검증기를 쓰지 않는다. 거부 사유(certificate revoked)는 기록에 남긴다(D-05·T-06). 통합 및 시험 단계에서는 폐기한 인증서, 기한이 지난 CRL, CRL이 없는 경우를 각각 넣어 거부되는지 확인한다.</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>REVOKED SIGNER ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>revoked signer refused</code> 출력 확인 · 참고: MITRE CWE-299 Demonstrative Example 1(인증서가 있는지만 보고 폐기 여부는 확인하지 않음) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">// 정비 단말이 형상 서버(HTTPS)에서 소프트웨어 형상 목록을 받는 클라이언트를 만든다
+using HttpClient configClient = CreateConfigClient();
+Console.WriteLine($"config client ready: {configClient.BaseAddress}");
+
+static HttpClient CreateConfigClient()
+{
+    // 폐쇄망이라 인증서 폐기 목록을 받을 수 없다는 이유로 폐기 확인을 끈다
+#pragma warning disable CA2000 // 처리기는 HttpClient가 함께 해제한다
+    var handler = new HttpClientHandler
+    {
+        CheckCertificateRevocationList = false,
+    };
+#pragma warning restore CA2000
+    return new HttpClient(handler, disposeHandler: true)
+    {
+        BaseAddress = new Uri("https://config.example.invalid/"),
+    };
+}</code></pre>
+<p>HttpClientHandler.CheckCertificateRevocationList를 false로 둔다. 폐기된 서버 인증서도 사슬과 이름만 맞으면 연결되며, .NET 분석기가 CA5399(HttpClient 인증서 폐기 목록 검사 끄기)로 경고한다. 이 속성의 기본값이 false여서 값을 적지 않은 HttpClientHandler도 CA5399로 경고되지만, 처리기 없이 만든 new HttpClient()는 경고되지 않으므로(net10.0 실험) 코드 리뷰로 확인한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">// 정비 단말이 형상 서버(HTTPS)에서 소프트웨어 형상 목록을 받는 클라이언트를 만든다
+using HttpClient configClient = CreateConfigClient();
+Console.WriteLine($"config client ready: {configClient.BaseAddress}");
+
+static HttpClient CreateConfigClient()
+{
+    // 서버 인증서의 폐기 여부를 확인한다. 폐쇄망은 내부 CRL 배포 지점을 운영해 인증서에 그 주소를 넣는다
+#pragma warning disable CA2000 // 처리기는 HttpClient가 함께 해제한다
+    var handler = new HttpClientHandler
+    {
+        CheckCertificateRevocationList = true,
+    };
+#pragma warning restore CA2000
+    return new HttpClient(handler, disposeHandler: true)
+    {
+        BaseAddress = new Uri("https://config.example.invalid/"),
+    };
+}</code></pre>
+<p>CheckCertificateRevocationList를 true로 두어 서버 인증서의 폐기 여부를 확인한다(D-05·T-06). 폐쇄망에서는 내부 CRL 배포 지점을 운영해 인증서의 CRL 배포 지점(CDP)에 그 주소를 넣는다. 폐기 정보를 얻지 못하면 연결이 실패할 수 있으므로 배포 지점의 가용성도 함께 설계한다.</p>
+<p class="ex-meta">검증: .NET 컴파일러·분석기 — 나쁜 예에서 <code>CA5399</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-299 Demonstrative Example 1(인증서가 있는지만 보고 폐기 여부는 확인하지 않음) 참고, 이 가이드가 새로 작성 / Microsoft Learn 코드 분석 규칙 CA5399 &#x27;Definitely disable HttpClient certificate revocation list check&#x27; 참고</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.Set;
+
+public class Example {
+    // 지상 키 관리 소프트웨어가 접속한 키 적재 장비의 장비 인증서를 확인한다
+    static boolean keyloaderTrusted(X509Certificate device, X509Certificate projectCa) throws Exception {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        CertPath path = cf.generateCertPath(List.of(device));
+        PKIXParameters params = new PKIXParameters(Set.of(new TrustAnchor(projectCa, null)));
+        params.setRevocationEnabled(false);   // 폐쇄망이라 CRL을 받을 수 없다며 폐기 확인을 끈다
+        try {
+            CertPathValidator.getInstance("PKIX").validate(path, params);
+            return true;
+        } catch (CertPathValidatorException e) {
+            return false;
+        }
+    }
+
+    // 시험용 공개 인증서(개인키 없음): 정비·키 관리 겸용 사업 인증기관, 그 기관이 발급했다가 장비 분실로 폐기한 키 적재 장비 인증서
+    static final String PROJECT_CA_PEM = """
+            -----BEGIN CERTIFICATE-----
+            MIIBiTCCAS+gAwIBAgIBATAKBggqhkjOPQQDAjArMSkwJwYDVQQDDCBQcm9qZWN0
+            IE1haW50ZW5hbmNlIENBIChleGFtcGxlKTAgFw0yNjEwMjAwMjQzMzZaGA8yMTI2
+            MDkyNjAyNDMzNlowKzEpMCcGA1UEAwwgUHJvamVjdCBNYWludGVuYW5jZSBDQSAo
+            ZXhhbXBsZSkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATP1RWUPV5rtOX4qxCv
+            zvHbueU1hrRaHRbUTZBtQCZwJ1HuOxsBEBLsx2zilypLokgLEJMFgf+D6cP+6zq0
+            qflqo0IwQDAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4E
+            FgQUQM7ajR8KTPRpRPWE2Ze1nMOiYfwwCgYIKoZIzj0EAwIDSAAwRQIgaUXwQocA
+            PTQO5RIGVb2hWDT+5FrNCjS6wAvO5mHaDBICIQCeIn9J5pXCu/Zns5pBy0gUxZQ0
+            wVJv0MXS9Tze0t83xg==
+            -----END CERTIFICATE-----
+            """;
+    static final String KEYLOADER_PEM = """
+            -----BEGIN CERTIFICATE-----
+            MIIBpTCCAUqgAwIBAgICEAcwCgYIKoZIzj0EAwIwKzEpMCcGA1UEAwwgUHJvamVj
+            dCBNYWludGVuYW5jZSBDQSAoZXhhbXBsZSkwIBcNMjYxMDIwMDI0MzM2WhgPMjEy
+            NjA5MjYwMjQzMzZaMCcxJTAjBgNVBAMMHGtleWxvYWRlci0wNy5leGFtcGxlLmlu
+            dmFsaWQwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASWls+fMKNkd723gzhvXtkU
+            JZEmAUG/cUzjxErwrXQuT2FhzYzft/tcFBOknTBCbu20CaHChyx+yckWB4iooWwq
+            o2AwXjAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIHgDAfBgNVHSMEGDAWgBRA
+            ztqNHwpM9GlE9YTZl7Wcw6Jh/DAdBgNVHQ4EFgQU9IX9iq+R3UPs9gItk+OShbon
+            4n8wCgYIKoZIzj0EAwIDSQAwRgIhAP+aFnleeH0kn4GV53+WTZ5dc3PGAIys5ipa
+            fTVsBOvXAiEAwep3NlgnbgCWFUpATpo+MbWBiQlxEEZOdaUtB9coP1g=
+            -----END CERTIFICATE-----
+            """;
+
+    static X509Certificate pem(String text) throws Exception {
+        return (X509Certificate) CertificateFactory.getInstance("X.509")
+                .generateCertificate(new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII)));
+    }
+
+    public static void main(String[] args) throws Exception {
+        boolean ok = keyloaderTrusted(pem(KEYLOADER_PEM), pem(PROJECT_CA_PEM));
+        System.out.println(ok ? "REVOKED DEVICE ACCEPTED" : "revoked device refused");
+    }
+}</code></pre>
+<p>PKIXParameters.setRevocationEnabled(false)로 폐기 확인을 끈다. CertPathValidator는 사슬과 기간만 보고 통과시키므로 인증기관이 폐기한 키 적재 장비 인증서를 계속 신뢰한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.CollectionCertStoreParameters;
+import java.security.cert.PKIXParameters;
+import java.security.cert.PKIXRevocationChecker;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
+public class Example {
+    // 지상 키 관리 소프트웨어가 접속한 키 적재 장비의 장비 인증서를 확인한다.
+    // CRL은 인증기관이 정해진 경로(이동식 매체 등)로 배포한 최신본을 넣고, 네트워크 조회(OCSP)로 넘어가지 않는다
+    static boolean keyloaderTrusted(X509Certificate device, X509Certificate projectCa, X509CRL latestCrl)
+            throws Exception {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        CertPath path = cf.generateCertPath(List.of(device));
+        PKIXParameters params = new PKIXParameters(Set.of(new TrustAnchor(projectCa, null)));
+        params.addCertStore(CertStore.getInstance("Collection", new CollectionCertStoreParameters(List.of(latestCrl))));
+        CertPathValidator validator = CertPathValidator.getInstance("PKIX");
+        PKIXRevocationChecker revocation = (PKIXRevocationChecker) validator.getRevocationChecker();
+        revocation.setOptions(EnumSet.of(PKIXRevocationChecker.Option.PREFER_CRLS,
+                PKIXRevocationChecker.Option.NO_FALLBACK));      // CRL로 확인하지 못하면 실패
+        params.setRevocationEnabled(true);
+        params.addCertPathChecker(revocation);
+        try {
+            validator.validate(path, params);
+            return true;
+        } catch (CertPathValidatorException e) {
+            System.out.println("reason: " + e.getReason());
+            return false;
+        }
+    }
+
+    // 시험용 공개 인증서(개인키 없음): 정비·키 관리 겸용 사업 인증기관, 그 기관이 발급했다가 장비 분실로 폐기한 키 적재 장비 인증서
+    static final String PROJECT_CA_PEM = """
+            -----BEGIN CERTIFICATE-----
+            MIIBiTCCAS+gAwIBAgIBATAKBggqhkjOPQQDAjArMSkwJwYDVQQDDCBQcm9qZWN0
+            IE1haW50ZW5hbmNlIENBIChleGFtcGxlKTAgFw0yNjEwMjAwMjQzMzZaGA8yMTI2
+            MDkyNjAyNDMzNlowKzEpMCcGA1UEAwwgUHJvamVjdCBNYWludGVuYW5jZSBDQSAo
+            ZXhhbXBsZSkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATP1RWUPV5rtOX4qxCv
+            zvHbueU1hrRaHRbUTZBtQCZwJ1HuOxsBEBLsx2zilypLokgLEJMFgf+D6cP+6zq0
+            qflqo0IwQDAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4E
+            FgQUQM7ajR8KTPRpRPWE2Ze1nMOiYfwwCgYIKoZIzj0EAwIDSAAwRQIgaUXwQocA
+            PTQO5RIGVb2hWDT+5FrNCjS6wAvO5mHaDBICIQCeIn9J5pXCu/Zns5pBy0gUxZQ0
+            wVJv0MXS9Tze0t83xg==
+            -----END CERTIFICATE-----
+            """;
+    static final String KEYLOADER_PEM = """
+            -----BEGIN CERTIFICATE-----
+            MIIBpTCCAUqgAwIBAgICEAcwCgYIKoZIzj0EAwIwKzEpMCcGA1UEAwwgUHJvamVj
+            dCBNYWludGVuYW5jZSBDQSAoZXhhbXBsZSkwIBcNMjYxMDIwMDI0MzM2WhgPMjEy
+            NjA5MjYwMjQzMzZaMCcxJTAjBgNVBAMMHGtleWxvYWRlci0wNy5leGFtcGxlLmlu
+            dmFsaWQwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASWls+fMKNkd723gzhvXtkU
+            JZEmAUG/cUzjxErwrXQuT2FhzYzft/tcFBOknTBCbu20CaHChyx+yckWB4iooWwq
+            o2AwXjAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIHgDAfBgNVHSMEGDAWgBRA
+            ztqNHwpM9GlE9YTZl7Wcw6Jh/DAdBgNVHQ4EFgQU9IX9iq+R3UPs9gItk+OShbon
+            4n8wCgYIKoZIzj0EAwIDSQAwRgIhAP+aFnleeH0kn4GV53+WTZ5dc3PGAIys5ipa
+            fTVsBOvXAiEAwep3NlgnbgCWFUpATpo+MbWBiQlxEEZOdaUtB9coP1g=
+            -----END CERTIFICATE-----
+            """;
+    // 시험용 CRL: 위 장비 인증서(일련번호 0x1007)를 폐기했다. 시험이 오래 돌도록 다음 갱신일을 멀리 잡았다
+    static final String LATEST_CRL_PEM = """
+            -----BEGIN X509 CRL-----
+            MIHpMIGRAgEBMAoGCCqGSM49BAMCMCsxKTAnBgNVBAMMIFByb2plY3QgTWFpbnRl
+            bmFuY2UgQ0EgKGV4YW1wbGUpFw0yNjEwMjAwMjQzMzZaGA8yMTI2MDkyNjAyNDMz
+            NlowIzAhAgIQBxcNMjYxMDIwMDI0MzM2WjAMMAoGA1UdFQQDCgEBoA4wDDAKBgNV
+            HRQEAwIBATAKBggqhkjOPQQDAgNHADBEAiAyEaQ6v3XLxNctTRl7traVnBkKF0RE
+            YerWfAov7H2ONgIgVUkYp66hvyoGj9gdiSfU6rpShRyvPeI01v7sl3A6qt8=
+            -----END X509 CRL-----
+            """;
+
+    static X509Certificate pem(String text) throws Exception {
+        return (X509Certificate) CertificateFactory.getInstance("X.509")
+                .generateCertificate(new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII)));
+    }
+
+    static X509CRL crl(String text) throws Exception {
+        return (X509CRL) CertificateFactory.getInstance("X.509")
+                .generateCRL(new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII)));
+    }
+
+    public static void main(String[] args) throws Exception {
+        boolean ok = keyloaderTrusted(pem(KEYLOADER_PEM), pem(PROJECT_CA_PEM), crl(LATEST_CRL_PEM));
+        System.out.println(ok ? "REVOKED DEVICE ACCEPTED" : "revoked device refused");
+    }
+}</code></pre>
+<p>인증기관이 배포한 최신 CRL을 CertStore로 넘기고, PKIXRevocationChecker에 PREFER_CRLS·NO_FALLBACK을 주어 CRL로만 확인하고 확인하지 못하면 실패하게 한다. 폐기된 인증서는 CertPathValidatorException(사유 REVOKED)으로 거부된다(D-05·T-06). OCSP 응답기에 닿지 않는 폐쇄망에서도 이렇게 들여온 CRL로 확인할 수 있다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>REVOKED DEVICE ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>revoked device refused</code> 출력 확인 · 참고: MITRE CWE-299 Demonstrative Example 1(인증서가 있는지만 보고 폐기 여부는 확인하지 않음) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import datetime
+
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.x509.oid import NameOID
+
+NOW = datetime.datetime.now(datetime.timezone.utc)
+DAY = datetime.timedelta(days=1)
+
+
+def issue(subject, issuer, pub, key, serial, ca=False):          # 시험 준비용 인증서 발급
+    return (x509.CertificateBuilder().subject_name(subject).issuer_name(issuer).public_key(pub)
+            .serial_number(serial).not_valid_before(NOW - DAY).not_valid_after(NOW + 365 * DAY)
+            .add_extension(x509.BasicConstraints(ca=ca, path_length=None), critical=True)
+            .sign(key, hashes.SHA256()))
+
+
+name = lambda cn: x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, cn)])
+ca_key, loader_key = ec.generate_private_key(ec.SECP256R1()), ec.generate_private_key(ec.SECP256R1())
+CA = issue(name("GSE Root CA"), name("GSE Root CA"), ca_key.public_key(), ca_key, 1, ca=True)
+loader = issue(name("key-loader-07"), CA.subject, loader_key.public_key(), ca_key, 0x2F)
+# 키 적재 장비 07을 분실해 기관 CA가 인증서를 폐기하고 CRL을 냈다
+CRL = (x509.CertificateRevocationListBuilder().issuer_name(CA.subject).last_update(NOW).next_update(NOW + DAY)
+       .add_revoked_certificate(x509.RevokedCertificateBuilder().serial_number(0x2F).revocation_date(NOW).build())
+       .sign(ca_key, hashes.SHA256()))
+
+
+# 지상 키 관리 소프트웨어가 접속한 키 적재 장비의 장비 인증서를 확인한다
+def accept_loader(cert):
+    cert.verify_directly_issued_by(CA)                            # 서명·발급자 확인
+    if not cert.not_valid_before_utc &lt;= NOW &lt;= cert.not_valid_after_utc:
+        return "REJECTED (expired)"
+    return "ACCEPTED"                                             # 폐기 여부는 보지 않는다
+
+
+print("key-loader-07:", accept_loader(loader))</code></pre>
+<p>인증서의 발급자 서명과 유효 기간만 보고 폐기 여부는 확인하지 않는다. 분실한 키 적재 장비의 인증서를 기관 CA가 폐기해도 유효 기간이 남아 있는 동안은 그 장비가 키를 적재받을 수 있다. Python ssl 모듈도 기본 설정(create_default_context)에서는 CRL을 확인하지 않는다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import datetime
+
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.x509.oid import NameOID
+
+NOW = datetime.datetime.now(datetime.timezone.utc)
+DAY = datetime.timedelta(days=1)
+
+
+def issue(subject, issuer, pub, key, serial, ca=False):          # 시험 준비용 인증서 발급
+    return (x509.CertificateBuilder().subject_name(subject).issuer_name(issuer).public_key(pub)
+            .serial_number(serial).not_valid_before(NOW - DAY).not_valid_after(NOW + 365 * DAY)
+            .add_extension(x509.BasicConstraints(ca=ca, path_length=None), critical=True)
+            .sign(key, hashes.SHA256()))
+
+
+name = lambda cn: x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, cn)])
+ca_key, loader_key = ec.generate_private_key(ec.SECP256R1()), ec.generate_private_key(ec.SECP256R1())
+CA = issue(name("GSE Root CA"), name("GSE Root CA"), ca_key.public_key(), ca_key, 1, ca=True)
+loader = issue(name("key-loader-07"), CA.subject, loader_key.public_key(), ca_key, 0x2F)
+# 키 적재 장비 07을 분실해 기관 CA가 인증서를 폐기하고 CRL을 냈다
+CRL = (x509.CertificateRevocationListBuilder().issuer_name(CA.subject).last_update(NOW).next_update(NOW + DAY)
+       .add_revoked_certificate(x509.RevokedCertificateBuilder().serial_number(0x2F).revocation_date(NOW).build())
+       .sign(ca_key, hashes.SHA256()))
+
+
+def accept_loader(cert, crl):
+    cert.verify_directly_issued_by(CA)
+    if not cert.not_valid_before_utc &lt;= NOW &lt;= cert.not_valid_after_utc:
+        return "REJECTED (expired)"
+    # 폐기 확인: CRL이 같은 CA의 서명이고 기한 안일 때만 믿고, 없거나 낡았으면 거부한다(실패 시 닫힘)
+    if crl is None or not crl.is_signature_valid(CA.public_key()) or crl.next_update_utc is None or crl.next_update_utc &lt; NOW:
+        return "REJECTED (no valid CRL)"
+    if crl.get_revoked_certificate_by_serial_number(cert.serial_number) is not None:
+        return "REJECTED (revoked)"
+    return "ACCEPTED"
+
+
+print("key-loader-07:", accept_loader(loader, CRL))</code></pre>
+<p>같은 CA가 서명했고 기한(next_update)이 지나지 않은 CRL로 일련번호가 폐기 목록에 있는지 확인하고, CRL이 없거나 낡았으면 거부한다(실패 시 닫힘, D-05). TLS 연결에서는 ctx.verify_flags |= ssl.VERIFY_CRL_CHECK_LEAF로 켜고 load_verify_locations로 CRL 파일을 함께 넣는다. 폐쇄망에서는 CRL을 반입하는 주기와 기한이 지났을 때의 처리를 운용 절차로 정하고, 폐기한 인증서로 접속이 거부되는지 부정 시험을 한다(T-06).</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>key-loader-07: ACCEPTED</code> 검출, 좋은 예에서 미검출·<code>key-loader-07: REJECTED (revoked)</code> 출력 확인 · 참고: MITRE CWE-299 Demonstrative Example 1(인증서가 있는지만 보고 폐기 여부는 확인하지 않음) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 1건)</summary><div lang="en"><p><b>Example 1.</b> The following OpenSSL code ensures that there is a certificate before continuing execution.</p><p><i>Bad / C</i></p><pre><code>if (cert = SSL_get_peer_certificate(ssl)) {
+
+                             // got a certificate, do secret things</code></pre><p>Because this code does not use SSL_get_verify_results() to check the certificate, it could accept certificates that have been revoked (X509_V_ERR_CERT_REVOKED). The product could be communicating with a malicious host.</p></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>흔히 SAST(Static Application Security Testing)라 부르는 자동 정적 분석(static analysis)은 소스코드(또는 바이너리·컴파일된 코드)를 실행하지 않고 분석해 이 약점의 일부 사례를 찾을 수 있으며, 대개 데이터 흐름·제어 흐름 모델을 만든 뒤 입력 출처('source')와 외부 구성요소나 운영체제 같은 하위 계층과 상호작용하는 목적지('sink')를 잇는 잠재적 취약 패턴을 찾는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect &quot;sources&quot; (origins of input) with &quot;sinks&quot; (destinations where the data interacts with external components, a lower layer such as the OS, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다.</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<ul>
+<li>① 원문 탐지 방법은 자동 정적 분석뿐이다. 다른 정적 분석 도구·컴파일러 경고로 점검한다.</li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-3">부록 A-3 보조 항목</a> 행의 단계별 지침</strong> (이 항목은 197개 밖에서 더한 보조 항목이다. 이 CWE를 대상 CWE 목록에 둔 기준선 활동과 환경 지침이며, 요구사항 분석 행에는 원문 완화책도 함께 모았다. 적용 조건·추가 근거는 부록 A-3 표에 있다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td><a href="../../ch4-design/#d-05">D-05</a> 암호·키·비밀 관리 설계</td>
+</tr>
+<tr>
+<td>구현</td>
+<td><a href="../../appendix/c-environment-guides/#lcs-07">LCS-07</a> 암호·난수·비밀 관리</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a> 보안 기능 부정 시험</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 2건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-05">D-05</a> 암호·키·비밀 관리 설계 (설계)</li>
+<li><a href="../../ch6-integration-test/#t-06">T-06</a> 보안 기능 부정 시험 (통합 및 시험)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 1건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>개발 언어 (1건)</td>
+<td><a href="../../appendix/c-environment-guides/#lcs-07">LCS-07</a> 암호·난수·비밀 관리</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="../295/">CWE-295</a> 부적절한 인증서 유효성 검증, <a href="../404/">CWE-404</a> 부적절한 자원 해제</li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 12건 중 앞의 8건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2011-2014" target="_blank" rel="noopener">CVE-2011-2014</a></td>
+<td>LDAP-over-SSL 구현이 인증서 폐기 목록(CRL)을 확인하지 않아 폐기된 인증서로 위장할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>LDAP-over-SSL implementation does not check Certificate Revocation List (CRL), allowing spoofing using a revoked certificate.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2011-0199" target="_blank" rel="noopener">CVE-2011-0199</a></td>
+<td>운영체제가 일부 경우 인증서 폐기 목록(CRL)을 확인하지 않아 폐기된 인증서로 위장할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Operating system does not check Certificate Revocation List (CRL) in some cases, allowing spoofing using a revoked certificate.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2010-5185" target="_blank" rel="noopener">CVE-2010-5185</a></td>
+<td>백신 제품이 서명된 실행 파일의 인증서가 폐기되었는지 확인하지 않는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Antivirus product does not check whether certificates from signed executables have been revoked.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3046" target="_blank" rel="noopener">CVE-2009-3046</a></td>
+<td>웹 브라우저가 중간 인증서 가운데 폐기된 것이 있는지 확인하지 않는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Web browser does not check if any intermediate certificates are revoked.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-0161" target="_blank" rel="noopener">CVE-2009-0161</a></td>
+<td>연쇄: OCSP용 Ruby 모듈이 응답을 잘못 해석해 폐기된 인증서를 탐지하지 못한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: Ruby module for OCSP misinterprets a response, preventing detection of a revoked certificate.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2011-2701" target="_blank" rel="noopener">CVE-2011-2701</a></td>
+<td>연쇄: OCSP 응답기의 응답을 잘못 파싱해 폐기된 인증서로 우회할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: incorrect parsing of replies from OCSP responders allows bypass using a revoked certificate.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2011-0935" target="_blank" rel="noopener">CVE-2011-0935</a></td>
+<td>라우터가 일부 공개키를 영구히 캐시할 수 있어, 나중에 인증서가 폐기되어도 우회가 가능해진다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Router can permanently cache certain public keys, which would allow bypass if the certificate is later revoked.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-1358" target="_blank" rel="noopener">CVE-2009-1358</a></td>
+<td>연쇄: 운영체제 패키지 관리자가 반환값을 제대로 확인하지 않아 폐기된 인증서로 우회할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: OS package manager does not properly check the return value, allowing bypass using a revoked certificate.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>CLASP</td><td></td><td lang="en">Failure to check for certificate revocation</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/299.html" target="_blank" rel="noopener">CWE-299</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../295/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-295 부적절한 인증서 유효성 검증">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-295 부적절한 인증서 유효성 검증
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../306/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-306 적절한 인증 없는 중요기능 허용">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-306 적절한 인증 없는 중요기능 허용
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

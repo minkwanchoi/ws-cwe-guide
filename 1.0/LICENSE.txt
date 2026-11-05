@@ -1,0 +1,38 @@
+MIT License
+
+Copyright (c) 2026 minkwanchoi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Scope of this license
+
+In this repository and its built editions, "the Software" means the guide text,
+data, spreadsheets, scripts, example code, selection tool and introduction
+image written by the copyright holder. It does not grant rights in third-party
+material, which stays under its own terms as listed in NOTICE.md:
+
+- MITRE CWE and CVE original text. The Korean translations and summaries of CWE
+  text are offered under this license for the copyright holder's contribution
+  only; MITRE's terms still apply to the underlying text.
+- Short quotations in the guide text, which remain the property of their authors.
+- Original Microsoft Learn and SEI CERT material.
+- Bundled theme, font and icon assets (assets/ and THIRD-PARTY-NOTICES.txt).
+
+적용 범위: 이 라이선스는 저작권자가 쓴 원고·데이터·Excel·스크립트·예시 코드·선택 도구·소개 이미지에
+적용한다. 제3자 자료는 NOTICE.md에 적은 각 조건을 따른다.

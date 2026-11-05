@@ -1,0 +1,2655 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/cwe/759/">
+      
+      
+        <link rel="prev" href="../755/">
+      
+      
+        <link rel="next" href="../761/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-759 솔트 없이 일방향 해시 함수 사용 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-759-솔트-없이-일방향-해시-함수-사용" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-759 솔트 없이 일방향 해시 함수 사용
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-759 솔트 없이 일방향 해시 함수 사용
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-759 솔트 없이 일방향 해시 함수 사용
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-759-솔트-없이-일방향-해시-함수-사용">CWE-759 솔트 없이 일방향 해시 함수 사용<a class="headerlink" href="#cwe-759-솔트-없이-일방향-해시-함수-사용" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Use of a One-Way Hash without a Salt</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>변형(Variant)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>미완성(Incomplete)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>조건부 — 사용자 계정·비밀번호 사용</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어 무관</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/759.html" target="_blank" rel="noopener">MITRE CWE-759</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">이름 표기</p>
+<p>「소프트웨어 개발보안 가이드」(2021. 11.)의 항목명은 '솔트 없이 일방향 해쉬함수 사용'(부록 인쇄 349쪽은 '해쉬 함수')이다. 이 가이드는 외래어 표기 '해시'를 쓴 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.)의 항목명을 따른다.</p>
+</div>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>비밀번호처럼 되돌릴 수 없어야 하는 입력을 해시할 때 솔트를 쓰지 않아 생기는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 비밀번호처럼 되돌릴 수 없어야 하는 입력에 일방향 암호 해시를 적용하면서 입력의 일부로 솔트(salt)를 쓰지 않는다.</p>
+<p><strong>배경(Background Details)</strong></p>
+<p>암호학에서 솔트(salt)는 사전 공격을 더 어렵게 하려고 해싱 전에 입력에 무작위 데이터를 덧붙이는 것을 가리킨다.</p>
+<details class="cwe-orig"><summary>원문(Description · Background Details)</summary><div lang="en"><p>The product uses a one-way cryptographic hash against an input that should not be reversible, such as a password, but the product does not also use a salt as part of the input.</p><p>In cryptography, salt refers to some random addition of data to an input before hashing to make dictionary attacks more difficult.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>실현(REALIZATION): 이 약점은 아키텍처 보안 전술을 구현하는 과정에서 생긴다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>접근 통제</td>
+<td>보호 메커니즘 우회 / 권한 획득 또는 신원 도용</td>
+<td>공격자가 해시에 접근할 수 있으면 솔트가 없어 무차별 대입 공격을 하기 쉬워진다. 예를 들어 레인보 테이블(rainbow table) 같은 사전 공격 기법으로 해시 값을 미리 계산할 수 있다. 해시 함수의 계산 비용이 크지 않으면 오프라인 비밀번호 크래킹은 여전히 효과적일 수 있으며, 많은 암호 함수가 효율적으로 설계되어 해시가 암호학적으로 강하더라도 대규모 컴퓨팅 자원을 쓰는 공격에 취약할 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 3건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>해시 계산에 드는 노력(반복 횟수 '스트레칭'이나 필요한 메모리 양)을 설정으로 바꿀 수 있는 적응형 해시 함수를 쓴다. 일부 해시 함수는 솔트를 자동으로 적용한다. 이런 함수는 MD5처럼 일부러 빠르게 만든 함수보다 무차별 대입 공격의 부담을 크게 늘릴 수 있어, 계산 부담 때문에 레인보 테이블 공격이 비현실적이 될 수 있다. 계산 능력이 빨라지고 싸지면 사용 중인 알고리즘을 통째로 바꾸지 않고 작업량을 늘리도록 다시 설정할 수 있다. 이런 성질 중 하나 이상을 가진 해시 함수로 bcrypt [REF-291], scrypt [REF-292], PBKDF2 [REF-293]가 있다. 어느 것이 가장 효과적인지는 논쟁 중이지만, 모두 계산 부담이 매우 작은 해시 함수에 솔트를 쓰는 것보다 강하다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Use an adaptive hash function that can be configured to change the amount of computational effort needed to compute the hash, such as the number of iterations (&quot;stretching&quot;) or the amount of memory required. Some hash functions perform salting automatically. These functions can significantly increase the overhead for a brute force attack compared to intentionally-fast functions such as MD5. For example, rainbow table attacks can become infeasible due to the high computing overhead. Finally, since computing power gets faster and cheaper over time, the technique can be reconfigured to increase the workload without forcing an entire replacement of the algorithm in use.</p><p>Some hash functions that have one or more of these desired properties include bcrypt [REF-291], scrypt [REF-292], and PBKDF2 [REF-293]. While there is active debate about which of these is the most effective, they are all stronger than using salts with hash functions with very little computing overhead.</p></div></details></td>
+<td>높음(High) — 이런 함수를 쓰면 성능에 영향을 줄 수 있어 서비스 거부 공격을 피하도록 특별히 고려해야 한다. 다만 설정으로 CPU·메모리 사용량을 세밀하게 조정할 수 있어 환경에 맞출 수 있다.</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>추가 계산 노력을 요구하는 기법을 구현할 수 없다면, 비밀번호마다 예측할 수 없는 시드를 쓰는 강한 난수 생성기로 새 무작위 솔트를 만들어 평문 비밀번호에 더한 뒤 해시하고, 해시를 저장할 때 솔트도 함께 저장한다. 모든 비밀번호에 같은 솔트를 쓰지 않는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>If a technique that requires extra computational effort can not be implemented, then for each password that is processed, generate a new random salt using a strong random number generator with unpredictable seeds. Add the salt to the plaintext password before hashing it. When storing the hash, also store the salt. Do not use the same salt for every password.</p></div></details></td>
+<td>제한적(Limited) — 흔한 인식과 달리, 좋은 솔트를 해시에 써도 개별 해시(예: 중요 인물의 비밀번호)를 노리는 표적 공격의 작업량은 충분히 늘지 않는다. 일반적으로 솔트는 적응형 해시 함수로 계산 시간이나 메모리 부담을 늘리는 등의 다른 해싱 기법보다 효과가 작다. 작업량이 내장되어 있지 않으면, 현대의 공격은 대규모 병렬 컴퓨팅(클라우드 서비스 등)이나 저렴할 수 있는 GPU, ASIC, FPGA 같은 특수 하드웨어를 써서 아주 짧은 시간 안에 많은 해시를 계산하거나 가능한 모든 비밀번호 공간을 소진할 수도 있다. 자세한 내용은 <a href="../916/">CWE-916</a>을 참고한다.</td>
+</tr>
+<tr>
+<td>구현(Implementation) / 아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>업계에서 승인된 기법을 쓸 때는 올바르게 쓰고, 자원이 많이 드는 단계를 건너뛰지 않는다(<a href="https://cwe.mitre.org/data/definitions/325.html" target="_blank" rel="noopener">CWE-325</a>). 이런 단계는 흔히 일반적인 공격을 막는 데 필수적이다. <em>(구현 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When using industry-approved techniques, use them correctly. Don&#x27;t cut corners by skipping resource-intensive steps (CWE-325). These steps are often essential for preventing common attacks.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>이 단계를 함께 가리키는 원문 완화책은 <a href="#mit-design">설계</a> 단계에 1건 실었다('구현 단계에도 해당' 표시).</p>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 정비 단말·운용자 콘솔이 운용자 비밀번호를 그대로 두지 않고 일방향 해시값(검증값)으로 바꿔 계정 파일에 저장한다. 계정 파일이 유출되면 공격자는 같은 검증값끼리 묶고 미리 계산한 해시 표와 대조해 비밀번호를 알아낼 수 있다. 예시는 같은 비밀번호를 쓰는 두 계정의 검증값이 같은지 비교한다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;openssl/sha.h&gt;
+
+/* 정비 단말 계정 파일에 저장할 검증값: SHA-256(비밀번호) */
+typedef struct {
+    char operator_id[16];
+    unsigned char verifier[SHA256_DIGEST_LENGTH];
+} AccountRecord;
+
+static void enroll(AccountRecord *rec, const char *id, const char *password)
+{
+    snprintf(rec-&gt;operator_id, sizeof rec-&gt;operator_id, "%s", id);
+    SHA256((const unsigned char *)password, strlen(password), rec-&gt;verifier);   /* 솔트 없음 */
+}
+
+int main(void)
+{
+    AccountRecord a, b;
+    enroll(&amp;a, "maint-01", "EXAMPLE-ONLY-pw1");
+    enroll(&amp;b, "maint-02", "EXAMPLE-ONLY-pw1");   /* 우연히 같은 비밀번호 */
+
+    /* 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다 */
+    puts(memcmp(a.verifier, b.verifier, sizeof a.verifier) == 0 ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    return 0;
+}</code></pre>
+<p>비밀번호를 솔트 없이 SHA-256 한 번으로 바꿔 저장한다. 같은 비밀번호는 같은 검증값이 되어 한 계정만 풀면 나머지도 풀리고, 미리 계산한 표(레인보 테이블)가 그대로 통한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;openssl/crypto.h&gt;
+#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/rand.h&gt;
+
+#define PBKDF2_ROUNDS 600000   /* 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다 */
+
+/* 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256 검증값 */
+typedef struct {
+    char operator_id[16];
+    unsigned char salt[16];
+    unsigned char verifier[32];
+} AccountRecord;
+
+static int derive(const char *pw, const unsigned char *salt, unsigned char *out)
+{
+    return PKCS5_PBKDF2_HMAC(pw, (int)strlen(pw), salt, 16, PBKDF2_ROUNDS, EVP_sha256(), 32, out) == 1 ? 0 : -1;
+}
+
+static int enroll(AccountRecord *rec, const char *id, const char *pw)
+{
+    snprintf(rec-&gt;operator_id, sizeof rec-&gt;operator_id, "%s", id);
+    if (RAND_bytes(rec-&gt;salt, sizeof rec-&gt;salt) != 1) return -1;
+    return derive(pw, rec-&gt;salt, rec-&gt;verifier);
+}
+
+static int verify(const AccountRecord *rec, const char *pw)
+{
+    unsigned char probe[32];
+    return derive(pw, rec-&gt;salt, probe) == 0 &amp;&amp; CRYPTO_memcmp(probe, rec-&gt;verifier, 32) == 0;
+}
+
+int main(void)
+{
+    AccountRecord a, b;
+    if (enroll(&amp;a, "maint-01", "EXAMPLE-ONLY-pw1") != 0 || enroll(&amp;b, "maint-02", "EXAMPLE-ONLY-pw1") != 0) {
+        return 1;
+    }
+    printf("login maint-01: %s\n", verify(&amp;a, "EXAMPLE-ONLY-pw1") ? "ok" : "denied");
+    puts(memcmp(a.verifier, b.verifier, sizeof a.verifier) == 0 ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    return 0;
+}</code></pre>
+<p>계정마다 RAND_bytes로 16바이트 솔트를 만들고 PBKDF2-HMAC-SHA256(반복 600,000회는 예시 값)으로 검증값을 만든다. 같은 비밀번호도 검증값이 달라지고, 비교는 CRYPTO_memcmp로 상수 시간에 한다. 반복 횟수는 장비 성능·인증 지연 요구에 맞춰 정한다(D-05).</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>IDENTICAL VERIFIERS</code> 검출, 좋은 예에서 미검출·<code>verifiers differ</code> 출력 확인 · 참고: MITRE CWE-759 Demonstrative Example 1·2(솔트 없는 해시로 비밀번호 검사·저장) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-11 &#x27;솔트 없이 일방향 해쉬 함수 사용&#x27;(인쇄 114쪽) 참고</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;openssl/evp.h&gt;
+#include &lt;array&gt;
+#include &lt;cstdio&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+using Digest = std::array&lt;unsigned char, 32&gt;;
+
+// 운용자 콘솔 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다
+static Digest hash_password(const std::string &amp;pw) {
+    Digest d{};
+    unsigned int len = 0;
+    EVP_Digest(pw.data(), pw.size(), d.data(), &amp;len, EVP_sha256(), nullptr);   // 솔트 없음
+    return d;
+}
+
+int main() {
+    std::map&lt;std::string, Digest&gt; accounts;
+    accounts["op-alpha"] = hash_password("EXAMPLE-ONLY-pw1");
+    accounts["op-bravo"] = hash_password("EXAMPLE-ONLY-pw1");   // 우연히 같은 비밀번호
+
+    // 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다
+    std::puts(accounts["op-alpha"] == accounts["op-bravo"] ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    return 0;
+}</code></pre>
+<p>EVP_Digest로 비밀번호를 솔트 없이 SHA-256 한 번 해시한다. 두 운용자가 같은 비밀번호를 쓰면 검증값이 같아져 계정 파일만 보고도 알 수 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;openssl/evp.h&gt;
+#include &lt;openssl/rand.h&gt;
+#include &lt;array&gt;
+#include &lt;cstdio&gt;
+#include &lt;map&gt;
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+
+constexpr int kRounds = 600000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다
+
+struct Verifier {
+    std::array&lt;unsigned char, 16&gt; salt{};
+    std::array&lt;unsigned char, 32&gt; dk{};
+};
+
+// 계정마다 무작위 솔트 + PBKDF2-HMAC-SHA256(키 유도 함수)
+static Verifier enroll(const std::string &amp;pw) {
+    Verifier v;
+    if (RAND_bytes(v.salt.data(), static_cast&lt;int&gt;(v.salt.size())) != 1 ||
+        PKCS5_PBKDF2_HMAC(pw.data(), static_cast&lt;int&gt;(pw.size()), v.salt.data(), static_cast&lt;int&gt;(v.salt.size()),
+                          kRounds, EVP_sha256(), static_cast&lt;int&gt;(v.dk.size()), v.dk.data()) != 1) {
+        throw std::runtime_error("enrollment failed");
+    }
+    return v;
+}
+
+int main() {
+    std::map&lt;std::string, Verifier&gt; accounts;
+    accounts["op-alpha"] = enroll("EXAMPLE-ONLY-pw1");
+    accounts["op-bravo"] = enroll("EXAMPLE-ONLY-pw1");
+    std::puts(accounts["op-alpha"].dk == accounts["op-bravo"].dk ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    return 0;
+}</code></pre>
+<p>계정마다 무작위 솔트와 PBKDF2-HMAC-SHA256을 쓰고 솔트를 검증값과 함께 저장한다(반복 횟수도 함께 기록해 두면 나중에 올리기 쉽다). 실패하면 예외로 등록을 멈춘다(D-05).</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>IDENTICAL VERIFIERS</code> 검출, 좋은 예에서 미검출·<code>verifiers differ</code> 출력 확인 · 참고: MITRE CWE-759 Demonstrative Example 1·2(솔트 없는 해시로 비밀번호 검사·저장) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Security.Cryptography;
+using System.Text;
+
+// 운용자 콘솔 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다(솔트 없음)
+static byte[] HashPassword(string password) =&gt; SHA256.HashData(Encoding.UTF8.GetBytes(password));
+
+var accounts = new Dictionary&lt;string, byte[]&gt;
+{
+    ["op-alpha"] = HashPassword("EXAMPLE-ONLY-pw1"),
+    ["op-bravo"] = HashPassword("EXAMPLE-ONLY-pw1"),   // 우연히 같은 비밀번호
+};
+
+// 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다
+bool same = accounts["op-alpha"].AsSpan().SequenceEqual(accounts["op-bravo"]);
+Console.WriteLine(same ? "IDENTICAL VERIFIERS" : "verifiers differ");</code></pre>
+<p>SHA256.HashData로 비밀번호를 솔트 없이 해시한다. 같은 비밀번호는 같은 검증값이 되어 계정 파일에서 바로 드러난다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Security.Cryptography;
+
+const int Rounds = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다
+
+// 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256
+static (byte[] Salt, byte[] Dk) Enroll(string password)
+{
+    byte[] salt = RandomNumberGenerator.GetBytes(16);
+    return (salt, Rfc2898DeriveBytes.Pbkdf2(password, salt, Rounds, HashAlgorithmName.SHA256, 32));
+}
+
+static bool Verify((byte[] Salt, byte[] Dk) v, string attempt) =&gt;
+    CryptographicOperations.FixedTimeEquals(
+        Rfc2898DeriveBytes.Pbkdf2(attempt, v.Salt, Rounds, HashAlgorithmName.SHA256, 32), v.Dk);
+
+var accounts = new Dictionary&lt;string, (byte[] Salt, byte[] Dk)&gt;
+{
+    ["op-alpha"] = Enroll("EXAMPLE-ONLY-pw1"),
+    ["op-bravo"] = Enroll("EXAMPLE-ONLY-pw1"),
+};
+Console.WriteLine($"login op-alpha: {(Verify(accounts["op-alpha"], "EXAMPLE-ONLY-pw1") ? "ok" : "denied")}");
+bool same = accounts["op-alpha"].Dk.AsSpan().SequenceEqual(accounts["op-bravo"].Dk);
+Console.WriteLine(same ? "IDENTICAL VERIFIERS" : "verifiers differ");</code></pre>
+<p>RandomNumberGenerator로 계정마다 솔트를 만들고 Rfc2898DeriveBytes.Pbkdf2(SHA-256, 반복 600,000회는 예시 값)로 검증값을 만든다. 비교는 CryptographicOperations.FixedTimeEquals로 상수 시간에 한다. 반복 횟수는 장비 성능·인증 지연 요구에 맞춰 정한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>IDENTICAL VERIFIERS</code> 검출, 좋은 예에서 미검출·<code>verifiers differ</code> 출력 확인 · 참고: MITRE CWE-759 Demonstrative Example 2(솔트 없는 해시로 비밀번호 저장) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Example {
+    // 정비 단말 계정 저장소: 비밀번호를 SHA-256 한 번으로 바꿔 둔다
+    static byte[] hashPassword(char[] password) throws GeneralSecurityException {
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
+        return sha.digest(new String(password).getBytes(StandardCharsets.UTF_8));   // 솔트 없음
+    }
+
+    public static void main(String[] args) throws GeneralSecurityException {
+        Map&lt;String, byte[]&gt; accounts = new HashMap&lt;&gt;();
+        accounts.put("maint-01", hashPassword("EXAMPLE-ONLY-pw1".toCharArray()));
+        accounts.put("maint-02", hashPassword("EXAMPLE-ONLY-pw1".toCharArray()));   // 우연히 같은 비밀번호
+
+        // 계정 파일을 빼낸 공격자는 같은 값끼리 묶고, 미리 계산한 해시 표와 바로 대조한다
+        boolean same = Arrays.equals(accounts.get("maint-01"), accounts.get("maint-02"));
+        System.out.println(same ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    }
+}</code></pre>
+<p>MessageDigest SHA-256으로 비밀번호를 솔트 없이 해시한다. 같은 비밀번호는 같은 검증값이 되고 미리 계산한 표가 그대로 통한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+public class Example {
+    static final SecureRandom RNG = new SecureRandom();
+    static final int ROUNDS = 600_000;   // 장비 성능·인증 지연 요구에 맞춰 정하고 주기적으로 올린다
+
+    record Verifier(byte[] salt, byte[] dk) {}
+
+    static byte[] derive(char[] password, byte[] salt) throws GeneralSecurityException {
+        PBEKeySpec spec = new PBEKeySpec(password, salt, ROUNDS, 256);
+        try {
+            return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).getEncoded();
+        } finally {
+            spec.clearPassword();
+        }
+    }
+
+    // 계정마다 무작위 솔트 16바이트 + PBKDF2-HMAC-SHA256
+    static Verifier enroll(char[] password) throws GeneralSecurityException {
+        byte[] salt = new byte[16];
+        RNG.nextBytes(salt);
+        return new Verifier(salt, derive(password, salt));
+    }
+
+    static boolean verify(Verifier v, char[] attempt) throws GeneralSecurityException {
+        return MessageDigest.isEqual(derive(attempt, v.salt()), v.dk());   // 상수 시간 비교
+    }
+
+    public static void main(String[] args) throws GeneralSecurityException {
+        Map&lt;String, Verifier&gt; accounts = new HashMap&lt;&gt;();
+        accounts.put("maint-01", enroll("EXAMPLE-ONLY-pw1".toCharArray()));
+        accounts.put("maint-02", enroll("EXAMPLE-ONLY-pw1".toCharArray()));
+        System.out.println("login maint-01: " + (verify(accounts.get("maint-01"), "EXAMPLE-ONLY-pw1".toCharArray()) ? "ok" : "denied"));
+        boolean same = Arrays.equals(accounts.get("maint-01").dk(), accounts.get("maint-02").dk());
+        System.out.println(same ? "IDENTICAL VERIFIERS" : "verifiers differ");
+    }
+}</code></pre>
+<p>SecretKeyFactory("PBKDF2WithHmacSHA256")에 SecureRandom 솔트 16바이트와 반복 횟수를 지정하고, 비교는 MessageDigest.isEqual로 한다. PBEKeySpec의 비밀번호는 사용 뒤 지운다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>IDENTICAL VERIFIERS</code> 검출, 좋은 예에서 미검출·<code>verifiers differ</code> 출력 확인 · 참고: MITRE CWE-759 Demonstrative Example 1(솔트 없는 해시로 비밀번호 검사) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-15 &#x27;솔트 없이 일방향 해쉬함수 사용&#x27;(인쇄 167쪽) 참고</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import hashlib
+
+accounts = {}
+
+
+# 정비 단말이 운용자 비밀번호를 검증값으로 바꿔 계정 파일에 저장한다
+def enroll(user, password):
+    accounts[user] = hashlib.sha256(password.encode()).hexdigest()   # 솔트 없이 해시
+
+
+enroll("op-kim", "EXAMPLE-ONLY-pw1")
+enroll("op-park", "EXAMPLE-ONLY-pw1")         # 다른 운용자가 같은 비밀번호를 고름
+same = accounts["op-kim"] == accounts["op-park"]
+print("IDENTICAL VERIFIERS" if same else "verifiers differ")</code></pre>
+<p>비밀번호를 솔트 없이 SHA-256 한 번으로 해시한다. 같은 비밀번호는 늘 같은 검증값이 되어 계정 파일만 보고도 누가 같은 비밀번호를 쓰는지 드러나고, 미리 계산한 해시 표(레인보 테이블)로 한꺼번에 되찾을 수 있다. 빠른 해시 한 번이라 대입 공격도 쉽다(<a href="../916/">CWE-916</a>).</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import hashlib
+import hmac
+import os
+
+accounts = {}
+SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1}          # 예시 값, 대상 장비에서 재어 정한다
+
+
+def enroll(user, password):
+    salt = os.urandom(16)                        # 계정마다 새 솔트
+    params = dict(SCRYPT)                        # 비용 인자를 계정 기록에 함께 남겨 나중에 올려도 기존 계정을 확인한다
+    digest = hashlib.scrypt(password.encode(), salt=salt, dklen=32, **params)
+    accounts[user] = (params, salt, digest)
+
+
+def verify(user, password):
+    params, salt, digest = accounts[user]
+    trial = hashlib.scrypt(password.encode(), salt=salt, dklen=32, **params)
+    return hmac.compare_digest(trial, digest)
+
+
+enroll("op-kim", "EXAMPLE-ONLY-pw1")
+enroll("op-park", "EXAMPLE-ONLY-pw1")
+same = accounts["op-kim"][2] == accounts["op-park"][2]
+print("IDENTICAL VERIFIERS" if same else "verifiers differ")
+print("login op-kim:", verify("op-kim", "EXAMPLE-ONLY-pw1"))</code></pre>
+<p>계정마다 os.urandom으로 새 솔트를 만들고, 비밀번호용으로 설계된 느린 함수(hashlib.scrypt·hashlib.pbkdf2_hmac, 또는 argon2-cffi 패키지의 Argon2)로 검증값을 만든다(D-05). 솔트와 비용 인자를 검증값과 함께 저장해 나중에 비용을 올릴 수 있게 한다. 확인할 때는 hmac.compare_digest로 비교한다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>IDENTICAL VERIFIERS</code> 검출, 좋은 예에서 미검출·<code>verifiers differ</code> 출력 확인 · 참고: MITRE CWE-759 Demonstrative Example 2(솔트 없는 해시로 새 계정 비밀번호 저장) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-14 &#x27;솔트 없이 일방향 해시 함수 사용&#x27;(인쇄 112쪽) 참고</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 2건)</summary><div lang="en"><p><b>Example 1.</b> In both of these examples, a user is logged in if their given password matches a stored password:</p><p><i>Bad / C</i></p><pre><code>unsigned char *check_passwd(char *plaintext) {
+  ctext = simple_digest(&quot;sha1&quot;,plaintext,strlen(plaintext), ... );
+
+                          //Login if hash matches stored hash
+
+  if (equal(ctext, secret_password())) {
+    login_user();
+  }
+}</code></pre><p><i>Bad / Java</i></p><pre><code>String plainText = new String(plainTextIn);
+MessageDigest encer = MessageDigest.getInstance(&quot;SHA&quot;);
+encer.update(plainTextIn);
+byte[] digest = password.digest();
+
+                     //Login if hash matches stored hash
+
+if (equal(digest,secret_password())) {
+  login_user();
+}</code></pre><p>This code relies exclusively on a password mechanism (CWE-309) using only one factor of authentication (CWE-308). If an attacker can steal or guess a user&#x27;s password, they are given full access to their account. Note this code also uses SHA-1, which is a weak hash (CWE-328). It also does not use a salt (CWE-759).</p><p><b>Example 2.</b> In this example, a new user provides a new username and password to create an account. The program hashes the new user&#x27;s password then stores it in a database.</p><p><i>Bad / Python</i></p><pre><code>def storePassword(userName,Password):
+  hasher = hashlib.new(&#x27;md5&#x27;)
+  hasher.update(Password)
+  hashedPassword = hasher.digest()
+
+                          # UpdateUserLogin returns True on success, False otherwise
+
+  return updateUserLogin(userName,hashedPassword)</code></pre><p>While it is good to avoid storing a cleartext password, the program does not provide a salt to the hashing function, thus increasing the chances of an attacker being able to reverse the hash and discover the original password if the database is compromised.</p><p>Fixing this is as simple as providing a salt to the hashing function on initialization:</p><p><i>Good / Python</i></p><pre><code>def storePassword(userName,Password):
+  hasher = hashlib.new(&#x27;md5&#x27;,b&#x27;SaltGoesHere&#x27;)
+  hasher.update(Password)
+  hashedPassword = hasher.digest()
+
+                          # UpdateUserLogin returns True on success, False otherwise
+
+  return updateUserLogin(userName,hashedPassword)</code></pre><p>Note that regardless of the usage of a salt, the md5 hash is no longer considered secure, so this example still exhibits CWE-327.</p></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석(바이너리·바이트코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 바이트코드 약점 분석(디스어셈블러와 소스코드 약점 분석 포함), 바이너리 약점 분석(디스어셈블러와 소스코드 약점 분석 포함). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Bytecode Weakness Analysis - including disassembler + source code weakness analysis<br>      Binary Weakness Analysis - including disassembler + source code weakness analysis</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>수동 정적 분석(바이너리·바이트코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 바이너리/바이트코드 디스어셈블러(이후 취약점·이상 징후를 수동 분석). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Binary / Bytecode disassembler - then use manual analysis for vulnerabilities &amp; anomalies</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>수동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 집중 수동 표본 점검(소스 대상 집중 수동 분석), 수동 소스코드 리뷰(인스펙션 제외). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Focused Manual Spotcheck - Focused manual analysis of source<br>        Manual Source Code Review (not inspections)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>자동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 소스코드 약점 분석기, 상황 설정형 소스코드 약점 분석기. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Source code Weakness Analyzer<br>        Context-configured Source Code Weakness Analyzer</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>자동 정적 분석</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 설정 점검 도구. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Configuration Checker</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>아키텍처·설계 검토</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 정형 기법 / 구성에 의한 정확성(Correct-By-Construction). 부분 적용에 비용 효과적: 인스펙션(IEEE 1028 표준, 요구사항·설계·소스코드 등에 적용 가능). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Formal Methods / Correct-By-Construction<br>   <br>        Cost effective for partial coverage:</p><p>Inspection (IEEE 1028 standard) (can apply to requirements, design, source code, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다(아키텍처·설계 검토는 <a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토).</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>같은 비밀번호로 계정 두 개를 만든 뒤 저장된 검증값을 비교해, 같으면 솔트가 없는 것으로 판정한다.</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a></td>
+<td>[예시] CWE-759 예시 검증(같은 비밀번호의 검증값 동일 여부)</td>
+</tr>
+<tr>
+<td>비밀번호를 해시하는 곳에서 SHA-256·MD5를 한 번만 적용하는지, 계정마다 강한 난수로 만든 솔트와 반복 횟수를 쓰는 적응형 함수(PBKDF2, bcrypt, scrypt, Argon2)를 쓰는지 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>[CWE] CWE-759 완화책(Architecture and Design: 적응형 해시 함수, 비밀번호마다 새 솔트)</td>
+</tr>
+<tr>
+<td>저장 형식 문서에 솔트 길이, 반복 횟수, 알고리즘 식별자가 정해져 있고 반복 횟수를 타깃 연산 성능과 인증 지연 요구로 정했는지 확인한다.</td>
+<td><a href="../../ch4-design/#d-09">D-09</a>·<a href="../../ch4-design/#d-05">D-05</a></td>
+<td>[보완]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>① 원문 탐지 방법(원문 효과성별): 높음: 수동 정적 분석(소스코드), 아키텍처·설계 검토 / 부분 적용: 자동 정적 분석(바이너리·바이트코드), 수동 정적 분석(바이너리·바이트코드). 각 방법의 시험 활동은 6.2의 대응표를 따른다.</li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-759">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>비밀번호 저장에 솔트와 반복(키 유도) 기반 해시를 쓰도록 설계에 정한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>사용자별 랜덤 솔트와 PBKDF2(충분한 반복 횟수) 등 검증된 키 유도 함수를 사용한다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>SecretKeyFactory("PBKDF2WithHmacSHA256")에 SecureRandom 솔트와 반복 횟수를 지정한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>저장 해시 형식 점검(솔트 존재, 동일 비밀번호의 해시 상이 여부)을 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>반복 횟수를 하드웨어 성능 향상에 맞춰 주기적으로 상향한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>MCU 연산 성능을 고려해 반복 횟수를 결정하되 인증 지연 요구와 균형을 맞춘다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 2건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-05">D-05</a> 암호·키·비밀 관리 설계 (설계)</li>
+<li><a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토 (설계)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="../916/">CWE-916</a> 계산 노력이 부족한 비밀번호 해시 사용</li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 2건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2008-1526" target="_blank" rel="noopener">CVE-2008-1526</a></td>
+<td>라우터가 해시에 솔트를 쓰지 않아 비밀번호 크래킹이 쉬워진다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Router does not use a salt with a hash, making it easier to crack passwords.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2006-1058" target="_blank" rel="noopener">CVE-2006-1058</a></td>
+<td>라우터가 해시에 솔트를 쓰지 않아 비밀번호 크래킹이 쉬워진다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Router does not use a salt with a hash, making it easier to crack passwords.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/759.html" target="_blank" rel="noopener">CWE-759</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../755/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-755 부적절한 예외 처리">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-755 부적절한 예외 처리
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../761/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-761 버퍼 시작이 아닌 위치의 포인터 free()">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-761 버퍼 시작이 아닌 위치의 포인터 free()
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

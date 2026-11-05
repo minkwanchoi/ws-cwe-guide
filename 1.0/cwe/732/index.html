@@ -1,0 +1,2922 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/cwe/732/">
+      
+      
+        <link rel="prev" href="../704/">
+      
+      
+        <link rel="next" href="../733/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-732 중요한 자원에 대한 잘못된 권한 설정 - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-732-중요한-자원에-대한-잘못된-권한-설정" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-732 중요한 자원에 대한 잘못된 권한 설정
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-732 중요한 자원에 대한 잘못된 권한 설정
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-732 중요한 자원에 대한 잘못된 권한 설정
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-732-중요한-자원에-대한-잘못된-권한-설정">CWE-732 중요한 자원에 대한 잘못된 권한 설정<a class="headerlink" href="#cwe-732-중요한-자원에-대한-잘못된-권한-설정" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Incorrect Permission Assignment for Critical Resource</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>분류(Class)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>초안(Draft)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>해당</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="취약점의 원인을 이 CWE 번호로 기록해도 되는지에 대한 MITRE의 권고. 허용·검토 후 허용·권장하지 않음·금지가 있다">MITRE 매핑 권고</a></td>
+<td>검토 후 허용(Allowed-with-Review) — 결과를 기록할 때는 더 맞는 하위 CWE가 있는지 검토한다(하위 CWE: <a href="https://cwe.mitre.org/data/definitions/276.html" target="_blank" rel="noopener">CWE-276</a>·<a href="https://cwe.mitre.org/data/definitions/277.html" target="_blank" rel="noopener">CWE-277</a>·<a href="https://cwe.mitre.org/data/definitions/278.html" target="_blank" rel="noopener">CWE-278</a>·<a href="https://cwe.mitre.org/data/definitions/279.html" target="_blank" rel="noopener">CWE-279</a>·<a href="https://cwe.mitre.org/data/definitions/281.html" target="_blank" rel="noopener">CWE-281</a>·<a href="../493/">CWE-493</a>·<a href="../582/">CWE-582</a>·<a href="../583/">CWE-583</a> 외 3개) <details class="cwe-orig"><summary>원문(Mapping Notes)</summary><div lang="en"><p>Rationale: While the name itself indicates an assignment of permissions for resources, this is often misused for vulnerabilities in which &quot;permissions&quot; are not checked, which is an &quot;authorization&quot; weakness (CWE-285 or descendants) within CWE&#x27;s model [REF-1287].</p><p>Comments: Closely analyze the specific mistake that is allowing the resource to be exposed, and perform a CWE mapping for that mistake.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어 무관 · 기술: 기술 무관, 클라우드 컴퓨팅(Cloud Computing)</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank" rel="noopener">MITRE CWE-732</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>보안상 중요한 자원의 권한을 의도하지 않은 행위자가 읽거나 수정할 수 있게 지정해 생기는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 보안상 중요한 자원의 권한을, 의도하지 않은 행위자(actor)가 그 자원을 읽거나 수정할 수 있게 지정한다.</p>
+<details class="cwe-orig"><summary>원문(Description)</summary><div lang="en"><p>The product specifies permissions for a security-critical resource in a way that allows that resource to be read or modified by unintended actors.</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>설계</td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>실현(REALIZATION): 아키텍처 보안 전술을 구현하는 과정에서 생기는 약점이다. 개발자가 소프트웨어가 단일 사용자 시스템에서 실행된다거나 신뢰할 수 있는 관리자만 접근한다는 식으로 운영 환경을 가정할 수 있으며, 다른 환경에서 실행되면 권한이 문제가 된다.</td>
+</tr>
+<tr>
+<td>설치(Installation)</td>
+<td>통합 및 시험</td>
+<td>개발자가 사용자가 처음 실행할 때의 문제를 줄이려고 권한을 느슨하게 설정하고 문서에 권한을 강화해야 한다고 적을 수 있는데, 시스템 관리자와 사용자가 항상 문서를 읽지는 않으므로 안전하지 않은 권한이 바뀌지 않고 남을 수 있다.</td>
+</tr>
+<tr>
+<td>운용(Operation)</td>
+<td>유지보수</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기밀성</td>
+<td>애플리케이션 데이터 읽기 / 파일·디렉터리 읽기</td>
+<td>공격자가 관련 자원에서 파일에 저장된 자격 증명이나 설정 정보 같은 민감한 정보를 읽을 수 있다.</td>
+</tr>
+<tr>
+<td>접근 통제</td>
+<td>권한 획득 또는 신원 도용</td>
+<td>공격자가 관련 자원의 중요한 속성을 수정해 권한을 얻을 수 있다(예: 누구나 쓸 수 있는(world-writable) 실행 파일을 트로이 목마로 바꿔치기).</td>
+</tr>
+<tr>
+<td>무결성 / 기타</td>
+<td>애플리케이션 데이터 수정 / 기타</td>
+<td>공격자가 관련 자원의 중요한 데이터를 파괴하거나 손상시킬 수 있다(예: 데이터베이스 레코드 삭제). 예로 공개 사용자나 익명 사용자가 읽거나 쓸 수 있게 잘못 설정된 클라우드 저장소 계정을 들 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 9건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>소프트웨어를 익명·일반·특권·관리 영역으로 나누고, 서로 구별되는 사용자 그룹·권한·역할을 신중히 정의해 공격 표면을 줄인 뒤, 이를 데이터·기능·관련 자원에 대응시켜 권한을 설정한다. 이렇게 하면 자원을 더 세밀하게 통제할 수 있다 [REF-207]. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Divide the software into anonymous, normal, privileged, and administrative areas. Reduce the attack surface by carefully defining distinct user groups, privileges, and/or roles. Map these against data, functionality, and the related resources. Then set the permissions accordingly. This will allow you to maintain more fine-grained control over your resources. [REF-207]</p></div></details></td>
+<td>보통(Moderate) — 효과적인 전략이 될 수 있으나, 실제로는 자원이나 사용자 유형이 많거나 애플리케이션 기능이 빠르게 바뀌면 이런 영역을 정의하기 어렵거나 시간이 많이 들 수 있다.</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design) / 운용(Operation)</td>
+<td>샌드박스·격리</td>
+<td>프로세스와 운영체제 사이에 엄격한 경계를 두는 'jail'이나 비슷한 샌드박스(sandbox) 환경에서 코드를 실행하면, 특정 디렉터리에서 접근할 수 있는 파일이나 소프트웨어가 실행할 수 있는 명령을 제한할 수 있다. 운영체제 수준의 예로 Unix chroot jail, AppArmor, SELinux가 있고, 관리형 코드도 일부 보호를 줄 수 있다(예: Java SecurityManager의 java.io.FilePermission으로 파일 작업 제한을 지정). 단, 적용하기 어려울 수 있고, 운영체제에 미치는 영향만 제한할 뿐이어서 애플리케이션의 나머지 부분은 여전히 침해될 수 있다. <a href="../243/">CWE-243</a> 등 jail 관련 약점을 피하도록 주의한다. <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Run the code in a &quot;jail&quot; or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict which files can be accessed in a particular directory or which commands can be executed by the software.</p><p>OS-level examples include the Unix chroot jail, AppArmor, and SELinux. In general, managed code may provide some protection. For example, java.io.FilePermission in the Java SecurityManager allows the software to specify restrictions on file operations.</p><p>This may not be a feasible solution, and it only limits the impact to the operating system; the rest of the application may still be subject to compromise.</p><p>Be careful to avoid CWE-243 and other weaknesses related to jails.</p></div></details></td>
+<td>제한적(Limited) — 이 완화책의 효과는 사용하는 샌드박스나 jail의 예방 능력에 달려 있으며, 공격자를 특정 시스템 호출로 제한하거나 접근 가능한 파일 시스템 범위를 줄이는 등 공격 범위를 줄이는 데만 도움이 될 수도 있다.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>설정 파일 같은 중요한 자원을 쓸 때 그 자원에 안전하지 않은 권한(예: 일반 사용자 누구나 수정 가능)이 있는지 확인하고 [REF-62], 인가되지 않은 당사자가 자원을 수정했을 가능성이 있으면 오류를 발생시키거나 프로그램을 종료한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When using a critical resource such as a configuration file, check to see if the resource has insecure permissions (such as being modifiable by any regular user) [REF-62], and generate an error or even exit the software if there is a possibility that the resource could have been modified by an unauthorized party.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation) / 설치(Installation)</td>
+<td>—</td>
+<td>프로그램 시작 시 기본 권한이나 umask를 가능한 한 가장 제한적으로 명시해 설정하고, 설치 시에도 적절한 권한을 설정한다. 이렇게 하면 프로그램을 설치하거나 실행하는 사용자의 안전하지 않은 권한을 물려받지 않는다. <em>(통합 및 시험 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>During program startup, explicitly set the default permissions or umask to the most restrictive setting possible. Also set the appropriate permissions during program installation. This will prevent you from inheriting insecure permissions from any user who installs or runs the program.</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>구현(Implementation) / 시스템 구성(System Configuration) / 운용(Operation)</td>
+<td>—</td>
+<td>클라우드(예: S3 버킷, Azure blob, Google Cloud Storage 등)에 데이터를 저장할 때 제공자의 통제 기능으로 공개 접근을 비활성화한다. <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When storing data in the cloud (e.g., S3 buckets, Azure blobs, Google Cloud Storage, etc.), use the provider&#x27;s controls to disable public access.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>문서화(Documentation)</td>
+<td>—</td>
+<td>문서에서 안전하지 않은 설정 변경을 권하지 않는다. 특히 그 설정이 애플리케이션 범위 밖의 자원과 다른 프로그램까지 확장될 수 있으면 더욱 그렇다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Do not suggest insecure configuration changes in documentation, especially if those configurations can extend to resources and other programs that are outside the scope of the application.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>설치(Installation)</td>
+<td>—</td>
+<td>시스템 관리자가 소프트웨어 매뉴얼에 권장된 설정으로 직접 바꿀 것이라고 가정하지 않는다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Do not assume that a system administrator will manually change the configuration to the settings that are recommended in the software&#x27;s manual.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시스템 구성(System Configuration)</td>
+<td>—</td>
+<td>모든 설정 파일·실행 파일·라이브러리는 소프트웨어 관리자만 읽고 쓸 수 있게 한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>For all configuration files, executables, and libraries, make sure that they are only readable and writable by the software&#x27;s administrator.</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>운용(Operation) / 시스템 구성(System Configuration)</td>
+<td>실행 환경 강화</td>
+<td>소프트웨어가 USGCB(United States Government Configuration Baseline, REF-199) 또는 그에 준하는 하드닝 설정 가이드 아래에서 제대로 동작하게 한다. 많은 조직이 이런 가이드로 배포된 소프트웨어의 공격 표면과 잠재 위험을 줄인다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Ensure that the software runs properly under the United States Government Configuration Baseline (USGCB) [REF-199] or an equivalent hardening configuration guide, which many organizations use to limit the attack surface and potential risk of deployed software.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 세션 키·감사 로그·임무 계획·정비 기록 파일을 만드는 프로그램이다. C·C++ 예시는 탑재 컴퓨터(임베디드 Linux)에서, Python 예시는 지상 통제 소프트웨어(Linux)에서 파일 모드(umask·0600 등)로, Java·C# 예시는 지상 통제 PC(Windows)에서 ACL로 작성했다. 어느 쪽이든 만든 파일의 실제 권한을 다시 읽어 모든 계정(기타 사용자·Everyone)에게 쓰기가 열렸는지 출력한다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+
+#define KEY_PATH "link_session.key"
+
+/* 데이터링크 세션 키를 탑재 컴퓨터(임베디드 Linux)의 파일로 남긴다 */
+int main(void)
+{
+    unsigned char key[32] = {0};
+    umask(0);                                    /* 정비 도구도 쓰라고 umask를 풀어 둔다 */
+    unlink(KEY_PATH);                            /* 예시 재실행용 */
+    int fd = open(KEY_PATH, O_WRONLY | O_CREAT, 0666);   /* 모든 계정 읽기·쓰기 */
+    if (fd &lt; 0) {
+        perror("open");
+        return 1;
+    }
+    if (write(fd, key, sizeof key) != (ssize_t)sizeof key) {
+        perror("write");
+    }
+    close(fd);
+
+    struct stat st;
+    if (stat(KEY_PATH, &amp;st) == 0) {
+        printf("%s mode %04o\n", KEY_PATH, (unsigned)(st.st_mode &amp; 0777));
+    }
+    return 0;
+}</code></pre>
+<p>umask를 0으로 풀고 0666으로 파일을 만들어 세션 키를 모든 계정이 읽고 바꿀 수 있다. 실행 결과의 mode 0666이 그 상태다. '다른 도구도 써야 해서' 권한을 넓히는 것이 흔한 원인이다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;unistd.h&gt;
+
+#define KEY_PATH "link_session.key"
+
+int main(void)
+{
+    unsigned char key[32] = {0};
+    umask(077);                                  /* 이 프로세스가 만드는 파일은 소유자만 */
+    unlink(KEY_PATH);                            /* 예시 재실행용 */
+    /* 처음부터 0600으로, 이미 있으면 실패(O_EXCL), 링크는 따라가지 않음 */
+    int fd = open(KEY_PATH, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);
+    if (fd &lt; 0) {
+        perror("open");
+        return 1;
+    }
+    if (write(fd, key, sizeof key) != (ssize_t)sizeof key) {
+        perror("write");
+    }
+    close(fd);
+
+    struct stat st;
+    if (stat(KEY_PATH, &amp;st) == 0) {
+        printf("%s mode %04o\n", KEY_PATH, (unsigned)(st.st_mode &amp; 0777));
+    }
+    return 0;
+}</code></pre>
+<p>umask(077)과 open(…, O_CREAT | O_EXCL | O_NOFOLLOW, 0600)으로 처음부터 소유자만 접근하게 만든다. 다른 도구가 키를 써야 하면 권한을 넓히지 말고 그 도구를 같은 계정·그룹으로 설계한다(M-03).</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>mode 0nn[2367]</code> 검출, 좋은 예에서 미검출·<code>mode 0600</code> 출력 확인 · 참고: MITRE CWE-732 Demonstrative Example 1(umask를 0으로 두고 모든 사용자가 읽고 쓰는 파일 생성) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 보안기능 2-2 &#x27;중요한 자원에 대한 잘못된 권한허용&#x27;(인쇄 82쪽) 참고</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;filesystem&gt;
+#include &lt;fstream&gt;
+
+namespace fs = std::filesystem;
+
+// 정비 기록 서비스: 감사 로그를 만든 뒤 '접근 오류'가 난다는 민원에 권한을 넓혔다
+int main() {
+    const fs::path log = "audit.log";
+    fs::remove(log);                                    // 예시 재실행용
+    {
+        std::ofstream out(log);
+        out &lt;&lt; "2026-10-18T09:00Z operator=kim cmd=HEATER_CHECK\n";
+    }
+    fs::permissions(log, fs::perms::all);               // 0777: 누구나 고치고 지울 수 있다
+
+    auto p = fs::status(log).permissions();
+    std::printf("audit.log mode %04o\n", static_cast&lt;unsigned&gt;(p &amp; fs::perms::mask));
+    return 0;
+}</code></pre>
+<p>파일을 만든 뒤 접근 오류를 피하려고 권한을 0777로 넓혀 아무 계정이나 감사 로그를 고치거나 지울 수 있다. 감사 기록을 믿을 수 없게 된다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;cstdio&gt;
+#include &lt;filesystem&gt;
+#include &lt;fstream&gt;
+#include &lt;sys/stat.h&gt;
+
+namespace fs = std::filesystem;
+
+int main() {
+    const fs::path log = "audit.log";
+    fs::remove(log);                                    // 예시 재실행용
+    ::umask(027);                                       // 만들 때부터 그룹 쓰기·기타 접근 없음
+    {
+        std::ofstream out(log);
+        out &lt;&lt; "2026-10-18T09:00Z operator=kim cmd=HEATER_CHECK\n";
+    }
+    // 기록 서비스(소유자)는 읽기·쓰기, 감사 그룹은 읽기만, 기타는 없음
+    fs::permissions(log, fs::perms::owner_read | fs::perms::owner_write | fs::perms::group_read,
+                    fs::perm_options::replace);
+
+    auto p = fs::status(log).permissions();
+    std::printf("audit.log mode %04o\n", static_cast&lt;unsigned&gt;(p &amp; fs::perms::mask));
+    return 0;
+}</code></pre>
+<p>umask(027)로 만들 때부터 기타 사용자 접근을 막고, 소유자 읽기·쓰기와 감사 그룹 읽기만 남기도록 권한을 바꿔 넣는다(std::filesystem::perm_options::replace). 설치 후 권한 점검 시험으로 확인한다.</p>
+<p class="ex-meta">검증: 실행 결과 · Linux(gcc)에서 빌드 — 나쁜 예에서 <code>mode 0nn[2367]</code> 검출, 좋은 예에서 미검출·<code>mode 0640</code> 출력 확인 · 참고: MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Security.AccessControl;
+using System.Security.Principal;
+
+if (!OperatingSystem.IsWindows())
+{
+    Console.WriteLine("this example uses Windows ACLs");
+    return;
+}
+
+var world = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+var file = new FileInfo("maint_records.db");
+file.Delete();                                   // 예시 재실행용
+File.WriteAllText(file.FullName, "record v1");
+
+// 정비 기록 도구가 어느 계정으로 돌든 쓰게 하려고 Everyone에게 수정 권한을 준다
+FileSecurity sec = file.GetAccessControl();
+sec.AddAccessRule(new FileSystemAccessRule(world, FileSystemRights.Modify, AccessControlType.Allow));
+file.SetAccessControl(sec);
+
+bool open = false;                               // 실제 ACL을 다시 읽어 확인
+foreach (FileSystemAccessRule r in file.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier)))
+{
+    open |= r.AccessControlType == AccessControlType.Allow &amp;&amp; world.Equals(r.IdentityReference);
+}
+Console.WriteLine($"maint_records.db everyone access: {open}");</code></pre>
+<p>Everyone(WorldSid)에게 수정 권한을 주어 지상 PC의 어느 계정이든 정비 기록을 바꿀 수 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Security.AccessControl;
+using System.Security.Principal;
+
+if (!OperatingSystem.IsWindows())
+{
+    Console.WriteLine("this example uses Windows ACLs");
+    return;
+}
+
+var world = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+var file = new FileInfo("maint_records.db");
+file.Delete();                                   // 예시 재실행용
+
+// 상속을 끊고 서비스 실행 계정에만 수정 권한을 준 보안 설명자로 '처음부터' 만든다
+using var me = WindowsIdentity.GetCurrent();
+var sec = new FileSecurity();
+sec.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
+sec.AddAccessRule(new FileSystemAccessRule(me.User!, FileSystemRights.Modify, AccessControlType.Allow));
+using (FileStream fs = file.Create(FileMode.CreateNew, FileSystemRights.Write, FileShare.None,
+                                   4096, FileOptions.None, sec))
+{
+    fs.Write("record v1"u8);
+}
+
+bool open = false;                               // 실제 ACL을 다시 읽어 확인
+foreach (FileSystemAccessRule r in file.GetAccessControl().GetAccessRules(true, true, typeof(SecurityIdentifier)))
+{
+    open |= r.AccessControlType == AccessControlType.Allow &amp;&amp; world.Equals(r.IdentityReference);
+}
+Console.WriteLine($"maint_records.db everyone access: {open}");</code></pre>
+<p>상속을 끊고 서비스 실행 계정에만 수정 권한을 준 FileSecurity로 파일을 처음부터 만든다. Linux에서 실행하는 도구라면 FileStreamOptions.UnixCreateMode나 File.SetUnixFileMode로 소유자 전용 모드를 준다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>everyone access: True</code> 검출, 좋은 예에서 미검출·<code>everyone access: False</code> 출력 확인 · 참고: MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclEntryPermission;
+import java.nio.file.attribute.AclEntryType;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Example {
+    // 파일 ACL에 Everyone 허용 항목이 있는지 실제 ACL에서 확인한다
+    // (표시 이름은 Windows 언어판마다 다르다. 실제로는 SID S-1-1-0으로 확인한다)
+    static boolean openToEveryone(Path p) throws IOException {
+        AclFileAttributeView view = Files.getFileAttributeView(p, AclFileAttributeView.class);
+        return view.getAcl().stream().anyMatch(e -&gt; e.type() == AclEntryType.ALLOW
+                &amp;&amp; e.principal().getName().endsWith("Everyone"));
+    }
+
+    public static void main(String[] args) throws IOException {
+        Path plan = Path.of("mission_plan.dat");
+        Files.deleteIfExists(plan);                      // 예시 재실행용
+        Files.write(plan, new byte[] {1, 2, 3});
+
+        // 계획 편집기 여러 대가 고칠 수 있도록 Everyone에게 쓰기 권한을 준다
+        UserPrincipal everyone = plan.getFileSystem().getUserPrincipalLookupService()
+                .lookupPrincipalByName("Everyone");
+        AclFileAttributeView view = Files.getFileAttributeView(plan, AclFileAttributeView.class);
+        List&lt;AclEntry&gt; acl = new ArrayList&lt;&gt;(view.getAcl());
+        acl.add(0, AclEntry.newBuilder().setType(AclEntryType.ALLOW).setPrincipal(everyone)
+                .setPermissions(AclEntryPermission.READ_DATA, AclEntryPermission.WRITE_DATA,
+                        AclEntryPermission.APPEND_DATA).build());
+        view.setAcl(acl);
+
+        System.out.println("mission_plan.dat everyone access: " + openToEveryone(plan));
+    }
+}</code></pre>
+<p>여러 편집기가 고칠 수 있게 Everyone에게 쓰기 권한을 주어, 어느 계정이든 임무 계획 파일을 바꿀 수 있다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclEntryPermission;
+import java.nio.file.attribute.AclEntryType;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.EnumSet;
+import java.util.List;
+
+public class Example {
+    // 파일 ACL에 Everyone 허용 항목이 있는지 실제 ACL에서 확인한다
+    // (표시 이름은 Windows 언어판마다 다르다. 실제로는 SID S-1-1-0으로 확인한다)
+    static boolean openToEveryone(Path p) throws IOException {
+        AclFileAttributeView view = Files.getFileAttributeView(p, AclFileAttributeView.class);
+        return view.getAcl().stream().anyMatch(e -&gt; e.type() == AclEntryType.ALLOW
+                &amp;&amp; e.principal().getName().endsWith("Everyone"));
+    }
+
+    public static void main(String[] args) throws IOException {
+        Path plan = Path.of("mission_plan.dat");
+        Files.deleteIfExists(plan);                      // 예시 재실행용
+
+        // 실행 계정 하나에만 접근을 주는 ACL을 '만들 때부터' 붙인다(편집 권한은 응용이 따로 판정)
+        UserPrincipal self = plan.getFileSystem().getUserPrincipalLookupService()
+                .lookupPrincipalByName(System.getProperty("user.name"));
+        AclEntry ownerOnly = AclEntry.newBuilder().setType(AclEntryType.ALLOW).setPrincipal(self)
+                .setPermissions(EnumSet.complementOf(EnumSet.of(AclEntryPermission.WRITE_ACL,
+                        AclEntryPermission.WRITE_OWNER, AclEntryPermission.EXECUTE))).build();
+        FileAttribute&lt;List&lt;AclEntry&gt;&gt; acl = new FileAttribute&lt;&gt;() {
+            @Override public String name() { return "acl:acl"; }
+            @Override public List&lt;AclEntry&gt; value() { return List.of(ownerOnly); }
+        };
+        try (SeekableByteChannel ch = Files.newByteChannel(plan,
+                EnumSet.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), acl)) {
+            ch.write(ByteBuffer.wrap(new byte[] {1, 2, 3}));   // 이미 있으면 실패(덮어쓰지 않음)
+        }
+
+        System.out.println("mission_plan.dat everyone access: " + openToEveryone(plan));
+    }
+}</code></pre>
+<p>실행 계정 하나에만 접근을 주는 ACL을 파일 생성과 동시에 붙이고(CREATE_NEW), 편집 권한은 응용의 인가로 판정한다. POSIX 파일 시스템에서는 PosixFilePermissions.asFileAttribute(rw-------)를 Files.createFile에 넘겨 같은 효과를 낸다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>everyone access: true</code> 검출, 좋은 예에서 미검출·<code>everyone access: false</code> 출력 확인 · 참고: MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 보안기능 2-3 &#x27;중요한 자원에 대한 잘못된 권한허용&#x27;(인쇄 125쪽) 참고</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import os
+import stat
+
+
+# 지상 통제 소프트웨어가 세션 키 파일을 만든다
+def write_session_key(path, key):
+    with open(path, "wb") as f:
+        f.write(key)
+    os.chmod(path, 0o666)                 # 정비 도구도 읽을 수 있게 하려고 모두에게 읽기·쓰기 허용
+
+
+write_session_key("session.key", os.urandom(32))
+mode = stat.S_IMODE(os.stat("session.key").st_mode)
+print(f"mode={oct(mode)} everyone write: {bool(mode &amp; stat.S_IWOTH)}")</code></pre>
+<p>세션 키 파일을 만든 뒤 모든 계정이 읽고 쓸 수 있게(0o666) 권한을 연다. 같은 장비의 다른 계정·프로세스가 키를 읽거나 바꿀 수 있다. Bandit은 너그러운 권한을 주는 os.chmod를 B103으로 보고한다. 예시는 지상 통제 소프트웨어(Linux)를 가정해 Linux(WSL)에서 실행한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import os
+import stat
+
+
+def write_session_key(path, key):
+    # 만들 때부터 소유자만 읽고 쓰게(0o600) 만든다. 이미 있으면 덮어쓰지 않는다(O_EXCL)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "wb") as f:
+        f.write(key)
+
+
+if os.path.exists("session.key"):         # 예시 재실행용
+    os.unlink("session.key")
+write_session_key("session.key", os.urandom(32))
+mode = stat.S_IMODE(os.stat("session.key").st_mode)
+print(f"mode={oct(mode)} everyone write: {bool(mode &amp; stat.S_IWOTH)}")</code></pre>
+<p>os.open에 권한(0o600)을 넘겨 만들 때부터 소유자만 접근하게 하고, O_EXCL로 이미 있는 파일(다른 계정이 미리 만든 파일·링크)을 덮어쓰지 않는다(D-04). 만든 뒤 chmod로 좁히면 그 사이에 열릴 수 있다. 다른 도구가 읽어야 하면 전용 그룹을 만들어 그룹 읽기(0o640)까지만 연다. 서비스 계정의 umask와 배치 디렉터리 권한은 설치 구성 기준선에 적는다(M-03).</p>
+<p class="ex-meta">검증: Bandit · Linux(python3)에서 실행 — 나쁜 예에서 <code>B103</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-732 Demonstrative Example 3(나중에 chmod로 모든 사용자에게 쓰기 권한을 줌) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 보안기능 2-3 &#x27;중요한 자원에 대한 잘못된 권한 설정&#x27;(인쇄 76쪽) 참고</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 7건)</summary><div lang="en"><p><b>Example 1.</b> The following code sets the umask of the process to 0 before creating a file and writing &quot;Hello world&quot; into the file.</p><p><i>Bad / C</i></p><pre><code>#define OUTFILE &quot;hello.out&quot;
+
+umask(0);
+FILE *out;
+
+                     /* Ignore link following (CWE-59) for brevity */
+
+out = fopen(OUTFILE, &quot;w&quot;);
+if (out) {
+  fprintf(out, &quot;hello world!\n&quot;);
+  fclose(out);
+}</code></pre><p>After running this program on a UNIX system, running the &quot;ls -l&quot; command might return the following output:</p><p><i>Result</i></p><pre><code>-rw-rw-rw- 1 username 13 Nov 24 17:58 hello.out</code></pre><p>The &quot;rw-rw-rw-&quot; string indicates that the owner, group, and world (all users) can read the file and write to it.</p><p><b>Example 2.</b> This code creates a home directory for a new user, and makes that user the owner of the directory. If the new directory cannot be owned by the user, the directory is deleted.</p><p><i>Bad / PHP</i></p><pre><code>function createUserDir($username){
+  $path = &#x27;/home/&#x27;.$username;
+  if(!mkdir($path)){
+    return false;
+  }
+  if(!chown($path,$username)){
+    rmdir($path);
+    return false;
+  }
+  return true;
+}</code></pre><p>Because the optional &quot;mode&quot; argument is omitted from the call to mkdir(), the directory is created with the default permissions 0777. Simply setting the new user as the owner of the directory does not explicitly change the permissions of the directory, leaving it with the default. This default allows any user to read and write to the directory, allowing an attack on the user&#x27;s files. The code also fails to change the owner group of the directory, which may result in access by unexpected groups.</p><p>This code may also be vulnerable to Path Traversal (CWE-22) attacks if an attacker supplies a non alphanumeric username.</p><p><b>Example 3.</b> The following code snippet might be used as a monitor to periodically record whether a web site is alive. To ensure that the file can always be modified, the code uses chmod() to make the file world-writable.</p><p><i>Bad / Perl</i></p><pre><code>$fileName = &quot;secretFile.out&quot;;
+
+if (-e $fileName) {
+  chmod 0777, $fileName;
+}
+
+my $outFH;
+if (! open($outFH, &quot;&gt;&gt;$fileName&quot;)) {
+  ExitError(&quot;Couldn&#x27;t append to $fileName: $!&quot;);
+}
+my $dateString = FormatCurrentTime();
+my $status = IsHostAlive(&quot;cwe.mitre.org&quot;);
+print $outFH &quot;$dateString cwe status: $status!\n&quot;;
+close($outFH);</code></pre><p>The first time the program runs, it might create a new file that inherits the permissions from its environment. A file listing might look like:</p><p><i>Result</i></p><pre><code>-rw-r--r-- 1 username 13 Nov 24 17:58 secretFile.out</code></pre><p>This listing might occur when the user has a default umask of 022, which is a common setting. Depending on the nature of the file, the user might not have intended to make it readable by everyone on the system.</p><p>The next time the program runs, however - and all subsequent executions - the chmod will set the file&#x27;s permissions so that the owner, group, and world (all users) can read the file and write to it:</p><p><i>Result</i></p><pre><code>-rw-rw-rw- 1 username 13 Nov 24 17:58 secretFile.out</code></pre><p>Perhaps the programmer tried to do this because a different process uses different permissions that might prevent the file from being updated.</p><p><b>Example 4.</b> This program creates and reads from an admin file to determine privilege information.</p><p>If the admin file doesn&#x27;t exist, the program will create one. In order to create the file, the program must have write privileges to write to the file. After the file is created, the permissions need to be changed to read only.</p><p><i>Bad / Go</i></p><pre><code>                  const adminFile = &quot;/etc/admin-users&quot;
+
+                  func createAdminFileIfNotExists() error {
+
+                          file, err := os.Create(adminFile)
+
+                          if err != nil {
+
+                               return err
+
+                          }
+
+                          return nil
+
+                  }
+
+                  func changeModeOfAdminFile() error {
+
+                          fileMode := os.FileMode(0440)
+
+                          if err := os.Chmod(adminFile, fileMode); err != nil {
+
+                               return err
+
+                          }
+
+                          return nil
+
+                  }</code></pre><p>os.Create will create a file with 0666 permissions before umask if the specified file does not exist. A typical umask of 0022 would result in the file having 0644 permissions. That is, the file would have world-writable and world-readable permissions.</p><p>In this scenario, it is advised to use the more customizable method of os.OpenFile with the os.O_WRONLY and os.O_CREATE flags specifying 0640 permissions to create the admin file.</p><p>This is because on a typical system where the umask is 0022, the perm 0640 applied in os.OpenFile will result in a file of 0620 where only the owner and group can write.</p><p><b>Example 5.</b> The following command recursively sets world-readable permissions for a directory and all of its children:</p><p><i>Bad / Shell</i></p><pre><code>chmod -R ugo+r DIRNAME</code></pre><p>If this command is run from a program, the person calling the program might not expect that all the files under the directory will be world-readable. If the directory is expected to contain private data, this could become a security problem.</p><p><b>Example 6.</b> The following Azure command updates the settings for a storage account:</p><p><i>Bad / Shell</i></p><pre><code>az storage account update --name &lt;storage-account&gt; --resource-group &lt;resource-group&gt; --allow-blob-public-access true</code></pre><p>However, &quot;Allow Blob Public Access&quot; is set to true, meaning that anonymous/public users can access blobs.</p><p>The command could be modified to disable &quot;Allow Blob Public Access&quot; by setting it to false.</p><p><i>Good / Shell</i></p><pre><code>az storage account update --name &lt;storage-account&gt; --resource-group &lt;resource-group&gt; --allow-blob-public-access false</code></pre><p><b>Example 7.</b> The following Google Cloud Storage command gets the settings for a storage account named &#x27;BUCKET_NAME&#x27;:</p><p><i>Informative / Shell</i></p><pre><code>        gsutil iam get gs://BUCKET_NAME</code></pre><p>Suppose the command returns the following result:</p><p><i>Bad / JSON</i></p><pre><code>       {
+
+          &quot;bindings&quot;:[{
+
+                &quot;members&quot;:[
+
+                  &quot;projectEditor: PROJECT-ID&quot;,
+
+                  &quot;projectOwner: PROJECT-ID&quot;
+
+                ],
+
+                &quot;role&quot;:&quot;roles/storage.legacyBucketOwner&quot;
+
+          },
+
+          {
+
+                &quot;members&quot;:[
+
+                  &quot;allUsers&quot;,
+
+                  &quot;projectViewer: PROJECT-ID&quot;
+
+                  ],
+
+                  &quot;role&quot;:&quot;roles/storage.legacyBucketReader&quot;
+
+                }
+
+          ]
+
+        }</code></pre><p>This result includes the &quot;allUsers&quot; or IAM role added as members, causing this policy configuration to allow public access to cloud storage resources. There would be a similar concern if &quot;allAuthenticatedUsers&quot; was present.</p><p>The command could be modified to remove &quot;allUsers&quot; and/or &quot;allAuthenticatedUsers&quot; as follows:</p><p><i>Good / Shell</i></p><pre><code>       gsutil iam ch -d allUsers gs://BUCKET_NAME
+
+        gsutil iam ch -d allAuthenticatedUsers gs://BUCKET_NAME</code></pre></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>자동화된 정적 분석은 파일·디렉터리·공유 메모리·장치 인터페이스 같은 시스템 자원의 권한 문제 탐지에 효과적일 수 있다. 권한을 바꾸는 라이브러리 함수 사용을 찾아, 그 호출 인자에 안전하지 않을 수 있는 값이 있는지 분석할 수 있다. 다만 의도된 보안 정책이 특정 작업(예: 웹 서버에 파일 게시)에 느슨한 권한을 허용할 수 있어, 보안 영향이 없거나 코드를 고칠 필요가 없는 경고(오탐)가 일부 생길 수 있다. 사용자 정의 권한 모델(예: 게시판에서 특정 포럼 메시지를 누가 읽을 수 있는지 정의)은 정적 분석으로 탐지하기 어려울 수 있으며, 권한 검사·할당을 구현하는 사용자 정의 함수를 식별하는 사용자 정의 시그니처를 만들 수도 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated static analysis may be effective in detecting permission problems for system resources such as files, directories, shared memory, device interfaces, etc. Automated techniques may be able to detect the use of library functions that modify permissions, then analyze function calls for arguments that contain potentially insecure values.</p><p>However, since the software&#x27;s intended security policy might allow loose permissions for certain operations (such as publishing a file on a web server), automated static analysis may produce some false positives - i.e., warnings that do not have any security consequences or require any code changes.</p><p>When custom permissions models are used - such as defining who can read messages in a particular forum in a bulletin board system - these can be difficult to detect using automated static analysis. It may be possible to define custom signatures that identify any custom functions that implement the permission checks and assignments.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>자동 동적 분석</td>
+<td>자동화된 동적 분석은 파일·디렉터리·공유 메모리·장치 인터페이스 같은 시스템 자원의 권한 문제 탐지에 효과적일 수 있다. 다만 의도된 보안 정책이 특정 작업(예: 웹 서버에 파일 게시)에 느슨한 권한을 허용할 수 있어, 보안 영향이 없거나 코드를 고칠 필요가 없는 경고(오탐)가 일부 생길 수 있다. 사용자 정의 권한 모델(예: 게시판에서 특정 포럼 메시지를 누가 읽을 수 있는지 정의)은 동적 분석으로 탐지하기 어려울 수 있으며, 권한 검사·할당을 구현하는 사용자 정의 함수를 식별하는 사용자 정의 시그니처를 만들 수도 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Automated dynamic analysis may be effective in detecting permission problems for system resources such as files, directories, shared memory, device interfaces, etc.</p><p>However, since the software&#x27;s intended security policy might allow loose permissions for certain operations (such as publishing a file on a web server), automated dynamic analysis may produce some false positives - i.e., warnings that do not have any security consequences or require any code changes.</p><p>When custom permissions models are used - such as defining who can read messages in a particular forum in a bulletin board system - these can be difficult to detect using automated dynamic analysis. It may be possible to define custom signatures that identify any custom functions that implement the permission checks and assignments.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>수동 분석</td>
+<td>침투 시험(penetration test), 위협 모델링, 활성 세션을 기록·수정하는 대화형 도구처럼 사람이 직접 분석하는 도구·기법으로 이 약점을 탐지할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>This weakness can be detected using tools and techniques that require manual (human) analysis, such as penetration testing, threat modeling, and interactive tools that allow the tester to record and modify an active session.</p></div></details></td>
+<td>이런 수동 방법은 완전 자동화 기법보다 더 효과적일 수 있으며, 특히 설계·업무 규칙과 관련된 약점에서 그렇다.</td>
+</tr>
+<tr>
+<td>수동 정적 분석</td>
+<td>수동 정적 분석은 사용자 정의 권한 모델·함수 사용 탐지에 효과적일 수 있다. 관련 함수 사용을 코드에서 찾은 뒤, 분석자가 소프트웨어의 의도된 보안 모델에 비추어 권한 할당을 평가할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Manual static analysis may be effective in detecting the use of custom permissions models and functions. The code could then be examined to identifying usage of the related functions. Then the human analyst could evaluate permission assignments in the context of the intended security model of the software.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>수동 동적 분석</td>
+<td>수동 동적 분석은 사용자 정의 권한 모델·함수 사용 탐지에 효과적일 수 있다. 사용자 정의 권한과 관련된 코드 경로를 중점적으로 실행한 뒤, 분석자가 소프트웨어의 의도된 보안 모델에 비추어 권한 할당을 평가할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Manual dynamic analysis may be effective in detecting the use of custom permissions models and functions. The program could then be executed with a focus on exercising code paths that are related to the custom permissions. Then the human analyst could evaluate permission assignments in the context of the intended security model of the software.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>퍼징(Fuzzing)</td>
+<td>퍼징(fuzzing)은 이 약점 탐지에 효과적이지 않다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Fuzzing is not effective in detecting this weakness.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>블랙박스 시험</td>
+<td>운영체제·네트워크와 상호작용하는 소프트웨어 프로세스를 살피는 모니터링 도구를 쓴다. 소스코드가 없거나, 직접 개발하지 않은 소프트웨어이거나, 빌드 단계에서 새 약점이 들어오지 않았는지 확인하려 할 때 유용하다. 도구로는 실행 중인 프로세스에 붙는 디버거, truss(Solaris)·strace(Linux) 같은 시스템 호출 추적 도구, FileMon·RegMon·Process Monitor 등 Sysinternals 유틸리티(Windows), 네트워크 트래픽을 보는 스니퍼·프로토콜 분석기가 있다. 모니터를 프로세스에 붙여 파일·디렉터리·공유 메모리 같은 운영체제 자원에 대한 라이브러리 함수·시스템 호출을 관찰하고, 호출 인자를 살펴 어떤 권한이 쓰이는지 추론한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Use monitoring tools that examine the software&#x27;s process as it interacts with the operating system and the network. This technique is useful in cases when source code is unavailable, if the software was not developed by you, or if you want to verify that the build phase did not introduce any new weaknesses. Examples include debuggers that directly attach to the running process; system-call tracing utilities such as truss (Solaris) and strace (Linux); system activity monitors such as FileMon, RegMon, Process Monitor, and other Sysinternals utilities (Windows); and sniffers and protocol analyzers that monitor network traffic.</p><p>Attach the monitor to the process and watch for library functions or system calls on OS resources such as files, directories, and shared memory. Examine the arguments to these calls to infer which permissions are being used.</p></div></details></td>
+<td>이 기법은 시스템 자원 관련 권한 문제에만 유용하며, 블로그 사용자가 글을 'private'로 지정했는데 시스템이 실수로 'public'으로 표시하는 경우처럼 권한과 관련된 애플리케이션 수준 업무 규칙은 탐지하지 못할 가능성이 높다.</td>
+</tr>
+<tr>
+<td>자동 정적 분석(바이너리·바이트코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 애플리케이션 간 흐름 분석. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Inter-application Flow Analysis</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>수동 정적 분석(바이너리·바이트코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 바이너리/바이트코드 디스어셈블러(이후 취약점·이상 징후를 수동 분석). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Binary / Bytecode disassembler - then use manual analysis for vulnerabilities &amp; anomalies</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>동적 분석(결과 자동 해석)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 호스트 기반 취약점 스캐너(설정 결함 검사, 감사 메커니즘 동작 확인, 호스트 설정이 미리 정한 기준을 충족하는지 확인), 웹 애플리케이션 스캐너, 웹 서비스 스캐너, 데이터베이스 스캐너. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Host-based Vulnerability Scanners - Examine configuration for flaws, verifying that audit mechanisms work, ensure host configuration meets certain predefined criteria<br>     Web Application Scanner<br>     Web Services Scanner<br>        Database Scanners</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>동적 분석(결과 수동 해석)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 호스트 애플리케이션 인터페이스 스캐너. 부분 적용에 비용 효과적: 퍼징 도구, 프레임워크 기반 퍼징 도구, 자동 감시 실행, 강제 경로 실행. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Host Application Interface Scanner<br>   <br>        Cost effective for partial coverage:</p><p>Fuzz Tester<br>      Framework-based Fuzzer<br>      Automated Monitored Execution<br>       Forced Path Execution</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>수동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 수동 소스코드 리뷰(인스펙션 제외). 부분 적용에 비용 효과적: 집중 수동 표본 점검(소스 대상 집중 수동 분석). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Manual Source Code Review (not inspections)<br>  <br>        Cost effective for partial coverage:</p><p>Focused Manual Spotcheck - Focused manual analysis of source</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>자동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 상황 설정형 소스코드 약점 분석기. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Context-configured Source Code Weakness Analyzer</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>자동 정적 분석</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 설정 점검 도구. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Configuration Checker</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>아키텍처·설계 검토</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 정형 기법 / 구성에 의한 정확성(Correct-By-Construction). 부분 적용에 비용 효과적: 인스펙션(IEEE 1028 표준, 요구사항·설계·소스코드 등에 적용 가능). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Formal Methods / Correct-By-Construction<br>   <br>        Cost effective for partial coverage:</p><p>Inspection (IEEE 1028 standard) (can apply to requirements, design, source code, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다(아키텍처·설계 검토는 <a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토).</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>설치·첫 실행 뒤 실제 파일·디렉터리·장치 파일의 권한 비트와 소유자(ls -l, stat, icacls)를 기록해 기준선과 비교하고, 다른 계정이 쓸 수 있는 키·설정·기록 파일을 찾는다.</td>
+<td><a href="../../ch6-integration-test/#t-08">T-08</a>·<a href="../../ch7-maintenance/#m-03">M-03</a></td>
+<td>[예시] CWE-732 예시 검증(실제 권한 비트, Everyone 접근 여부 확인)</td>
+</tr>
+<tr>
+<td>umask(0), chmod 0666·0777, Everyone·WorldSid 권한 부여, 생성 시 권한 인자를 주는 호출을 찾아 권한 값이 자원의 용도에 맞는지 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>[CWE] CWE-732 탐지 방법(수동 정적 분석: 권한 함수 호출을 보안 모델과 대조) · [표준] SEI CERT FIO06-C</td>
+</tr>
+<tr>
+<td>Yocto·Buildroot 레시피와 설치 스크립트에서 권한·소유자 지정을 확인하고, 관리자의 수동 권한 변경에 기대는 항목이 없는지 본다.</td>
+<td><a href="../../ch7-maintenance/#m-03">M-03</a></td>
+<td>[CWE] CWE-732 완화책(Installation: 관리자가 권장 설정으로 바꿀 것이라 가정하지 않음)</td>
+</tr>
+<tr>
+<td>권한이 낮은 계정으로 키·설정·감사 기록 파일을 읽고 고쳐 보는 부정 시험을 한다.</td>
+<td><a href="../../ch6-integration-test/#t-06">T-06</a></td>
+<td>[CWE] CWE-732 탐지 방법(수동 동적 분석: 권한 관련 경로 실행)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>⓪ 하위 CWE 지원 확인: 도구가 이 번호 대신 하위 CWE(<a href="https://cwe.mitre.org/data/definitions/276.html" target="_blank" rel="noopener">CWE-276</a>·<a href="https://cwe.mitre.org/data/definitions/277.html" target="_blank" rel="noopener">CWE-277</a>·<a href="https://cwe.mitre.org/data/definitions/278.html" target="_blank" rel="noopener">CWE-278</a>·<a href="https://cwe.mitre.org/data/definitions/279.html" target="_blank" rel="noopener">CWE-279</a>·<a href="https://cwe.mitre.org/data/definitions/281.html" target="_blank" rel="noopener">CWE-281</a>·<a href="../493/">CWE-493</a>·<a href="../582/">CWE-582</a>·<a href="../583/">CWE-583</a> 외 3개)로 보고하는지 먼저 확인한다. 지원하면 '미지원'이 아니며, 지원하는 CWE 목록을 점검 결과·FA 사유서에 근거로 적는다.</li>
+<li>① 원문 탐지 방법(원문 효과성별): 높음: 동적 분석(결과 수동 해석), 수동 정적 분석(소스코드), 아키텍처·설계 검토 / 부분 적용: 자동 정적 분석(바이너리·바이트코드), 수동 정적 분석(바이너리·바이트코드), 동적 분석(결과 자동 해석) / 효과 등급 없음: 자동 동적 분석, 수동 분석, 수동 정적 분석, 수동 동적 분석, 퍼징(Fuzzing), 블랙박스 시험. 각 방법의 시험 활동은 6.2의 대응표를 따른다.</li>
+<li>③ SEI CERT 대응 규칙: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio03-j" target="_blank" rel="noopener">FIO03-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec01-j" target="_blank" rel="noopener">SEC01-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/runtime-environment-env/env03-j" target="_blank" rel="noopener">ENV03-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio06-c" target="_blank" rel="noopener">FIO06-C</a></li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-732">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>설정파일·키·로그·실행파일의 소유자와 권한을 설계서에 정의한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>umask(077) 후 open(..., 0600)으로 생성하고, chmod 777 등 과도한 권한을 금지한다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>Files.createFile()에 PosixFilePermissions로 최소 권한을 지정한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>설치 후 파일 권한 점검 스크립트와 배포 이미지 권한 감사를 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>패치·설치 과정에서 권한이 변경되지 않는지 확인하고 보안 구성 기준선을 유지한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>임베디드 Linux 루트 파일시스템 빌드(Yocto/Buildroot) 시 권한·소유자를 레시피에서 지정하고, MCU는 MPU(메모리 보호 장치)로 메모리 영역 권한(특권/비특권)을 분리한다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>도구가 보고하는 하위 CWE</strong>는 <a href="#detection">도구 미지원 시 대안 ⓪</a>을 본다.</p>
+<p><strong>기준선 활동 4건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-04">D-04</a> 권한 분리·최소 권한·격리 설계 (설계)</li>
+<li><a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토 (설계)</li>
+<li><a href="../../ch7-maintenance/#m-03">M-03</a> 배포·설치 구성 기준선 (유지보수 · 조건: 파일시스템(S3)이 '권한 있는 FS' 또는 '단순 FS')</li>
+<li><a href="../../ch7-maintenance/#m-06">M-06</a> 운용 보호 (유지보수)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 22건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>탑재 환경 (5건)</td>
+<td><a href="../../appendix/c-environment-guides/#pc-01">PC-01</a> 운용자 권한 모델 정의, <a href="../../appendix/c-environment-guides/#pc-07">PC-07</a> 운용 구성 점검, <a href="../../appendix/c-environment-guides/#sbc-04">SBC-04</a> 루트 파일시스템 최소화, <a href="../../appendix/c-environment-guides/#soc-01">SOC-01</a> 코어·PL 접근 권한 설계, <a href="../../appendix/c-environment-guides/#soc-05">SOC-05</a> 하드웨어 경계 시험</td>
+</tr>
+<tr>
+<td>운영체제/런타임 (6건)</td>
+<td><a href="../../appendix/c-environment-guides/#win-01">WIN-01</a> 최소 권한 실행 구조, <a href="../../appendix/c-environment-guides/#win-08">WIN-08</a> 권한·ACL 점검, <a href="../../appendix/c-environment-guides/#lnx-02">LNX-02</a> 권한 분리와 격리, <a href="../../appendix/c-environment-guides/#lnx-08">LNX-08</a> 이미지 설정 감사, <a href="../../appendix/c-environment-guides/#vxw-02">VXW-02</a> 653 파티션 설계, <a href="../../appendix/c-environment-guides/#frt-01">FRT-01</a> MPU 포트와 권한 분리</td>
+</tr>
+<tr>
+<td>IDE/컴파일러 (4건)</td>
+<td><a href="../../appendix/c-environment-guides/#wrw-01">WRW-01</a> 커널 모드 최소화와 RTP 분리, <a href="../../appendix/c-environment-guides/#ccs-02">CCS-02</a> 보안 영역·디버그 잠금 설계, <a href="../../appendix/c-environment-guides/#msvc-02">MSVC-02</a> 서비스 최소 권한과 DLL 경로, <a href="../../appendix/c-environment-guides/#avr-02">AVR-02</a> 퓨즈·락비트 정책</td>
+</tr>
+<tr>
+<td>기반 소프트웨어 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#bsp-02">BSP-02</a> 부팅·디버그 보안 활성화, <a href="../../appendix/c-environment-guides/#bsp-03">BSP-03</a> MPU/MMU와 링커 스크립트</td>
+</tr>
+<tr>
+<td>개발·시험 망 환경 (5건)</td>
+<td><a href="../../appendix/c-environment-guides/#net-in-02">NET-IN-02</a> 환경별 VM 표준 이미지, <a href="../../appendix/c-environment-guides/#net-in-03">NET-IN-03</a> 접근통제와 직무분리, <a href="../../appendix/c-environment-guides/#net-cl-01">NET-CL-01</a> 반입·반출 통제 절차, <a href="../../appendix/c-environment-guides/#net-cl-06">NET-CL-06</a> 이동식 매체 보호, <a href="../../appendix/c-environment-guides/#net-cl-10">NET-CL-10</a> 백업·복구·폐기 관리</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>SEI CERT 규칙</strong>: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-output-fio/fio03-j" target="_blank" rel="noopener">FIO03-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/platform-security-sec/sec01-j" target="_blank" rel="noopener">SEC01-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/runtime-environment-env/env03-j" target="_blank" rel="noopener">ENV03-J</a>, <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-c-coding-standard/recommendations/input-output-fio/fio06-c" target="_blank" rel="noopener">FIO06-C</a></li>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="../285/">CWE-285</a> 부적절한 인가(authorization), <a href="https://cwe.mitre.org/data/definitions/668.html" target="_blank" rel="noopener">CWE-668</a></li>
+<li><strong>하위 항목</strong>(이 가이드 범위 197개 안): <a href="../493/">CWE-493</a> 중요 public 변수의 final 미지정, <a href="../582/">CWE-582</a> public, final, static으로 선언된 배열, <a href="../583/">CWE-583</a> public으로 선언된 finalize() 메서드, <a href="../608/">CWE-608</a> Struts: ActionForm의 비공개가 아닌 필드, <a href="../766/">CWE-766</a> 중요 데이터 요소의 public 선언</li>
+<li><strong>연관 항목</strong>: 이 항목이 구성하는 복합 항목(RequiredBy) <a href="https://cwe.mitre.org/data/definitions/61.html" target="_blank" rel="noopener">CWE-61</a>, <a href="../689/">CWE-689</a></li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 20건 중 앞의 8건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2026-53657" target="_blank" rel="noopener">CVE-2026-53657</a></td>
+<td>Linux VM 실행 도구의 헬퍼 에이전트가 모든 사용자가 쓸 수 있는 권한으로 root 소유 Unix 도메인 소켓을 만들어, VM 게스트에서 코드를 실행할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>helper agent in a Linux VM launcher creates a root-owned Unix domain socket with world-writable permissions, allowing code execution from VM guests</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2022-29527" target="_blank" rel="noopener">CVE-2022-29527</a></td>
+<td>클라우드 관리용 Go 애플리케이션이 누구나 쓸 수 있는 sudoers 파일을 만들어, 로컬 공격자가 경쟁조건을 이용해 sudo 규칙을 삽입하고 root로 권한을 상승할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Go application for cloud management creates a world-writable sudoers file that allows local attackers to inject sudo rules and escalate privileges to root by winning a race condition.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3482" target="_blank" rel="noopener">CVE-2009-3482</a></td>
+<td>백신 제품이 "Program Files" 폴더 아래 파일에 안전하지 않은 "Everyone: Full Control" 권한을 설정하여 공격자가 실행 파일을 트로이 목마로 바꿀 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Anti-virus product sets insecure &quot;Everyone: Full Control&quot; permissions for files under the &quot;Program Files&quot; folder, allowing attackers to replace executables with Trojan horses.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3897" target="_blank" rel="noopener">CVE-2009-3897</a></td>
+<td>제품이 설치 때 0777 권한으로 디렉터리를 만들어 사용자가 권한을 얻고 인증에 쓰이는 소켓에 접근할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Product creates directories with 0777 permissions at installation, allowing users to gain privileges and access a socket used for authentication.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3489" target="_blank" rel="noopener">CVE-2009-3489</a></td>
+<td>사진 편집기가 안전하지 않은 보안 설명자로 서비스를 설치하여 사용자가 서비스를 중지·시작하거나 SYSTEM 권한으로 명령을 실행할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Photo editor installs a service with an insecure security descriptor, allowing users to stop or start the service, or execute commands as SYSTEM.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-15708" target="_blank" rel="noopener">CVE-2020-15708</a></td>
+<td>소켓이 안전하지 않은 권한으로 생성된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>socket created with insecure permissions</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-3289" target="_blank" rel="noopener">CVE-2009-3289</a></td>
+<td>라이브러리 함수가 파일을 새 대상으로 복사하면서 원본 파일의 권한을 대상에 쓰는데, 원본이 대개 0777 권한을 갖는 심볼릭 링크이면 잘못된 권한이 된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Library function copies a file to a new target and uses the source file&#x27;s permissions for the target, which is incorrect when the source file is a symbolic link, which typically has 0777 permissions.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2009-0115" target="_blank" rel="noopener">CVE-2009-0115</a></td>
+<td>장치 드라이버가 소켓 파일에 모든 사용자가 쓸 수 있는 권한을 주어 공격자가 임의 명령을 삽입할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Device driver uses world-writable permissions for a socket file, allowing attackers to inject arbitrary commands.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/732.html" target="_blank" rel="noopener">CWE-732</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../704/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-704 부적절한 형변환">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-704 부적절한 형변환
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../733/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-733 컴파일러 최적화에 의한 보안 코드 제거·변형">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-733 컴파일러 최적화에 의한 보안 코드 제거·변형
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>

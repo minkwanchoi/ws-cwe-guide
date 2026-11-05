@@ -1,0 +1,134 @@
+/* 글꼴: 저장소에 반입한 IBM Plex(assets/vendor/fonts/fonts.css). mkdocs.yml의 theme.font를 끄면 테마가 이 변수를 넣지 않으므로 여기서 준다 */
+:root { --md-text-font: "IBM Plex Sans KR"; --md-code-font: "IBM Plex Mono"; }
+
+/* 색: 선택 도구·버전 비교 도구·단일 문서판과 같은 값(글자 대비 4.5:1 이상) */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #28575f; --md-primary-fg-color--light: #3a6f78; --md-primary-fg-color--dark: #1d4148;
+  --md-accent-fg-color: #9a5b12; --md-accent-fg-color--transparent: #9a5b121a;
+  --md-typeset-a-color: #28575f;
+}
+[data-md-color-scheme="slate"] {
+  --md-hue: 170; --md-default-bg-color: #121817;
+  --md-primary-fg-color: #1d4148; --md-primary-fg-color--light: #28575f; --md-primary-fg-color--dark: #16333a;
+  --md-accent-fg-color: #e2a95c; --md-accent-fg-color--transparent: #e2a95c1a;
+  --md-typeset-a-color: #7fb5bd;
+}
+/* 제목을 또렷하게 */
+.md-typeset h1 { color: var(--md-default-fg-color); font-weight: 600; }
+.md-typeset h2 { font-weight: 500; }
+
+/* 본문 글자는 한글 줄바꿈. 표는 칸 안에서 줄을 바꿔 가로 스크롤을 줄인다 */
+.md-typeset { word-break: keep-all; overflow-wrap: anywhere; }
+.md-typeset table:not([class]) { font-size: .72rem; }
+.md-typeset table:not([class]) td { vertical-align: top; }
+.md-typeset td code { word-break: normal; overflow-wrap: anywhere; }
+.md-typeset table:not([class]) td:first-child { word-break: keep-all; }
+/* 칸을 일률 100px로 누르지 않는다: 폭은 내용 양에 비례한다 */
+.md-typeset table:not([class]) th { min-width: 2.5rem; white-space: normal; }
+.md-typeset table:not([class]) th a { word-break: keep-all; }  /* 머리글 정의 링크도 낱말 단위로만 줄을 바꾼다 */
+/* 표 안의 지침 ID·CWE 번호는 하이픈에서 줄이 갈리지 않게 */
+.md-typeset td a[href*="c-environment-guides"], .md-typeset td a[href*="/cwe/"], .md-typeset td a[href*="cwe.mitre.org"] { white-space: nowrap; }
+.md-typeset td:has(> a[id]) { white-space: nowrap; }
+/* 7열 이상 표: 칸이 한 단어씩 꺾이지 않게 최소 폭을 준다(화면이 넉넉하면 가로로 넘치지 않는다) */
+.md-typeset table:not([class]):has(th:nth-child(7)) td { min-width: 4.5rem; }
+.md-typeset table:not([class]):has(th:nth-child(7)) td:first-child { min-width: 7rem; }
+/* 10열 이상 표(부록 G 양식): 넓은 화면에서 가로로 넘치지 않게 최소 폭을 줄인다 */
+.md-typeset table:not([class]):has(th:nth-child(10)) td { min-width: 3.4rem; }
+.md-typeset table:not([class]):has(th:nth-child(10)) td:first-child { min-width: 4.5rem; }
+/* 부록 E-2: 칸 폭을 고정해 긴 파일 경로를 칸 안에서 줄 바꿈한다 */
+.md-typeset .tbl-e2 table { table-layout: fixed; width: 100%; }
+.md-typeset .tbl-e2 th:nth-child(1) { width: 9%; } .md-typeset .tbl-e2 th:nth-child(2) { width: 15%; } .md-typeset .tbl-e2 th:nth-child(3) { width: 42%; } .md-typeset .tbl-e2 th:nth-child(4) { width: 24%; } .md-typeset .tbl-e2 th:nth-child(5) { width: 10%; }
+.md-typeset .tbl-e2 td { overflow-wrap: anywhere; }
+/* 언어별 규칙 쪽·부록 B의 표 필터(view-filter.js). 범위 상자는 누른 것이 테두리로 보인다 */
+.md-typeset .vfilter { margin: .6em 0 .4em; }
+/* 범위 지도: 막대는 겹치지 않는 칸, 위·아래 괄호는 칸을 묶은 집합. 고른 범위에 든 칸을 사이트 색으로 칠한다 */
+.md-typeset .vf-scope { margin-bottom: .7em; font-size: .72rem; --vf-acc: var(--md-typeset-a-color); --vf-line: var(--md-default-fg-color--lighter); }
+.md-typeset .vf-scope button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.md-typeset .vf-scope button:focus-visible { outline: .1rem solid var(--vf-acc); outline-offset: .1rem; border-radius: .15rem; }
+.md-typeset .vf-all { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3em .6em; margin-bottom: .3em; color: var(--md-default-fg-color--light); }
+.md-typeset .vf-all button { border: .05rem solid var(--vf-line); border-radius: 1rem; padding: .1em .7em; white-space: nowrap; }
+.md-typeset .vf-all button[aria-pressed="true"] { border-color: var(--vf-acc); color: var(--vf-acc); font-weight: 700; background: color-mix(in srgb, var(--vf-acc) 12%, transparent); }
+.md-typeset .vf-row { display: grid; column-gap: .15rem; }
+.md-typeset .vf-br { display: flex; flex-direction: column; align-items: center; color: var(--md-default-fg-color--light); }
+.md-typeset .vf-br span b { color: var(--md-default-fg-color); font-weight: 700; margin-left: .25em; }
+.md-typeset .vf-br::after { content: ""; align-self: stretch; height: .3rem; margin: .1rem .1rem .15rem; border: .1rem solid var(--vf-line); border-bottom: 0; }
+.md-typeset .vf-br.vf-dn { flex-direction: column-reverse; }
+.md-typeset .vf-br.vf-dn::after { margin: .15rem .1rem .1rem; border-top: 0; border-bottom: .1rem solid var(--vf-line); }
+.md-typeset .vf-br[aria-pressed="true"], .md-typeset .vf-br[aria-pressed="true"] span b { color: var(--vf-acc); font-weight: 700; }
+.md-typeset .vf-br[aria-pressed="true"]::after { border-color: var(--vf-acc); }
+.md-typeset .vf-scope .vf-seg { display: flex; flex-direction: column; justify-content: center; min-height: 3.2em; padding: .4em .3em; text-align: center; line-height: 1.3;
+  background: var(--md-code-bg-color); border: .05rem solid var(--vf-line); }
+.md-typeset .vf-scope .vf-seg:first-child { border-radius: .3rem 0 0 .3rem; }
+.md-typeset .vf-scope .vf-seg:last-child { border-radius: 0 .3rem .3rem 0; }
+.md-typeset .vf-scope .vf-seg b { display: block; font-size: .9rem; font-weight: 700; }
+.md-typeset .vf-scope .vf-seg.in { background: color-mix(in srgb, var(--vf-acc) 16%, transparent); border-color: var(--vf-acc); }
+.md-typeset .vf-scope .vf-seg[aria-pressed="true"] { background: color-mix(in srgb, var(--vf-acc) 32%, transparent); }
+.md-typeset .vf-bar { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; font-size: .72rem; }
+.md-typeset .vf-bar select, .md-typeset .vf-bar input { font: inherit; padding: .2em .4em; border: .05rem solid var(--md-default-fg-color--lighter); border-radius: .2rem; background: var(--md-default-bg-color); color: inherit; }
+.md-typeset .vf-count { color: var(--md-default-fg-color--light); }
+/* 휴대폰 폭: 'anywhere'는 칸을 글자 하나 폭까지 줄여 한 글자씩 줄이 바뀐다. 낱말 단위로만 줄을 바꾸고, 넘치는 표는 표 상자 안에서 가로로 민다 */
+@media screen and (max-width: 44.99em) {
+  .md-typeset table:not([class]) th, .md-typeset table:not([class]) td { overflow-wrap: break-word; min-width: 5em; }
+  .md-typeset table:not([class]) td:first-child { min-width: 4em; }
+  .md-typeset .tbl-e2 table { table-layout: auto; }
+}
+/* 머리글 제목 옆 판 표시(온라인판의 판 선택 메뉴가 나타나면 그쪽을 쓴다) */
+.md-typeset .site-ver, .site-ver { flex-shrink: 0; align-self: center; margin-left: .5rem; padding: 0 .35rem; border: .05rem solid currentcolor; border-radius: .2rem; color: inherit; font-size: .6rem; font-weight: 400; line-height: 1.5; opacity: .9; }
+.site-ver:hover { opacity: 1; text-decoration: underline; }
+.site-ver:has(~ .md-version) { display: none; }
+@media screen and (max-width: 44.99em) { .site-ver { display: none; } }
+/* 왼쪽 메뉴: 어느 쪽에서나 같고, 현재 묶음만 펼친다 */
+.md-grid { max-width: 90rem; }
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary { width: 13.5rem; }
+  .md-nav--primary > .md-nav__title { display: none; }
+  .md-nav--primary .md-nav__link { margin-top: 0; padding: .3rem .5rem; border-radius: .15rem; font-size: .72rem; line-height: 1.35; color: var(--md-default-fg-color); }
+  .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link, .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__container > a { font-weight: 600; }
+  .md-nav--primary .md-nav__container { padding: 0; }
+  .md-nav--primary .md-nav__container > a { flex-grow: 1; }
+  .md-nav--primary .md-nav__container > label { flex-shrink: 0; }
+  .md-nav--primary .md-nav__link:hover { background-color: var(--md-default-fg-color--lightest); }
+  .md-nav--primary .md-nav .md-nav { border-left: .05rem solid var(--md-default-fg-color--lighter); margin-left: .6rem; }
+  .md-nav--primary .md-nav__link--active, .md-nav--primary .md-nav__item--active > .md-nav__link--active {
+    color: var(--md-typeset-a-color); background-color: var(--md-accent-fg-color--transparent); box-shadow: inset .15rem 0 0 var(--md-typeset-a-color); font-weight: 700;
+  }
+}
+/* 쪽 안 목차: 넓은 화면은 오른쪽, 그 밖에는 제목 아래 접는 상자 */
+.md-typeset details.page-toc { max-width: 42rem; margin: .4rem 0 1rem; padding: .3rem .6rem; border: .05rem solid var(--md-default-fg-color--lighter); border-radius: .2rem; box-shadow: none; background: none; font-size: .72rem; }
+.md-typeset details.page-toc > summary { margin: 0; padding: .2rem 1.6rem .2rem 0; background: none; font-weight: 600; color: var(--md-default-fg-color); }
+.md-typeset details.page-toc > summary::before { display: none; }
+.md-typeset details.page-toc ul { margin: .2rem 0 .3rem 1rem; }
+.md-typeset details.page-toc li { margin: .1rem 0; }
+@media screen and (min-width: 76.25em) and (max-width: 99.99em) { .md-main .md-sidebar--secondary:not([hidden]) { display: none; } }
+@media screen and (min-width: 100em) { .md-typeset details.page-toc { display: none; } }
+/* 표는 넓게 쓰되 문단은 읽기 좋은 폭으로 */
+.md-typeset > p, .md-typeset > ul, .md-typeset > ol, .md-typeset > blockquote, .md-typeset > .admonition, .md-typeset > details { max-width: 42rem; }
+.md-typeset > details.example, .md-typeset > .admonition.abstract { max-width: none; }
+.md-typeset blockquote { border-left-color: var(--md-accent-fg-color); }
+
+/* 규칙별 해설(CWE) */
+.md-typeset .cwe-en { margin-top: -.6rem; color: var(--md-default-fg-color--light); font-style: italic; }
+.md-typeset details.cwe-orig { margin: .3rem 0 0; font-size: .92em; border-left-width: .15rem; box-shadow: none; }
+.md-typeset details.cwe-orig > summary { font-size: .9em; padding-top: .2rem; padding-bottom: .2rem; }
+.md-typeset details.cwe-orig [lang="en"] { word-break: normal; }
+.md-typeset .cwe-src { font-size: .72rem; color: var(--md-default-fg-color--light); }
+/* 규칙별 해설: 하지 말 것·할 것 예시의 검증·참고 줄 */
+.md-typeset p.ex-meta { font-size: .78em; color: var(--md-default-fg-color--light); margin-top: -.4rem; }
+.md-typeset details.cwe-orig pre { white-space: pre-wrap; }
+.md-typeset details.cwe-orig pre > code { font-size: .62rem; }
+/* 규칙별 해설: 언어별 예시 상자(나쁜 예·좋은 예, details.example) */
+.md-typeset details.example { margin: .6rem 0; font-size: .75rem; border-color: var(--md-primary-fg-color); }
+.md-typeset details.example > summary { font-weight: 700; background-color: var(--md-accent-fg-color--transparent); }
+.md-typeset details.example > summary::before { background-color: var(--md-primary-fg-color); }
+.md-typeset details.example pre > code { font-size: .7rem; line-height: 1.5; }
+/* 나쁜 예·좋은 예: 표지와 코드 왼쪽 선으로 구분(색만으로 구분하지 않도록 글자 표지를 유지) */
+.md-typeset p.ex-bad, .md-typeset p.ex-good { margin-bottom: .3rem; font-weight: 700; }
+.md-typeset p.ex-bad { color: #a4312d; }
+.md-typeset p.ex-good { color: #23693f; }
+[data-md-color-scheme="slate"] .md-typeset p.ex-bad { color: #e07a76; }
+[data-md-color-scheme="slate"] .md-typeset p.ex-good { color: #5fbf86; }
+.md-typeset p.ex-bad + .highlight pre, .md-typeset p.ex-bad + pre { border-left: .2rem solid #a4312d; }
+.md-typeset p.ex-good + .highlight pre, .md-typeset p.ex-good + pre { border-left: .2rem solid #23693f; }
+
+/* 표 머리글 링크로 들어온 부록 F '표의 칸과 값' 행을 짚어 보인다 */
+.md-typeset tr:has(a:target) { background: color-mix(in srgb, var(--md-typeset-a-color) 10%, transparent); }

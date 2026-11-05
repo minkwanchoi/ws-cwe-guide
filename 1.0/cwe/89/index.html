@@ -1,0 +1,2786 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-DrEMJJ29sL7vIloQzly+VUGMxKcBTMII+OfW7Y8AkG4='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="무기체계 임베디드 소프트웨어의 CWE 보안약점을 요구사항 분석·설계·구현·통합 및 시험·유지보수의 수명주기 5단계와 개발환경별로 예방하기 위한 개발자 참고 가이드">
+      
+      
+      
+        <link rel="canonical" href="https://minkwanchoi.github.io/ws-cwe-guide/1.0/cwe/89/">
+      
+      
+        <link rel="prev" href="../78/">
+      
+      
+        <link rel="next" href="../95/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>CWE-89 SQL 삽입(SQL injection) - 무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/vendor/fonts/fonts.css">
+    
+      <link rel="stylesheet" href="../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cwe-89-sql-삽입sql-injection" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-header__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CWE-89 SQL 삽입(SQL injection)
+            
+          </span><a class="site-ver" href="../../changelog/" title="판 번호와 변경 이력">v1.0.0</a>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="어두운 화면"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="어두운 화면" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="밝은 화면"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="밝은 화면" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" class="md-nav__button md-logo" aria-label="무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    무기체계 소프트웨어 보안약점(CWE) 예방 참고 가이드
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    홈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    요약
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    요약
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brief/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    실무 요약본
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    가이드 요약
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    본문
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    본문
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch1-general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제1장 개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch2-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제2장 지침 체계와 선택 절차
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch3-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제3장 요구사항 분석 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch4-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제4장 설계 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch5-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제5장 구현 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch6-integration-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제6장 통합 및 시험 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch7-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제7장 유지보수 단계
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ch8-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    제8장 개발환경별 고려사항
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../selection-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지침 선택 도구
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cwe-versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE 버전 비교
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    규칙별 해설
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    규칙별 해설
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-checklist/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    보안약점 점검 목록 규칙(44개)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C 규칙(CWE-658 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ 규칙(CWE-659 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java 규칙(CWE-660 뷰)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-cs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C# 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view-py/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 규칙(CWE 뷰 없음)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-89 SQL 삽입(SQL injection)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CWE-89 SQL 삽입(SQL injection)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../appendix/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    부록
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/a-weakness-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 A 보안약점 점검 목록(44개) 조견표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/b-language-views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 B 언어 뷰 보안약점 153개와 적용성
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/c-environment-guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 C 개발환경별 지침 245건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/d-security-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 D C#·Python 보안 규칙 대응표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/e-oss-evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 E 참조 오픈소스 프로젝트와 근거 목록
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/f-glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 F 용어 대조표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/g-worksheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    부록 G 선택 워크시트와 점검표
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내려받기
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../evidence/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    문서 정보
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    문서 정보
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    변경 이력
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    참고문헌
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    출처와 이용 조건
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설명(Description)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        발생 단계(Modes Of Introduction)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        영향(Common Consequences)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        완화책(Potential Mitigations)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="완화책(Potential Mitigations)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mit-req" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        요구사항 분석 (본문 제3장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        설계 (본문 제4장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-impl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        구현 (본문 제5장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        통합 및 시험 (본문 제6장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mit-maint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유지보수 (본문 제7장)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        예시(나쁜 예·좋은 예)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지 방법(Detection Methods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        이 가이드에서 다루는 곳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        관련 규칙·사례
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        출처
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cwe-89-sql-삽입sql-injection">CWE-89 SQL 삽입(SQL injection)<a class="headerlink" href="#cwe-89-sql-삽입sql-injection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h1><details class="page-toc"><summary>이 쪽의 목차</summary><ul><li><a href="#description">설명(Description)</a></li><li><a href="#modes">발생 단계(Modes Of Introduction)</a></li><li><a href="#consequences">영향(Common Consequences)</a></li><li><a href="#mitigations">완화책(Potential Mitigations)</a><ul><li><a href="#mit-req">요구사항 분석 (본문 제3장)</a></li><li><a href="#mit-design">설계 (본문 제4장)</a></li><li><a href="#mit-impl">구현 (본문 제5장)</a></li><li><a href="#mit-test">통합 및 시험 (본문 제6장)</a></li><li><a href="#mit-maint">유지보수 (본문 제7장)</a></li></ul></li><li><a href="#examples">예시(나쁜 예·좋은 예)</a></li><li><a href="#detection">탐지 방법(Detection Methods)</a></li><li><a href="#coverage">이 가이드에서 다루는 곳</a></li><li><a href="#related">관련 규칙·사례</a></li><li><a href="#sources">출처</a></li></ul></details>
+<p class="cwe-en" lang="en">Improper Neutralization of Special Elements used in an SQL Command</p>
+
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../ch2-framework/#cwe-hierarchy" title="MITRE CWE가 약점을 얼마나 구체적으로 기술했는지의 수준. 기둥·분류·기본·변형 넷과 여러 약점을 묶은 복합이 있다">추상화 수준</a></td>
+<td>기본(Base)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-status" title="MITRE가 매긴 CWE 항목의 완성도(검토·검증 정도). 약점의 위험도와는 관계없다">상태</a></td>
+<td>안정(Stable)</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-membership" title="이 CWE가 이 가이드 범위에 들어온 경로. 보안약점 점검 목록 번호, 언어 뷰, 보조 항목이 있다">소속</a></td>
+<td>「보안약점 점검 목록」(44개)</td>
+</tr>
+<tr>
+<td><a href="../../ch2-framework/#sec-2-5" title="이 가이드의 기본 판정. 해당은 언어·환경과 관계없이 점검하고, 조건부는 특정 사용 기술·특성이 있을 때만 점검한다. 과제의 최종 판정은 2.5 ⑥을 따른다">가이드 적용성</a></td>
+<td>조건부 — DB 사용</td>
+</tr>
+<tr>
+<td><a href="../../appendix/f-glossary/#col-platform" title="MITRE가 그 약점이 나타날 수 있다고 적은 언어·기술·운영체제·아키텍처">적용 플랫폼</a></td>
+<td>언어: 언어 무관, Go, SQL, Python · 기술: 데이터베이스 서버(Database Server)</td>
+</tr>
+<tr>
+<td>원문</td>
+<td><a href="https://cwe.mitre.org/data/definitions/89.html" target="_blank" rel="noopener">MITRE CWE-89</a> (CWE 5.0)</td>
+</tr>
+</tbody>
+</table>
+<p><a id="summary"></a></p>
+<div class="admonition abstract">
+<p class="admonition-title">한 줄 요약</p>
+<p>외부 입력으로 SQL 명령을 만들면서 특수 요소를 무력화하지 않거나 잘못 무력화해 의도한 SQL 명령이 바뀔 수 있는 약점이다.</p>
+<p>→ <a href="#examples">나쁜 예·좋은 예</a></p>
+</div>
+<h2 id="description">설명(Description)<a class="headerlink" href="#description" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>제품이 상위 구성요소에서 온, 외부 영향을 받은 입력으로 SQL 명령의 전부나 일부를 만들면서, 하위 구성요소로 보낼 때 의도한 SQL 명령을 바꿀 수 있는 특수 요소를 무력화(neutralize)하지 않거나 잘못 무력화한다. 사용자가 조작할 수 있는 입력에서 SQL 구문을 충분히 제거하거나 인용(quoting) 처리하지 않으면, 생성된 SQL 질의가 그 입력을 일반 사용자 데이터가 아닌 SQL로 해석하게 할 수 있다.</p>
+<details class="cwe-orig"><summary>원문(Description · Dimensions)</summary><div lang="en"><p>The product constructs all or part of an SQL command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended SQL command when it is sent to a downstream component. Without sufficient removal or quoting of SQL syntax in user-controllable inputs, the generated SQL query can cause those inputs to be interpreted as SQL instead of ordinary user data.</p><p>Dimensions: Behavior-Property = Improper; Behavior-Type = Neutralization; Input-Type = Special Elements; Behavior-Type = Used; Language-Type = SQL; Other = Command</p></div></details>
+
+<h2 id="modes">발생 단계(Modes Of Introduction)<a class="headerlink" href="#modes" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th>수명주기 단계(가이드 대응)</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>실현(REALIZATION): 이 약점은 아키텍처 보안 전술을 구현하는 과정에서 생긴다.</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>구현</td>
+<td>이 약점은 대개 사용자 입력을 데이터베이스에 저장하는 데이터 중심 애플리케이션에서 나타난다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">영향(Common Consequences)<a class="headerlink" href="#consequences" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-scope" title="약점이 악용되면 침해되는 보안 속성. 예: 기밀성, 무결성, 가용성">영역</a></th>
+<th><a href="../../appendix/f-glossary/#col-impact" title="약점이 악용됐을 때의 기술적 결과. 예: 메모리 읽기, 권한 획득">영향</a></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기밀성 / 무결성 / 가용성</td>
+<td>허가되지 않은 코드·명령 실행</td>
+<td>공격자는 흔히 SQL 문을 바꿔 출력을 실행 가능한 파일로 보내는 방식으로 시스템 명령을 실행할 수 있다.</td>
+</tr>
+<tr>
+<td>기밀성</td>
+<td>애플리케이션 데이터 읽기</td>
+<td>SQL 데이터베이스는 일반적으로 민감한 데이터를 담고 있으므로 SQL 삽입 취약점에서는 기밀성 손실이 자주 발생한다.</td>
+</tr>
+<tr>
+<td>인증</td>
+<td>권한 획득 또는 신원 도용 / 보호 메커니즘 우회</td>
+<td>사용자 이름·비밀번호 확인 등 인증에 부실한 SQL 명령을 쓰면, 비밀번호를 미리 알지 못해도 다른 사용자로 제품에 접속할 수도 있다.</td>
+</tr>
+<tr>
+<td>접근 통제</td>
+<td>보호 메커니즘 우회</td>
+<td>인가 정보가 SQL 데이터베이스에 있으면 SQL 삽입 취약점을 성공적으로 악용해 이 정보를 바꿀 수도 있다.</td>
+</tr>
+<tr>
+<td>무결성</td>
+<td>애플리케이션 데이터 수정</td>
+<td>SQL 삽입 공격으로 민감한 정보를 읽을 수 있는 것처럼, 그 정보를 수정하거나 삭제할 수도 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mitigations">완화책(Potential Mitigations)<a class="headerlink" href="#mitigations" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>원문 완화책 10건(수명주기 단계로 묶은 규칙은 <a href="../">색인</a>에 있다).</p>
+<h3 id="mit-req">요구사항 분석 (<a href="../../ch3-requirements/">본문 제3장</a>)<a class="headerlink" href="#mit-req" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-design">설계 (<a href="../../ch4-design/">본문 제4장</a>)<a class="headerlink" href="#mit-design" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>라이브러리·프레임워크 활용</td>
+<td>이 약점이 생기지 않게 하거나 피하기 쉽게 하는 구성을 제공하는, 검증된 라이브러리나 프레임워크를 사용한다 [REF-1482]. 예를 들어 Hibernate나 Enterprise Java Beans 같은 영속성 계층은 올바르게 사용하면 SQL 삽입을 상당히 막아 줄 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid [REF-1482].</p><p>For example, consider using persistence layers such as Hibernate or Enterprise Java Beans, which can provide significant protection against SQL injection if used properly.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>매개변수화</td>
+<td>데이터와 코드의 분리를 자동으로 강제하는 구조적 메커니즘이 있으면 쓴다. 출력을 만드는 곳마다 개발자가 인용·인코딩·검증을 직접 하지 않아도 이 메커니즘이 자동으로 처리할 수 있다. SQL 질의는 prepared statement, 매개변수화 질의(parameterized query), 저장 프로시저로 처리하며, 이 기능들은 매개변수·변수를 받고 강한 타입을 지원해야 한다. 이 기능 안에서 "exec" 같은 기능으로 질의 문자열을 동적으로 만들어 실행하지 않는다. SQL 삽입 가능성이 다시 생길 수 있다 [REF-867]. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.</p><p>Process SQL queries using prepared statements, parameterized queries, or stored procedures. These features should accept parameters or variables and support strong typing. Do not dynamically construct and execute query strings within these features using &quot;exec&quot; or similar functionality, since this may re-introduce the possibility of SQL injection. [REF-867]</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design) / 운용(Operation)</td>
+<td>실행 환경 강화</td>
+<td>작업에 필요한 최소 권한으로 코드를 실행한다 [REF-76]. 가능하면 한 작업에만 쓰는 제한된 권한의 격리 계정을 만들어, 공격이 성공해도 나머지 소프트웨어나 그 환경에 바로 접근하지 못하게 한다(예: 데이터베이스 애플리케이션은 특히 일상 운영에서 데이터베이스 관리자 권한으로 실행할 필요가 거의 없다). SQL 데이터베이스 사용자 계정도 최소 권한 원칙에 따라 계정 사용에 필요한 최소 권한만 준다. 요구사항이 '사용자는 자기 데이터를 읽고 고칠 수 있다'라면 다른 사람의 데이터는 읽거나 쓰지 못하게 제한한다. 모든 데이터베이스 객체에 가능한 가장 엄격한 권한을 쓴다(예: 저장 프로시저는 실행 전용). <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Run your code using the lowest privileges that are required to accomplish the necessary tasks [REF-76]. If possible, create isolated accounts with limited privileges that are only used for a single task. That way, a successful attack will not immediately give the attacker access to the rest of the software or its environment. For example, database applications rarely need to run as the database administrator, especially in day-to-day operations.</p><p>Specifically, follow the principle of least privilege when creating user accounts to a SQL database. The database users should only have the minimum privileges necessary to use their account. If the requirements of the system indicate that a user can read and modify their own data, then limit their privileges so they cannot read/write others&#x27; data. Use the strictest permissions possible on all database objects, such as execute-only for stored procedures.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>—</td>
+<td>클라이언트 측에서 하는 보안 검사는 서버 측에서도 똑같이 수행해야 한다(<a href="https://cwe.mitre.org/data/definitions/602.html" target="_blank" rel="noopener">CWE-602</a> 방지). 공격자는 검사 뒤에 값을 바꾸거나 클라이언트에서 검사를 아예 없앤 뒤 수정된 값을 서버에 보낼 수 있기 때문이다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>아키텍처·설계(Architecture and Design)</td>
+<td>변환을 통한 강제</td>
+<td>파일 이름이나 URL처럼 허용할 대상이 제한되거나 알려져 있으면 숫자 ID 같은 고정 입력값을 실제 파일 이름·URL에 대응시키고 그 밖의 입력은 모두 거부한다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When the set of acceptable objects, such as filenames or URLs, is limited or known, create a mapping from a set of fixed input values (such as numeric IDs) to the actual filenames or URLs, and reject all other inputs.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-impl">구현 (<a href="../../ch5-implementation/">본문 제5장</a>)<a class="headerlink" href="#mit-impl" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구현(Implementation)</td>
+<td>출력 인코딩</td>
+<td>제어와 데이터가 섞인 동적 질의 문자열·코드·명령은 위험하지만 피할 수 없을 때도 있다. 그럴 때는 인자를 올바르게 인용하고 인자 안의 특수 문자를 이스케이프한다. 가장 보수적인 방법은 매우 엄격한 허용목록(예: 영숫자·공백만)을 통과하지 못하는 문자를 모두 이스케이프하거나 걸러 내는 것이고, 공백 같은 특수 문자가 여전히 필요하면 이스케이프·필터링 뒤에 각 인자를 따옴표로 감싼다. 인자 삽입(<a href="https://cwe.mitre.org/data/definitions/88.html" target="_blank" rel="noopener">CWE-88</a>)에 주의한다. 직접 구현하기보다 데이터베이스나 언어가 제공하는 기능을 쓸 수 있다(예: Oracle DBMS_ASSERT 패키지는 매개변수가 SQL 삽입에 덜 취약한 속성을 갖는지 검사·강제할 수 있고, MySQL에는 C와 PHP에서 쓰는 mysql_real_escape_string() API 함수가 있다). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).</p><p>Instead of building a new implementation, such features may be available in the database or programming language. For example, the Oracle DBMS_ASSERT package can check or enforce that parameters have certain properties that make them less vulnerable to SQL injection. For MySQL, the mysql_real_escape_string() API function is available in both C and PHP.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>입력값 검증</td>
+<td>모든 입력을 악의적이라고 가정하고, 명세에 엄격히 맞는 입력만 받는 허용목록('accept known good') 방식으로 검증해 맞지 않는 입력은 거부하거나 맞게 변환한다. 검증할 때는 길이·유형·허용 값 전체 범위·누락/추가 입력·구문·관련 필드 간 일관성·업무 규칙을 모두 고려한다(예: 'boat'는 영숫자만 있어 구문상 유효하지만 'red'·'blue' 같은 색상만 받는 필드라면 유효하지 않다). 악의적이거나 잘못된 입력을 찾는 방식(거부목록)에만 의존하지 않는다. 이 방식은 특히 코드 환경이 바뀔 때 원치 않는 입력을 하나 이상 놓치기 쉬워 검증이 우회될 수 있다. 다만 거부목록은 공격 탐지나 즉시 거부할 정도로 잘못된 입력을 가려내는 데는 쓸모가 있을 수 있다. SQL 질의 문자열을 만들 때는 요청 매개변수의 기대값에 맞춰 문자 집합을 엄격한 허용목록으로 제한한다. 이는 공격 범위를 간접적으로 줄일 뿐이며 올바른 출력 인코딩·이스케이프보다 덜 중요하다. SQL 삽입을 막는 가장 효과적인 방법은 올바른 출력 인코딩·이스케이프·인용이며, 입력값 검증은 일부 심층 방어를 제공할 수 있다. 입력값 검증만으로는 항상 막지 못하며, 임의 문자를 담을 수 있는 자유 형식 필드를 지원해야 하면 특히 그렇다(예: "O'Reilly"는 흔한 성이라 검증을 통과할 가능성이 크지만 아포스트로피를 이스케이프 등으로 처리해야 하고, 지우면 위험은 줄어도 잘못된 이름이 기록된다). 가능하면 메타문자를 이스케이프하기보다 아예 허용하지 않는 것이 가장 안전할 수 있으며, 이는 일부 심층 방어가 된다. 데이터가 데이터베이스에 들어간 뒤 후속 처리가 메타문자를 이스케이프하지 않고 쓸 수 있고, 그런 처리를 통제하지 못할 수도 있기 때문이다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Assume all input is malicious. Use an &quot;accept known good&quot; input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.</p><p>When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, &quot;boat&quot; may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as &quot;red&quot; or &quot;blue.&quot;</p><p>Do not rely exclusively on looking for malicious or malformed inputs. This is likely to miss at least one undesirable input, especially if the code&#x27;s environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.</p><p>When constructing SQL query strings, use stringent allowlists that limit the character set based on the expected value of the parameter in the request. This will indirectly limit the scope of an attack, but this technique is less important than proper output encoding and escaping.</p><p>Note that proper output encoding, escaping, and quoting is the most effective solution for preventing SQL injection, although input validation may provide some defense-in-depth. This is because it effectively limits what will appear in output. Input validation will not always prevent SQL injection, especially if you are required to support free-form text fields that could contain arbitrary characters. For example, the name &quot;O&#x27;Reilly&quot; would likely pass the validation step, since it is a common last name in the English language. However, it cannot be directly inserted into the database because it contains the &quot;&#x27;&quot; apostrophe character, which would need to be escaped or otherwise handled. In this case, stripping the apostrophe might reduce the risk of SQL injection, but it would produce incorrect behavior because the wrong name would be recorded.</p><p>When feasible, it may be safest to disallow meta-characters entirely, instead of escaping them. This will provide some defense in depth. After the data is entered into the database, later processes may neglect to escape meta-characters before use, and you may not have control over those processes.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>구현(Implementation)</td>
+<td>—</td>
+<td>오류 메시지에는 의도한 대상에게만 쓸모 있는 최소 정보를 담는다. 메시지는 너무 모호해 사용자를 혼란스럽게 하지도, 너무 자세해 의도보다 많이 드러내지도 않게 균형을 맞추고, 오류를 판별한 방법을 드러내지 않는다(공격자는 상세 정보로 원래 공격을 다듬어 성공 가능성을 높일 수 있다). 자세한 오류를 남겨야 하면 로그에 기록하되 공격자가 로그를 볼 수 있는 경우를 고려하고, 비밀번호 같은 매우 민감한 정보는 로그 파일에 절대 저장하지 않는다. 사용자 계정 존재 여부처럼 내부 상태를 공격자에게 뜻하지 않게 알려 줄 수 있는 일관되지 않은 메시지를 피한다. SQL 삽입에서는 SQL 질의 구조를 드러내는 오류 메시지가 공격자가 공격 문자열을 맞추는 데 도움이 될 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Ensure that error messages only contain minimal details that are useful to the intended audience and no one else. The messages need to strike the balance between being too cryptic (which can confuse users) or being too detailed (which may reveal more than intended). The messages should not reveal the methods that were used to determine the error. Attackers can use detailed information to refine or optimize their original attack, thereby increasing their chances of success.</p><p>If errors must be captured in some detail, record them in log messages, but consider what could occur if the log messages can be viewed by attackers. Highly sensitive information such as passwords should never be saved to log files.</p><p>Avoid inconsistent messaging that might accidentally tip off an attacker about internal state, such as whether a user account exists or not.</p><p>In the context of SQL Injection, error messages revealing the structure of a SQL query can help attackers tailor successful attack strings.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>운용(Operation) / 구현(Implementation)</td>
+<td>실행 환경 강화</td>
+<td>PHP를 쓸 때는 애플리케이션이 register_globals를 쓰지 않도록 설정하고 구현 중에도 이 기능에 의존하지 않게 개발하되, <a href="../95/">CWE-95</a>, <a href="https://cwe.mitre.org/data/definitions/621.html" target="_blank" rel="noopener">CWE-621</a> 같은 약점에 노출되는 register_globals 에뮬레이션을 구현하지 않도록 주의한다. <em>(유지보수 단계에도 해당)</em> <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>When using PHP, configure the application so that it does not use register_globals. During implementation, develop the application so that it does not rely on this feature, but be wary of implementing a register_globals emulation that is subject to weaknesses such as CWE-95, CWE-621, and similar issues.</p></div></details></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mit-test">통합 및 시험 (<a href="../../ch6-integration-test/">본문 제6장</a>)<a class="headerlink" href="#mit-test" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<p>원문 완화책 없음</p>
+<h3 id="mit-maint">유지보수 (<a href="../../ch7-maintenance/">본문 제7장</a>)<a class="headerlink" href="#mit-maint" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch2-framework/#sec-2-2" title="CWE가 완화책과 발생 지점에 붙인 단계(스키마 열거값 17종). 이 가이드는 수명주기 5단계로 옮겨 쓴다">CWE 단계(Phase)</a></th>
+<th><a href="../../appendix/f-glossary/#col-strategy" title="CWE 완화책이 약점을 막는 방식. 예: 입력값 검증, 매개변수화, 실행 환경 강화">전략</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>운용(Operation)</td>
+<td>방화벽</td>
+<td>이 약점에 대한 공격을 탐지할 수 있는 애플리케이션 방화벽을 사용한다. 이는 코드를 고칠 수 없을 때(제3자가 관리하는 경우), 더 포괄적인 소프트웨어 보증 조치를 적용하는 동안의 긴급 예방책으로, 또는 심층 방어로 도움이 될 수 있다 [REF-1481]. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Use an application firewall that can detect attacks against this weakness. It can be beneficial in cases in which the code cannot be fixed (because it is controlled by a third party), as an emergency prevention measure while more comprehensive software assurance measures are applied, or to provide defense in depth [REF-1481.</p></div></details></td>
+<td>보통(Moderate) — 애플리케이션 방화벽은 모든 입력 경로를 다루지 못할 수 있고, 수신 구성요소가 여전히 처리하는 잘못된 형식의 입력 등으로 우회될 수 있으며, 기능에 따라 정상 요청을 의도치 않게 거부·변경할 수 있고, 맞춤 설정에 일부 수작업이 필요할 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">예시(나쁜 예·좋은 예)<a class="headerlink" href="#examples" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p>아래 코드는 이 가이드가 다음 상황을 가정해 <strong>새로 작성</strong>한 것이다. 정비 이력·장비 위치 기록·부품 교체 기록·임무 경로점을 담은 DB를 운용자가 입력한 일련번호·장비 번호·부품 번호·임무 코드로 조회한다. 공격자는 값에 따옴표와 OR·UNION·주석(--)을 넣어 질의 조건을 바꾼다. 예시는 DB 드라이버 없이 질의문과 바인딩 값을 출력해 질의 구조가 바뀌는지 확인한다. Python 예시는 표준 라이브러리 sqlite3의 메모리 DB로 실제 조회 결과를 본다. 언어마다 분석기·새니타이저·실행 결과로 나쁜 예는 잡히고 좋은 예는 잡히지 않음을 확인했다. 좋은 예는 그 약점 하나를 막는 최소 예이며 그대로 운용 코드가 되는 것은 아니다. 언어 상자를 눌러 펼친다.</p>
+<details class="example" id="ex-c" open="open">
+<summary>C</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+
+/* 시험용: DB 드라이버로 보내는 대신 질의문을 출력한다 */
+static void db_exec(const char *sql)
+{
+    printf("SQL&gt; %s\n", sql);
+}
+
+/* 운용자가 입력한 장비 일련번호로 정비 이력을 조회 */
+static void find_history(const char *serial)
+{
+    char sql[256];
+    snprintf(sql, sizeof sql,
+             "SELECT day, task FROM maint WHERE serial = '%s' AND site = 7",
+             serial);                       /* 입력이 질의문 구조의 일부가 된다 */
+    db_exec(sql);
+}
+
+int main(void)
+{
+    find_history("SN-1042");
+    find_history("x' OR 1=1 --");          /* 조건을 바꾸고 뒤 조건을 주석 처리 */
+    return 0;
+}</code></pre>
+<p>snprintf로 입력을 따옴표 안에 이어 붙여 질의문을 만든다. "x' OR 1=1 --"이면 조건이 항상 참이 되고 뒤의 site 조건은 주석이 되어 모든 기록이 조회된다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-c">#include &lt;stdio.h&gt;
+
+/* 시험용 바인딩 인터페이스: sqlite3_prepare_v2()/sqlite3_bind_text()와 같은 형태 */
+typedef struct { const char *sql; const char *val[4]; int n; } Stmt;
+
+static void stmt_prepare(Stmt *st, const char *sql) { st-&gt;sql = sql; st-&gt;n = 0; }
+
+static int stmt_bind_text(Stmt *st, int idx, const char *v)
+{
+    if (idx != st-&gt;n + 1 || idx &gt; 4) return -1;
+    st-&gt;val[st-&gt;n++] = v;                   /* 값은 질의문과 따로 전달된다 */
+    return 0;
+}
+
+static void stmt_step(const Stmt *st)
+{
+    printf("SQL&gt; %s\n", st-&gt;sql);
+    for (int i = 0; i &lt; st-&gt;n; ++i) printf("     ?%d &lt;- [%s]\n", i + 1, st-&gt;val[i]);
+}
+
+static void find_history(const char *serial)
+{
+    Stmt st;
+    stmt_prepare(&amp;st, "SELECT day, task FROM maint WHERE serial = ? AND site = 7");
+    if (stmt_bind_text(&amp;st, 1, serial) != 0) { puts("bind failed"); return; }
+    stmt_step(&amp;st);
+}
+
+int main(void)
+{
+    find_history("SN-1042");
+    find_history("x' OR 1=1 --");
+    return 0;
+}</code></pre>
+<p>질의문은 '?' 자리표시자를 둔 상수로 두고 값은 바인딩 함수로 따로 넘긴다(I-04). 실제 과제에서는 sqlite3_prepare_v2()와 sqlite3_bind_text()를 쓴다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>serial = 'x' OR 1=1</code> 검출, 좋은 예에서 미검출·<code>?1 &lt;- [x' OR 1=1 --]</code> 출력 확인 · 참고: MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「C 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-1 &#x27;SQL 삽입&#x27;(인쇄 3쪽) 참고</p>
+</details>
+<details class="example" id="ex-cpp">
+<summary>C++</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// 시험용: DB로 보내는 대신 질의문을 출력
+void execute(const std::string &amp;sql) { std::cout &lt;&lt; "SQL&gt; " &lt;&lt; sql &lt;&lt; '\n'; }
+
+// 운용자가 입력한 장비 번호로 장비 위치 기록을 조회
+void findRecords(const std::string &amp;device_tag) {
+    execute("SELECT id, lat, lon FROM positions WHERE device_tag = '" + device_tag +
+            "' AND classified = 0");                // 문자열을 이어 붙여 질의 구성
+}
+
+int main() {
+    findRecords("GSE11");
+    findRecords("Z' OR 'a'='a' --");                 // 비공개 위치 기록까지 조회된다
+}</code></pre>
+<p>std::string 덧셈으로 질의문을 만들어 "Z' OR 'a'='a' --"가 들어가면 classified = 0 조건이 주석 처리되어 비공개 위치 기록까지 조회된다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;utility&gt;
+#include &lt;vector&gt;
+
+// 시험용 매개변수화 질의: 질의문(고정)과 값(바인딩)을 따로 보관해 드라이버에 넘긴다
+class Query {
+public:
+    explicit Query(std::string sql) : sql_(std::move(sql)) {}
+    Query &amp;bind(std::string value) { params_.push_back(std::move(value)); return *this; }
+    void execute() const {
+        std::cout &lt;&lt; "SQL&gt; " &lt;&lt; sql_ &lt;&lt; '\n';
+        for (std::size_t i = 0; i &lt; params_.size(); ++i) {
+            std::cout &lt;&lt; "     ?" &lt;&lt; i + 1 &lt;&lt; " &lt;- [" &lt;&lt; params_[i] &lt;&lt; "]\n";
+        }
+    }
+private:
+    std::string sql_;
+    std::vector&lt;std::string&gt; params_;
+};
+
+void findRecords(const std::string &amp;device_tag) {
+    Query("SELECT id, lat, lon FROM positions WHERE device_tag = ? AND classified = 0")
+        .bind(device_tag)
+        .execute();
+}
+
+int main() {
+    findRecords("GSE11");
+    findRecords("Z' OR 'a'='a' --");
+}</code></pre>
+<p>질의문(자리표시자)과 값을 따로 보관해 드라이버에 넘기는 매개변수화 질의로 바꾼다(I-04). 값은 질의 구조가 될 수 없다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>device_tag = 'Z' OR 'a'='a'</code> 검출, 좋은 예에서 미검출·<code>?1 &lt;- [Z' OR 'a'='a' --]</code> 출력 확인 · 참고: MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-cs">
+<summary>C#</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Data;
+using System.Data.Common;
+using System.Globalization;
+
+Console.WriteLine($"{typeof(MissionStore).Name} compiled");
+
+// 임무 계획 DB에서 운용자가 입력한 임무 코드로 승인된 경로점 개수를 센다
+static class MissionStore
+{
+    public static int CountWaypoints(DbConnection db, string missionCode)
+    {
+        ArgumentNullException.ThrowIfNull(db);
+        if (db.State != ConnectionState.Open)
+        {
+            db.Open();
+        }
+        using DbCommand cmd = db.CreateCommand();
+        cmd.CommandTimeout = 5;
+        // 입력을 보간 문자열로 질의문에 넣는다
+        cmd.CommandText = $"SELECT COUNT(*) FROM waypoints WHERE approved = 1 AND mission = '{missionCode}'";
+        object? n = cmd.ExecuteScalar();
+        return n is null ? 0 : Convert.ToInt32(n, CultureInfo.InvariantCulture);
+    }
+}</code></pre>
+<p>DbCommand.CommandText에 입력을 보간 문자열로 넣는다. .NET 분석기 CA2100(SQL 쿼리의 보안 취약성 검토)이 상수가 아닌 질의문을 경고한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-csharp">using System.Data;
+using System.Data.Common;
+using System.Globalization;
+
+Console.WriteLine($"{typeof(MissionStore).Name} compiled");
+
+static class MissionStore
+{
+    public static int CountWaypoints(DbConnection db, string missionCode)
+    {
+        ArgumentNullException.ThrowIfNull(db);
+        if (db.State != ConnectionState.Open)
+        {
+            db.Open();
+        }
+        using DbCommand cmd = db.CreateCommand();
+        cmd.CommandTimeout = 5;
+        cmd.CommandText = "SELECT COUNT(*) FROM waypoints WHERE approved = 1 AND mission = @mission";
+        DbParameter p = cmd.CreateParameter();
+        p.ParameterName = "@mission";
+        p.DbType = DbType.String;
+        p.Value = missionCode;                   // 값은 매개변수로 따로 전달
+        cmd.Parameters.Add(p);
+        object? n = cmd.ExecuteScalar();
+        return n is null ? 0 : Convert.ToInt32(n, CultureInfo.InvariantCulture);
+    }
+}</code></pre>
+<p>CommandText는 '@mission' 매개변수를 둔 상수로 두고, CreateParameter로 만든 매개변수에 값을 넣어 Parameters에 추가한다(I-04).</p>
+<p class="ex-meta">검증: .NET 컴파일러·분석기 — 나쁜 예에서 <code>CA2100</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성</p>
+</details>
+<details class="example" id="ex-java">
+<summary>Java</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Example {
+    // 시험용 가짜 DB 연결: 드라이버 없이 호출된 질의만 출력한다
+    static &lt;T&gt; T fake(Class&lt;T&gt; type) {
+        return type.cast(Proxy.newProxyInstance(Example.class.getClassLoader(), new Class&lt;?&gt;[] {type},
+                (proxy, m, a) -&gt; switch (m.getName()) {
+                    case "createStatement" -&gt; fake(Statement.class);
+                    case "executeQuery" -&gt; { System.out.println("SQL&gt; " + a[0]); yield null; }
+                    default -&gt; null;
+                }));
+    }
+
+    // 정비 기록 DB에서 운용자가 입력한 부품 번호로 교체 이력을 조회
+    static void findReplacements(Connection db, String partNo) throws SQLException {
+        Statement st = db.createStatement();
+        st.executeQuery("SELECT day, tech FROM parts_log WHERE part_no = '" + partNo + "'");  // 이어 붙임
+    }
+
+    public static void main(String[] args) throws SQLException {
+        Connection db = fake(Connection.class);
+        findReplacements(db, "P-77812");
+        findReplacements(db, "x' UNION SELECT user, pw FROM accounts --");
+    }
+}</code></pre>
+<p>Statement.executeQuery에 입력을 이어 붙인 문자열을 넘긴다. UNION SELECT가 붙으면 다른 테이블(계정 정보)까지 조회된다. 예시의 DB 연결은 호출 내용만 출력하는 시험용 Proxy다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-java">import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Example {
+    // 시험용 가짜 DB 연결: 드라이버 없이 질의문과 바인딩 값을 출력한다
+    static &lt;T&gt; T fake(Class&lt;T&gt; type) {
+        return type.cast(Proxy.newProxyInstance(Example.class.getClassLoader(), new Class&lt;?&gt;[] {type},
+                (proxy, m, a) -&gt; switch (m.getName()) {
+                    case "prepareStatement" -&gt; { System.out.println("SQL&gt; " + a[0]); yield fake(PreparedStatement.class); }
+                    case "setString" -&gt; { System.out.println("     ?" + a[0] + " &lt;- [" + a[1] + "]"); yield null; }
+                    default -&gt; null;
+                }));
+    }
+
+    static void findReplacements(Connection db, String partNo) throws SQLException {
+        try (PreparedStatement ps = db.prepareStatement("SELECT day, tech FROM parts_log WHERE part_no = ?")) {
+            ps.setString(1, partNo);             // 값은 질의문과 따로 바인딩
+            try (ResultSet rows = ps.executeQuery()) {
+                // 조회 결과를 읽는다(시험용 연결이라 생략). 문과 결과는 어떤 경로로 나가도 닫힌다
+            }
+        }
+    }
+
+    public static void main(String[] args) throws SQLException {
+        Connection db = fake(Connection.class);
+        findReplacements(db, "P-77812");
+        findReplacements(db, "x' UNION SELECT user, pw FROM accounts --");
+    }
+}</code></pre>
+<p>PreparedStatement의 '?' 자리표시자와 setString 바인딩으로 바꾼다(I-04). 정렬 열·테이블 이름처럼 바인딩할 수 없는 부분은 허용목록으로 고른다.</p>
+<p class="ex-meta">검증: 실행 결과 — 나쁜 예에서 <code>part_no = 'x' UNION</code> 검출, 좋은 예에서 미검출·<code>?1 &lt;- [x' UNION SELECT</code> 출력 확인 · 참고: MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙인 질의문) 참고, 이 가이드가 새로 작성 / KISA·행정안전부 「Java 시큐어코딩 가이드」(3판) 입력데이터 검증 및 표현 1-1 &#x27;SQL 삽입&#x27;(인쇄 3쪽) 참고</p>
+</details>
+<details class="example" id="ex-py">
+<summary>Python</summary>
+<p class="ex-bad"><strong>나쁜 예</strong></p>
+<pre class="highlight"><code class="language-python">import sqlite3
+
+db = sqlite3.connect(":memory:")
+db.execute("CREATE TABLE repair (part_no TEXT, action TEXT, crew TEXT)")
+db.executemany("INSERT INTO repair VALUES (?, ?, ?)",
+               [("HYD-221", "seal replaced", "crew-3"),
+                ("NAV-907", "IMU recalibrated", "crew-1")])
+
+
+# 운용자가 입력한 부품 번호로 정비 이력을 찾는다
+def history(part_no):
+    sql = "SELECT action, crew FROM repair WHERE part_no = '%s'" % part_no   # 입력을 SQL 문장에 끼워 넣음
+    return db.execute(sql).fetchall()
+
+
+print(history("HYD-221"))
+print(history("x' OR '1'='1"))          # 조건이 늘 참이 되어 모든 이력이 나온다</code></pre>
+<p>부품 번호를 % 서식으로 SQL 문장에 끼워 넣는다. "x' OR '1'='1"이 들어오면 WHERE 조건이 늘 참이 되어 다른 부품의 정비 이력까지 모두 나온다. Bandit은 이 호출을 B608(문자열로 조립한 질의를 통한 SQL 삽입 가능성)로 보고한다.</p>
+<p class="ex-good"><strong>좋은 예</strong></p>
+<pre class="highlight"><code class="language-python">import sqlite3
+
+db = sqlite3.connect(":memory:")
+db.execute("CREATE TABLE repair (part_no TEXT, action TEXT, crew TEXT)")
+db.executemany("INSERT INTO repair VALUES (?, ?, ?)",
+               [("HYD-221", "seal replaced", "crew-3"),
+                ("NAV-907", "IMU recalibrated", "crew-1")])
+
+
+def history(part_no):
+    # 자리표시자(?)로 값만 따로 넘긴다: 입력은 SQL 문법으로 해석되지 않는다
+    cur = db.execute("SELECT action, crew FROM repair WHERE part_no = ?", (part_no,))
+    return cur.fetchall()
+
+
+print(history("HYD-221"))
+print(history("x' OR '1'='1"))</code></pre>
+<p>자리표시자(?)를 쓰고 값은 execute의 두 번째 인자로 넘긴다(I-04). DB 드라이버가 값을 SQL 문법과 분리해 다루므로 따옴표가 들어와도 부품 번호 글자로만 비교된다. 표 이름·정렬 열처럼 자리표시자로 넘길 수 없는 부분은 허용목록에서 고른다.</p>
+<p class="ex-meta">검증: Bandit — 나쁜 예에서 <code>B608</code> 검출, 좋은 예에서 미검출 · 참고: MITRE CWE-89 Demonstrative Example 2(입력을 이어 붙여 검색 질의를 만듦) 참고, 이 가이드가 새로 작성 / 과학기술정보통신부·한국인터넷진흥원 「Python 시큐어코딩 가이드」(2023. 12.) 입력데이터 검증 및 표현 1-1 &#x27;SQL 삽입&#x27;(인쇄 8쪽) 참고</p>
+</details>
+<details class="cwe-orig"><summary>MITRE 원문 예시(Demonstrative Examples, 영문 6건)</summary><div lang="en"><p><b>Example 1.</b> In 2008, a large number of web servers were compromised using the same SQL injection attack string. This single string worked against many different programs. The SQL injection was then used to modify the web sites to serve malicious code.</p><p><b>Example 2.</b> The following code dynamically constructs and executes a SQL query that searches for items matching a specified name. The query restricts the items displayed to those where owner matches the user name of the currently-authenticated user.</p><p><i>Bad / C#</i></p><pre><code>...
+string userName = ctx.getAuthenticatedUserName();
+string query = &quot;SELECT * FROM items WHERE owner = &#x27;&quot; + userName + &quot;&#x27; AND itemname = &#x27;&quot; + ItemName.Text + &quot;&#x27;&quot;;
+sda = new SqlDataAdapter(query, conn);
+DataTable dt = new DataTable();
+sda.Fill(dt);
+...</code></pre><p>The query that this code intends to execute follows:</p><p><i>Informative</i></p><pre><code>SELECT * FROM items WHERE owner = &lt;userName&gt; AND itemname = &lt;itemName&gt;;</code></pre><p>However, because the query is constructed dynamically by concatenating a constant base query string and a user input string, the query only behaves correctly if itemName does not contain a single-quote character. If an attacker with the user name wiley enters the string:</p><p><i>Attack</i></p><pre><code>name&#x27; OR &#x27;a&#x27;=&#x27;a</code></pre><p>for itemName, then the query becomes the following:</p><p><i>Attack</i></p><pre><code>SELECT * FROM items WHERE owner = &#x27;wiley&#x27; AND itemname = &#x27;name&#x27; OR &#x27;a&#x27;=&#x27;a&#x27;;</code></pre><p>The addition of the:</p><p><i>Attack</i></p><pre><code>OR &#x27;a&#x27;=&#x27;a</code></pre><p>condition causes the WHERE clause to always evaluate to true, so the query becomes logically equivalent to the much simpler query:</p><p><i>Attack</i></p><pre><code>SELECT * FROM items;</code></pre><p>This simplification of the query allows the attacker to bypass the requirement that the query only return items owned by the authenticated user; the query now returns all entries stored in the items table, regardless of their specified owner.</p><p><b>Example 3.</b> This example examines the effects of a different malicious value passed to the query constructed and executed in the previous example.</p><p>If an attacker with the user name wiley enters the string:</p><p><i>Attack</i></p><pre><code>name&#x27;; DELETE FROM items; --</code></pre><p>for itemName, then the query becomes the following two queries:</p><p><i>Attack / SQL</i></p><pre><code>SELECT * FROM items WHERE owner = &#x27;wiley&#x27; AND itemname = &#x27;name&#x27;;
+DELETE FROM items;
+
+                     --&#x27;</code></pre><p>Many database servers, including Microsoft(R) SQL Server 2000, allow multiple SQL statements separated by semicolons to be executed at once. While this attack string results in an error on Oracle and other database servers that do not allow the batch-execution of statements separated by semicolons, on databases that do allow batch execution, this type of attack allows the attacker to execute arbitrary commands against the database.</p><p>Notice the trailing pair of hyphens (--), which specifies to most database servers that the remainder of the statement is to be treated as a comment and not executed. In this case the comment character serves to remove the trailing single-quote left over from the modified query. On a database where comments are not allowed to be used in this way, the general attack could still be made effective using a trick similar to the one shown in the previous example.</p><p>If an attacker enters the string</p><p><i>Attack</i></p><pre><code>name&#x27;; DELETE FROM items; SELECT * FROM items WHERE &#x27;a&#x27;=&#x27;a</code></pre><p>Then the following three valid statements will be created:</p><p><i>Attack</i></p><pre><code>SELECT * FROM items WHERE owner = &#x27;wiley&#x27; AND itemname = &#x27;name&#x27;;
+DELETE FROM items;
+SELECT * FROM items WHERE &#x27;a&#x27;=&#x27;a&#x27;;</code></pre><p>One traditional approach to preventing SQL injection attacks is to handle them as an input validation problem and either accept only characters from an allowlist of safe values or identify and escape a denylist of potentially malicious values. Allowlists can be a very effective means of enforcing strict input validation rules, but parameterized SQL statements require less maintenance and can offer more guarantees with respect to security. As is almost always the case, denylisting is riddled with loopholes that make it ineffective at preventing SQL injection attacks. For example, attackers can:</p><p>Target fields that are not quoted Find ways to bypass the need for certain escaped meta-characters Use stored procedures to hide the injected meta-characters.</p><p>Manually escaping characters in input to SQL queries can help, but it will not make your application secure from SQL injection attacks.</p><p>Another solution commonly proposed for dealing with SQL injection attacks is to use stored procedures. Although stored procedures prevent some types of SQL injection attacks, they do not protect against many others. For example, the following PL/SQL procedure is vulnerable to the same SQL injection attack shown in the first example.</p><p><i>Bad / SQL</i></p><pre><code>procedure get_item ( itm_cv IN OUT ItmCurTyp, usr in varchar2, itm in varchar2)
+is open itm_cv for
+&#x27; SELECT * FROM items WHERE &#x27; || &#x27;owner = &#x27;|| usr || &#x27; AND itemname = &#x27; || itm || &#x27;;
+end get_item;</code></pre><p>Stored procedures typically help prevent SQL injection attacks by limiting the types of statements that can be passed to their parameters. However, there are many ways around the limitations and many interesting statements that can still be passed to stored procedures. Again, stored procedures can prevent some exploits, but they will not make your application secure against SQL injection attacks.</p><p><b>Example 4.</b> MS SQL has a built-in function that enables shell command execution. An SQL injection in such a context could be disastrous. For example, a query of the form:</p><p><i>Bad / SQL</i></p><pre><code>SELECT ITEM,PRICE FROM PRODUCT WHERE ITEM_CATEGORY=&#x27;$user_input&#x27; ORDER BY PRICE</code></pre><p>Where $user_input is taken from an untrusted source.</p><p>If the user provides the string:</p><p><i>Attack</i></p><pre><code>&#x27;; exec master..xp_cmdshell &#x27;dir&#x27; --</code></pre><p>The query will take the following form:</p><p><i>Attack</i></p><pre><code>SELECT ITEM,PRICE FROM PRODUCT WHERE ITEM_CATEGORY=&#x27;&#x27;; exec master..xp_cmdshell &#x27;dir&#x27; --&#x27; ORDER BY PRICE</code></pre><p>Now, this query can be broken down into:</p><p>a first SQL query: SELECT ITEM,PRICE FROM PRODUCT WHERE ITEM_CATEGORY=&#x27;&#x27;; a second SQL query, which executes the dir command in the shell: exec master..xp_cmdshell &#x27;dir&#x27; an MS SQL comment: --&#x27; ORDER BY PRICE</p><p>As can be seen, the malicious input changes the semantics of the query into a query, a shell command execution and a comment.</p><p><b>Example 5.</b> This code intends to print a message summary given the message ID.</p><p><i>Bad / PHP</i></p><pre><code>$id = $_COOKIE[&quot;mid&quot;];
+mysql_query(&quot;SELECT MessageID, Subject FROM messages WHERE MessageID = &#x27;$id&#x27;&quot;);</code></pre><p>The programmer may have skipped any input validation on $id under the assumption that attackers cannot modify the cookie. However, this is easy to do with custom client code or even in the web browser.</p><p>While $id is wrapped in single quotes in the call to mysql_query(), an attacker could simply change the incoming mid cookie to:</p><p><i>Attack</i></p><pre><code>1432&#x27; or &#x27;1&#x27; = &#x27;1</code></pre><p>This would produce the resulting query:</p><p><i>Result</i></p><pre><code>SELECT MessageID, Subject FROM messages WHERE MessageID = &#x27;1432&#x27; or &#x27;1&#x27; = &#x27;1&#x27;</code></pre><p>Not only will this retrieve message number 1432, it will retrieve all other messages.</p><p>In this case, the programmer could apply a simple modification to the code to eliminate the SQL injection:</p><p><i>Good / PHP</i></p><pre><code>$id = intval($_COOKIE[&quot;mid&quot;]);
+mysql_query(&quot;SELECT MessageID, Subject FROM messages WHERE MessageID = &#x27;$id&#x27;&quot;);</code></pre><p>However, if this code is intended to support multiple users with different message boxes, the code might also need an access control check (CWE-285) to ensure that the application user has the permission to see that message.</p><p><b>Example 6.</b> This example attempts to take a last name provided by a user and enter it into a database.</p><p><i>Bad / Perl</i></p><pre><code>$userKey = getUserID();
+$name = getUserInput();
+
+                     # ensure only letters, hyphens and apostrophe are allowed
+
+$name = allowList($name, &quot;^a-zA-z&#x27;-$&quot;);
+$query = &quot;INSERT INTO last_names VALUES(&#x27;$userKey&#x27;, &#x27;$name&#x27;)&quot;;</code></pre><p>While the programmer applies an allowlist to the user input, it has shortcomings. First of all, the user is still allowed to provide hyphens, which are used as comment structures in SQL. If a user specifies &quot;--&quot; then the remainder of the statement will be treated as a comment, which may bypass security logic. Furthermore, the allowlist permits the apostrophe, which is also a data / command separator in SQL. If a user supplies a name with an apostrophe, they may be able to alter the structure of the whole statement and even change control flow of the program, possibly accessing or modifying confidential information. In this situation, both the hyphen and apostrophe are legitimate characters for a last name and permitting them is required. Instead, a programmer may want to use a prepared statement or apply an encoding routine to the input to prevent any data / directive misinterpretations.</p></div></details>
+
+<h2 id="detection">탐지 방법(Detection Methods)<a class="headerlink" href="#detection" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><a href="../../appendix/f-glossary/#col-method" title="약점을 찾는 기법. 예: 자동 정적 분석, 퍼징. 같은 행의 효과성과 함께 본다">방법</a></th>
+<th>요지</th>
+<th><a href="../../appendix/f-glossary/#col-effectiveness" title="MITRE가 매긴 완화책·탐지 방법의 효과 수준. 예: 높음, 보통, 제한적, 심층 방어">효과성</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자동 정적 분석</td>
+<td>이 약점은 흔히 자동화된 정적 분석 도구로 탐지할 수 있고 많은 최신 도구가 데이터 흐름 분석이나 제약 기반 기법으로 오탐을 줄이지만, 올바른 입력값 검증을 인식하지 못해 오탐이 생기거나, SQL 명령을 간접 호출하는 자체 API 함수·서드파티 라이브러리 사용을(특히 그 코드를 분석할 수 없을 때) 탐지하지 못해 미탐이 생길 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>This weakness can often be detected using automated static analysis tools. Many modern tools use data flow analysis or constraint-based techniques to minimize the number of false positives.</p><p>Automated static analysis might not be able to recognize when proper input validation is being performed, leading to false positives - i.e., warnings that do not have any security consequences or do not require any code changes.</p><p>Automated static analysis might not be able to detect the usage of custom API functions or third-party libraries that indirectly invoke SQL commands, leading to false negatives - especially if the API/library code is not available for analysis.</p></div></details></td>
+<td>100% 정확도와 탐지 범위를 달성할 수 없으므로 완전한 해결책은 아니다.</td>
+</tr>
+<tr>
+<td>자동 동적 분석</td>
+<td>퍼징(fuzzing)·강건성 시험·오류 주입처럼 다양한 입력의 대규모 시험 모음으로 소프트웨어와 상호작용하는 동적 도구·기법으로 이 약점을 탐지할 수 있으며, 이때 동작이 느려질 수는 있어도 불안정해지거나 비정상 종료되거나 잘못된 결과를 내서는 안 된다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>This weakness can be detected using dynamic tools and techniques that interact with the software using large test suites with many diverse inputs, such as fuzz testing (fuzzing), robustness testing, and fault injection. The software&#x27;s operation may slow down, but it should not become unstable, crash, or generate incorrect results.</p></div></details></td>
+<td>보통(Moderate)</td>
+</tr>
+<tr>
+<td>수동 분석</td>
+<td>수동 분석은 이 약점을 찾는 데 유용할 수 있지만 제한된 시간 안에 원하는 검토 범위에 이르지 못할 수 있으며, 모든 입력을 고려해야 하는 약점은 공격 표면이 너무 클 수 있어 더 어렵다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Manual analysis can be useful for finding this weakness, but it might not achieve desired code coverage within limited time constraints. This becomes difficult for weaknesses that must be considered for all inputs, since the attack surface can be too large.</p></div></details></td>
+<td>—</td>
+</tr>
+<tr>
+<td>자동 정적 분석(바이너리·바이트코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 바이트코드 약점 분석(디스어셈블러와 소스코드 약점 분석 포함), 바이너리 약점 분석(디스어셈블러와 소스코드 약점 분석 포함). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Bytecode Weakness Analysis - including disassembler + source code weakness analysis<br>      Binary Weakness Analysis - including disassembler + source code weakness analysis</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>동적 분석(결과 자동 해석)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 데이터베이스 스캐너. 부분 적용에 비용 효과적: 웹 애플리케이션 스캐너, 웹 서비스 스캐너. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Database Scanners<br>    <br>        Cost effective for partial coverage:</p><p>Web Application Scanner<br>      Web Services Scanner</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>동적 분석(결과 수동 해석)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 부분 적용에 비용 효과적: 퍼징 도구, 프레임워크 기반 퍼징 도구. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Cost effective for partial coverage:</p><p>Fuzz Tester<br>       Framework-based Fuzzer</p></div></details></td>
+<td>부분 적용(SOAR Partial)</td>
+</tr>
+<tr>
+<td>수동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 수동 소스코드 리뷰(인스펙션 제외). 부분 적용에 비용 효과적: 집중 수동 표본 점검(소스 대상 집중 수동 분석). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Manual Source Code Review (not inspections)<br>  <br>        Cost effective for partial coverage:</p><p>Focused Manual Spotcheck - Focused manual analysis of source</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>자동 정적 분석(소스코드)</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 소스코드 약점 분석기, 상황 설정형 소스코드 약점 분석기. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Source code Weakness Analyzer<br>        Context-configured Source Code Weakness Analyzer</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+<tr>
+<td>아키텍처·설계 검토</td>
+<td>SOAR [REF-1479]에 따르면 다음 탐지 기법이 유용할 수 있다 — 비용 효과 매우 높음: 정형 기법 / 구성에 의한 정확성(Correct-By-Construction). 부분 적용에 비용 효과적: 인스펙션(IEEE 1028 표준, 요구사항·설계·소스코드 등에 적용 가능). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>According to SOAR [REF-1479], the following detection techniques may be useful:</p><p>Highly cost effective:</p><p>Formal Methods / Correct-By-Construction<br>   <br>        Cost effective for partial coverage:</p><p>Inspection (IEEE 1028 standard) (can apply to requirements, design, source code, etc.)</p></div></details></td>
+<td>높음(High)</td>
+</tr>
+</tbody>
+</table>
+<p>탐지 방법별 시험 활동은 <a href="../../ch6-integration-test/">제6장</a>에 있다(아키텍처·설계 검토는 <a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토).</p>
+<p><strong>도구 미지원 시 대안.</strong> 공통안은 <a href="../../ch6-integration-test/#sec-6-2">6.2</a>에 있고, 이 절에는 이 항목의 고유안만 적는다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="../../ch6-integration-test/#sec-6-2" title="그 보안약점을 도구 없이 찾는 방법과 활동. 도구가 지원하지 않을 때의 고유 대안이다">점검 착안점</a></th>
+<th>활동</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB 접근 코드에서 질의문이 sprintf·문자열 덧셈·보간 문자열로 만들어지는 곳을 찾고, 값이 바인딩 매개변수(sqlite3_bind_*, PreparedStatement, DbParameter)로만 들어가는지 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a>·<a href="../../ch5-implementation/#i-04">I-04</a></td>
+<td>[CWE] CWE-89 완화책(Architecture and Design: Parameterization) · [표준] SEI CERT IDS00-J</td>
+</tr>
+<tr>
+<td>입력 필드에 "' OR 1=1 --", UNION SELECT, 주석 기호를 넣어 조회 건수가 늘거나 다른 테이블 값이 나오는지 시험한다. DB 연결을 실행된 질의문을 기록하는 시험용 대체 구현으로 바꾸면 실제 DB 없이도 질의문을 확인할 수 있다.</td>
+<td><a href="../../ch6-integration-test/#t-05">T-05</a>·<a href="../../ch6-integration-test/#t-04">T-04</a></td>
+<td>[예시] CWE-89 예시 검증(실행된 질의문에 삽입 구문이 남는지 확인)</td>
+</tr>
+<tr>
+<td>테이블·열 이름이나 정렬 방향처럼 바인딩할 수 없는 부분이 외부 입력으로 정해지는 곳은 고정 목록에서 고르는지 따로 확인한다.</td>
+<td><a href="../../ch5-implementation/#i-09">I-09</a></td>
+<td>[CWE] CWE-89 완화책(Architecture and Design: Enforcement by Conversion)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>① 원문 탐지 방법(원문 효과성별): 높음: 자동 정적 분석(바이너리·바이트코드), 동적 분석(결과 자동 해석), 수동 정적 분석(소스코드), 아키텍처·설계 검토 / 보통: 자동 동적 분석 / 부분 적용: 동적 분석(결과 수동 해석) / 효과 등급 없음: 수동 분석. 각 방법의 시험 활동은 6.2의 대응표를 따른다.</li>
+<li>③ SEI CERT 대응 규칙: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids00-j" target="_blank" rel="noopener">IDS00-J</a></li>
+</ul>
+<h2 id="coverage">이 가이드에서 다루는 곳<a class="headerlink" href="#coverage" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<p><strong><a href="../../appendix/a-weakness-list/#a-cwe-89">부록 A의 이 항목 행</a>에 있는 단계별 지침</strong> (요구사항 분석 행은 기준선 활동·환경 지침과 원문 완화책에서 모았다)</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>요구사항 분석</td>
+<td>—</td>
+</tr>
+<tr>
+<td>설계</td>
+<td>DB 접근 계층을 매개변수화 질의(Prepared Statement) 또는 검증된 ORM으로 일원화하고, DB 계정 권한을 최소화한다.</td>
+</tr>
+<tr>
+<td>구현(C·C++)</td>
+<td>SQLite 등 사용 시 sqlite3_prepare_v2()+sqlite3_bind_*()로 바인딩하고, sprintf로 질의문을 조합하지 않는다.</td>
+</tr>
+<tr>
+<td>구현(Java)</td>
+<td>PreparedStatement의 ? 바인딩을 사용하고, 정렬 열·테이블 이름 등 바인딩 불가 요소는 허용목록(allowlist)으로 매핑한다.</td>
+</tr>
+<tr>
+<td>통합 및 시험</td>
+<td>SQL 메타문자(' " -- ; /* */) 기반 퍼징(fuzzing), sqlmap 등 동적 점검, 정적 분석(오염 추적)을 수행한다.</td>
+</tr>
+<tr>
+<td>유지보수</td>
+<td>스키마·질의 변경 시 동적 질의 신규 발생 여부를 코드 리뷰 체크리스트로 확인한다.</td>
+</tr>
+<tr>
+<td>임베디드 고려</td>
+<td>SBC 내장 SQLite(운용기록·임무데이터 DB)에 적용한다. MCU에는 대개 해당하지 않는다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준선 활동 2건</strong></p>
+<ul>
+<li><a href="../../ch4-design/#d-09">D-09</a> 설계 보안성 검토 (설계)</li>
+<li><a href="../../ch5-implementation/#i-04">I-04</a> 명령·질의·경로·자원 식별자 무력화(매개변수화) (구현)</li>
+</ul>
+<p><strong>모든 항목에 공통인 시험 활동.</strong> <a href="../../ch6-integration-test/#t-01">T-01</a> 정적시험과 <a href="../../ch6-integration-test/#t-02">T-02</a> 타깃 동적시험은 대상 약점을 가리지 않고 모든 과제가 수행한다.</p>
+<p><strong>환경 지침 5건.</strong> 과제 환경에 맞는 지침은 <a href="../../selection-tool/">지침 선택 도구</a>로 고른다. 축별로 최대 8건을 보이고 나머지는 <a href="../../appendix/c-environment-guides/">부록 C</a>에서 찾는다.</p>
+<table>
+<thead>
+<tr>
+<th>축</th>
+<th>지침</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>탑재 환경 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#pc-02">PC-02</a> 외부 연동 신뢰 경계 정의, <a href="../../appendix/c-environment-guides/#pc-05">PC-05</a> 명령·질의 매개변수화</td>
+</tr>
+<tr>
+<td>IDE/컴파일러 (1건)</td>
+<td><a href="../../appendix/c-environment-guides/#msvc-05">MSVC-05</a> C# 프로젝트 보안 설정</td>
+</tr>
+<tr>
+<td>개발 언어 (2건)</td>
+<td><a href="../../appendix/c-environment-guides/#lcs-09">LCS-09</a> Roslyn 분석기와 경고 오류화, <a href="../../appendix/c-environment-guides/#lj-04">LJ-04</a> 삽입·경로 검증</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">관련 규칙·사례<a class="headerlink" href="#related" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<ul>
+<li><strong>SEI CERT 규칙</strong>: <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/input-validation-and-data-sanitization-ids/ids00-j" target="_blank" rel="noopener">IDS00-J</a></li>
+<li><strong>상위 항목</strong>(전체 약점 계층 View 1000): <a href="https://cwe.mitre.org/data/definitions/943.html" target="_blank" rel="noopener">CWE-943</a></li>
+<li><strong>연관 항목</strong>: 앞설 수 있음(CanFollow) <a href="https://cwe.mitre.org/data/definitions/456.html" target="_blank" rel="noopener">CWE-456</a></li>
+</ul>
+<p><strong>관찰 사례</strong>(원문 Observed Examples 15건 중 앞의 8건, 요지는 한글 요약이고 원문은 접은 상자)</p>
+<table>
+<thead>
+<tr>
+<th>참조</th>
+<th>요지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2024-6847" target="_blank" rel="noopener">CVE-2024-6847</a></td>
+<td>AI 챗봇에서 대화 메시지를 통해 SQL 삽입이 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in AI chatbot via a conversation message</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2025-26794" target="_blank" rel="noopener">CVE-2025-26794</a></td>
+<td>전자우편 에이전트의 SQLite 연동 부분에서 SQL 삽입이 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in e-mail agent through SQLite integration</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2023-32530" target="_blank" rel="noopener">CVE-2023-32530</a></td>
+<td>보안 제품 대시보드에서 조작된 인증서 필드로 SQL 삽입이 일어난다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in security product dashboard using crafted certificate fields</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-42258" target="_blank" rel="noopener">CVE-2021-42258</a></td>
+<td>근무시간 기록·청구 소프트웨어에서 SQL 삽입이 일어난다(CISA KEV에 따르면 실제 악용됨). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in time and billing software, as exploited in the wild per CISA KEV.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2021-27101" target="_blank" rel="noopener">CVE-2021-27101</a></td>
+<td>파일 전송 시스템에서 조작된 Host 헤더로 SQL 삽입이 일어난다(CISA KEV에 따르면 실제 악용됨). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in file-transfer system via a crafted Host header, as exploited in the wild per CISA KEV.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2020-12271" target="_blank" rel="noopener">CVE-2020-12271</a></td>
+<td>방화벽 제품의 관리자 인터페이스나 사용자 포털에서 SQL 삽입이 일어난다(CISA KEV에 따르면 실제 악용됨). <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>SQL injection in firewall product&#x27;s admin interface or user portal, as exploited in the wild per CISA KEV.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2019-3792" target="_blank" rel="noopener">CVE-2019-3792</a></td>
+<td>Go로 작성된 자동화 시스템의 API에 SQL 삽입 취약점이 있어 공격자가 권한이 필요한 데이터를 읽을 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>An automation system written in Go contains an API that is vulnerable to SQL injection allowing the attacker to read privileged data.</p></div></details></td>
+</tr>
+<tr>
+<td><a href="https://www.cve.org/CVERecord?id=CVE-2004-0366" target="_blank" rel="noopener">CVE-2004-0366</a></td>
+<td>연쇄: 데이터베이스 인증용 라이브러리의 SQL 삽입 결함으로 SQL 삽입과 인증 우회를 할 수 있다. <details class="cwe-orig"><summary>원문</summary><div lang="en"><p>Chain: SQL injection in library intended for database authentication allows SQL injection and authentication bypass.</p></div></details></td>
+</tr>
+</tbody>
+</table>
+<details class="cwe-orig"><summary>다른 분류 체계 대응(원문)</summary>
+<table><thead><tr><th>분류 체계</th><th>ID</th><th>항목</th></tr></thead><tbody>
+<tr><td>PLOVER</td><td></td><td lang="en">SQL injection</td></tr>
+<tr><td>7 Pernicious Kingdoms</td><td></td><td lang="en">SQL Injection</td></tr>
+<tr><td>CLASP</td><td></td><td lang="en">SQL injection</td></tr>
+<tr><td>OWASP Top Ten 2007</td><td>A2</td><td lang="en">Injection Flaws</td></tr>
+<tr><td>OWASP Top Ten 2004</td><td>A1</td><td lang="en">Unvalidated Input</td></tr>
+<tr><td>OWASP Top Ten 2004</td><td>A6</td><td lang="en">Injection Flaws</td></tr>
+<tr><td>WASC</td><td>19</td><td lang="en">SQL Injection</td></tr>
+<tr><td>Software Fault Patterns</td><td>SFP24</td><td lang="en">Tainted input to command</td></tr>
+<tr><td>OMG ASCSM</td><td>ASCSM-CWE-89</td><td lang="en"></td></tr>
+<tr><td>OpenSSF Secure Coding Guide for Python</td><td>pyscg-0010</td><td lang="en">Prevent SQL Injection</td></tr>
+<tr><td>OWASP Golang Secure Coding Practices Guide</td><td></td><td lang="en">Database Security</td></tr>
+</tbody></table></details>
+
+<h2 id="sources">출처<a class="headerlink" href="#sources" title="이 절의 고정 주소(누르면 주소창에 이 절 주소가 나온다)">&para;</a></h2>
+<div class="cwe-src">
+<p>MITRE CWE 5.0 <a href="https://cwe.mitre.org/data/definitions/89.html" target="_blank" rel="noopener">CWE-89</a> (XML 배포 파일 cwec_v5.0.xml, 2026. 10. 28.). 영문 원문 © 2006–2026 The MITRE Corporation. CWE™는 The MITRE Corporation의 상표다. 원문은 <a href="https://cwe.mitre.org/about/termsofuse.html" target="_blank" rel="noopener">CWE 이용 조건</a>에 따라 저작권 표시·이용 허락 문구와 함께 복제했다(이용 허락 문구 전문은 <a href="../#license">규칙별 해설 색인</a>). 원문은 'as is'로 제공된다. 한글 해설은 이 가이드(작성자 minkwanchoi)의 비공식 번역·요약이며, 원문과 다르면 원문이 우선한다.</p>
+</div>
+<details class="cwe-orig"><summary>CWE 이용 허락 문구(원문)</summary><div lang="en"><p>CWE™ is free to use by any organization or individual for any research, development, and/or commercial purposes, per these CWE Terms of Use. Accordingly, The MITRE Corporation hereby grants you a non-exclusive, royalty-free license to use CWE for research, development, and commercial purposes. Any copy you make for such purposes is authorized on the condition that you reproduce MITRE’s copyright designation and this license in any such copy. CWE is a trademark of The MITRE Corporation.</p></div></details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  맨위로
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="하단/푸터" >
+        
+          
+          <a href="../78/" class="md-footer__link md-footer__link--prev" aria-label="이전: CWE-78 운영체제 명령어 삽입(OS command injection)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                이전
+              </span>
+              <div class="md-ellipsis">
+                CWE-78 운영체제 명령어 삽입(OS command injection)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../95/" class="md-footer__link md-footer__link--next" aria-label="다음: CWE-95 동적으로 평가하는 코드의 지시문 무력화 미흡(Eval 삽입)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                다음
+              </span>
+              <div class="md-ellipsis">
+                CWE-95 동적으로 평가하는 코드의 지시문 무력화 미흡(Eval 삽입)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      v1.0.0 · 기준일 2026. 11. 2. · CWE 5.0 · 매뉴얼 제2024-6호 · <a href="../../changelog/">변경 이력</a><br>© 2026 minkwanchoi · MIT 라이선스(제3자 자료 제외) · <a href="../../notices/">출처와 이용 조건</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/minkwanchoi/ws-cwe-guide" target="_blank" rel="noopener" title="GitHub 저장소" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.top", "navigation.footer", "navigation.indexes", "search.highlight", "toc.follow", "content.code.copy", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": {"default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/view-filter.js"></script>
+      
+    
+  </body>
+</html>
