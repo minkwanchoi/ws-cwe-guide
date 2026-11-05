@@ -16,6 +16,12 @@
 
 > 이 가이드는 준수 의무를 정하는 규정이 아니다. 오픈소스 사례는 지침이 실제 임베디드 코드에서 쓰이는 방식을 보여 줄 뿐 무기체계 적합성을 입증하지 않는다.
 
+## 30초 소개
+
+![지침 선택 도구로 개발환경을 고르고, 수명주기 단계별 지침·정적 분석 도구 미지원 대안·예시 코드·온라인판과 폐쇄망판을 차례로 보여 주는 화면](media/intro-preview.gif)
+
+<sub>v1.0.0 화면 예시. 예시 코드는 이 가이드가 새로 작성한 것이다.</sub>
+
 ## 저장소 구성
 
 ```
@@ -34,6 +40,7 @@ scripts/
   check_links.py       근거 링크 실존 확인
   gen_*.py, linkify.py, lib.py, templates/
 docs/, site/, site-offline/, site-single/, dist/   생성물(커밋하지 않음)
+media/intro-preview.gif  README의 30초 소개 화면
 mkdocs.yml             온라인판 설정(MkDocs Material + mike 판 관리 + privacy 플러그인으로 외부 자원 내장)
 mkdocs.offline.yml     폐쇄망판 설정(mkdocs.yml을 이어받고 .html 주소·offline 플러그인·판 메뉴 끔)
 VERSION                현재 판 번호(SemVer)
